@@ -11,6 +11,30 @@ export const asyncRouterMap = [
     meta: { title: '首页' },
     redirect: '/dashboard/workplace',
     children: [
+      {
+        path: '/basic_archives',
+        name: 'basic_archives',
+        component: RouteView,
+        redirect: '/exception/403',
+        meta: { title: '基础档案', icon: 'user', permission: [ 'exception' ] },
+        children: [
+          {
+            path: '/basic_archives/goods_file',
+            name: 'goods_file',
+            component: RouteView,
+            redirect: '/exception/403',
+            meta: { title: '商品档案', icon: 'user', permission: [ 'exception' ] },
+            children: [
+              {
+                path: '/basic_archives/goods_file/Add.vue',
+                name: 'Add',
+                component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/Add.vue'),
+                meta: { title: '新增', permission: [ 'exception' ] }
+              }
+            ]
+          }
+        ]
+      },
       // dashboard
       {
         path: 'dashboard',

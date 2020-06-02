@@ -26,10 +26,16 @@ export const asyncRouterMap = [
             meta: { title: '商品档案', icon: 'user', permission: [ 'exception' ] },
             children: [
               {
-                path: '/basic_archives/goods_file/Add.vue',
+                path: '/add',
                 name: 'Add',
                 component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/Add.vue'),
                 meta: { title: '新增', permission: [ 'exception' ] }
+              },
+              {
+                path: '/product-list',
+                name: 'ProductList',
+                component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductList.vue'),
+                meta: { title: '产品清单', permission: [ 'exception' ] }
               }
             ]
           }

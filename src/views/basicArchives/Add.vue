@@ -1,4 +1,5 @@
 <template>
+  <a-card>
   <a-form-model
     ref="ruleForm"
     :model="form"
@@ -106,10 +107,11 @@
       </a-upload>
     </a-form-model-item>
     <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-      <a-button type="primary" @click="onSubmit">保存并继续</a-button>
-      <a-button style="margin-left: 10px;" @click="resetForm">保存</a-button>
+      <a-button type="primary" @click="onSubmit">保存</a-button>
+      <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
     </a-form-model-item>
   </a-form-model>
+  </a-card>
 </template>
 <script>
 import Vue from 'vue'

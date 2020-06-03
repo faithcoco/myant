@@ -13,7 +13,7 @@
   },
   "dependencies": {
     "@antv/data-set": "^0.10.2",
-    "ant-design-vue": "1.5.0-rc.6",
+    "ant-design-vue": "^1.5.0-rc.6",
     "axios": "^0.19.0",
     "core-js": "^3.1.2",
     "enquire.js": "^2.1.6",
@@ -38,14 +38,11 @@
   "devDependencies": {
     "@ant-design/colors": "^3.2.1",
     "@vue/cli-plugin-babel": "^4.0.4",
-
     "@vue/cli-plugin-router": "^4.0.4",
     "@vue/cli-plugin-unit-jest": "^4.0.4",
     "@vue/cli-plugin-vuex": "^4.0.4",
     "@vue/cli-service": "^4.0.4",
-
     "@vue/test-utils": "^1.0.0-beta.29",
-
     "babel-plugin-import": "^1.12.2",
     "babel-plugin-transform-remove-console": "^6.9.4",
     "less": "^3.0.4",

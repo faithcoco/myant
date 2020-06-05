@@ -23,7 +23,12 @@ const serverList = (options) => {
       callNo: Mock.mock('@integer(1, 999)'),
       status: Mock.mock('@integer(0, 3)'),
       updatedAt: Mock.mock('@datetime'),
-      editable: false
+      editable: false,
+      name: '洪岗',
+      role:'部门主管，财务',
+      tellphone:'',
+      field_name:'客户名称',
+      field_type:'文本类型'
     })
   }
 

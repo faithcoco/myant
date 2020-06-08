@@ -15,12 +15,31 @@
         <a-descriptions layout="vertical" bordered :column="4">
           <a-descriptions-item label="推送内容">系统将合同推送给</a-descriptions-item>
           <a-descriptions-item label="推送人员/角色">
-        
+            <div
+              :style="{textAlign: 'center',height: '40px',lineHeight: '40px',color: '#777'}">合同推进人</div>
+            <a-divider />
+            <p>
+              人员:
+              <a-input placeholder="input search text" style="width: 200px" />
+            </p>
+            <a-divider />
+            <p>
+              人员:
+              <a-input placeholder="input search text" style="width: 200px" />
+            </p>
           </a-descriptions-item>
           <a-descriptions-item label="是否推送">
-            <div id="components-layout-demo-basic">
-             
-            </div>
+            <p>
+              <a-checkbox @change="onChange" />
+            </p>
+            <a-divider />
+            <p>
+              <a-checkbox @change="onChange" />
+            </p>
+            <a-divider />
+            <p>
+              <a-checkbox @change="onChange" />
+            </p>
           </a-descriptions-item>
           <a-descriptions-item label="推送时间">消息会实时推送</a-descriptions-item>
         </a-descriptions>
@@ -41,7 +60,6 @@ import { Layout } from 'ant-design-vue'
 import { Descriptions } from 'ant-design-vue'
 Vue.use(Descriptions)
 
-
 export default {
   name: 'TreeList',
   components: {
@@ -58,7 +76,6 @@ export default {
       orgTree: [],
       selectedRowKeys: [],
       selectedRows: []
-     
     }
   },
   created() {

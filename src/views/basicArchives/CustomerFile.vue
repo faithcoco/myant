@@ -103,7 +103,7 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item label="开户银行">
+      <a-form-model-item label="开户银行hello">
         <a-input v-model="form.desc"  placeholder="请输入开户银行" />
       </a-form-model-item>
 

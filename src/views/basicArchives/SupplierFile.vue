@@ -8,7 +8,7 @@
       :wrapper-col="wrapperCol"
     >
 
-        <a-form-model-item ref="name" label="供应商名称" prop="name">
+        <a-form-model-item ref="name" label="供应商名称sipmle" prop="name">
         <a-input
           v-model="form.name"
           placeholder="请输入供应商名称"

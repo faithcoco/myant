@@ -18,7 +18,7 @@
           }"
         />
       </a-form-model-item>
-      <a-form-model-item label="供应商编号" required prop="date1">
+      <a-form-model-item label="供应商编号"  prop="date1">
         <a-input placeholder="请输入供应商编号">
           <a-button slot="suffix" type="link">自动获取</a-button>
         </a-input>

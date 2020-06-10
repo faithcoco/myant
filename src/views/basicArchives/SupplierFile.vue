@@ -106,9 +106,9 @@ export default {
       form: {
         supplierName: '', //供应商名称
         region: '', //负责人
-        date1: undefined, //供应商编号
+        date1: '', //供应商编号
         delivery: false,
-        type: [],
+        type:"",
         resource: '',
         desc: '',
         taxpayerId: '', //纳税人识别号

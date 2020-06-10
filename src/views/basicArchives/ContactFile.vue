@@ -7,32 +7,32 @@
     :label-col="labelCol"
     :wrapper-col="wrapperCol"
   >
-    <a-form-model-item label="产品编码" required prop="date1">
-      <a-input placeholder="请输入产品编码" >
+    <a-form-model-item label="联系人编码" required prop="date1">
+      <a-input placeholder="请输入联系人编码" >
         <a-button slot="suffix" type="link">自动获取</a-button>
       </a-input>
     </a-form-model-item>
-    <a-form-model-item ref="name" label="产品名称" prop="name">
+    <a-form-model-item ref="name" label="联系人名称" prop="name">
       <a-input
         v-model="form.name"
-        placeholder="请输入产品名称"
+        placeholder="请输入联系人名称"
         @blur="
           () => {
             
           }"
       />
     </a-form-model-item>
-    <a-form-model-item  label="产品条码" prop="code">
+    <a-form-model-item  label="客户或供应商" prop="code">
       <a-input
         v-model="form.code"
-        placeholder="请输入产品条码"
+        placeholder="请输入客户或供应商"
        
       />
     </a-form-model-item>
-    <a-form-model-item ref="name" label="规格型号">
+    <a-form-model-item ref="name" label="关联公司">
       <a-input
         v-model="form.name"
-        placeholder="请输入规格型号"
+        placeholder="请输入关联公司"
         @blur="
           () => {
          
@@ -40,10 +40,10 @@
         "
       />
     </a-form-model-item>
-    <a-form-model-item ref="name" label="计量单位" >
+    <a-form-model-item ref="name" label="联系电话" >
       <a-input
         v-model="form.name"
-        placeholder="请输入计量单位"
+        placeholder="请输入联系电话"
         @blur="
           () => {
           
@@ -52,10 +52,10 @@
         "
       />
     </a-form-model-item>
-    <a-form-model-item label="产品分类" >
+    <a-form-model-item label="职务" >
       <a-select
         show-search
-        placeholder="请选择产品分类"
+        placeholder="请选择职务"
         option-filter-prop="children"
         :filter-option="filterOption"
         @focus="handleFocus"
@@ -67,10 +67,10 @@
         <a-select-option value="tom">汽车零部件</a-select-option>
       </a-select>
     </a-form-model-item>
-    <a-form-model-item ref="name" label="销售单价" >
+    <a-form-model-item ref="name" label="部门" >
       <a-input
         v-model="form.price"
-        placeholder="请输入销售单价"
+        placeholder="请输入部门"
         @blur="
           () => {
             $refs.name.onFieldBlur();
@@ -78,10 +78,10 @@
         "
       />
     </a-form-model-item>
-    <a-form-model-item ref="name" label="采购单价" >
+    <a-form-model-item ref="name" label="地址" >
       <a-input
         v-model="form.name"
-        placeholder="请输入采购单价"
+        placeholder="请输入地址"
         @blur="
           () => {
             
@@ -89,10 +89,10 @@
         "
       />
     </a-form-model-item>
-    <a-form-model-item label="产品说明" >
+    <!-- <a-form-model-item label="产品说明" >
       <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
-    </a-form-model-item>
-    <a-form-model-item label="附件" >
+    </a-form-model-item> -->
+    <!-- <a-form-model-item label="附件" >
       <a-upload
         name="file"
         :multiple="true"
@@ -102,7 +102,7 @@
       >
         <a-button type="link" :size="size">添加附件</a-button>
       </a-upload>
-    </a-form-model-item>
+    </a-form-model-item> -->
     <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
       <a-button type="primary" @click="onSubmit">保存</a-button>
       <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>

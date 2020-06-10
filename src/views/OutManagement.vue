@@ -7,68 +7,95 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item ref="name" label="客户名称" prop="name">
-        <a-input
-          v-model="form.name"
-          placeholder="请输入客户名称"
-          @blur="
-          () => {
-            
-          }"
-        />
-      </a-form-model-item>
-      <a-form-model-item label="客户编号" required prop="date1">
-        <a-input placeholder="请输入客户编号">
-          <a-button slot="suffix" type="link">自动获取</a-button>
-        </a-input>
-      </a-form-model-item>
-      <a-form-model-item label="客户性质" prop="code">
-        <a-input v-model="form.code" placeholder="请输入客户性质" />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="所属行业">
-        <a-input
-          v-model="form.name"
-          placeholder="请输入所属行业"
-          @blur="
-          () => {
-         
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="办公地址">
-        <a-input
-          v-model="form.name"
-          placeholder="请输入办公地址"
-          @blur="
-          () => {
-          
-         
-          }
-        "
-        />
-      </a-form-model-item>
-
-      <a-form-model-item label="详细地址">
-        <a-input v-model="form.detailAddress" type="textarea" placeholder="请输入详细地址" />
-      </a-form-model-item>
-
-      <a-form-model-item label="负责人">
+      <a-form-model-item label="类型" required>
         <a-select
           show-search
-          placeholder="请选择负责人"
+          default-value="1"
+          placeholder="请选择出库类型"
           option-filter-prop="children"
           :filter-option="filterOption"
           @focus="handleFocus"
           @blur="handleBlur"
           @change="handleSearchChange"
         >
-          <a-select-option value="jack">专用设备</a-select-option>
-          <a-select-option value="lucy">芯片</a-select-option>
-          <a-select-option value="tom">汽车零部件</a-select-option>
+          <a-select-option value="1">销售出库1</a-select-option>
+          <a-select-option value="2">销售出库2</a-select-option>
+          <a-select-option value="3">销售出库3</a-select-option>
         </a-select>
       </a-form-model-item>
 
+      <a-form-model-item label="编号" required prop="Num">
+        <a-input v-model="form.Num" placeholder="请输入出库编号">
+          <a-button slot="suffix" type="link">自动获取</a-button>
+        </a-input>
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="仓库" prop="warehouse">
+        <a-input
+          v-model="form.warehouse"
+          placeholder="请选择仓库"
+          @blur="
+          () => {
+            
+          }"
+        >
+          <a-button slot="suffix" type="link">选择</a-button>
+        </a-input>
+      </a-form-model-item>
+      <a-form-model-item label="出库日期" prop="date">
+        <a-input v-model="form.date" placeholder="请选择出库日期" />
+      </a-form-model-item>
+      <a-form-model-item label="负责人">
+        <a-input
+          v-model="form.person"
+          placeholder="请选择负责人"
+          @blur="
+          () => {
+         
+          }
+        "
+        >
+          <a-button slot="suffix" type="link">选择</a-button>
+        </a-input>
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="关联单据" prop="document">
+        <a-input
+          v-model="form.document"
+          placeholder="请选择需要关联的单据"
+          @blur="
+          () => {
+          
+         
+          }
+        "
+        >
+          <a-button slot="suffix" type="link">选择</a-button>
+        </a-input>
+      </a-form-model-item>
+
+      <a-form-model-item label="出库产品" prop="product">
+        <a href>+选择产品</a>
+        <a-input
+          v-model="form.product"
+          placeholder="请输入产品编码"
+          @blur="
+          () => {
+            
+          }
+        "
+        ></a-input>
+      </a-form-model-item>
+      <a-form-model-item label="备注">
+        <a-input
+          v-model="form.Remarks"
+          placeholder="请输入备注"
+          type="textarea"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
       <a-form-model-item label="附件">
         <a-upload
           name="file"
@@ -81,32 +108,10 @@
         </a-upload>
       </a-form-model-item>
 
-      <a-form-model-item ref="name" label="发票抬头">
-        <a-input
-          v-model="form.price"
-          placeholder="请输入发票抬头"
-          @blur="
-          () => {
-            $refs.name.onFieldBlur();
-          }
-        "
-        />
+      <a-form-model-item label="审批人" required>
+        流程未设置
+        <a href="#">如何设置</a>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="纳税人识别号">
-        <a-input
-          v-model="form.name"
-          placeholder="请输入纳税人识别号"
-          @blur="
-          () => {
-            
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item label="开户银行hello">
-        <a-input v-model="form.desc"  placeholder="请输入开户银行" />
-      </a-form-model-item>
-
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
         <a-button type="primary" @click="onSubmit">保存</a-button>
         <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
@@ -130,33 +135,30 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        name: '',
-        region: undefined,
-        date1: undefined,
-        delivery: false,
-        type: [],
+        type: '', //类型
+        warehouse: '', //仓库
+        Num: '', //编号
+        date: '', //出库日期
+        person: '', //负责人
+        document: '', //关联单据
+        product: '', //出库产品
+        Remarks: '', //备注
         resource: '',
         desc: '',
         code: '',
         price: ''
       },
       rules: {
-        name: [
-          { required: true, message: '请输入产品编码', trigger: 'blur' },
+        Num: [{ required: true, message: '请输入出库编号', trigger: 'blur' }],
+        type: [
+          { required: true, message: '请选择出库类型', trigger: 'blur' },
           { min: 1, max: 3, message: '', trigger: 'blur' }
         ],
-        region: [{ required: true, message: '', trigger: 'change' }],
-        date1: [{ required: true, message: '', trigger: 'change' }],
-        type: [
-          {
-            type: 'array',
-            required: true,
-            message: 'Please select at least one activity type',
-            trigger: 'change'
-          }
-        ],
-        resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
+        warehouse: [{ required: true, message: '请选择仓库', trigger: 'blur' }],
+
+        date: [{ required: true, message: '请选择出库日期', trigger: 'blur' }],
+        document: [{ required: true, message: '请选择需要关联的单据', trigger: 'blur' }],
+        product: [{ required: true, message: '请选择出库产品', trigger: 'blur' }]
       }
     }
   },

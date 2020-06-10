@@ -7,10 +7,9 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-
-        <a-form-model-item ref="name" label="供应商名称test" prop="name">
+      <a-form-model-item ref="name" label="供应商名称" prop="supplierName">
         <a-input
-          v-model="form.name"
+          v-model="form.supplierName"
           placeholder="请输入供应商名称"
           @blur="
           () => {
@@ -18,45 +17,25 @@
           }"
         />
       </a-form-model-item>
-      <a-form-model-item label="供应商编号1716"  prop="date1">
-        <a-input placeholder="请输入供应商编号">
+      <a-form-model-item label="供应商编号" required prop="date1">
+        <a-input v-model="form.date1" placeholder="请输入供应商编号">
           <a-button slot="suffix" type="link">自动获取</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="供应商分类" >
-        <a-select
-          show-search
-          placeholder="请选择供应商分类"
-          option-filter-prop="children"
-          :filter-option="filterOption"
-          @focus="handleFocus"
-          @blur="handleBlur"
-          @change="handleSearchChange"
-        >
-          <a-select-option value="jack">专用设备</a-select-option>
-          <a-select-option value="lucy">芯片</a-select-option>
-          <a-select-option value="tom">汽车零部件</a-select-option>
-        </a-select>
+      <a-form-model-item label="供应商类型">
+        <a-input v-model="form.type" placeholder="请选择供应商类型">
+          <a-button slot="suffix" type="link">选择</a-button>
+        </a-input>
       </a-form-model-item>
-         <a-form-model-item label="负责人" prop="region">
-        <a-select
-          show-search
-          placeholder="请选择供应商负责人"
-          option-filter-prop="children"
-          :filter-option="filterOption"
-          @focus="handleFocus"
-          @blur="handleBlur"
-          @change="handleSearchChange"
-        >
-          <a-select-option value="jack">tom</a-select-option>
-          <a-select-option value="lucy">curry</a-select-option>
-          <a-select-option value="tom">jame</a-select-option>
-        </a-select>
+      <a-form-model-item label="负责人" prop="region">
+        <a-input v-model="form.region" placeholder="请选择负责人">
+          <a-button slot="suffix" type="link">选择</a-button>
+        </a-input>
       </a-form-model-item>
-  
+
       <a-form-model-item ref="name" label="纳税人识别号">
         <a-input
-          v-model="form.name"
+          v-model="form.taxpayerId"
           placeholder="请输入纳税人识别号"
           @blur="
           () => {
@@ -65,9 +44,9 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="联系人" >
+      <a-form-model-item ref="name" label="联系人">
         <a-input
-          v-model="form.name"
+          v-model="form.contactPerson"
           placeholder="请输入联系人"
           @blur="
           () => {
@@ -76,9 +55,9 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="联系电话" >
+      <a-form-model-item ref="name" label="联系电话">
         <a-input
-          v-model="form.name"
+          v-model="form.phone"
           placeholder="请输入联系电话"
           @blur="
           () => {
@@ -87,11 +66,11 @@
         "
         />
       </a-form-model-item>
-      
-      <a-form-model-item label="备注" >
+
+      <a-form-model-item label="备注">
         <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
       </a-form-model-item>
-      <a-form-model-item label="附件" >
+      <a-form-model-item label="附件">
         <a-upload
           name="file"
           :multiple="true"
@@ -125,21 +104,24 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        name: '',
-        region: undefined,
-        date1: undefined,
+        supplierName: '', //供应商名称
+        region: '', //负责人
+        date1: undefined, //供应商编号
         delivery: false,
         type: [],
         resource: '',
-        desc: ''
+        desc: '',
+        taxpayerId: '', //纳税人识别号
+        contactPerson: '', //联系人
+        phone: ''
       },
       rules: {
-        name: [
-          { required: true, message: '请输入产品编码', trigger: 'blur' },
+        supplierName: [
+          { required: true, message: '请输入供应商名称', trigger: 'blur' },
           { min: 3, max: 5, message: '', trigger: 'blur' }
         ],
-        region: [{ required: true, message: '', trigger: 'change' }],
-        date1: [{ required: true, message: '', trigger: 'change' }],
+        region: [{ required: true, message: '请选择负责人', trigger: 'change' }],
+        date1: [{ required: true, message: '请输入供应商编号', trigger: 'change' }],
         type: [
           {
             type: 'array',

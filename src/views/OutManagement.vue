@@ -9,6 +9,7 @@
     >
       <a-form-model-item label="类型" required>
         <a-select
+          :model="value"
           show-search
           default-value="1"
           placeholder="请选择出库类型"
@@ -42,7 +43,13 @@
         </a-input>
       </a-form-model-item>
       <a-form-model-item label="出库日期" prop="date">
-        <a-input v-model="form.date" placeholder="请选择出库日期" />
+        <a-date-picker
+          v-model="form.date"
+          show-time
+          type="date"
+          placeholder="Pick a date"
+          style="width: 100%;"
+        />
       </a-form-model-item>
       <a-form-model-item label="负责人">
         <a-input
@@ -156,7 +163,7 @@ export default {
         ],
         warehouse: [{ required: true, message: '请选择仓库', trigger: 'blur' }],
 
-        date: [{ required: true, message: '请选择出库日期', trigger: 'blur' }],
+        date: [{ required: true, message: '请选择出库日期', trigger: 'change' }],
         document: [{ required: true, message: '请选择需要关联的单据', trigger: 'blur' }],
         product: [{ required: true, message: '请选择出库产品', trigger: 'blur' }]
       }

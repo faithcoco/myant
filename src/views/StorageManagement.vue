@@ -7,9 +7,10 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item ref="name" label="类型" prop="type">
+      <a-form-model-item ref="name" label="类型" required>
         <a-select
           show-search
+          :model="value"
           default-value="1"
           placeholder="请选择入库类型"
           option-filter-prop="children"
@@ -34,14 +35,12 @@
         </a-input>
       </a-form-model-item>
       <a-form-model-item ref="date" label="入库日期" prop="date">
-        <a-input
+        <a-date-picker
           v-model="form.date"
-          placeholder="请选择入库日期"
-          @blur="
-          () => {
-         
-          }
-        "
+          show-time
+          type="date"
+          placeholder="Pick a date"
+          style="width: 100%;"
         />
       </a-form-model-item>
       <a-form-model-item ref="person" label="负责人">
@@ -138,9 +137,9 @@ export default {
         warehouse: '', //仓库
         date: '', //入库日期
         person: '', //负责人
-        document:'',//关联单据
-        product: '',//入库产品
-        Remarks:'',//备注
+        document: '', //关联单据
+        product: '', //入库产品
+        Remarks: '', //备注
         desc: '',
         code: '',
         price: ''
@@ -148,14 +147,13 @@ export default {
       rules: {
         type: [
           { required: true, message: '请选择入库类型', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
         ],
         Num: [{ required: true, message: '请输入编号', trigger: 'change' }],
         warehouse: [{ required: true, message: '请选择仓库', trigger: 'change' }],
 
         date: [{ required: true, message: '请选择入库日期', trigger: 'change' }],
         document: [{ required: true, message: '请选择需要关联的单据', trigger: 'blur' }],
-        product: [{ required: true, message: '请输入入库产品', trigger: 'blur' }],
+        product: [{ required: true, message: '请输入入库产品', trigger: 'blur' }]
       }
     }
   },

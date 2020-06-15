@@ -66,25 +66,17 @@ export const asyncRouterMap = [
         ]
       },
       {
-        path: 'rkgl',
-        name: 'rkgl',
-        component: RouteView,
-        meta: { title: '入库管理', icon: 'user', permission: ['dashboard'] }
-      },
-      {
-        path: 'ckgl',
-        name: 'ckgl',
-        component: RouteView,
+        path: 'StorageManagement',
+        name: 'StorageManagement',
+        meta: { title: '入库管理', icon: 'user', permission: ['dashboard'] },
+        component: () => import(/* webpackChunkName: "fail" */ '@/views/StorageManagement.vue')
+        
+      }, {
+        path: 'OutManagement',
+        name: 'OutManagement',
+        component: () => import(/* webpackChunkName: "fail" */ '@/views/OutManagement.vue'),
         meta: { title: '出库管理', icon: 'user', permission: ['dashboard'] },
-        children: [
-          {
-            path: 'OutboundOrder',
-            name: 'OutboundOrder',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/OutboundManagement/OutboundOrder.vue'),
-            meta: { title: '出库单', icon: 'user', permission: ['dashboard'] }
-          }
-        ]
-      },
+      }, 
 
       /////////////////////////////////////
       {

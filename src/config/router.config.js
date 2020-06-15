@@ -3,7 +3,6 @@ import { UserLayout, BasicLayout, RouteView, BlankLayout, PageView } from '@/lay
 import { bxAnaalyse } from '@/core/icons'
 
 export const asyncRouterMap = [
-
   {
     path: '/',
     name: 'index',
@@ -38,84 +37,169 @@ export const asyncRouterMap = [
                 meta: { title: '产品清单', permission: ['dashboard'] }
               }
             ]
-          }, {
+          },
+          {
             path: 'classification_goods',
             name: 'ClassificationGoods',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ClassificationGoods.vue'),
-            meta: { title: '货品分类', icon: 'user', permission: ['dashboard'] },
-
-          }, {
+            meta: { title: '货品分类', icon: 'user', permission: ['dashboard'] }
+          },
+          {
             path: 'supplier_file',
             name: 'SupplierFile',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/SupplierFile.vue'),
-            meta: { title: '供应商档案', icon: 'user', permission: ['dashboard'] },
-          }, {
+            meta: { title: '供应商档案', icon: 'user', permission: ['dashboard'] }
+          },
+          {
             path: 'customer_file',
             name: 'CustomerFile',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/CustomerFile.vue'),
-            meta: { title: '客户档案', icon: 'user', permission: ['dashboard'] },
-          }, {
+            meta: { title: '客户档案', icon: 'user', permission: ['dashboard'] }
+          },
+          {
             path: 'contact_file',
             name: 'ContactFile',
-        
+
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ContactFile.vue'),
-            meta: { title: '联系人档案', icon: 'user', permission: ['dashboard'] },
+            meta: { title: '联系人档案', icon: 'user', permission: ['dashboard'] }
           }
         ]
       },
       {
-        path: 'StorageManagement',
-        name: 'StorageManagement',
-        meta: { title: '入库管理', icon: 'user', permission: ['dashboard'] },
-        component: () => import(/* webpackChunkName: "fail" */ '@/views/StorageManagement.vue')
-        
-      }, {
-        path: 'OutManagement',
-        name: 'OutManagement',
-        component: () => import(/* webpackChunkName: "fail" */ '@/views/OutManagement.vue'),
+        path: 'rkgl',
+        name: 'rkgl',
+        component: RouteView,
+        meta: { title: '入库管理', icon: 'user', permission: ['dashboard'] }
+      },
+      {
+        path: 'ckgl',
+        name: 'ckgl',
+        component: RouteView,
         meta: { title: '出库管理', icon: 'user', permission: ['dashboard'] },
-      }, {
+        children: [
+          {
+            path: 'OutboundOrder',
+            name: 'OutboundOrder',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OutboundManagement/OutboundOrder.vue'),
+            meta: { title: '出库单', icon: 'user', permission: ['dashboard'] }
+          }
+        ]
+      },
+
+      /////////////////////////////////////
+      {
         path: 'yyzx',
         name: 'yyzx',
         component: RouteView,
         meta: { title: '运营中心', icon: 'user', permission: ['dashboard'] },
-      }, {
+        children: [
+          {
+            path: 'Transfer',
+            name: 'Transfer',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/Transfer.vue'),
+            meta: { title: '调拨', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'Inventory',
+            name: 'Inventory',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/Inventory.vue'),
+            meta: { title: '盘点', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'PositionAdjustment',
+            name: 'PositionAdjustment',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/PositionAdjustment.vue'),
+            meta: { title: '货位调整', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'ShippingNotice',
+            name: 'ShippingNotice',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/ShippingNotice.vue'),
+            meta: { title: '发货通知（客户）', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'ReceiptNotice',
+            name: 'ReceiptNotice',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/ReceiptNotice.vue'),
+            meta: { title: '收货通知（供应商）', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'ReturnNoticeClient',
+            name: 'ReturnNoticeClient',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/ReturnNoticeClient.vue'),
+            meta: { title: '退货通知（客户）', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'ReturnNoticeSupplier',
+            name: 'ReturnNoticeSupplier',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/ReturnNoticeSupplier.vue'),
+            meta: { title: '退货通知（供应商）', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'Bale',
+            name: 'Bale',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/Bale.vue'),
+            meta: { title: '打包', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'WorkTimeReportApplication',
+            name: 'WorkTimeReportApplication',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/WorkTimeReportApplication.vue'),
+            meta: { title: '报工申请', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'PickingApplication',
+            name: 'PickingApplication',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/PickingApplication.vue'),
+            meta: { title: '领料申请', icon: 'user', permission: ['dashboard'] }
+          },
+        ]
+      },
+      //////////////////////////////////
+
+      {
         path: 'management',
         name: 'management',
         component: RouteView,
         meta: { title: '管理中心', icon: 'user', permission: ['dashboard'] },
         children: [
-         {
+          {
             path: 'EnterpriseInformation',
             name: 'enterprise-information',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/EnterpriseInformation.vue'),
-            meta: { title: '企业信息', icon: 'user', permission: ['dashboard'] },
-          }, {
+            meta: { title: '企业信息', icon: 'user', permission: ['dashboard'] }
+          },
+          {
             path: 'Sector',
             name: 'sector',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/Sector.vue'),
-            meta: { title: '部门设置', icon: 'user', permission: ['dashboard'] },
-          },{
+            meta: { title: '部门设置', icon: 'user', permission: ['dashboard'] }
+          },
+          {
             path: 'PersonnelSetting',
             name: 'personnel-setting',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/PersonnelSetting.vue'),
-            meta: { title: '人员设置', icon: 'user', permission: ['dashboard'] },
-          },{
+            meta: { title: '人员设置', icon: 'user', permission: ['dashboard'] }
+          },
+          {
             path: 'RoleSetting',
             name: 'role-setting',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/RoleSetting.vue'),
-            meta: { title: '角色设置', icon: 'user', permission: ['dashboard'] },
-          },{
+            meta: { title: '角色设置', icon: 'user', permission: ['dashboard'] }
+          },
+          {
             path: 'FormSetting',
             name: 'form-setting',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/FormSetting.vue'),
-            meta: { title: '表单设置', icon: 'user', permission: ['dashboard'] },
-          },{
+            meta: { title: '表单设置', icon: 'user', permission: ['dashboard'] }
+          },
+          {
             path: 'CodeSetting',
             name: 'code-setting',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/CodeSetting.vue'),
-            meta: { title: '编号设置', icon: 'user', permission: ['dashboard'] },
-          }, {
+            meta: { title: '编号设置', icon: 'user', permission: ['dashboard'] }
+          },
+          {
             path: 'warehouse',
             name: 'Warehouse',
             component: RouteView,
@@ -129,12 +213,14 @@ export const asyncRouterMap = [
                 meta: { title: '新增', permission: ['dashboard'] }
               }
             ]
-          },{
+          },
+          {
             path: 'approval-settin',
             name: 'ApprovalSettin',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/ApprovalSettin.vue'),
-            meta: { title: '审批设置', icon: 'user', permission: ['dashboard'] },
-          } ,{
+            meta: { title: '审批设置', icon: 'user', permission: ['dashboard'] }
+          },
+          {
             path: 'Inventory',
             name: 'inventory',
             component: RouteView,
@@ -148,29 +234,131 @@ export const asyncRouterMap = [
                 meta: { title: '新增', permission: ['dashboard'] }
               }
             ]
-          },{
+          },
+          {
             path: 'MessageSettin',
             name: 'message_settin',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/MessageSettin.vue'),
-            meta: { title: '消息设置', icon: 'user', permission: ['dashboard'] },
+            meta: { title: '消息设置', icon: 'user', permission: ['dashboard'] }
           }
         ]
-      }, {
-        path: 'bbzx',
-        name: 'bbzx',
+      },
+      {
+        path: 'ReportCenter',
+        name: 'ReportCenter',
         component: RouteView,
         meta: { title: '报表中心', icon: 'user', permission: ['dashboard'] },
-      }, {
+        children: [
+          {
+            path: 'ExistingStock',
+            name: 'enterprise-ExistingStock',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/ReportCenter/ExistingStock.vue'),
+            meta: { title: '现存量报表', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'FlowAccount',
+            name: 'FlowAccount',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/ReportCenter/FlowAccount.vue'),
+            meta: { title: '库存台账', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'InventoryLedger',
+            name: 'InventoryLedger',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/ReportCenter/InventoryLedger.vue'),
+            meta: { title: '出入库流水帐', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'WarehouseAge',
+            name: 'WarehouseAge',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/ReportCenter/WarehouseAge.vue'),
+            meta: { title: '库龄分析', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'WorkEfficiency',
+            name: 'WorkEfficiency',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/ReportCenter/WorkEfficiency.vue'),
+            meta: { title: '作业效率报表', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'StockOutlook',
+            name: 'StockOutlook',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/ReportCenter/StockOutlook.vue'),
+            meta: { title: '库存展望报表', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'SendingReceivingSummaryTable',
+            name: 'SendingReceivingSummaryTable',
+            component: () =>
+              import(/* webpackChunkName: "fail" */ '@/views/ReportCenter/SendingReceivingSummaryTable.vue'),
+            meta: { title: '收发存汇总表', icon: 'user', permission: ['dashboard'] }
+          }
+        ]
+      },
+      {
         path: 'ybp',
         name: 'ybp',
         component: RouteView,
-        meta: { title: '仪表盘', icon: 'user', permission: ['dashboard'] },
-      }, {
+        meta: { title: '仪表盘', icon: 'user', permission: ['dashboard'] }
+      },
+      {
         path: 'xxzx',
         name: 'xxzx',
         component: RouteView,
         meta: { title: '消息中心', icon: 'user', permission: ['dashboard'] },
-      }, {
+        children: [
+          {
+            path: 'MyApproval',
+            name: 'MyApproval',
+            component: RouteView,
+            // component: () => import(/* webpackChunkName: "fail" */ '@/views/informationCenter/ApprovalAgency.vue'),
+            redirect: '/informationCenter/MyApproval/Undone',
+            meta: { title: '审批待办', permission: ['dashboard'] },
+            children: [
+              {
+                path: 'Undone',
+                name: 'Undone',
+                component: () =>
+                  import(/* webpackChunkName: "fail" */ '@/views/informationCenter/MyApproval/Undone.vue'),
+                meta: { title: '待我处理', permission: ['dashboard'] }
+              },
+              {
+                path: 'Completed',
+                name: 'Completed',
+                component: () =>
+                  import(/* webpackChunkName: "fail" */ '@/views/informationCenter/MyApproval/Completed.vue'),
+                meta: { title: '我已处理', permission: ['dashboard'] }
+              },
+              {
+                path: 'Initiate',
+                name: 'Initiate',
+                component: () =>
+                  import(/* webpackChunkName: "fail" */ '@/views/informationCenter/MyApproval/Initiate.vue'),
+                meta: { title: '我发起的', permission: ['dashboard'] }
+              },
+              {
+                path: 'GiveMe',
+                name: 'GiveMe',
+                component: () =>
+                  import(/* webpackChunkName: "fail" */ '@/views/informationCenter/MyApproval/GiveMe.vue'),
+                meta: { title: '抄送我的', permission: ['dashboard'] }
+              }
+            ]
+          },
+          {
+            path: 'ContractNews',
+            name: 'ContractNews',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/informationCenter/ContractNews.vue'),
+            meta: { title: '合同动态', permission: ['dashboard'] }
+          },
+          {
+            path: 'SystemNotification',
+            name: 'SystemNotification',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/informationCenter/SystemNotification.vue'),
+            meta: { title: '系统通知', permission: ['dashboard'] }
+          }
+        ]
+      },
+      {
         path: '/other',
         name: 'otherPage',
         component: PageView,
@@ -229,7 +417,6 @@ export const asyncRouterMap = [
           }
         ]
       }
-
     ]
   },
   {
@@ -286,15 +473,15 @@ export const asyncRouterMap = [
         ]
       }
     ]
-  }, 
+  },
   {
-    path: '*', redirect: '/404', hidden: true
+    path: '*',
+    redirect: '/404',
+    hidden: true
   }
 ]
 
-
 export const asyncRouterMap1 = [
-
   {
     path: '/',
     name: 'index',
@@ -623,7 +810,9 @@ export const asyncRouterMap1 = [
     ]
   },
   {
-    path: '*', redirect: '/404', hidden: true
+    path: '*',
+    redirect: '/404',
+    hidden: true
   }
 ]
 
@@ -678,5 +867,4 @@ export const constantRouterMap = [
     path: '/404',
     component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
   }
-
 ]

@@ -38,7 +38,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="调拨日期">
         <a-date-picker
-          v-model="form.date"
+          v-model="form.TransferDate"
           show-time
           type="date"
           placeholder="Pick a date"
@@ -185,7 +185,7 @@ export default {
         SourceWarehouseCode: '', //源仓库编码
         TargetWarehouseCode: '', //目标仓库编码
         DepartmentCode: '', //部门编码
-        date: '', //日期
+        TransferDate: '', //日期
         InventoryCode: '', //存货编码
         InventoryName: '', //存货名称
         LocationCode: '', //货位编码

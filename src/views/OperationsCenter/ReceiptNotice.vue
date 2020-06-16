@@ -49,7 +49,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="预计入库日期">
         <a-date-picker
-          v-model="form.date"
+          v-model="form.ExpectedInWarehouseDate"
           show-time
           type="date"
           placeholder="Pick a date"
@@ -239,7 +239,7 @@ export default {
         ContactCode: '',
         DepartmentCode: '', //部门编码
         SalesmanCode: '',
-        date: '', //日期
+        ExpectedInWarehouseDate: '', //日期
         ReceivingWarehouseCode: '',
         InventoryCode: '', //存货编码
         InventoryName: '', //存货名称

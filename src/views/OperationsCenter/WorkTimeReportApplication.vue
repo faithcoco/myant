@@ -7,23 +7,10 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="调拨单编码" required prop="coding">
-        <a-input v-model="form.RequisitionCode" placeholder="请输入调拨单编码">
+      <a-form-model-item label="报工申请单编码" required prop="coding">
+        <a-input v-model="form.WorkTimeReportApplicationCode" placeholder="请输入报工申请单编码">
           <a-button slot="suffix" type="link">自动获取</a-button>
         </a-input>
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="源仓库编码" prop="name">
-        <a-input
-          v-model="form.SourceWarehouseCode"
-          placeholder="请输入源仓库编码"
-          @blur="
-          () => {
-            
-          }"
-        />
-      </a-form-model-item>
-      <a-form-model-item label="目标仓库编码" prop="code">
-        <a-input v-model="form.TargetWarehouseCode" placeholder="请输入目标仓库编码" />
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码">
         <a-input
@@ -36,13 +23,35 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="调拨日期">
+      <a-form-model-item ref="name" label="业务员编码">
+        <a-input
+          v-model="form.SalesmanCode"
+          placeholder="请输入业务员编码"
+          @blur="
+          () => {
+         
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="预计入库日期">
         <a-date-picker
-          v-model="form.date"
+          v-model="form.ExpectedInWarehouseDate"
           show-time
           type="date"
           placeholder="Pick a date"
           style="width: 100%;"
+        />
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="预计入库仓库编码">
+        <a-input
+          v-model="form.ExpectedInWarehouseCode"
+          placeholder="请输入预计入库仓库编码"
+          @blur="
+          () => {
+            $refs.name.onFieldBlur();
+          }
+        "
         />
       </a-form-model-item>
       <a-form-model-item ref="name" label="存货编码">
@@ -66,19 +75,6 @@
           }
         "
         />
-      </a-form-model-item>
-      <a-form-model-item label="货位编码">
-        <a-input
-          v-model="form.LocationCode"
-          placeholder="请输入货位编码"
-          @blur="
-          () => {
-            
-          }
-        "
-        >
-          <a-button slot="suffix" type="link">自动获取</a-button>
-        </a-input>
       </a-form-model-item>
       <a-form-model-item label="批次编码">
         <a-input
@@ -146,10 +142,54 @@
         "
         />
       </a-form-model-item>
+      <a-form-model-item label="含税单价">
+        <a-input
+          v-model="form.TaxIncludedUnitPrice"
+          placeholder="请输入含税单价"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="税率">
+        <a-input
+          v-model="form.TaxRate"
+          placeholder="请输入税率"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
       <a-form-model-item label="金额">
         <a-input
           v-model="form.Amount"
           placeholder="请输入金额"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="含税金额">
+        <a-input
+          v-model="form.TaxIncludedAmount"
+          placeholder="请输入金额"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="税额">
+        <a-input
+          v-model="form.Tax"
+          placeholder="请输入税额"
           @blur="
           () => {
             
@@ -181,21 +221,24 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        RequisitionCode: '', //调拨单编码
-        SourceWarehouseCode: '', //源仓库编码
-        TargetWarehouseCode: '', //目标仓库编码
+        WorkTimeReportApplicationCode: '', //报工申请单编码
         DepartmentCode: '', //部门编码
-        date: '', //日期
+        SalesmanCode: '',
+        ExpectedInWarehouseDate: '', //日期
+        ExpectedInWarehouseCode:'',
         InventoryCode: '', //存货编码
         InventoryName: '', //存货名称
-        LocationCode: '', //货位编码
         BatchCode: '', //批次编码
         Quantity: '', //数量
         Unit: '', //单位
         PackingQuantity: '', //包装数量
         PackingUnit: '', //包装单位
         UnitPrice: '', //单价
-        Amount: '' //金额
+        TaxIncludedUnitPrice: '', //含税单价
+        TaxRate: '', //税率
+        Amount: '', //金额
+        TaxIncludedAmount: '', //含税金额
+        Tax: '' //税额
       },
       rules: {
         name: [

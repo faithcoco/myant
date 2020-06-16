@@ -7,23 +7,20 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="调拨单编码" required prop="coding">
-        <a-input v-model="form.RequisitionCode" placeholder="请输入调拨单编码">
+      <a-form-model-item label="装箱单编码" required prop="coding">
+        <a-input v-model="form.PackingListCode" placeholder="请输入装箱单编码">
           <a-button slot="suffix" type="link">自动获取</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="源仓库编码" prop="name">
+      <a-form-model-item ref="name" label="装箱仓库编码" prop="name">
         <a-input
-          v-model="form.SourceWarehouseCode"
-          placeholder="请输入源仓库编码"
+          v-model="form.PackingWarehouseCode"
+          placeholder="请输入装箱仓库编码"
           @blur="
           () => {
             
           }"
         />
-      </a-form-model-item>
-      <a-form-model-item label="目标仓库编码" prop="code">
-        <a-input v-model="form.TargetWarehouseCode" placeholder="请输入目标仓库编码" />
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码">
         <a-input
@@ -36,14 +33,32 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="调拨日期">
+      <a-form-model-item ref="name" label="业务员编码">
+        <a-input
+          v-model="form.SalesmanCode"
+          placeholder="请输入业务员编码"
+          @blur="
+          () => {
+         
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="装箱日期">
         <a-date-picker
-          v-model="form.date"
+          v-model="form.PackingDate"
           show-time
           type="date"
           placeholder="Pick a date"
           style="width: 100%;"
         />
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="装箱状态">
+        <a-select default-value="1" style="width: 120px" @change="handleChanges">
+          <a-select-option value="1">执行完毕</a-select-option>
+          <a-select-option value="2">未执行</a-select-option>
+          <a-select-option value="3" >手工关闭</a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item ref="name" label="存货编码">
         <a-input
@@ -66,19 +81,6 @@
           }
         "
         />
-      </a-form-model-item>
-      <a-form-model-item label="货位编码">
-        <a-input
-          v-model="form.LocationCode"
-          placeholder="请输入货位编码"
-          @blur="
-          () => {
-            
-          }
-        "
-        >
-          <a-button slot="suffix" type="link">自动获取</a-button>
-        </a-input>
       </a-form-model-item>
       <a-form-model-item label="批次编码">
         <a-input
@@ -181,21 +183,25 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        RequisitionCode: '', //调拨单编码
-        SourceWarehouseCode: '', //源仓库编码
-        TargetWarehouseCode: '', //目标仓库编码
+        PackingListCode: '',
+        PackingWarehouseCode: '',
         DepartmentCode: '', //部门编码
-        date: '', //日期
+        SalesmanCode: '',
+        PackingDate: '', //日期
+        ReturnWarehouseCode: '',
         InventoryCode: '', //存货编码
         InventoryName: '', //存货名称
-        LocationCode: '', //货位编码
         BatchCode: '', //批次编码
         Quantity: '', //数量
         Unit: '', //单位
         PackingQuantity: '', //包装数量
         PackingUnit: '', //包装单位
         UnitPrice: '', //单价
-        Amount: '' //金额
+        TaxIncludedUnitPrice: '', //含税单价
+        TaxRate: '', //税率
+        Amount: '', //金额
+        TaxIncludedAmount: '', //含税金额
+        Tax: '' //税额
       },
       rules: {
         name: [
@@ -253,6 +259,9 @@ export default {
     },
     filterOption(input, option) {
       return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    },
+    handleChanges(value) {
+      console.log(`selected ${value}`)
     }
   }
 }

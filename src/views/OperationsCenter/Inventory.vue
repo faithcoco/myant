@@ -35,7 +35,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="盘点日期">
         <a-date-picker
-          v-model="form.date"
+          v-model="form.InventoryDate"
           show-time
           type="date"
           placeholder="Pick a date"
@@ -181,7 +181,7 @@ export default {
         InventoryListCoding: '', //盘点单编码
         InventoryWarehouseCode: '',
         DepartmentCode: '', //部门编码
-        date: '', //日期
+        InventoryDate: '', //日期
         InventoryCode: '', //存货编码
         InventoryName: '', //存货名称
         LocationCode: '', //货位编码

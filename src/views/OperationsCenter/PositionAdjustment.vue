@@ -49,7 +49,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="调整日期">
         <a-date-picker
-          v-model="form.date"
+          v-model="form.AdjustmentDate"
           show-time
           type="date"
           placeholder="Pick a date"
@@ -197,7 +197,7 @@ export default {
         TargetLocationCode: '',
         DepartmentCode: '', //部门编码
         SalesmanCode:'',//业务员编码
-        date: '', //日期
+        AdjustmentDate: '', //日期
         InventoryCode: '', //存货编码
         InventoryName: '', //存货名称
         LocationCode: '', //货位编码

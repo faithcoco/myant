@@ -8,7 +8,7 @@
       :wrapper-col="wrapperCol"
     >
       <a-form-model-item label="发货通知单编码" required prop="coding">
-        <a-input v-model="form.ReturnNotificationCode" placeholder="请输入发货通知单编码">
+        <a-input v-model="form.ShippingNoticeCode" placeholder="请输入发货通知单编码">
           <a-button slot="suffix" type="link">自动获取</a-button>
         </a-input>
       </a-form-model-item>
@@ -57,19 +57,19 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="预计入库日期">
+      <a-form-model-item ref="name" label="预计退库日期">
         <a-date-picker
-          v-model="form.date"
+          v-model="form.ExpectedReturnDate"
           show-time
           type="date"
           placeholder="Pick a date"
           style="width: 100%;"
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="收货仓库编码">
+      <a-form-model-item ref="name" label="发货仓库编码">
         <a-input
-          v-model="form.ReceivingWarehouseCode"
-          placeholder="请输入收货仓库编码"
+          v-model="form.ShippingWarehouseCode"
+          placeholder="请输入发货通知单编码"
           @blur="
           () => {
             $refs.name.onFieldBlur();
@@ -179,7 +179,7 @@
       <a-form-model-item label="税率">
         <a-input
           v-model="form.TaxRate"
-          placeholder="请输入含税单价"
+          placeholder="请输入税率"
           @blur="
           () => {
             
@@ -212,7 +212,7 @@
       <a-form-model-item label="税额">
         <a-input
           v-model="form.Tax"
-          placeholder="请输入金额"
+          placeholder="请输入税额"
           @blur="
           () => {
             
@@ -244,13 +244,13 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        ReturnNotificationCode: '', //发货通知单编码
+        ShippingNoticeCode: '', //发货通知单编码
         CustomerCode: '',
         ContactCode: '',
         DepartmentCode: '', //部门编码
         SalesmanCode: '',
-        date: '', //日期
-        ReceivingWarehouseCode: '',
+        ExpectedReturnDate: '', //日期
+        ShippingWarehouseCode:'',
         InventoryCode: '', //存货编码
         InventoryName: '', //存货名称
         BatchCode: '', //批次编码

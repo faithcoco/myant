@@ -9,7 +9,7 @@
 
     <h2># Trend 组件 </h2>
 
-    <a-divider> 正常1805 </a-divider>
+    <a-divider> 正常</a-divider>
 
     <a-card>
 

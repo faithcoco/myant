@@ -80,7 +80,7 @@
       </a-form-model-item>
 
       <a-form-model-item label="出库产品" prop="product">
-        <a href>+选择产品</a>
+      
         <a-input
           v-model="form.product"
           placeholder="请输入产品编码"
@@ -89,7 +89,9 @@
             
           }
         "
-        ></a-input>
+        >
+        <a-button slot="suffix" type="link">选择</a-button>
+        </a-input>
       </a-form-model-item>
       <a-form-model-item label="备注">
         <a-input

@@ -39,13 +39,8 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
-        <a-descriptions-item label="领料申请单编码">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="部门编码">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="业务员编码">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="预计出库日期">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="预计出库仓库编码">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="存货编码">{{product.purchase_unit_price}}</a-descriptions-item>
-         <a-descriptions-item label="存货名称">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="存货编码">{{product.name }}</a-descriptions-item>
+        <a-descriptions-item label="仓库编码">{{product.code}}</a-descriptions-item>
          <a-descriptions-item label="货位编码">{{product.purchase_unit_price}}</a-descriptions-item>
          <a-descriptions-item label="批次编码">{{product.purchase_unit_price}}</a-descriptions-item>
          <a-descriptions-item label="数量">{{product.purchase_unit_price}}</a-descriptions-item>
@@ -91,7 +86,7 @@ Vue.use(Transfer)
 const columns = [
   {
     key: '0',
-    title: '领料申请单编码',
+    title: '存货编码',
     dataIndex: 'name',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
@@ -99,7 +94,7 @@ const columns = [
   },
   {
     key: '1',
-    title: '部门编码',
+    title: '仓库编码',
     dataIndex: 'code',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.name - b.name
@@ -107,57 +102,22 @@ const columns = [
 
   {
     key: '2',
-    title: '业务员编码',
+    title: '货位编码',
     dataIndex: 'type',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '预计出库日期',
+    title: '批次编码',
     dataIndex: 'unit',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '预计出库仓库编码',
-    dataIndex: 'sales_unit_price',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '5',
-    title: '存货编码',
-    dataIndex: 'purchase_unit_price',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-    {
-    key: '5',
-    title: '存货名称',
-    dataIndex: 'purchase_unit_price',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-    {
-    key: '5',
-    title: '货位编码',
-    dataIndex: 'purchase_unit_price',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-    {
-    key: '5',
-    title: '批次编码',
-    dataIndex: 'purchase_unit_price',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-    {
-    key: '5',
     title: '数量',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'sales_unit_price',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },

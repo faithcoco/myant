@@ -7,71 +7,18 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="领料申请单编码" required prop="coding">
+      <a-form-model-item label="存货编码" required prop="coding">
         <a-input v-model="form.PickingApplicationCode" placeholder="请输入领料申请单编码">
           <a-button slot="suffix" type="link">自动获取</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="部门编码">
+      <a-form-model-item ref="name" label="仓库编码">
         <a-input
           v-model="form.DepartmentCode"
           placeholder="请输入部门编码"
           @blur="
           () => {
          
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="业务员编码">
-        <a-input
-          v-model="form.SalesmanCode"
-          placeholder="请输入业务员编码"
-          @blur="
-          () => {
-         
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="预计出库日期">
-        <a-date-picker
-          v-model="form.ExpectedOutWarehouseDate"
-          show-time
-          type="date"
-          placeholder="Pick a date"
-          style="width: 100%;"
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="预计出库仓库编码">
-        <a-input
-          v-model="form.ExpectedOutWarehouseCode"
-          placeholder="请输入预计出库仓库编码"
-          @blur="
-          () => {
-            $refs.name.onFieldBlur();
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="存货编码">
-        <a-input
-          v-model="form.InventoryCode"
-          placeholder="请输入存货编码"
-          @blur="
-          () => {
-            $refs.name.onFieldBlur();
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="存货名称">
-        <a-input
-          v-model="form.InventoryName"
-          placeholder="请输入存货名称"
-          @blur="
-          () => {
-            
           }
         "
         />

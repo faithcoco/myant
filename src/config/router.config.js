@@ -70,13 +70,13 @@ export const asyncRouterMap = [
         name: 'StorageManagement',
         meta: { title: '入库管理', icon: 'user', permission: ['dashboard'] },
         component: () => import(/* webpackChunkName: "fail" */ '@/views/StorageManagement.vue')
-        
+
       }, {
         path: 'OutManagement',
         name: 'OutManagement',
         component: () => import(/* webpackChunkName: "fail" */ '@/views/OutManagement.vue'),
         meta: { title: '出库管理', icon: 'user', permission: ['dashboard'] },
-      }, 
+      },
 
       /////////////////////////////////////
       {
@@ -297,58 +297,8 @@ export const asyncRouterMap = [
         name: 'xxzx',
         component: RouteView,
         meta: { title: '消息中心', icon: 'user', permission: ['dashboard'] },
-        children: [
-          {
-            path: 'MyApproval',
-            name: 'MyApproval',
-            component: RouteView,
-            // component: () => import(/* webpackChunkName: "fail" */ '@/views/informationCenter/ApprovalAgency.vue'),
-            redirect: '/informationCenter/MyApproval/Undone',
-            meta: { title: '审批待办', permission: ['dashboard'] },
-            children: [
-              {
-                path: 'Undone',
-                name: 'Undone',
-                component: () =>
-                  import(/* webpackChunkName: "fail" */ '@/views/informationCenter/MyApproval/Undone.vue'),
-                meta: { title: '待我处理', permission: ['dashboard'] }
-              },
-              {
-                path: 'Completed',
-                name: 'Completed',
-                component: () =>
-                  import(/* webpackChunkName: "fail" */ '@/views/informationCenter/MyApproval/Completed.vue'),
-                meta: { title: '我已处理', permission: ['dashboard'] }
-              },
-              {
-                path: 'Initiate',
-                name: 'Initiate',
-                component: () =>
-                  import(/* webpackChunkName: "fail" */ '@/views/informationCenter/MyApproval/Initiate.vue'),
-                meta: { title: '我发起的', permission: ['dashboard'] }
-              },
-              {
-                path: 'GiveMe',
-                name: 'GiveMe',
-                component: () =>
-                  import(/* webpackChunkName: "fail" */ '@/views/informationCenter/MyApproval/GiveMe.vue'),
-                meta: { title: '抄送我的', permission: ['dashboard'] }
-              }
-            ]
-          },
-          {
-            path: 'ContractNews',
-            name: 'ContractNews',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/informationCenter/ContractNews.vue'),
-            meta: { title: '合同动态', permission: ['dashboard'] }
-          },
-          {
-            path: 'SystemNotification',
-            name: 'SystemNotification',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/informationCenter/SystemNotification.vue'),
-            meta: { title: '系统通知', permission: ['dashboard'] }
-          }
-        ]
+        component: () => import(/* webpackChunkName: "fail" */ '@/views/MessageCenter.vue'),
+      
       },
       {
         path: '/other',

@@ -290,7 +290,21 @@ export const asyncRouterMap = [
         path: 'ybp',
         name: 'ybp',
         component: RouteView,
-        meta: { title: '仪表盘', icon: 'user', permission: ['dashboard'] }
+        meta: { title: '仪表盘', icon: 'user', permission: ['dashboard'] },
+        children: [
+          {
+            path: 'ShippingPlan',
+            name: 'ShippingPlan',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/dashboard/ShippingPlan.vue'),
+            meta: { title: '发货计划', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'ReceiptPlan',
+            name: 'ReceiptPlan',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/dashboard/ReceiptPlan.vue'),
+            meta: { title: '收货计划', icon: 'user', permission: ['dashboard'] }
+          }
+        ]
       },
       {
         path: 'xxzx',

@@ -1,0 +1,184 @@
+<template>
+  <a-card>
+  <a-form-model
+    ref="ruleForm"
+    :model="form"
+    :rules="rules"
+    :label-col="labelCol"
+    :wrapper-col="wrapperCol"
+  >
+    <a-form-model-item label="联系人编码" required prop="date1">
+      <a-input placeholder="请输入联系人编码" >
+        <a-button slot="suffix" type="link">自动获取</a-button>
+      </a-input>
+    </a-form-model-item>
+    <a-form-model-item ref="name" label="联系人名称" prop="name">
+      <a-input
+        v-model="form.name"
+        placeholder="请输入联系人名称"
+        @blur="
+          () => {
+            
+          }"
+      />
+    </a-form-model-item>
+    <a-form-model-item  label="客户或供应商" prop="code">
+      <a-input
+        v-model="form.code"
+        placeholder="请输入客户或供应商"
+       
+      />
+    </a-form-model-item>
+    <a-form-model-item ref="name" label="关联公司">
+      <a-input
+        v-model="form.name"
+        placeholder="请输入关联公司"
+        @blur="
+          () => {
+         
+          }
+        "
+      />
+    </a-form-model-item>
+    <a-form-model-item ref="name" label="联系电话" >
+      <a-input
+        v-model="form.name"
+        placeholder="请输入联系电话"
+        @blur="
+          () => {
+          
+         
+          }
+        "
+      />
+    </a-form-model-item>
+    <a-form-model-item label="职务" >
+      <a-select
+        show-search
+        placeholder="请选择职务"
+        option-filter-prop="children"
+        :filter-option="filterOption"
+        @focus="handleFocus"
+        @blur="handleBlur"
+        @change="handleSearchChange"
+      >
+        <a-select-option value="jack">专用设备</a-select-option>
+        <a-select-option value="lucy">芯片</a-select-option>
+        <a-select-option value="tom">汽车零部件</a-select-option>
+      </a-select>
+    </a-form-model-item>
+    <a-form-model-item ref="name" label="部门" >
+      <a-input
+        v-model="form.price"
+        placeholder="请输入部门"
+        @blur="
+          () => {
+            $refs.name.onFieldBlur();
+          }
+        "
+      />
+    </a-form-model-item>
+    <a-form-model-item ref="name" label="地址" >
+      <a-input
+        v-model="form.name"
+        placeholder="请输入地址"
+        @blur="
+          () => {
+            
+          }
+        "
+      />
+    </a-form-model-item>
+    <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
+      <a-button type="primary" @click="onSubmit">保存</a-button>
+      <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
+    </a-form-model-item>
+  </a-form-model>
+  </a-card>
+</template>
+<script>
+import Vue from 'vue'
+import { formModel, Button } from 'ant-design-vue'
+Vue.use(formModel, Button)
+
+export default {
+  data () {
+    return {
+      headers: {
+        authorization: 'authorization-text'
+      },
+      size: 'small',
+      labelCol: { span: 4 },
+      wrapperCol: { span: 14 },
+      other: '',
+      form: {
+        name: '',
+        region: undefined,
+        date1: undefined,
+        delivery: false,
+        type: [],
+        resource: '',
+        desc: '',
+        code:'',
+        price:''
+      },
+      rules: {
+        name: [
+          { required: true, message: '请输入产品编码', trigger: 'blur' },
+          { min: 1, max: 3, message: '', trigger: 'blur' }
+        ],
+        region: [{ required: true, message: '', trigger: 'change' }],
+        date1: [{ required: true, message: '', trigger: 'change' }],
+        type: [
+          {
+            type: 'array',
+            required: true,
+            message: 'Please select at least one activity type',
+            trigger: 'change'
+          }
+        ],
+        resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
+        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
+      }
+    }
+  },
+  methods: {
+    handleChange (info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList)
+      }
+      if (info.file.status === 'done') {
+        this.$message.success(`${info.file.name} file uploaded successfully`)
+      } else if (info.file.status === 'error') {
+        this.$message.error(`${info.file.name} file upload failed.`)
+      }
+    },
+    handleSearchChange (value) {
+      console.log(`selected ${value}`)
+    },
+    onSubmit () {
+      this.$refs.ruleForm.validate(valid => {
+           console.log('name--->',this.form)
+        if (valid) {
+          alert('submit!')
+        } else {
+          console.log('error submit!!')
+          return false
+        }
+      })
+    },
+    resetForm () {
+      this.$refs.ruleForm.resetFields()
+    },
+    handleBlur () {
+      console.log('blur')
+    },
+    handleFocus () {
+      console.log('focus')
+    },
+    filterOption (input, option) {
+      return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    }
+  }
+}
+</script>

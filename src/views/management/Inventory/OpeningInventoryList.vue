@@ -16,7 +16,14 @@
           </span>
         </a-col>
       </a-row>
-      <a-table :row-selection="rowSelection" :columns="targetTitle" :data-source="data">
+      <a-table
+        :row-selection="rowSelection"
+        :columns="targetTitle"
+        :data-source="data"
+        bordered
+        size="middle"
+        :scroll="{ x: 'calc(400px + 50%)', y: 400 }"
+      >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
         <span slot="action" slot-scope="text, record">
           <template>
@@ -41,10 +48,10 @@
       <a-descriptions title :column="1">
         <a-descriptions-item label="存货编码">{{product.name }}</a-descriptions-item>
         <a-descriptions-item label="仓库编码">{{product.code}}</a-descriptions-item>
-         <a-descriptions-item label="货位编码">{{product.purchase_unit_price}}</a-descriptions-item>
-         <a-descriptions-item label="批次编码">{{product.purchase_unit_price}}</a-descriptions-item>
-         <a-descriptions-item label="数量">{{product.purchase_unit_price}}</a-descriptions-item>
-         <a-descriptions-item label="计量单位">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="货位编码">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="批次编码">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="数量">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="计量单位">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="包装数量">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="包装单位">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="单价">{{product.purchase_unit_price}}</a-descriptions-item>
@@ -121,35 +128,35 @@ const columns = [
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '5',
     title: '计量单位',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '5',
     title: '包装数量',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '5',
     title: '包装单位',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '5',
     title: '单价',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '5',
     title: '金额',
     dataIndex: 'purchase_unit_price',

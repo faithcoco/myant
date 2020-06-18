@@ -16,7 +16,14 @@
           </span>
         </a-col>
       </a-row>
-      <a-table :row-selection="rowSelection" :columns="targetTitle" :data-source="data">
+      <a-table
+        :row-selection="rowSelection"
+        :columns="targetTitle"
+        :data-source="data"
+        bordered
+        size="middle"
+        :scroll="{ x: 'calc(1200px + 50%)', y: 400 }"
+      >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
         <span slot="action" slot-scope="text, record">
           <template>
@@ -48,7 +55,7 @@
         <a-descriptions-item label="收货仓库编码">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="存货编码">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="存货名称">{{product.sales_unit_price}}</a-descriptions-item>
-       <a-descriptions-item label="批次编码">{{product.sales_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="批次编码">{{product.sales_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="数量">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="计量单位">{{product.sales_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="包装数量">{{product.purchase_unit_price}}</a-descriptions-item>
@@ -57,8 +64,8 @@
         <a-descriptions-item label="含税单价">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="税率">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="金额">{{product.purchase_unit_price}}</a-descriptions-item>
-         <a-descriptions-item label="含税金额">{{product.purchase_unit_price}}</a-descriptions-item>
-         <a-descriptions-item label="税额">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="含税金额">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="税额">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -131,14 +138,14 @@ const columns = [
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '5',
     title: '预计入库日期',
     dataIndex: 'sales_unit_price',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
-      {
+  {
     key: '6',
     title: '收货仓库编码',
     dataIndex: 'sales_unit_price',
@@ -229,7 +236,7 @@ const columns = [
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '19',
     title: '税额',
     dataIndex: 'purchase_unit_price',

@@ -16,7 +16,14 @@
           </span>
         </a-col>
       </a-row>
-      <a-table :row-selection="rowSelection" :columns="targetTitle" :data-source="data">
+      <a-table
+        :row-selection="rowSelection"
+        :columns="targetTitle"
+        :data-source="data"
+        bordered
+        size="middle"
+        :scroll="{ x: 'calc(700px + 50%)', y: 400 }"
+      >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
         <span slot="action" slot-scope="text, record">
           <template>
@@ -41,7 +48,7 @@
       <a-descriptions title :column="1">
         <a-descriptions-item label="盘点单编码">{{product.name }}</a-descriptions-item>
         <a-descriptions-item label="盘点仓库编码">{{product.code}}</a-descriptions-item>
-       <a-descriptions-item label="部门编码">{{product.unit}}</a-descriptions-item>
+        <a-descriptions-item label="部门编码">{{product.unit}}</a-descriptions-item>
         <a-descriptions-item label="盘点日期">{{product.sales_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="存货编码">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="存货名称">{{product.sales_unit_price}}</a-descriptions-item>
@@ -52,7 +59,7 @@
         <a-descriptions-item label="包装数量">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="包装单位">{{product.sales_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="单价">{{product.purchase_unit_price}}</a-descriptions-item>
-         <a-descriptions-item label="金额">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="金额">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -93,6 +100,7 @@ const columns = [
     title: '盘点单编码',
     dataIndex: 'name',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
@@ -101,6 +109,7 @@ const columns = [
     title: '盘点仓库编码',
     dataIndex: 'code',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.name - b.name
   },
   {
@@ -108,6 +117,7 @@ const columns = [
     title: '部门编码',
     dataIndex: 'unit',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -115,6 +125,7 @@ const columns = [
     title: '盘点日期',
     dataIndex: 'sales_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -122,69 +133,79 @@ const columns = [
     title: '存货编码',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '5',
     title: '存货名称',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '6',
     title: '货位编码',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '7',
     title: '批次编码',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '8',
     title: '数量',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '9',
     title: '计量单位',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '10',
     title: '包装数量',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
-      {
+  {
     key: '11',
     title: '包装单位',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
-      {
+  {
     key: '12',
     title: '单价',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
-      {
+  {
     key: '13',
     title: '金额',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -192,6 +213,7 @@ const columns = [
     title: '操作',
     dataIndex: 'action',
     width: '150px',
+    width: 100,
     scopedSlots: { customRender: 'action' }
   }
 ]

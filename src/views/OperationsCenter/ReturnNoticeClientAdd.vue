@@ -8,35 +8,47 @@
       :wrapper-col="wrapperCol"
     >
       <a-form-model-item label="发货通知单编码" required prop="coding">
-        <a-input v-model="form.ShippingNoticeCode" placeholder="请输入发货通知单编码">
+        <!-- <a-input v-model="form.ShippingNoticeCode" placeholder="请输入发货通知单编码">
           <a-button slot="suffix" type="link">自动获取</a-button>
-        </a-input>
+        </a-input>-->
+        <a-table :columns="columns" :data-source="data" :pagination="false">
+          <a slot="name" slot-scope="text">{{ text }}</a>
+        </a-table>
       </a-form-model-item>
       <a-form-model-item ref="name" label="客户编码" prop="name">
-        <a-input
+        <!-- <a-input
           v-model="form.CustomerCode"
           placeholder="请输入客户编码"
           @blur="
           () => {
             
           }"
-        />
+        />-->
+        <a-table :columns="columns" :data-source="data" :pagination="false">
+          <a slot="name" slot-scope="text">{{ text }}</a>
+        </a-table>
       </a-form-model-item>
       <a-form-model-item ref="name" label="客户地址编码" prop="name">
-        <a-input
+        <!-- <a-input
           v-model="form.CustomerAddressCode"
           placeholder="请输入客户地址编码"
           @blur="
           () => {
             
           }"
-        />
+        />-->
+        <a-table :columns="columns" :data-source="data" :pagination="false">
+          <a slot="name" slot-scope="text">{{ text }}</a>
+        </a-table>
       </a-form-model-item>
       <a-form-model-item label="联系人编码" prop="code">
-        <a-input v-model="form.ContactCode" placeholder="请输入联系人编码" />
+        <!-- <a-input v-model="form.ContactCode" placeholder="请输入联系人编码" /> -->
+        <a-table :columns="columns" :data-source="data" :pagination="false">
+          <a slot="name" slot-scope="text">{{ text }}</a>
+        </a-table>
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码">
-        <a-input
+        <!-- <a-input
           v-model="form.DepartmentCode"
           placeholder="请输入部门编码"
           @blur="
@@ -44,10 +56,13 @@
          
           }
         "
-        />
+        />-->
+        <a-table :columns="columns" :data-source="data" :pagination="false">
+          <a slot="name" slot-scope="text">{{ text }}</a>
+        </a-table>
       </a-form-model-item>
       <a-form-model-item ref="name" label="业务员编码">
-        <a-input
+        <!-- <a-input
           v-model="form.SalesmanCode"
           placeholder="请输入业务员编码"
           @blur="
@@ -55,7 +70,10 @@
          
           }
         "
-        />
+        />-->
+        <a-table :columns="columns" :data-source="data" :pagination="false">
+          <a slot="name" slot-scope="text">{{ text }}</a>
+        </a-table>
       </a-form-model-item>
       <a-form-model-item ref="name" label="预计退库日期">
         <a-date-picker
@@ -67,7 +85,7 @@
         />
       </a-form-model-item>
       <a-form-model-item ref="name" label="发货仓库编码">
-        <a-input
+        <!-- <a-input
           v-model="form.ShippingWarehouseCode"
           placeholder="请输入发货通知单编码"
           @blur="
@@ -75,10 +93,13 @@
             $refs.name.onFieldBlur();
           }
         "
-        />
+        />-->
+        <a-table :columns="columns" :data-source="data" :pagination="false">
+          <a slot="name" slot-scope="text">{{ text }}</a>
+        </a-table>
       </a-form-model-item>
       <a-form-model-item ref="name" label="存货编码">
-        <a-input
+        <!-- <a-input
           v-model="form.InventoryCode"
           placeholder="请输入存货编码"
           @blur="
@@ -86,7 +107,10 @@
             $refs.name.onFieldBlur();
           }
         "
-        />
+        />-->
+        <a-table :columns="columns" :data-source="data" :pagination="false">
+          <a slot="name" slot-scope="text">{{ text }}</a>
+        </a-table>
       </a-form-model-item>
       <a-form-model-item ref="name" label="存货名称">
         <a-input
@@ -100,7 +124,7 @@
         />
       </a-form-model-item>
       <a-form-model-item label="批次编码">
-        <a-input
+        <!-- <a-input
           v-model="form.BatchCode"
           placeholder="请输入批次编码"
           @blur="
@@ -108,7 +132,10 @@
             
           }
         "
-        />
+        />-->
+        <a-table :columns="columns" :data-source="data" :pagination="false">
+          <a slot="name" slot-scope="text">{{ text }}</a>
+        </a-table>
       </a-form-model-item>
       <a-form-model-item label="数量">
         <a-input
@@ -233,9 +260,74 @@ import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
 
+const columns = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+    scopedSlots: { customRender: 'name' }
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    key: 'age',
+    width: 80
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address',
+    key: 'address 1',
+    ellipsis: true
+  },
+  {
+    title: 'Long Column Long Column Long Column',
+    dataIndex: 'address',
+    key: 'address 2',
+    ellipsis: true
+  },
+  {
+    title: 'Long Column Long Column',
+    dataIndex: 'address',
+    key: 'address 3',
+    ellipsis: true
+  },
+  {
+    title: 'Long Column',
+    dataIndex: 'address',
+    key: 'address 4',
+    ellipsis: true
+  }
+]
+
+const data = [
+  {
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
+    tags: ['nice', 'developer']
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
+    tags: ['loser']
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
+    tags: ['cool', 'teacher']
+  }
+]
+
 export default {
   data() {
     return {
+      data,
+      columns,
       headers: {
         authorization: 'authorization-text'
       },
@@ -250,7 +342,7 @@ export default {
         DepartmentCode: '', //部门编码
         SalesmanCode: '',
         ExpectedReturnDate: '', //日期
-        ShippingWarehouseCode:'',
+        ShippingWarehouseCode: '',
         InventoryCode: '', //存货编码
         InventoryName: '', //存货名称
         BatchCode: '', //批次编码

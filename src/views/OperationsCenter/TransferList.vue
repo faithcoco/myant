@@ -16,7 +16,13 @@
           </span>
         </a-col>
       </a-row>
-      <a-table :row-selection="rowSelection" :columns="targetTitle" :data-source="data">
+      <a-table
+        :row-selection="rowSelection"
+        :columns="targetTitle"
+        :data-source="data"
+        bordered
+        :scroll="{ x: 'calc(700px + 50%)', y: 400 }"
+      >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
         <span slot="action" slot-scope="text, record">
           <template>
@@ -53,7 +59,7 @@
         <a-descriptions-item label="包装数量">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="包装单位">{{product.sales_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="单价">{{product.purchase_unit_price}}</a-descriptions-item>
-         <a-descriptions-item label="金额">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="金额">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -95,13 +101,15 @@ const columns = [
     dataIndex: 'name',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
-    scopedSlots: { customRender: 'name' }
+    width: 110,
+    scopedSlots: { customRender: 'name' }//
   },
   {
     key: '1',
     title: '源仓库编码',
     dataIndex: 'code',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.name - b.name
   },
 
@@ -110,6 +118,7 @@ const columns = [
     title: '目标仓库编码',
     dataIndex: 'type',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -117,6 +126,7 @@ const columns = [
     title: '部门编码',
     dataIndex: 'unit',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -124,6 +134,7 @@ const columns = [
     title: '调拨日期',
     dataIndex: 'sales_unit_price',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -131,69 +142,79 @@ const columns = [
     title: '存货编码',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '6',
     title: '存货名称',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '7',
     title: '货位编码',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '8',
     title: '批次编码',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '9',
     title: '数量',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '10',
     title: '计量单位',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '11',
     title: '包装数量',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
-      {
+  {
     key: '12',
     title: '包装单位',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
-      {
+  {
     key: '13',
     title: '单价',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
-      {
+  {
     key: '14',
     title: '金额',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -201,6 +222,7 @@ const columns = [
     title: '操作',
     dataIndex: 'action',
     width: '150px',
+    width: 110,
     scopedSlots: { customRender: 'action' }
   }
 ]

@@ -16,7 +16,14 @@
           </span>
         </a-col>
       </a-row>
-      <a-table :row-selection="rowSelection" :columns="targetTitle" :data-source="data">
+      <a-table
+        :row-selection="rowSelection"
+        :columns="targetTitle"
+        :data-source="data"
+        bordered
+        size="middle"
+        :scroll="{ x: 'calc(500px + 50%)', y: 400 }"
+      >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
         <span slot="action" slot-scope="text, record">
           <template>
@@ -126,14 +133,14 @@ const columns = [
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '6',
     title: '部门',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
-    {
+  {
     key: '7',
     title: '地址',
     dataIndex: 'purchase_unit_price',

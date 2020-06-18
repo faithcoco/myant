@@ -1,113 +1,109 @@
 <template>
   <a-card>
-  <a-form-model
-    ref="ruleForm"
-    :model="form"
-    :rules="rules"
-    :label-col="labelCol"
-    :wrapper-col="wrapperCol"
-  >
-    <a-form-model-item label="产品编码" required prop="date1">
-      <a-input placeholder="请输入产品编码" >
-        <a-button slot="suffix" type="link">自动获取</a-button>
-      </a-input>
-    </a-form-model-item>
-    <a-form-model-item ref="name" label="产品名称" prop="name">
-      <a-input
-        v-model="form.name"
-        placeholder="请输入产品名称"
-        @blur="
+    <a-form-model
+      ref="ruleForm"
+      :model="form"
+      :rules="rules"
+      :label-col="labelCol"
+      :wrapper-col="wrapperCol"
+    >
+      <a-form-model-item label="产品编码" required prop="date1">
+        <a-table :columns="columns" :data-source="data"  :pagination="false">
+          <a slot="name" slot-scope="text">{{ text }}</a>
+        </a-table>
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="产品名称" prop="name">
+        <a-input
+          v-model="form.name"
+          placeholder="请输入产品名称"
+          @blur="
           () => {
             
           }"
-      />
-    </a-form-model-item>
-    <a-form-model-item  label="产品条码" prop="code">
-      <a-input
-        v-model="form.code"
-        placeholder="请输入产品条码"
-       
-      />
-    </a-form-model-item>
-    <a-form-model-item ref="name" label="规格型号">
-      <a-input
-        v-model="form.name"
-        placeholder="请输入规格型号"
-        @blur="
+        />
+      </a-form-model-item>
+      <a-form-model-item label="产品条码" prop="code">
+        <a-input v-model="form.code" placeholder="请输入产品条码" />
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="规格型号">
+        <a-input
+          v-model="form.name"
+          placeholder="请输入规格型号"
+          @blur="
           () => {
          
           }
         "
-      />
-    </a-form-model-item>
-    <a-form-model-item ref="name" label="计量单位" >
-      <a-input
-        v-model="form.name"
-        placeholder="请输入计量单位"
-        @blur="
+        />
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="计量单位">
+        <a-input
+          v-model="form.name"
+          placeholder="请输入计量单位"
+          @blur="
           () => {
           
          
           }
         "
-      />
-    </a-form-model-item>
-    <a-form-model-item label="产品分类" >
-      <a-select
-        show-search
-        placeholder="请选择产品分类"
-        option-filter-prop="children"
-        :filter-option="filterOption"
-        @focus="handleFocus"
-        @blur="handleBlur"
-        @change="handleSearchChange"
-      >
-        <a-select-option value="jack">专用设备</a-select-option>
-        <a-select-option value="lucy">芯片</a-select-option>
-        <a-select-option value="tom">汽车零部件</a-select-option>
-      </a-select>
-    </a-form-model-item>
-    <a-form-model-item ref="name" label="销售单价" >
-      <a-input
-        v-model="form.price"
-        placeholder="请输入销售单价"
-        @blur="
+        />
+      </a-form-model-item>
+      <a-form-model-item label="产品分类">
+        <a-select
+          show-search
+          placeholder="请选择产品分类"
+          option-filter-prop="children"
+          :filter-option="filterOption"
+          @focus="handleFocus"
+          @blur="handleBlur"
+          @change="handleSearchChange"
+        >
+          <a-select-option value="jack">专用设备</a-select-option>
+          <a-select-option value="lucy">芯片</a-select-option>
+          <a-select-option value="tom">汽车零部件</a-select-option>
+        </a-select>
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="销售单价">
+        <a-input
+          v-model="form.price"
+          placeholder="请输入销售单价"
+          @blur="
           () => {
             $refs.name.onFieldBlur();
           }
         "
-      />
-    </a-form-model-item>
-    <a-form-model-item ref="name" label="采购单价" >
-      <a-input
-        v-model="form.name"
-        placeholder="请输入采购单价"
-        @blur="
+        />
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="采购单价">
+        <a-input
+          v-model="form.name"
+          placeholder="请输入采购单价"
+          @blur="
           () => {
             
           }
         "
-      />
-    </a-form-model-item>
-    <a-form-model-item label="产品说明" >
-      <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
-    </a-form-model-item>
-    <a-form-model-item label="附件" >
-      <a-upload
-        name="file"
-        :multiple="true"
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        :headers="headers"
-        @change="handleChange"
-      >
-        <a-button type="link" :size="size">添加附件</a-button>
-      </a-upload>
-    </a-form-model-item>
-    <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-      <a-button type="primary" @click="onSubmit">保存</a-button>
-      <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
-    </a-form-model-item>
-  </a-form-model>
+        />
+      </a-form-model-item>
+      <a-form-model-item label="产品说明">
+        <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
+      </a-form-model-item>
+      <a-form-model-item label="附件">
+        <a-upload
+          name="file"
+          :multiple="true"
+          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+          :headers="headers"
+          @change="handleChange"
+        >
+          <a-button type="link" :size="size">添加附件</a-button>
+        </a-upload>
+      </a-form-model-item>
+      <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
+        <a-button type="primary" @click="onSubmit">保存</a-button>
+        <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
+      </a-form-model-item>
+    </a-form-model>
   </a-card>
 </template>
 <script>
@@ -115,9 +111,75 @@ import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
 
+const columns = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+    scopedSlots: { customRender: 'name' }
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    key: 'age',
+    width: 80
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address',
+    key: 'address 1',
+    ellipsis: true
+  },
+  {
+    title: 'Long Column Long Column Long Column',
+    dataIndex: 'address',
+    key: 'address 2',
+    ellipsis: true
+  },
+  {
+    title: 'Long Column Long Column',
+    dataIndex: 'address',
+    key: 'address 3',
+    ellipsis: true
+  },
+  {
+    title: 'Long Column',
+    dataIndex: 'address',
+    key: 'address 4',
+    ellipsis: true
+  }
+]
+
+const data = [
+  {
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
+    tags: ['nice', 'developer']
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
+    tags: ['loser']
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
+    tags: ['cool', 'teacher']
+  }
+]
+
 export default {
-  data () {
+  data() {
     return {
+      data,
+      columns,
+
       headers: {
         authorization: 'authorization-text'
       },
@@ -133,8 +195,8 @@ export default {
         type: [],
         resource: '',
         desc: '',
-        code:'',
-        price:''
+        code: '',
+        price: ''
       },
       rules: {
         name: [
@@ -157,7 +219,7 @@ export default {
     }
   },
   methods: {
-    handleChange (info) {
+    handleChange(info) {
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList)
       }
@@ -167,12 +229,12 @@ export default {
         this.$message.error(`${info.file.name} file upload failed.`)
       }
     },
-    handleSearchChange (value) {
+    handleSearchChange(value) {
       console.log(`selected ${value}`)
     },
-    onSubmit () {
+    onSubmit() {
       this.$refs.ruleForm.validate(valid => {
-           console.log('name--->',this.form)
+        console.log('name--->', this.form)
         if (valid) {
           alert('submit!')
         } else {
@@ -181,16 +243,16 @@ export default {
         }
       })
     },
-    resetForm () {
+    resetForm() {
       this.$refs.ruleForm.resetFields()
     },
-    handleBlur () {
+    handleBlur() {
       console.log('blur')
     },
-    handleFocus () {
+    handleFocus() {
       console.log('focus')
     },
-    filterOption (input, option) {
+    filterOption(input, option) {
       return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
     }
   }

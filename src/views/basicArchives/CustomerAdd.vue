@@ -18,9 +18,9 @@
         />
       </a-form-model-item>
       <a-form-model-item label="客户编号" prop="date1">
-        <a-input placeholder="请输入客户编号">
-          <a-button slot="suffix" type="link">自动获取</a-button>
-        </a-input>
+        <a-table :columns="columns" :data-source="data" :pagination="false">
+          <a slot="name" slot-scope="text">{{ text }}</a>
+        </a-table>
       </a-form-model-item>
       <a-form-model-item label="客户性质" prop="code">
         <a-input v-model="form.code" placeholder="请输入客户性质" />
@@ -107,9 +107,75 @@ import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
 
+const columns = [
+  {
+    title: 'Name',
+    dataIndex: 'name',
+    key: 'name',
+    scopedSlots: { customRender: 'name' }
+  },
+  {
+    title: 'Age',
+    dataIndex: 'age',
+    key: 'age',
+    width: 80
+  },
+  {
+    title: 'Address',
+    dataIndex: 'address',
+    key: 'address 1',
+    ellipsis: true
+  },
+  {
+    title: 'Long Column Long Column Long Column',
+    dataIndex: 'address',
+    key: 'address 2',
+    ellipsis: true
+  },
+  {
+    title: 'Long Column Long Column',
+    dataIndex: 'address',
+    key: 'address 3',
+    ellipsis: true
+  },
+  {
+    title: 'Long Column',
+    dataIndex: 'address',
+    key: 'address 4',
+    ellipsis: true
+  }
+]
+
+const data = [
+  {
+    key: '1',
+    name: 'John Brown',
+    age: 32,
+    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
+    tags: ['nice', 'developer']
+  },
+  {
+    key: '2',
+    name: 'Jim Green',
+    age: 42,
+    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
+    tags: ['loser']
+  },
+  {
+    key: '3',
+    name: 'Joe Black',
+    age: 32,
+    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
+    tags: ['cool', 'teacher']
+  }
+]
+
 export default {
   data() {
     return {
+      data,
+      columns,
+
       headers: {
         authorization: 'authorization-text'
       },

@@ -16,7 +16,14 @@
           </span>
         </a-col>
       </a-row>
-      <a-table :row-selection="rowSelection" :columns="targetTitle" :data-source="data">
+      <a-table
+        :row-selection="rowSelection"
+        :columns="targetTitle"
+        :data-source="data"
+        bordered
+        size="middle"
+        :scroll="{ x: 'calc(700px + 50%)', y: 400 }"
+      >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
         <span slot="action" slot-scope="text, record">
           <template>
@@ -47,7 +54,7 @@
         <a-descriptions-item label="负责人">{{product.unit}}</a-descriptions-item>
         <a-descriptions-item label="发票抬头">{{product.sales_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="纳税人识别号">{{product.purchase_unit_price}}</a-descriptions-item>
-         <a-descriptions-item label="开户银行">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="开户银行">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -140,7 +147,8 @@ const columns = [
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
-  },  {
+  },
+  {
     key: '8',
     title: '开户银行',
     dataIndex: 'purchase_unit_price',

@@ -8,10 +8,30 @@
       :wrapper-col="wrapperCol"
     >
       <a-form-model-item label="联系人编码" required prop="date1">
-        <a-table :columns="columns" :data-source="data" :pagination="false">
+        <a-input
+          v-model="form.name"
+          placeholder="请输入产品编码"
+          @blur="
+          () => {
+            
+          }"
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
+      </a-form-model-item>
+
+      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+        <a-table
+          :row-selection="rowSelection"
+          :columns="columns"
+          :data-source="data"
+          :pagination="false"
+          bordered
+        >
           <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
-      </a-form-model-item>
+      </a-modal>
+
       <a-form-model-item ref="name" label="联系人名称" prop="name">
         <a-input
           v-model="form.name"
@@ -97,7 +117,6 @@ import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
 
-
 const columns = [
   {
     title: 'Name',
@@ -164,6 +183,8 @@ const data = [
 export default {
   data() {
     return {
+      visible: false, ///////////////
+      selectedRowKeys: [], ////////////////////////
       data,
       columns,
       headers: {
@@ -204,6 +225,17 @@ export default {
       }
     }
   },
+  computed: {
+    rowSelection() {
+      const { selectedRowKeys } = this
+      return {
+        selectedRowKeys,
+        onChange: this.onSelectChange,
+        hideDefaultSelections: true,
+        onSelection: this.onSelection
+      }
+    }
+  },
   methods: {
     handleChange(info) {
       if (info.file.status !== 'uploading') {
@@ -240,6 +272,17 @@ export default {
     },
     filterOption(input, option) {
       return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    },
+    onSelectChange(selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys
+    },
+
+    showModal() {
+      this.visible = true
+    },
+    handleOk(e) {
+      console.log(e)
+      this.visible = false
     }
   }
 }

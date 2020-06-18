@@ -8,10 +8,30 @@
       :wrapper-col="wrapperCol"
     >
       <a-form-model-item label="产品编码" required prop="date1">
-        <a-table :columns="columns" :data-source="data"  :pagination="false">
+        <a-input
+          v-model="form.name"
+          placeholder="请输入产品编码"
+          @blur="
+          () => {
+            
+          }"
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
+      </a-form-model-item>
+
+      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+        <a-table
+          :row-selection="rowSelection"
+          :columns="columns"
+          :data-source="data"
+          :pagination="false"
+          bordered
+        >
           <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
-      </a-form-model-item>
+      </a-modal>
+
       <a-form-model-item ref="name" label="产品名称" prop="name">
         <a-input
           v-model="form.name"
@@ -113,9 +133,10 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
-    title: 'Name',
+    title: '编码',
     dataIndex: 'name',
     key: 'name',
+    width: 100,
     scopedSlots: { customRender: 'name' }
   },
   {
@@ -131,18 +152,6 @@ const columns = [
     ellipsis: true
   },
   {
-    title: 'Long Column Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 2',
-    ellipsis: true
-  },
-  {
-    title: 'Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 3',
-    ellipsis: true
-  },
-  {
     title: 'Long Column',
     dataIndex: 'address',
     key: 'address 4',
@@ -153,21 +162,21 @@ const columns = [
 const data = [
   {
     key: '1',
-    name: 'John Brown',
+    name: 'Y1001',
     age: 32,
     address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
     tags: ['nice', 'developer']
   },
   {
     key: '2',
-    name: 'Jim Green',
+    name: 'Y1002',
     age: 42,
     address: 'London No. 2 Lake Park, London No. 2 Lake Park',
     tags: ['loser']
   },
   {
     key: '3',
-    name: 'Joe Black',
+    name: 'Y1003',
     age: 32,
     address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
     tags: ['cool', 'teacher']
@@ -177,9 +186,10 @@ const data = [
 export default {
   data() {
     return {
+      visible: false,
       data,
       columns,
-
+      selectedRowKeys: [], // Check here to configure the default column
       headers: {
         authorization: 'authorization-text'
       },
@@ -204,7 +214,7 @@ export default {
           { min: 1, max: 3, message: '', trigger: 'blur' }
         ],
         region: [{ required: true, message: '', trigger: 'change' }],
-        date1: [{ required: true, message: '', trigger: 'change' }],
+        date1: [{ required: true, message: '请输入产品编码', trigger: 'change' }],
         type: [
           {
             type: 'array',
@@ -218,7 +228,21 @@ export default {
       }
     }
   },
+  computed: {
+    rowSelection() {
+      const { selectedRowKeys } = this
+      return {
+        selectedRowKeys,
+        onChange: this.onSelectChange,
+        hideDefaultSelections: true,
+        onSelection: this.onSelection
+      }
+    }
+  },
   methods: {
+    onSelectChange(selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys
+    },
     handleChange(info) {
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList)
@@ -254,6 +278,17 @@ export default {
     },
     filterOption(input, option) {
       return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    },
+    onSelectChange(selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys
+    },
+
+    showModal() {
+      this.visible = true
+    },
+    handleOk(e) {
+      console.log(e)
+      this.visible = false
     }
   }
 }

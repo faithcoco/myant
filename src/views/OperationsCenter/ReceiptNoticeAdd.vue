@@ -8,59 +8,76 @@
       :wrapper-col="wrapperCol"
     >
       <a-form-model-item label="收货通知单编码" required prop="coding">
-        <!-- <a-input v-model="form.ReceiptNotificationCode" placeholder="请输入收货通知单编码">
-          <a-button slot="suffix" type="link">自动获取</a-button>
-        </a-input>-->
-        <a-table :columns="columns" :data-source="data" :pagination="false">
-          <a slot="name" slot-scope="text">{{ text }}</a>
-        </a-table>
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="供应商编码" prop="name">
-        <!-- <a-input
-          v-model="form.SupplierCode"
-          placeholder="请输入供应商编码"
+        <a-input
+          v-model="form.name"
+          placeholder="请输入产品编码"
           @blur="
           () => {
             
           }"
-        />-->
-        <a-table :columns="columns" :data-source="data" :pagination="false">
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
+      </a-form-model-item>
+
+      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+        <a-table
+          :row-selection="rowSelection"
+          :columns="columns"
+          :data-source="data"
+          :pagination="false"
+          bordered
+        >
           <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
+      </a-modal>
+      <a-form-model-item ref="name" label="供应商编码" prop="name">
+        <a-input
+          v-model="form.name"
+          placeholder="请输入产品编码"
+          @blur="
+          () => {
+            
+          }"
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
       </a-form-model-item>
       <a-form-model-item label="联系人编码" prop="code">
-        <!-- <a-input v-model="form.ContactCode" placeholder="请输入联系人编码" /> -->
-        <a-table :columns="columns" :data-source="data" :pagination="false">
-          <a slot="name" slot-scope="text">{{ text }}</a>
-        </a-table>
+        <a-input
+          v-model="form.name"
+          placeholder="请输入产品编码"
+          @blur="
+          () => {
+            
+          }"
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码">
-        <!-- <a-input
-          v-model="form.DepartmentCode"
-          placeholder="请输入部门编码"
+        <a-input
+          v-model="form.name"
+          placeholder="请输入产品编码"
           @blur="
           () => {
-         
-          }
-        "
-        />-->
-        <a-table :columns="columns" :data-source="data" :pagination="false">
-          <a slot="name" slot-scope="text">{{ text }}</a>
-        </a-table>
+            
+          }"
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="业务员编码">
-        <!-- <a-input
-          v-model="form.SalesmanCode"
-          placeholder="请输入业务员编码"
+        <a-input
+          v-model="form.name"
+          placeholder="请输入产品编码"
           @blur="
           () => {
-         
-          }
-        "
-        />-->
-        <a-table :columns="columns" :data-source="data" :pagination="false">
-          <a slot="name" slot-scope="text">{{ text }}</a>
-        </a-table>
+            
+          }"
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="预计入库日期">
         <a-date-picker
@@ -72,32 +89,28 @@
         />
       </a-form-model-item>
       <a-form-model-item ref="name" label="收货仓库编码">
-        <!-- <a-input
-          v-model="form.ReceivingWarehouseCode"
-          placeholder="请输入收货仓库编码"
+        <a-input
+          v-model="form.name"
+          placeholder="请输入产品编码"
           @blur="
           () => {
-            $refs.name.onFieldBlur();
-          }
-        "
-        />-->
-        <a-table :columns="columns" :data-source="data" :pagination="false">
-          <a slot="name" slot-scope="text">{{ text }}</a>
-        </a-table>
+            
+          }"
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="存货编码">
-        <!-- <a-input
-          v-model="form.InventoryCode"
-          placeholder="请输入存货编码"
+        <a-input
+          v-model="form.name"
+          placeholder="请输入产品编码"
           @blur="
           () => {
-            $refs.name.onFieldBlur();
-          }
-        "
-        />-->
-        <a-table :columns="columns" :data-source="data" :pagination="false">
-          <a slot="name" slot-scope="text">{{ text }}</a>
-        </a-table>
+            
+          }"
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="存货名称">
         <a-input
@@ -111,18 +124,16 @@
         />
       </a-form-model-item>
       <a-form-model-item label="批次编码">
-        <!-- <a-input
-          v-model="form.BatchCode"
-          placeholder="请输入批次编码"
+        <a-input
+          v-model="form.name"
+          placeholder="请输入产品编码"
           @blur="
           () => {
             
-          }
-        "
-        />-->
-        <a-table :columns="columns" :data-source="data" :pagination="false">
-          <a slot="name" slot-scope="text">{{ text }}</a>
-        </a-table>
+          }"
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
       </a-form-model-item>
       <a-form-model-item label="数量">
         <a-input
@@ -313,6 +324,8 @@ const data = [
 export default {
   data() {
     return {
+      visible: false, ///////////////
+      selectedRowKeys: [], ////////////////////////
       data,
       columns,
       headers: {
@@ -364,6 +377,17 @@ export default {
       }
     }
   },
+  computed: {
+    rowSelection() {
+      const { selectedRowKeys } = this
+      return {
+        selectedRowKeys,
+        onChange: this.onSelectChange,
+        hideDefaultSelections: true,
+        onSelection: this.onSelection
+      }
+    }
+  },
   methods: {
     handleChange(info) {
       if (info.file.status !== 'uploading') {
@@ -400,6 +424,17 @@ export default {
     },
     filterOption(input, option) {
       return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    },
+    onSelectChange(selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys
+    },
+
+    showModal() {
+      this.visible = true
+    },
+    handleOk(e) {
+      console.log(e)
+      this.visible = false
     }
   }
 }

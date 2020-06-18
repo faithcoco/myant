@@ -11,20 +11,29 @@
         <a-input v-model="form.date1" placeholder="请输入仓库名称"></a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="仓库编号" prop="WarehouseId">
-        <!-- <a-input
-          v-model="form.WarehouseId"
-          placeholder="请输入仓库编号"
+        <a-input
+          v-model="form.name"
+          placeholder="请输入产品编码"
           @blur="
           () => {
             
           }"
         >
-          <a-button slot="suffix" type="link">自动获取</a-button>
-        </a-input>-->
-        <a-table :columns="columns" :data-source="data" :pagination="false">
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
+      </a-form-model-item>
+
+      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+        <a-table
+          :row-selection="rowSelection"
+          :columns="columns"
+          :data-source="data"
+          :pagination="false"
+          bordered
+        >
           <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
-      </a-form-model-item>
+      </a-modal>
 
       <a-form-model-item label="关联项目" prop="code">
         <a-input v-model="form.code" placeholder="请选择需要关联项目">
@@ -182,6 +191,8 @@ const data = [
 export default {
   data() {
     return {
+      visible: false,
+      selectedRowKeys: [],
       data,
       columns,
       headers: {
@@ -231,6 +242,17 @@ export default {
       }
     }
   },
+  computed: {
+    rowSelection() {
+      const { selectedRowKeys } = this
+      return {
+        selectedRowKeys,
+        onChange: this.onSelectChange,
+        hideDefaultSelections: true,
+        onSelection: this.onSelection
+      }
+    }
+  },
   methods: {
     handleChange(info) {
       if (info.file.status !== 'uploading') {
@@ -267,6 +289,17 @@ export default {
     },
     filterOption(input, option) {
       return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
+    },
+    onSelectChange(selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys
+    },
+
+    showModal() {
+      this.visible = true
+    },
+    handleOk(e) {
+      console.log(e)
+      this.visible = false
     }
   }
 }

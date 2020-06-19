@@ -45,21 +45,21 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
-        <a-descriptions-item label="调拨单编码">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="源仓库编码">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="目标仓库编码">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="部门编码">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="调拨日期">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="存货编码">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="存货名称">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="货位编码">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="批次编码">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="数量">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="计量单位">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="包装数量">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="包装单位">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="单价">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="金额">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="调拨单编码">{{product.TransferCode }}</a-descriptions-item>
+        <a-descriptions-item label="源仓库编码">{{product.SourceWarehouseCode}}</a-descriptions-item>
+        <a-descriptions-item label="目标仓库编码">{{product.TargetWarehouseCode}}</a-descriptions-item>
+        <a-descriptions-item label="部门编码">{{product.DepartmentCode}}</a-descriptions-item>
+        <a-descriptions-item label="调拨日期">{{product.TransferDate}}</a-descriptions-item>
+        <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
+        <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
+        <a-descriptions-item label="货位编码">{{product.LocationCode}}</a-descriptions-item>
+        <a-descriptions-item label="批次编码">{{product.BatchCode}}</a-descriptions-item>
+        <a-descriptions-item label="数量">{{product.Quantity}}</a-descriptions-item>
+        <a-descriptions-item label="计量单位">{{product.Unit}}</a-descriptions-item>
+        <a-descriptions-item label="包装数量">{{product.PackingQuantity}}</a-descriptions-item>
+        <a-descriptions-item label="包装单位">{{product.PackingUnit}}</a-descriptions-item>
+        <a-descriptions-item label="单价">{{product.UnitPrice}}</a-descriptions-item>
+        <a-descriptions-item label="金额">{{product.Amount}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -98,16 +98,16 @@ const columns = [
   {
     key: '0',
     title: '调拨单编码',
-    dataIndex: 'name',
+    dataIndex: 'TransferCode',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
     width: 110,
-    scopedSlots: { customRender: 'name' }//
+    scopedSlots: { customRender: 'name' } //
   },
   {
     key: '1',
     title: '源仓库编码',
-    dataIndex: 'code',
+    dataIndex: 'SourceWarehouseCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.name - b.name
@@ -116,7 +116,7 @@ const columns = [
   {
     key: '2',
     title: '目标仓库编码',
-    dataIndex: 'type',
+    dataIndex: 'TargetWarehouseCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -124,7 +124,7 @@ const columns = [
   {
     key: '3',
     title: '部门编码',
-    dataIndex: 'unit',
+    dataIndex: 'DepartmentCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -132,7 +132,7 @@ const columns = [
   {
     key: '4',
     title: '调拨日期',
-    dataIndex: 'sales_unit_price',
+    dataIndex: 'TransferDate',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -140,7 +140,7 @@ const columns = [
   {
     key: '5',
     title: '存货编码',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -148,7 +148,7 @@ const columns = [
   {
     key: '6',
     title: '存货名称',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -156,7 +156,7 @@ const columns = [
   {
     key: '7',
     title: '货位编码',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'LocationCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -164,7 +164,7 @@ const columns = [
   {
     key: '8',
     title: '批次编码',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'BatchCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -172,7 +172,7 @@ const columns = [
   {
     key: '9',
     title: '数量',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -180,7 +180,7 @@ const columns = [
   {
     key: '10',
     title: '计量单位',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'Unit',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -188,7 +188,7 @@ const columns = [
   {
     key: '11',
     title: '包装数量',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'PackingQuantity',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -196,7 +196,7 @@ const columns = [
   {
     key: '12',
     title: '包装单位',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'PackingUnit',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -204,7 +204,7 @@ const columns = [
   {
     key: '13',
     title: '单价',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'UnitPrice',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -212,7 +212,7 @@ const columns = [
   {
     key: '14',
     title: '金额',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'Amount',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -230,12 +230,21 @@ const data = []
 for (let i = 0; i < 46; i++) {
   data.push({
     key: i,
-    code: `000${i}`,
-    name: `电热毛巾架${i}`,
-    type: `K-0000T-${i}`,
-    unit: 46 - i,
-    sales_unit_price: 5,
-    purchase_unit_price: 3
+    TransferCode: `000${i}`,
+    SourceWarehouseCode: `000${i}`,
+    TargetWarehouseCode: `000${i}`,
+    DepartmentCode: `000${i}`,
+    TransferDate: `000${i}`,
+    InventoryCode: `000${i}`,
+    InventoryName: `000${i}`,
+    LocationCode: `000${i}`,
+    BatchCode: `000${i}`,
+    Quantity: `000${i}`,
+    Unit: `000${i}`,
+    PackingQuantity: `000${i}`,
+    PackingUnit: `000${i}`,
+    UnitPrice: `000${i}`,
+    Amount: `000${i}`
   })
 }
 const product = {}

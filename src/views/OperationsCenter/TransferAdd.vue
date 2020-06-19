@@ -7,10 +7,10 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="调拨单编码" required prop="coding">
+      <a-form-model-item label="调拨单编码" required prop="TransferCode">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.TransferCode"
+          placeholder="请输入调拨单编码"
           @blur="
           () => {
             
@@ -20,7 +20,7 @@
         </a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
         <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -32,10 +32,10 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item ref="name" label="源仓库编码" prop="name">
+      <a-form-model-item ref="name" label="源仓库编码" prop="SourceWarehouseCode">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.SourceWarehouseCode"
+          placeholder="请输入源仓库编码"
           @blur="
           () => {
             
@@ -44,10 +44,10 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="目标仓库编码" prop="code">
+      <a-form-model-item label="目标仓库编码" prop="TargetWarehouseCode">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.TargetWarehouseCode"
+          placeholder="请输入目标仓库编码"
           @blur="
           () => {
             
@@ -58,8 +58,8 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.DepartmentCode"
+          placeholder="请输入部门编码"
           @blur="
           () => {
             
@@ -73,14 +73,14 @@
           v-model="form.TransferDate"
           show-time
           type="date"
-          placeholder="Pick a date"
+          placeholder="请选择调拨日期"
           style="width: 100%;"
         />
       </a-form-model-item>
       <a-form-model-item ref="name" label="存货编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.InventoryCode"
+          placeholder="请输入存货编码"
           @blur="
           () => {
             
@@ -102,8 +102,8 @@
       </a-form-model-item>
       <a-form-model-item label="货位编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.LocationCode"
+          placeholder="请输入货位编码"
           @blur="
           () => {
             
@@ -114,8 +114,8 @@
       </a-form-model-item>
       <a-form-model-item label="批次编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.BatchCode"
+          placeholder="请输入批次编码"
           @blur="
           () => {
             
@@ -205,72 +205,82 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    scopedSlots: { customRender: 'name' }
+    title: '调拨单编码',
+    dataIndex: 'TransferCode',
+    key: 'TransferCode',
+    scopedSlots: { customRender: 'TransferCode' }
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: '源仓库编码',
+    dataIndex: 'SourceWarehouseCode',
+    key: 'SourceWarehouseCode',
     width: 80
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address 1',
-    ellipsis: true
+    title: '目标仓库编码',
+    dataIndex: 'TargetWarehouseCode',
+    key: 'TargetWarehouseCode'
   },
   {
-    title: 'Long Column Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 2',
-    ellipsis: true
+    title: '部门编码',
+    dataIndex: 'DepartmentCode',
+    key: 'DepartmentCode'
   },
   {
-    title: 'Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 3',
-    ellipsis: true
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
+    key: 'InventoryCode'
   },
   {
-    title: 'Long Column',
-    dataIndex: 'address',
-    key: 'address 4',
-    ellipsis: true
+    title: '货位编码',
+    dataIndex: 'LocationCode',
+    key: 'LocationCode'
+  },
+  {
+    title: '批次编码',
+    dataIndex: 'BatchCode',
+    key: 'BatchCode'
   }
 ]
 
 const data = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    tags: ['nice', 'developer']
+    TransferCode: 'a121345',
+    SourceWarehouseCode: 32,
+    TargetWarehouseCode: 'a121345',
+    DepartmentCode: 'a121345',
+    InventoryCode: 'a121345',
+    LocationCode: 'a121345',
+    BatchCode: 'a121345'
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-    tags: ['loser']
+    TransferCode: 'a121345',
+    SourceWarehouseCode: 42,
+    TargetWarehouseCode: 'a121345',
+    DepartmentCode: 'a121345',
+    InventoryCode: 'a121345',
+    LocationCode: 'a121345',
+    BatchCode: 'a121345'
   },
   {
     key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher']
+    TransferCode: 'a121345',
+    SourceWarehouseCode: 32,
+    TargetWarehouseCode: 'a121345',
+    DepartmentCode: 'a121345',
+    InventoryCode: 'a121345',
+    LocationCode: 'a121345',
+    BatchCode: 'a121345'
   }
 ]
 
 export default {
   data() {
     return {
-      visible: false, ///////////////
-      selectedRowKeys: [], ////////////////////////
+      visible: false,
+      selectedRowKeys: [],
       data,
       columns,
       headers: {
@@ -281,7 +291,7 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        RequisitionCode: '', //调拨单编码
+        TransferCode: '', //调拨单编码
         SourceWarehouseCode: '', //源仓库编码
         TargetWarehouseCode: '', //目标仓库编码
         DepartmentCode: '', //部门编码
@@ -298,8 +308,8 @@ export default {
         Amount: '' //金额
       },
       rules: {
-        name: [
-          { required: true, message: '请输入产品编码', trigger: 'blur' },
+        TransferCode: [
+          { required: true, message: '请输入调拨单编码', trigger: 'blur' },
           { min: 1, max: 3, message: '', trigger: 'blur' }
         ],
         region: [{ required: true, message: '', trigger: 'change' }],

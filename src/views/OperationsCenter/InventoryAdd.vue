@@ -7,10 +7,10 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="盘点单编码" required prop="coding">
+      <a-form-model-item label="盘点单编码" required prop="InventoryListCode">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.InventoryListCode"
+          placeholder="请输入盘点单编码"
           @blur="
           () => {
             
@@ -20,7 +20,7 @@
         </a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="请选择编码" width="1000px" @ok="handleOk">
         <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -32,10 +32,10 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item ref="name" label="盘点仓库编码" prop="name">
+      <a-form-model-item ref="name" label="盘点仓库编码" prop="InventoryWarehouseCode">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.InventoryWarehouseCode"
+          placeholder="请输入盘点仓库编码"
           @blur="
           () => {
             
@@ -46,8 +46,8 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.DepartmentCode"
+          placeholder="请输入部门编码"
           @blur="
           () => {
             
@@ -61,14 +61,14 @@
           v-model="form.InventoryDate"
           show-time
           type="date"
-          placeholder="Pick a date"
+          placeholder="请选择盘点日期"
           style="width: 100%;"
         />
       </a-form-model-item>
       <a-form-model-item ref="name" label="存货编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.InventoryCode"
+          placeholder="请输入存货编码"
           @blur="
           () => {
             
@@ -90,8 +90,8 @@
       </a-form-model-item>
       <a-form-model-item label="货位编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.LocationCode"
+          placeholder="请输入货位编码"
           @blur="
           () => {
             
@@ -102,8 +102,8 @@
       </a-form-model-item>
       <a-form-model-item label="批次编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.BatchCode"
+          placeholder="请输入批次编码"
           @blur="
           () => {
             
@@ -193,72 +193,76 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    scopedSlots: { customRender: 'name' }
+    title: '盘点单编码',
+    dataIndex: 'InventoryListCode',
+    key: 'InventoryListCode',
+    scopedSlots: { customRender: 'InventoryListCode' }
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-    width: 80
+    title: '盘点仓库编码',
+    dataIndex: 'InventoryWarehouseCode',
+    key: 'InventoryWarehouseCode'
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address 1',
-    ellipsis: true
+    title: '部门编码',
+    dataIndex: 'DepartmentCode',
+    key: 'DepartmentCode'
   },
   {
-    title: 'Long Column Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 2',
-    ellipsis: true
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
+    key: 'InventoryCode'
   },
   {
-    title: 'Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 3',
-    ellipsis: true
+    title: '货位编码',
+    dataIndex: 'LocationCode',
+    key: 'LocationCode'
   },
   {
-    title: 'Long Column',
-    dataIndex: 'address',
-    key: 'address 4',
-    ellipsis: true
+    title: '批次编码',
+    dataIndex: 'BatchCode',
+    key: 'BatchCode'
   }
 ]
 
 const data = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    tags: ['nice', 'developer']
+    InventoryListCode: 'a121345',
+    InventoryWarehouseCode: 'a121345',
+    TargetWarehouseCode: 'a121345',
+    DepartmentCode: 'a121345',
+    InventoryCode: 'a121345',
+    LocationCode: 'a121345',
+    BatchCode: 'a121345'
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-    tags: ['loser']
+    InventoryListCode: 'a121345',
+    InventoryWarehouseCode: 'a121345',
+    TargetWarehouseCode: 'a121345',
+    DepartmentCode: 'a121345',
+    InventoryCode: 'a121345',
+    LocationCode: 'a121345',
+    BatchCode: 'a121345'
   },
   {
     key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher']
+    InventoryListCode: 'a121345',
+    InventoryWarehouseCode: 'a121345',
+    TargetWarehouseCode: 'a121345',
+    DepartmentCode: 'a121345',
+    InventoryCode: 'a121345',
+    LocationCode: 'a121345',
+    BatchCode: 'a121345'
   }
 ]
 
 export default {
   data() {
     return {
-      visible: false, ///////////////
-      selectedRowKeys: [], ////////////////////////
+      visible: false,
+      selectedRowKeys: [],
       data,
       columns,
       headers: {
@@ -267,10 +271,9 @@ export default {
       size: 'small',
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
-      other: '',
       form: {
-        InventoryListCoding: '', //盘点单编码
-        InventoryWarehouseCode: '',
+        InventoryListCode: '', //盘点单编码
+        InventoryWarehouseCode: '', //盘点仓库编码
         DepartmentCode: '', //部门编码
         InventoryDate: '', //日期
         InventoryCode: '', //存货编码
@@ -285,22 +288,12 @@ export default {
         Amount: '' //金额
       },
       rules: {
-        name: [
-          { required: true, message: '请输入产品编码', trigger: 'blur' },
+        InventoryListCode: [
+          { required: true, message: '请输入盘点单编码', trigger: 'blur' },
           { min: 1, max: 3, message: '', trigger: 'blur' }
         ],
-        region: [{ required: true, message: '', trigger: 'change' }],
-        date1: [{ required: true, message: '', trigger: 'change' }],
-        type: [
-          {
-            type: 'array',
-            required: true,
-            message: 'Please select at least one activity type',
-            trigger: 'change'
-          }
-        ],
-        resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
+        InventoryWarehouseCode: [{ required: true, message: '请输入盘点仓库编码', trigger: 'change' }],
+        date1: [{ required: true, message: '', trigger: 'change' }]
       }
     }
   },

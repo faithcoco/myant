@@ -46,13 +46,13 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
-        <a-descriptions-item label="类型">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="编号">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="仓库">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="入库日期">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="负责人">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="关联单据">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="入库产品">{{product.sales_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="类型">{{product.Type}}</a-descriptions-item>
+        <a-descriptions-item label="编号">{{product.Num}}</a-descriptions-item>
+        <a-descriptions-item label="仓库">{{product.Warehouse}}</a-descriptions-item>
+        <a-descriptions-item label="入库日期">{{product.StorageDate}}</a-descriptions-item>
+        <a-descriptions-item label="负责人">{{product.Principal}}</a-descriptions-item>
+        <a-descriptions-item label="关联单据">{{product.RelatedDocuments}}</a-descriptions-item>
+        <a-descriptions-item label="入库产品">{{product.StorageProduct}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -91,7 +91,7 @@ const columns = [
   {
     key: '0',
     title: '类型',
-    dataIndex: 'name',
+    dataIndex: 'Type',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
@@ -99,7 +99,7 @@ const columns = [
   {
     key: '1',
     title: '编号',
-    dataIndex: 'code',
+    dataIndex: 'Num',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.name - b.name
   },
@@ -107,35 +107,35 @@ const columns = [
   {
     key: '2',
     title: '仓库',
-    dataIndex: 'type',
+    dataIndex: 'Warehouse',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
     title: '入库日期',
-    dataIndex: 'unit',
+    dataIndex: 'StorageDate',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
     title: '负责人',
-    dataIndex: 'sales_unit_price',
+    dataIndex: 'Principal',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
     title: '关联单据',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'RelatedDocuments',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
     title: '入库产品',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
@@ -148,15 +148,16 @@ const columns = [
   }
 ]
 const data = []
-for (let i = 0; i < 46; i++) {
+for (let i = 0; i < 30; i++) {
   data.push({
     key: i,
-    code: `000${i}`,
-    name: `电热毛巾架${i}`,
-    type: `K-0000T-${i}`,
-    unit: 46 - i,
-    sales_unit_price: 5,
-    purchase_unit_price: 3
+    Num: `000${i}`,
+    Type: '生活用品',
+    Warehouse: `K${i}`,
+    StorageDate: `1月${i+1}`,
+    Principal:'zhangsan',
+    RelatedDocuments:`qwsadas${i}`,
+    StorageProduct:`电热毛巾架${i}`
   })
 }
 const product = {}

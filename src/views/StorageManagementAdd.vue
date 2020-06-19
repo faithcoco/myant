@@ -26,8 +26,8 @@
       </a-form-model-item>
       <a-form-model-item label="编号" required prop="Num">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.Num"
+          placeholder="请输入编号"
           @blur="
           () => {
             
@@ -37,7 +37,7 @@
         </a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="选择编号" width="1000px" @ok="handleOk">
         <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -49,23 +49,23 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item label="仓库" prop="warehouse">
-        <a-input v-model="form.warehouse" placeholder="请选择仓库">
+      <a-form-model-item label="仓库" prop="Warehouse">
+        <a-input v-model="form.Warehouse" placeholder="请选择仓库">
           <a-button slot="suffix" type="link">选择</a-button>
         </a-input>
       </a-form-model-item>
       <a-form-model-item ref="date" label="入库日期" prop="date">
         <a-date-picker
-          v-model="form.date"
+          v-model="form.StorageDate"
           show-time
           type="date"
-          placeholder="Pick a date"
+          placeholder="请选择入库日期"
           style="width: 100%;"
         />
       </a-form-model-item>
-      <a-form-model-item ref="person" label="负责人">
+      <a-form-model-item ref="Principal" label="负责人">
         <a-input
-          v-model="form.person"
+          v-model="form.Principal"
           placeholder="请选择负责人"
           @blur="
           () => {
@@ -78,9 +78,9 @@
         </a-input>
       </a-form-model-item>
 
-      <a-form-model-item ref="name" label="关联单据" prop="document">
+      <a-form-model-item ref="name" label="关联单据" prop="RelateDocuments">
         <a-input
-          v-model="form.document"
+          v-model="form.RelateDocuments"
           placeholder="请选择需要关联的单据"
           @blur="
           () => {
@@ -93,8 +93,8 @@
         </a-input>
       </a-form-model-item>
 
-      <a-form-model-item label="入库产品" prop="product">
-        <a-input v-model="form.product" placeholder="请输入产品编码" @blur="
+      <a-form-model-item label="入库产品" prop="StorageProduct">
+        <a-input v-model="form.StorageProduct" placeholder="请输入入库产品" @blur="
           () => { }">
           <a-button slot="suffix" type="link">选择</a-button>
         </a-input>
@@ -137,64 +137,53 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    scopedSlots: { customRender: 'name' }
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: '类型',
+    dataIndex: 'Type',
+    key: 'Type',
+    scopedSlots: { customRender: 'Type' },
     width: 80
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address 1',
-    ellipsis: true
+    title: '编号',
+    dataIndex: 'Num',
+    key: 'Num',
+    width: 80
   },
   {
-    title: 'Long Column Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 2',
-    ellipsis: true
+    title: '仓库',
+    dataIndex: 'Warehouse',
+    key: 'Warehouse',
+    width: 80
   },
   {
-    title: 'Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 3',
-    ellipsis: true
-  },
-  {
-    title: 'Long Column',
-    dataIndex: 'address',
-    key: 'address 4',
-    ellipsis: true
+    title: '入库产品',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 80
   }
 ]
 
 const data = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    tags: ['nice', 'developer']
+    Type: '机箱',
+    Num: 322311,
+    Warehouse: 'A1',
+    StorageProduct: 'ASUS'
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-    tags: ['loser']
+    Type: '主板',
+    Num: 421231,
+    Warehouse: 'A1',
+    StorageProduct: '技嘉'
   },
   {
     key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher']
+    Type: '显卡',
+    Num: 3221312,
+    Warehouse: 'A1',
+    StorageProduct: 'RTX2080TI'
   }
 ]
 
@@ -213,13 +202,13 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        type: '', //类型
+        Type: '', //类型
         Num: '', //编号
-        warehouse: '', //仓库
-        date: '', //入库日期
-        person: '', //负责人
-        document: '', //关联单据
-        product: '', //入库产品
+        Warehouse: '', //仓库
+        StorageDate: '', //入库日期
+        Principal: '', //负责人
+        RelateDocuments: '', //关联单据
+        StorageProduct: '', //入库产品
         Remarks: '', //备注
         desc: '',
         code: '',
@@ -228,11 +217,11 @@ export default {
       rules: {
         type: [{ required: true, message: '请选择入库类型', trigger: 'blur' }],
         Num: [{ required: true, message: '请输入编号', trigger: 'change' }],
-        warehouse: [{ required: true, message: '请选择仓库', trigger: 'change' }],
+        Warehouse: [{ required: true, message: '请选择仓库', trigger: 'change' }],
 
-        date: [{ required: true, message: '请选择入库日期', trigger: 'change' }],
-        document: [{ required: true, message: '请选择需要关联的单据', trigger: 'blur' }],
-        product: [{ required: true, message: '请输入入库产品', trigger: 'blur' }]
+        StorageDate: [{ required: true, message: '请选择入库日期', trigger: 'change' }],
+        RelateDocuments: [{ required: true, message: '请选择需要关联的单据', trigger: 'blur' }],
+        StorageProduct: [{ required: true, message: '请输入入库产品', trigger: 'blur' }]
       }
     }
   },

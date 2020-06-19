@@ -105,7 +105,7 @@ export const asyncRouterMap = [
                 path: 'ContactList',
                 name: 'ContactList',
                 component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ContactList.vue'),
-                meta: { title: '联系人产品清单', permission: ['dashboard'] }
+                meta: { title: '联系人清单', permission: ['dashboard'] }
               }
             ]
           }

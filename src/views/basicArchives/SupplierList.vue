@@ -49,10 +49,10 @@
         <a-descriptions-item label="供应商名称">{{product.name }}</a-descriptions-item>
         <a-descriptions-item label="供应商编号">{{product.code}}</a-descriptions-item>
         <a-descriptions-item label="供应商类型">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="负责人">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="纳税人识别号">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="联系人">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="联系电话">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="负责人">{{product.principal}}</a-descriptions-item>
+        <a-descriptions-item label="纳税人识别号">{{product.TaxpayerIdentificationNumber}}</a-descriptions-item>
+        <a-descriptions-item label="联系人">{{product.ContactPerson}}</a-descriptions-item>
+        <a-descriptions-item label="联系电话">{{product.tel}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -114,28 +114,28 @@ const columns = [
   {
     key: '3',
     title: '负责人',
-    dataIndex: 'unit',
+    dataIndex: 'principal',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
     title: '纳税人识别号',
-    dataIndex: 'sales_unit_price',
+    dataIndex: 'TaxpayerIdentificationNumber',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
     title: '联系人',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'ContactPerson',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
     title: '联系电话',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'tel',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
@@ -153,10 +153,11 @@ for (let i = 0; i < 46; i++) {
     key: i,
     code: `000${i}`,
     name: `电热毛巾架${i}`,
-    type: `K-0000T-${i}`,
-    unit: 46 - i,
-    sales_unit_price: 5,
-    purchase_unit_price: 3
+    type: `国营`,
+    principal: '王五',
+    TaxpayerIdentificationNumber: `000${i}`,
+    ContactPerson: '王五',
+    tel: '13333333333'
   })
 }
 const product = {}

@@ -17,10 +17,10 @@
           }"
         />
       </a-form-model-item>
-      <a-form-model-item label="供应商编号" required prop="date1">
+      <a-form-model-item label="供应商编号" required prop="SupplierCode">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.SupplierCode"
+          placeholder="请输入供应商编号"
           @blur="
           () => {
             
@@ -30,7 +30,7 @@
         </a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="选择编号" width="1000px" @ok="handleOk">
         <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -43,7 +43,7 @@
       </a-modal>
 
       <a-form-model-item label="供应商类型">
-        <a-input v-model="form.type" placeholder="请选择供应商类型">
+        <a-input v-model="form.SupplierType" placeholder="请选择供应商类型">
           <a-button slot="suffix" type="link">选择</a-button>
         </a-input>
       </a-form-model-item>
@@ -55,7 +55,7 @@
 
       <a-form-model-item ref="name" label="纳税人识别号">
         <a-input
-          v-model="form.taxpayerId"
+          v-model="form.TaxpayerIdentificationNumber"
           placeholder="请输入纳税人识别号"
           @blur="
           () => {
@@ -66,7 +66,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="联系人">
         <a-input
-          v-model="form.contactPerson"
+          v-model="form.ContactPerson"
           placeholder="请输入联系人"
           @blur="
           () => {
@@ -77,7 +77,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="联系电话">
         <a-input
-          v-model="form.phone"
+          v-model="form.Tel"
           placeholder="请输入联系电话"
           @blur="
           () => {
@@ -115,64 +115,53 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    scopedSlots: { customRender: 'name' }
+    title: '供应商名称',
+    dataIndex: 'supplierName',
+    key: 'supplierName',
+     width: 80,
+    scopedSlots: { customRender: 'supplierName' }
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: '供应商编号',
+    dataIndex: 'SupplierCode',
+    key: 'SupplierCode',
     width: 80
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address 1',
-    ellipsis: true
+    title: '供应商类型',
+    dataIndex: 'SupplierType',
+    key: 'SupplierType',
+     width: 80
   },
   {
-    title: 'Long Column Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 2',
-    ellipsis: true
-  },
-  {
-    title: 'Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 3',
-    ellipsis: true
-  },
-  {
-    title: 'Long Column',
-    dataIndex: 'address',
-    key: 'address 4',
-    ellipsis: true
+    title: '负责人',
+    dataIndex: 'ContactPerson',
+    key: 'ContactPerson',
+     width: 80
   }
 ]
 
 const data = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    tags: ['nice', 'developer']
+    supplierName: 'John Brown',
+    SupplierCode: 32,
+    SupplierType: '服装',
+    ContactPerson: '老王'
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-    tags: ['loser']
+    supplierName: 'Jim Green',
+    SupplierCode: 42,
+    SupplierType: '电子',
+    ContactPerson: '李四'
   },
   {
     key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher']
+    supplierName: 'Joe Black',
+    SupplierCode: 32,
+    SupplierType: '餐饮',
+    ContactPerson: '张三'
   }
 ]
 
@@ -189,18 +178,17 @@ export default {
       size: 'small',
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
-      other: '',
       form: {
         supplierName: '', //供应商名称
         region: '', //负责人
-        date1: '', //供应商编号
+        SupplierCode: '', //供应商编号
         delivery: false,
-        type: '',
+        SupplierType: '',
         resource: '',
         desc: '',
-        taxpayerId: '', //纳税人识别号
-        contactPerson: '', //联系人
-        phone: ''
+        TaxpayerIdentificationNumber: '', //纳税人识别号
+        ContactPerson: '', //联系人
+        Tel: ''
       },
       rules: {
         supplierName: [
@@ -208,17 +196,7 @@ export default {
           { min: 3, max: 5, message: '', trigger: 'blur' }
         ],
         region: [{ required: true, message: '请选择负责人', trigger: 'change' }],
-        date1: [{ required: true, message: '请输入供应商编号', trigger: 'change' }],
-        type: [
-          {
-            type: 'array',
-            required: true,
-            message: 'Please select at least one activity type',
-            trigger: 'change'
-          }
-        ],
-        resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
+        SupplierCode: [{ required: true, message: '请输入供应商编号', trigger: 'change' }]
       }
     }
   },

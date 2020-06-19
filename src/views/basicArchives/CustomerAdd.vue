@@ -7,9 +7,9 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item ref="name" label="客户名称" prop="customerName">
+      <a-form-model-item ref="name" label="客户名称" prop="CustomerName">
         <a-input
-          v-model="form.customerName"
+          v-model="form.CustomerName"
           placeholder="请输入客户名称"
           @blur="
           () => {
@@ -18,11 +18,10 @@
         />
       </a-form-model-item>
 
-      <!--////////////////////////////////////////////////-->
-      <a-form-model-item label="客户编号" prop="date1">
+      <a-form-model-item label="客户编号" prop="CustomerNumber">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.CustomerNumber"
+          placeholder="请输入客户编号"
           @blur="
           () => {
             
@@ -32,7 +31,7 @@
         </a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="客户编号" width="1000px" @ok="handleOk">
         <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -43,15 +42,12 @@
           <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
       </a-modal>
-
-      <!--////////////////////////////////////////////////-->
-
-      <a-form-model-item label="客户性质" prop="code">
-        <a-input v-model="form.code" placeholder="请输入客户性质" />
+      <a-form-model-item label="客户性质" prop="CustomerNature">
+        <a-input v-model="form.CustomerNature" placeholder="请输入客户性质" />
       </a-form-model-item>
       <a-form-model-item ref="name" label="所属行业">
         <a-input
-          v-model="form.industry"
+          v-model="form.Industry"
           placeholder="请输入所属行业"
           @blur="
           () => {
@@ -62,7 +58,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="办公地址">
         <a-input
-          v-model="form.address"
+          v-model="form.Address"
           placeholder="请输入办公地址"
           @blur="
           () => {
@@ -72,7 +68,7 @@
         "
         />
 
-        <a-input v-model="form.detailAddress" type="textarea" placeholder="请输入详细地址" />
+        <a-input v-model="form.DetailAddress" type="textarea" placeholder="请输入详细地址" />
       </a-form-model-item>
 
       <a-form-model-item label="负责人" prop="principal">
@@ -95,7 +91,7 @@
 
       <a-form-model-item ref="name" label="发票抬头">
         <a-input
-          v-model="form.price"
+          v-model="form.Invoice"
           placeholder="请输入发票抬头"
           @blur="
           () => {
@@ -106,7 +102,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="纳税人识别号">
         <a-input
-          v-model="form.taxpayerId"
+          v-model="form.TaxpayerIdentificationNumber"
           placeholder="请输入纳税人识别号"
           @blur="
           () => {
@@ -116,7 +112,7 @@
         />
       </a-form-model-item>
       <a-form-model-item label="开户银行">
-        <a-input v-model="form.desc" placeholder="请输入开户银行" />
+        <a-input v-model="form.BankAccount" placeholder="请输入开户银行" />
       </a-form-model-item>
 
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
@@ -133,75 +129,63 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    scopedSlots: { customRender: 'name' }
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: '客户名称',
+    dataIndex: 'CustomerName',
+    key: 'CustomerName',
+    scopedSlots: { customRender: 'CustomerName' },
     width: 80
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address 1',
-    ellipsis: true
+    title: '客户编号',
+    dataIndex: 'CustomerNumber',
+    key: 'CustomerNumber',
+    width: 80
   },
   {
-    title: 'Long Column Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 2',
-    ellipsis: true
+    title: '客户性质',
+    dataIndex: 'CustomerNature',
+    key: 'CustomerNature',
+    width: 80
   },
   {
-    title: 'Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 3',
-    ellipsis: true
-  },
-  {
-    title: 'Long Column',
-    dataIndex: 'address',
-    key: 'address 4',
-    ellipsis: true
+    title: '所属行业',
+    dataIndex: 'Industry',
+    key: 'Industry',
+    width: 80
   }
 ]
 
 const data = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    tags: ['nice', 'developer']
+    CustomerName: 'John Brown',
+    CustomerNumber: 32,
+    CustomerNature: '国有',
+    Industry: "高新技术"
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-    tags: ['loser']
+    CustomerName: 'Jim Green',
+    CustomerNumber: 42,
+    CustomerNature: '私营',
+    Industry: "劳动密集型"
   },
   {
     key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher']
+    CustomerName: 'Joe Black',
+    CustomerNumber: 32,
+    CustomerNature: '私营',
+    Industry: '加工'
   }
 ]
 
 export default {
   data() {
     return {
-      visible: false, ///////////////
-      selectedRowKeys: [], ////////////////////////
+      visible: false,
+      selectedRowKeys: [],
       data,
       columns,
-
       headers: {
         authorization: 'authorization-text'
       },
@@ -210,43 +194,26 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        customerName: '', //客户名称
-        region: '',
-        date1: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: '',
-        code: '',
-        price: '',
+        CustomerName: '', //客户名称
+        CustomerNumber: '',
+        CustomerNature: '',
+        Invoice: '',
         principal: '', //负责人
-        industry: '', //行业
-        address: '', //地址
-        detailAddress: '',
-        taxpayerId: '' //纳税人识别号
+        Industry: '', //行业
+        Address: '', //地址
+        DetailAddress: '',
+        TaxpayerIdentificationNumber: '', //纳税人识别号
+        BankAccount: ''
       },
       rules: {
-        customerName: [
+        CustomerName: [
           { required: true, message: '请输入客户名称', trigger: 'blur' },
           { min: 1, max: 3, message: '', trigger: 'blur' }
         ],
-        principal: [{ required: true, message: '请选择负责人', trigger: 'blur' }],
-        region: [{ required: true, message: '', trigger: 'change' }],
-        date1: [{ required: false, message: '', trigger: 'change' }],
-        type: [
-          {
-            type: 'array',
-            required: true,
-            message: 'Please select at least one activity type',
-            trigger: 'change'
-          }
-        ],
-        resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
+        principal: [{ required: true, message: '请选择负责人', trigger: 'blur' }]
       }
     }
   },
-  /////////////
   computed: {
     rowSelection() {
       const { selectedRowKeys } = this
@@ -296,9 +263,8 @@ export default {
     },
     filterOption(input, option) {
       return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
-    }
+    },
     //////////////
-    ,
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },

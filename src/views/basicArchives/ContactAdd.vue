@@ -7,9 +7,9 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="联系人编码" required prop="date1">
+      <a-form-model-item label="联系人编码" required prop="ContactCode">
         <a-input
-          v-model="form.name"
+          v-model="form.ContactCode"
           placeholder="请输入产品编码"
           @blur="
           () => {
@@ -20,7 +20,7 @@
         </a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="选择联系人编码" width="1000px" @ok="handleOk">
         <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -32,9 +32,9 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item ref="name" label="联系人名称" prop="name">
+      <a-form-model-item ref="name" label="联系人名称" prop="ContactName">
         <a-input
-          v-model="form.name"
+          v-model="form.ContactName"
           placeholder="请输入联系人名称"
           @blur="
           () => {
@@ -42,12 +42,12 @@
           }"
         />
       </a-form-model-item>
-      <a-form-model-item label="客户或供应商" prop="code">
-        <a-input v-model="form.code" placeholder="请输入客户或供应商" />
+      <a-form-model-item label="客户或供应商" prop="Supplier">
+        <a-input v-model="form.Supplier" placeholder="请输入客户或供应商" />
       </a-form-model-item>
       <a-form-model-item ref="name" label="关联公司">
         <a-input
-          v-model="form.name"
+          v-model="form.Company"
           placeholder="请输入关联公司"
           @blur="
           () => {
@@ -58,7 +58,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="联系电话">
         <a-input
-          v-model="form.name"
+          v-model="form.Tel"
           placeholder="请输入联系电话"
           @blur="
           () => {
@@ -71,6 +71,7 @@
       <a-form-model-item label="职务">
         <a-select
           show-search
+          default-value="1"
           placeholder="请选择职务"
           option-filter-prop="children"
           :filter-option="filterOption"
@@ -78,14 +79,14 @@
           @blur="handleBlur"
           @change="handleSearchChange"
         >
-          <a-select-option value="jack">专用设备</a-select-option>
-          <a-select-option value="lucy">芯片</a-select-option>
-          <a-select-option value="tom">汽车零部件</a-select-option>
+          <a-select-option value="1">经理</a-select-option>
+          <a-select-option value="2">营销部长</a-select-option>
+          <a-select-option value="3">员工</a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门">
         <a-input
-          v-model="form.price"
+          v-model="form.Department"
           placeholder="请输入部门"
           @blur="
           () => {
@@ -96,7 +97,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="地址">
         <a-input
-          v-model="form.name"
+          v-model="form.Address"
           placeholder="请输入地址"
           @blur="
           () => {
@@ -119,72 +120,61 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    scopedSlots: { customRender: 'name' }
-  },
-  {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
+    title: '联系人名称',
+    dataIndex: 'ContactName',
+    key: 'ContactName',
+    scopedSlots: { customRender: 'ContactName' },
     width: 80
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address 1',
-    ellipsis: true
+    title: '联系人编码',
+    dataIndex: 'ContactCode',
+    key: 'ContactCode',
+    width: 80
   },
   {
-    title: 'Long Column Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 2',
-    ellipsis: true
+    title: '客户或供应商',
+    dataIndex: 'Supplier',
+    key: 'Supplier',
+    width: 80
   },
   {
-    title: 'Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 3',
-    ellipsis: true
-  },
-  {
-    title: 'Long Column',
-    dataIndex: 'address',
-    key: 'address 4',
-    ellipsis: true
+    title: '关联公司',
+    dataIndex: 'Company',
+    key: 'Company',
+    width: 80
   }
 ]
 
 const data = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    tags: ['nice', 'developer']
+    ContactName: 'John Brown',
+    ContactCode: 3213123,
+    Supplier: '张三',
+    Company: '京东'
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-    tags: ['loser']
+    ContactName: 'Jim Green',
+    ContactCode: 4223141,
+    Supplier: '李四',
+    Company: '淘宝'
   },
   {
     key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher']
+    ContactName: 'Joe Black',
+    ContactCode: 3223144,
+    Supplier: 'andy',
+    Company: '拼多多'
   }
 ]
 
 export default {
   data() {
     return {
-      visible: false, ///////////////
-      selectedRowKeys: [], ////////////////////////
+      visible: false,
+      selectedRowKeys: [],
       data,
       columns,
       headers: {
@@ -195,33 +185,20 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        name: '',
-        region: undefined,
-        date1: undefined,
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: '',
-        code: '',
-        price: ''
+        ContactCode: '',
+        ContactName: '',
+        Supplier: '', //客户或者供应商
+        Company: '',
+        Tel: '',
+        Job: '',
+        Department: '',
+        Address: ''
       },
       rules: {
-        name: [
+        ContactCode: [
           { required: true, message: '请输入产品编码', trigger: 'blur' },
           { min: 1, max: 3, message: '', trigger: 'blur' }
-        ],
-        region: [{ required: true, message: '', trigger: 'change' }],
-        date1: [{ required: true, message: '', trigger: 'change' }],
-        type: [
-          {
-            type: 'array',
-            required: true,
-            message: 'Please select at least one activity type',
-            trigger: 'change'
-          }
-        ],
-        resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
+        ]
       }
     }
   },

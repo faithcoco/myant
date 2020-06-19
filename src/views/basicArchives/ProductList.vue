@@ -146,7 +146,7 @@ for (let i = 0; i < 46; i++) {
     code: `000${i}`,
     name: `电热毛巾架${i}`,
     type: `K-0000T-${i}`,
-    unit: 46 - i,
+    unit: '箱',
     sales_unit_price: 5,
     purchase_unit_price: 3
   })

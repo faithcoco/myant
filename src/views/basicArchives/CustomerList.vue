@@ -46,15 +46,15 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
-        <a-descriptions-item label="客户名称">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="客户编号">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="客户性质">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="所属行业">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="办公地址">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="负责人">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="发票抬头">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="纳税人识别号">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="开户银行">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="客户名称">{{name }}</a-descriptions-item>
+        <a-descriptions-item label="客户编号">{{code}}</a-descriptions-item>
+        <a-descriptions-item label="客户性质">{{code}}</a-descriptions-item>
+        <a-descriptions-item label="所属行业">{{Industry}}</a-descriptions-item>
+        <a-descriptions-item label="办公地址">{{address}}</a-descriptions-item>
+        <a-descriptions-item label="负责人">{{principal}}</a-descriptions-item>
+        <a-descriptions-item label="发票抬头">{{Invoice}}</a-descriptions-item>
+        <a-descriptions-item label="纳税人识别号">{{TaxpayerIdentificationNumber}}</a-descriptions-item>
+        <a-descriptions-item label="开户银行">{{BankAccount}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -116,42 +116,42 @@ const columns = [
   {
     key: '3',
     title: '所属行业',
-    dataIndex: 'unit',
+    dataIndex: 'Industry',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
     title: '办公地址',
-    dataIndex: 'unit',
+    dataIndex: 'address',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
     title: '负责人',
-    dataIndex: 'unit',
+    dataIndex: 'principal',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
     title: '发票抬头',
-    dataIndex: 'sales_unit_price',
+    dataIndex: 'Invoice',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
     title: '纳税人识别号',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'TaxpayerIdentificationNumber',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '8',
     title: '开户银行',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'BankAccount',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
@@ -169,10 +169,13 @@ for (let i = 0; i < 46; i++) {
     key: i,
     code: `000${i}`,
     name: `电热毛巾架${i}`,
-    type: `K-0000T-${i}`,
-    unit: 46 - i,
-    sales_unit_price: 5,
-    purchase_unit_price: 3
+    type: `国营`,
+    Industry:'加工业',
+    address:'上海交通大学',
+    principal:'lisi',
+    Invoice:'固圣科技公司',
+    TaxpayerIdentificationNumber:10000+i,
+    BankAccount:'中国银行'
   })
 }
 const product = {}

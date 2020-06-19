@@ -46,14 +46,14 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
-        <a-descriptions-item label="联系人名称">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="联系人编码">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="客户或供应商">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="关联公司">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="联系电话">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="职务">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="部门">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="地址">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="联系人名称">{{name }}</a-descriptions-item>
+        <a-descriptions-item label="联系人编码">{{code}}</a-descriptions-item>
+        <a-descriptions-item label="客户或供应商">{{type}}</a-descriptions-item>
+        <a-descriptions-item label="关联公司">{{Company}}</a-descriptions-item>
+        <a-descriptions-item label="联系电话">{{Tel}}</a-descriptions-item>
+        <a-descriptions-item label="职务">{{Job}}</a-descriptions-item>
+        <a-descriptions-item label="部门">{{Department}}</a-descriptions-item>
+        <a-descriptions-item label="地址">{{Address}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -115,35 +115,35 @@ const columns = [
   {
     key: '3',
     title: '关联公司',
-    dataIndex: 'unit',
+    dataIndex: 'Company',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
     title: '联系电话',
-    dataIndex: 'sales_unit_price',
+    dataIndex: 'Tel',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
     title: '职务',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'Job',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
     title: '部门',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'Department',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
     title: '地址',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'Address',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
@@ -160,11 +160,13 @@ for (let i = 0; i < 46; i++) {
   data.push({
     key: i,
     code: `000${i}`,
-    name: `电热毛巾架${i}`,
-    type: `K-0000T-${i}`,
-    unit: 46 - i,
-    sales_unit_price: 5,
-    purchase_unit_price: 3
+    name: `张三`,
+    type: `华为`,
+    Company: '固圣科技',
+    Tel:'13339984321',
+    Job:'经理',
+    Department:'销售部',
+    Address:'上海高新科技园区'
   })
 }
 const product = {}

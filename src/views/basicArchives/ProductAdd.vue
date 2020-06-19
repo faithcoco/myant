@@ -7,9 +7,9 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="产品编码" required prop="date1">
+      <a-form-model-item label="产品编码" required prop="code">
         <a-input
-          v-model="form.name"
+          v-model="form.code"
           placeholder="请输入产品编码"
           @blur="
           () => {
@@ -20,7 +20,7 @@
         </a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="产品编码" width="1000px" @ok="handleOk">
         <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -32,9 +32,9 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item ref="name" label="产品名称" prop="name">
+      <a-form-model-item ref="ProductName" label="产品名称" prop="ProductName">
         <a-input
-          v-model="form.name"
+          v-model="form.ProductName"
           placeholder="请输入产品名称"
           @blur="
           () => {
@@ -42,12 +42,12 @@
           }"
         />
       </a-form-model-item>
-      <a-form-model-item label="产品条码" prop="code">
-        <a-input v-model="form.code" placeholder="请输入产品条码" />
+      <a-form-model-item label="产品条码" prop="Barcode">
+        <a-input v-model="form.Barcode" placeholder="请输入产品条码" />
       </a-form-model-item>
       <a-form-model-item ref="name" label="规格型号">
         <a-input
-          v-model="form.name"
+          v-model="form.SpecificationModel"
           placeholder="请输入规格型号"
           @blur="
           () => {
@@ -58,7 +58,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="计量单位">
         <a-input
-          v-model="form.name"
+          v-model="form.MeasurementUnit"
           placeholder="请输入计量单位"
           @blur="
           () => {
@@ -71,6 +71,7 @@
       <a-form-model-item label="产品分类">
         <a-select
           show-search
+          default-value="1"
           placeholder="请选择产品分类"
           option-filter-prop="children"
           :filter-option="filterOption"
@@ -78,14 +79,14 @@
           @blur="handleBlur"
           @change="handleSearchChange"
         >
-          <a-select-option value="jack">专用设备</a-select-option>
-          <a-select-option value="lucy">芯片</a-select-option>
-          <a-select-option value="tom">汽车零部件</a-select-option>
+          <a-select-option value="1">专用设备</a-select-option>
+          <a-select-option value="2">芯片</a-select-option>
+          <a-select-option value="3">汽车零部件</a-select-option>
         </a-select>
       </a-form-model-item>
       <a-form-model-item ref="name" label="销售单价">
         <a-input
-          v-model="form.price"
+          v-model="form.SalePrice"
           placeholder="请输入销售单价"
           @blur="
           () => {
@@ -96,7 +97,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="采购单价">
         <a-input
-          v-model="form.name"
+          v-model="form.PurchasePrice"
           placeholder="请输入采购单价"
           @blur="
           () => {
@@ -134,52 +135,52 @@ Vue.use(formModel, Button)
 const columns = [
   {
     title: '编码',
-    dataIndex: 'name',
-    key: 'name',
-    width: 100,
-    scopedSlots: { customRender: 'name' }
+    dataIndex: 'code',
+    key: '1',
+    width: 80,
+    scopedSlots: { customRender: 'code' }
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-    width: 80
+    title: '产品名称',
+    dataIndex: 'ProductName',
+    key: '2',
+    width: 100
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address 1',
-    ellipsis: true
+    title: '产品条码',
+    dataIndex: 'Barcode',
+    key: '3',
+    width: 100
   },
   {
-    title: 'Long Column',
-    dataIndex: 'address',
-    key: 'address 4',
-    ellipsis: true
+    title: '规格型号',
+    dataIndex: 'SpecificationModel',
+    key: '4',
+    width: 100
   }
 ]
 
 const data = [
   {
     key: '1',
-    name: 'Y1001',
-    age: 32,
-    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    tags: ['nice', 'developer']
+    code: 'Y1001',
+    ProductName: '自动炒菜机',
+    Barcode: '101010101010',
+    SpecificationModel: 'Y001'
   },
   {
     key: '2',
-    name: 'Y1002',
-    age: 42,
-    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-    tags: ['loser']
+    code: 'Y1002',
+    ProductName: '自动炒菜机',
+    Barcode: '101010101010',
+    SpecificationModel: 'Y001'
   },
   {
     key: '3',
-    name: 'Y1003',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher']
+    code: 'Y1003',
+    ProductName: '自动炒菜机',
+    Barcode: '101010101010',
+    SpecificationModel: 'Y001'
   }
 ]
 
@@ -198,33 +199,23 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        name: '',
-        region: undefined,
-        date1: undefined,
-        delivery: false,
-        type: [],
-        resource: '',
-        desc: '',
+        ProductName: '',
         code: '',
-        price: ''
+        Barcode: '',
+        SpecificationModel: '',
+        MeasurementUnit: '',
+        ProductCategories: '',
+        SalePrice: '',
+        PurchasePrice: '',
+        desc: ''
       },
       rules: {
-        name: [
+        ProductName: [
           { required: true, message: '请输入产品编码', trigger: 'blur' },
           { min: 1, max: 3, message: '', trigger: 'blur' }
         ],
-        region: [{ required: true, message: '', trigger: 'change' }],
-        date1: [{ required: true, message: '请输入产品编码', trigger: 'change' }],
-        type: [
-          {
-            type: 'array',
-            required: true,
-            message: 'Please select at least one activity type',
-            trigger: 'change'
-          }
-        ],
-        resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
+        code: [{ required: true, message: '请输入产品编码', trigger: 'change' }],
+        Barcode: [{ required: true, message: '请输入产品条码', trigger: 'change' }]
       }
     }
   },
@@ -240,9 +231,6 @@ export default {
     }
   },
   methods: {
-    onSelectChange(selectedRowKeys) {
-      this.selectedRowKeys = selectedRowKeys
-    },
     handleChange(info) {
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList)

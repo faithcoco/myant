@@ -55,6 +55,7 @@
         <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
         <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
         <a-descriptions-item label="批次编码">{{product.BatchCode}}</a-descriptions-item>
+        <a-descriptions-item label="货位编码">{{product.BatchCode}}</a-descriptions-item>
         <a-descriptions-item label="数量">{{product.Quantity}}</a-descriptions-item>
         <a-descriptions-item label="计量单位">{{product.Unit}}</a-descriptions-item>
         <a-descriptions-item label="包装数量">{{product.PackingQuantity}}</a-descriptions-item>
@@ -161,6 +162,13 @@ const columns = [
   {
     key: '8',
     title: '批次编码',
+    dataIndex: 'BatchCode',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '8',
+    title: '货位编码',
     dataIndex: 'BatchCode',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age

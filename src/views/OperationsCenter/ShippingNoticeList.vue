@@ -49,6 +49,7 @@
         <a-descriptions-item label="发货通知单编码">{{product.ShippingNoticeCode}}</a-descriptions-item>
         <a-descriptions-item label="客户编码">{{product.CustomerCode}}</a-descriptions-item>
         <a-descriptions-item label="客户地址编码">{{product.CustomerAddressCode}}</a-descriptions-item>
+        <a-descriptions-item label="联系人编码">{{product.CustomerAddressCode}}</a-descriptions-item>
         <a-descriptions-item label="部门编码">{{product.DepartmentCode}}</a-descriptions-item>
         <a-descriptions-item label="业务员编码">{{product.SalesmanCode}}</a-descriptions-item>
         <a-descriptions-item label="预计出库日期">{{product.ExpectedOutWarehouseCode}}</a-descriptions-item>
@@ -129,6 +130,14 @@ const columns = [
   },
   {
     key: '3',
+    title: '联系人编码',
+    dataIndex: 'CustomerAddressCode',
+    defaultSortOrder: 'descend',
+    width:100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '4',
     title: '部门编码',
     dataIndex: 'DepartmentCode',
     defaultSortOrder: 'descend',
@@ -136,7 +145,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '4',
+    key: '5',
     title: '业务员编码',
     dataIndex: 'SalesmanCode',
     defaultSortOrder: 'descend',
@@ -144,7 +153,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '5',
+    key: '6',
     title: '预计出库日期',
     dataIndex: 'ExpectedOutWarehouseCode',
     defaultSortOrder: 'descend',
@@ -152,7 +161,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '6',
+    key: '7',
     title: '发货仓库编码',
     dataIndex: 'ShippingWarehouseCode',
     defaultSortOrder: 'descend',
@@ -160,7 +169,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '7',
+    key: '8',
     title: '存货编码',
     dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
@@ -168,7 +177,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '8',
+    key: '9',
     title: '存货名称',
     dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
@@ -176,7 +185,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '9',
+    key: '10',
     title: '批次编码',
     dataIndex: 'BatchCode',
     defaultSortOrder: 'descend',
@@ -184,7 +193,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '10',
+    key: '11',
     title: '数量',
     dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
@@ -192,7 +201,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '11',
+    key: '12',
     title: '计量单位',
     dataIndex: 'Unit',
     defaultSortOrder: 'descend',
@@ -200,7 +209,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '12',
+    key: '13',
     title: '包装数量',
     dataIndex: 'PackingQuantity',
     defaultSortOrder: 'descend',
@@ -208,7 +217,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '13',
+    key: '14',
     title: '包装单位',
     dataIndex: 'PackingUnit',
     defaultSortOrder: 'descend',
@@ -216,7 +225,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '14',
+    key: '15',
     title: '单价',
     dataIndex: 'UnitPrice',
     defaultSortOrder: 'descend',
@@ -224,7 +233,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '15',
+    key: '16',
     title: '含税单价',
     dataIndex: 'TaxIncludedUnitPrice',
     defaultSortOrder: 'descend',
@@ -232,7 +241,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '16',
+    key: '17',
     title: '税率',
     dataIndex: 'TaxRate',
     defaultSortOrder: 'descend',
@@ -240,7 +249,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '17',
+    key: '18',
     title: '金额',
     dataIndex: 'Amount',
     defaultSortOrder: 'descend',
@@ -248,7 +257,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '18',
+    key: '19',
     title: '含税金额',
     dataIndex: 'TaxIncludedAmount',
     defaultSortOrder: 'descend',
@@ -256,7 +265,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '19',
+    key: '20',
     title: '税额',
     dataIndex: 'Tax',
     defaultSortOrder: 'descend',
@@ -264,7 +273,7 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '20',
+    key: '21',
     title: '操作',
     dataIndex: 'action',
     width: '150px',

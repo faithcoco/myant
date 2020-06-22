@@ -16,7 +16,7 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
         </a-input>
       </a-form-model-item>
 
@@ -99,18 +99,6 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item label="货位编码">
-        <a-input
-          v-model="form.LocationCode"
-          placeholder="请输入货位编码"
-          @blur="
-          () => {
-            
-          }"
-        >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
-      </a-form-model-item>
       <a-form-model-item label="批次编码">
         <a-input
           v-model="form.BatchCode"
@@ -123,7 +111,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="数量">
+          <a-form-model-item label="数量">
         <a-input
           v-model="form.Quantity"
           placeholder="请输入数量"
@@ -178,6 +166,28 @@
         "
         />
       </a-form-model-item>
+      <a-form-model-item label="含税单价">
+        <a-input
+          v-model="form.TaxIncludedUnitPrice"
+          placeholder="请输入含税单价"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="税率">
+        <a-input
+          v-model="form.TaxRate"
+          placeholder="请输入税率"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
       <a-form-model-item label="金额">
         <a-input
           v-model="form.Amount"
@@ -189,10 +199,32 @@
         "
         />
       </a-form-model-item>
+      <a-form-model-item label="含税金额">
+        <a-input
+          v-model="form.TaxIncludedAmount"
+          placeholder="请输入金额"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="税额">
+        <a-input
+          v-model="form.Tax"
+          placeholder="请输入税额"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
 
-      <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="onSubmit">保存</a-button>
-        <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
+        <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
+        <a-button type @click="resetForm">保存并继续</a-button>
+        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>

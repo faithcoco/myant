@@ -16,7 +16,7 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
         </a-input>
       </a-form-model-item>
 
@@ -41,7 +41,6 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
       <a-form-model-item label="目标仓库编码" prop="TargetWarehouseCode">
@@ -53,8 +52,7 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
+          </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码">
         <a-input
@@ -65,8 +63,7 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
+         </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="调拨日期">
         <a-date-picker
@@ -86,8 +83,7 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
+         </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="存货名称">
         <a-input
@@ -109,8 +105,7 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
+         </a-input>
       </a-form-model-item>
       <a-form-model-item label="批次编码">
         <a-input
@@ -121,8 +116,7 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
+         </a-input>
       </a-form-model-item>
       <a-form-model-item label="数量">
         <a-input
@@ -192,8 +186,8 @@
       </a-form-model-item>
 
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="onSubmit">保存</a-button>
-        <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
+        <a-button type @click="resetForm">保存并继续</a-button>
+        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>

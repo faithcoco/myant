@@ -2,10 +2,10 @@
   <div>
     <a-card>
       <a-row>
-        <a-col :span="21">
+        <a-col :span="19">
           <a-input-search @search="onSearch" placeholder="请输入搜索内容" />
         </a-col>
-        <a-col :span="3">
+        <a-col :span="5">
           <span
             class="table-page-search-submitButtons"
             :style="{ float: 'right', overflow: 'hidden' } || {} "

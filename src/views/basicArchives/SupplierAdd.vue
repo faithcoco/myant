@@ -16,7 +16,7 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+          <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
         </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="供应商名称" prop="supplierName">
@@ -30,10 +30,8 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-         <a-table  :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
+        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
-     
-     
 
       <a-modal v-model="visible" title="选择编号" width="1000px" @ok="handleOk">
         <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
@@ -111,7 +109,8 @@ const columns = [
     title: '供应商名称',
     dataIndex: 'supplierName',
     key: 'supplierName',
-    width: 80
+    width: 80,
+    scopedSlots: { customRender: 'supplierName' }
   },
   {
     title: '供应商编号',
@@ -133,12 +132,12 @@ const columns = [
   }
 ]
 const selectcolumns = [
- 
   {
     title: '供应商名称',
     dataIndex: 'supplierName',
     key: 'supplierName',
-    width: 80
+    width: 80,
+    scopedSlots: { customRender: 'supplierName' }
   },
   {
     title: '供应商编号',
@@ -159,7 +158,6 @@ const selectcolumns = [
     width: 80
   }
 ]
-
 const data = [
   {
     key: '1',
@@ -183,17 +181,17 @@ const data = [
     ContactPerson: '张三'
   }
 ]
-const numberRow=[]
-
+const numberRow = []
 export default {
   data() {
     return {
+      numberRow,
+      selectedRow: [],
+      selectcolumns,
+
       visible: false,
       data,
       columns,
-      numberRow,
-      selectedRow:[],
-      selectcolumns,
       selectedRowKeys: [], // Check here to configure the default column
       headers: {
         authorization: 'authorization-text'
@@ -202,6 +200,7 @@ export default {
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
       form: {
+        code: '',
         supplierName: '', //供应商名称
         region: '', //负责人
         SupplierCode: '', //供应商编号
@@ -269,13 +268,21 @@ export default {
     filterOption(input, option) {
       return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
     },
+    onSelectChange(selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys
+    },
+
     showModal() {
       this.visible = true
+    },
+    elect() {
+      this.form.SupplierCode = 'PT2020062200001'
     },
     handleOk(e) {
       console.log(e)
       this.visible = false
-      this.numberRow=this.selectedRow
+      this.numberRow = this.selectedRow
+      console.log(this.numberRow)
     },
     onChange(record) {
       console.log('check', record)

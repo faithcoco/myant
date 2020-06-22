@@ -46,8 +46,8 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
-        <a-descriptions-item label="联系人名称">{{name }}</a-descriptions-item>
         <a-descriptions-item label="联系人编码">{{code}}</a-descriptions-item>
+        <a-descriptions-item label="联系人名称">{{name }}</a-descriptions-item>
         <a-descriptions-item label="客户或供应商">{{type}}</a-descriptions-item>
         <a-descriptions-item label="关联公司">{{Company}}</a-descriptions-item>
         <a-descriptions-item label="联系电话">{{Tel}}</a-descriptions-item>
@@ -91,16 +91,16 @@ Vue.use(Transfer)
 const columns = [
   {
     key: '0',
-    title: '联系人名称',
-    dataIndex: 'name',
+    title: '联系人编码',
+    dataIndex: 'code',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
   {
     key: '1',
-    title: '联系人编码',
-    dataIndex: 'code',
+    title: '联系人名称',
+    dataIndex: 'name',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.name - b.name
   },
@@ -163,10 +163,10 @@ for (let i = 0; i < 46; i++) {
     name: `张三`,
     type: `华为`,
     Company: '固圣科技',
-    Tel:'13339984321',
-    Job:'经理',
-    Department:'销售部',
-    Address:'上海高新科技园区'
+    Tel: '13339984321',
+    Job: '经理',
+    Department: '销售部',
+    Address: '上海高新科技园区'
   })
 }
 const product = {}

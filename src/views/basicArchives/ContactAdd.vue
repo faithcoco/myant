@@ -16,7 +16,7 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
         </a-input>
       </a-form-model-item>
 
@@ -43,7 +43,19 @@
         />
       </a-form-model-item>
       <a-form-model-item label="客户或供应商" prop="Supplier">
-        <a-input v-model="form.Supplier" placeholder="请输入客户或供应商" />
+        <a-select
+          show-search
+          default-value="1"
+          placeholder="请选择批次管理"
+          option-filter-prop="children"
+          :filter-option="filterOption"
+          @focus="handleFocus"
+          @blur="handleBlur"
+          @change="handleSearchChange"
+        >
+          <a-select-option value="1">客户</a-select-option>
+          <a-select-option value="2">供应商</a-select-option>
+        </a-select>
       </a-form-model-item>
       <a-form-model-item ref="name" label="关联公司">
         <a-input
@@ -69,20 +81,15 @@
         />
       </a-form-model-item>
       <a-form-model-item label="职务">
-        <a-select
-          show-search
-          default-value="1"
-          placeholder="请选择职务"
-          option-filter-prop="children"
-          :filter-option="filterOption"
-          @focus="handleFocus"
-          @blur="handleBlur"
-          @change="handleSearchChange"
-        >
-          <a-select-option value="1">经理</a-select-option>
-          <a-select-option value="2">营销部长</a-select-option>
-          <a-select-option value="3">员工</a-select-option>
-        </a-select>
+        <a-input
+          v-model="form.Company"
+          placeholder="请输入职务"
+          @blur="
+          () => {
+         
+          }
+        "
+        />
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门">
         <a-input
@@ -107,8 +114,8 @@
         />
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="onSubmit">保存</a-button>
-        <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
+        <a-button type @click="resetForm">保存并继续</a-button>
+        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>

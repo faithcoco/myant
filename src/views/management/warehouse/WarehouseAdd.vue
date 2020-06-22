@@ -7,20 +7,20 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="仓库名称" prop="date1">
-        <a-input v-model="form.date1" placeholder="请输入仓库名称"></a-input>
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="仓库编号" prop="WarehouseId">
+      <a-form-model-item ref="name" label="仓库编码" prop="WarehouseId">
         <a-input
           v-model="form.name"
-          placeholder="请输入产品编码"
+          placeholder="请输入仓库编码"
           @blur="
           () => {
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
         </a-input>
+      </a-form-model-item>
+      <a-form-model-item label="仓库名称" prop="date1">
+        <a-input v-model="form.date1" placeholder="请输入仓库名称"></a-input>
       </a-form-model-item>
 
       <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
@@ -35,8 +35,8 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item label="关联项目" prop="code">
-        <a-input v-model="form.code" placeholder="请选择需要关联项目">
+      <a-form-model-item label="仓库负责人" prop="code">
+        <a-input v-model="form.code" placeholder="请选择仓库负责人">
           <a-button slot="suffix" type="link">选择</a-button>
         </a-input>
       </a-form-model-item>
@@ -51,7 +51,8 @@
           }
         "
         />
-
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="仓库地址">
         <a-input
           v-model="form.detailed"
           type="textarea"
@@ -64,10 +65,10 @@
         />
       </a-form-model-item>
 
-      <a-form-model-item ref="principal" label="仓库负责人" prop="principal">
+      <a-form-model-item ref="principal" label="货位管理" prop="principal">
         <a-input
           v-model="form.principal"
-          placeholder="请输入仓库负责人"
+          placeholder="请输入货位管理"
           @blur="
           () => {
           
@@ -78,25 +79,14 @@
           <a-button slot="suffix" type="link">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="联系电话">
+      <a-form-model-item label="批次管理">
         <a-input
           v-model="form.phone"
-          placeholder="请输入联系电话"
+          placeholder="请输入批次管理"
           @blur="
           () => {
           
          
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="备注">
-        <a-input
-          v-model="form.price"
-          placeholder="请填写备注"
-          @blur="
-          () => {
-            $refs.name.onFieldBlur();
           }
         "
         />
@@ -114,8 +104,8 @@
         </a-upload>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="onSubmit">保存</a-button>
-        <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
+        <a-button type @click="resetForm">保存并继续</a-button>
+        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>
@@ -127,40 +117,40 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
-    title: 'Name',
+    title: '仓库编码',
     dataIndex: 'name',
     key: 'name',
     scopedSlots: { customRender: 'name' }
   },
   {
-    title: 'Age',
+    title: '仓库名称',
     dataIndex: 'age',
-    key: 'age',
-    width: 80
+    key: 'age'
   },
   {
-    title: 'Address',
+    title: '仓库负责人',
     dataIndex: 'address',
-    key: 'address 1',
-    ellipsis: true
+    key: 'address 1'
   },
   {
-    title: 'Long Column Long Column Long Column',
+    title: '仓库地址',
     dataIndex: 'address',
-    key: 'address 2',
-    ellipsis: true
+    key: 'address 2'
   },
   {
-    title: 'Long Column Long Column',
+    title: '详细地址',
     dataIndex: 'address',
-    key: 'address 3',
-    ellipsis: true
+    key: 'address 3'
   },
   {
-    title: 'Long Column',
+    title: '货位管理',
     dataIndex: 'address',
-    key: 'address 4',
-    ellipsis: true
+    key: 'address 4'
+  },
+  {
+    title: '批次管理',
+    dataIndex: 'address',
+    key: 'address 4'
   }
 ]
 

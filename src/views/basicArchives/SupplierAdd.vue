@@ -28,16 +28,16 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
+         <a-table  :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
+     
+     
 
       <a-modal v-model="visible" title="选择编号" width="1000px" @ok="handleOk">
-        <a-table
-          :row-selection="rowSelection"
-          :columns="columns"
-          :data-source="data"
-          :pagination="false"
-          bordered
-        >
+        <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
+          <span slot="checked" style="margin: 0" slot-scope="text,record">
+            <a-checkbox v-model="record.checked" @change="onChange(record)" />
+          </span>
           <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
       </a-modal>
@@ -115,11 +115,17 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
+    title: '选择',
+    dataIndex: 'checked',
+    key: 'checked',
+    width: 80,
+    scopedSlots: { customRender: 'checked' }
+  },
+  {
     title: '供应商名称',
     dataIndex: 'supplierName',
     key: 'supplierName',
-     width: 80,
-    scopedSlots: { customRender: 'supplierName' }
+    width: 80
   },
   {
     title: '供应商编号',
@@ -131,13 +137,40 @@ const columns = [
     title: '供应商类型',
     dataIndex: 'SupplierType',
     key: 'SupplierType',
-     width: 80
+    width: 80
   },
   {
     title: '负责人',
     dataIndex: 'ContactPerson',
     key: 'ContactPerson',
-     width: 80
+    width: 80
+  }
+]
+const selectcolumns = [
+ 
+  {
+    title: '供应商名称',
+    dataIndex: 'supplierName',
+    key: 'supplierName',
+    width: 80
+  },
+  {
+    title: '供应商编号',
+    dataIndex: 'SupplierCode',
+    key: 'SupplierCode',
+    width: 80
+  },
+  {
+    title: '供应商类型',
+    dataIndex: 'SupplierType',
+    key: 'SupplierType',
+    width: 80
+  },
+  {
+    title: '负责人',
+    dataIndex: 'ContactPerson',
+    key: 'ContactPerson',
+    width: 80
   }
 ]
 
@@ -164,6 +197,7 @@ const data = [
     ContactPerson: '张三'
   }
 ]
+const numberRow=[]
 
 export default {
   data() {
@@ -171,6 +205,9 @@ export default {
       visible: false,
       data,
       columns,
+      numberRow,
+      selectedRow:[],
+      selectcolumns,
       selectedRowKeys: [], // Check here to configure the default column
       headers: {
         authorization: 'authorization-text'
@@ -205,7 +242,6 @@ export default {
       const { selectedRowKeys } = this
       return {
         selectedRowKeys,
-        onChange: this.onSelectChange,
         hideDefaultSelections: true,
         onSelection: this.onSelection
       }
@@ -247,16 +283,20 @@ export default {
     filterOption(input, option) {
       return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
     },
-    onSelectChange(selectedRowKeys) {
-      this.selectedRowKeys = selectedRowKeys
-    },
-
     showModal() {
       this.visible = true
     },
     handleOk(e) {
       console.log(e)
       this.visible = false
+      this.numberRow=this.selectedRow
+    },
+    onChange(record) {
+      console.log('check', record)
+      if (record.checked) {
+        this.selectedRow.push(record)
+        console.log(this.selectedRow)
+      }
     }
   }
 }

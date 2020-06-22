@@ -16,7 +16,7 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+          <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
         </a-input>
       </a-form-model-item>
       <a-form-model-item label="入库类型编码" required prop="Num">
@@ -30,26 +30,26 @@
         ></a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="选择编号" width="1000px" @ok="handleOk">
-        <a-table
-          :row-selection="rowSelection"
-          :columns="columns"
-          :data-source="data"
-          :pagination="false"
-          bordered
-        >
+      <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
+        <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
+          <span slot="checked" style="margin: 0" slot-scope="text,record">
+            <a-checkbox v-model="record.checked" @change="onChange(record)" />
+          </span>
           <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
       </a-modal>
 
       <a-form-model-item label="关联单据" prop="Warehouse">
         <a-input v-model="form.Warehouse" placeholder="请选择关联单据">
-            <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
         </a-input>
       </a-form-model-item>
 
       <a-form-model-item label="供应商编码" prop="Warehouse">
-        <a-input v-model="form.Warehouse" placeholder="请选择供应商编码"></a-input>
+        <a-input v-model="form.Warehouse" placeholder="请选择供应商编码">
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
+        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
 
       <a-form-model-item label="客户编码" prop="Warehouse">
@@ -79,7 +79,7 @@
         "
         >
           <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
-          </a-input>
+        </a-input>
       </a-form-model-item>
 
       <a-form-model-item ref="name" label="存货名称" prop="RelateDocuments">
@@ -105,14 +105,14 @@
           }
         "
         >
-            <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
-       </a-input>
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+        </a-input>
       </a-form-model-item>
 
       <a-form-model-item label="批次编码" prop="StorageProduct">
         <a-input v-model="form.StorageProduct" placeholder="请输入批次编码" @blur="
           () => { }">
-            <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
         </a-input>
       </a-form-model-item>
       <a-form-model-item label="数量">
@@ -207,6 +207,40 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
+    title: '选择',
+    dataIndex: 'checked',
+    key: 'checked',
+    width: 80,
+    scopedSlots: { customRender: 'checked' }
+  },
+  {
+    title: '类型',
+    dataIndex: 'Type',
+    key: 'Type',
+    scopedSlots: { customRender: 'Type' },
+    width: 80
+  },
+  {
+    title: '编号',
+    dataIndex: 'Num',
+    key: 'Num',
+    width: 80
+  },
+  {
+    title: '仓库',
+    dataIndex: 'Warehouse',
+    key: 'Warehouse',
+    width: 80
+  },
+  {
+    title: '入库产品',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 80
+  }
+]
+const selectcolumns = [
+  {
     title: '类型',
     dataIndex: 'Type',
     key: 'Type',
@@ -256,10 +290,13 @@ const data = [
     StorageProduct: 'RTX2080TI'
   }
 ]
-
+const numberRow = []
 export default {
   data() {
     return {
+      numberRow,
+      selectedRow: [],
+      selectcolumns,
       visible: false,
       selectedRowKeys: [],
       data,
@@ -347,13 +384,25 @@ export default {
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
-
+    elect() {
+      this.form.Num = 'PT2020062200001'
+    },
     showModal() {
       this.visible = true
     },
+
     handleOk(e) {
       console.log(e)
       this.visible = false
+      this.numberRow = this.selectedRow
+      console.log(this.numberRow)
+    },
+    onChange(record) {
+      console.log('check', record)
+      if (record.checked) {
+        this.selectedRow.push(record)
+        console.log(this.selectedRow)
+      }
     }
   }
 }

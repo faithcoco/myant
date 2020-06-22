@@ -6,11 +6,14 @@
           <a-input-search @search="onSearch" placeholder="请输入搜索内容" />
         </a-col>
         <a-col :span="5">
-         
+          <span
+            class="table-page-search-submitButtons"
+            :style="{ float: 'right', overflow: 'hidden' } || {} "
+          >
             <a-button style="margin-left: 5px" type="primary" @click="handleSetting()">设置</a-button>
             <a-button style="margin-left: 5px" @click="() => queryParam = {}">导入</a-button>
             <a-button style="margin-left: 5px" @click="() => queryParam = {}">导出</a-button>
-         
+          </span>
         </a-col>
       </a-row>
       <a-table
@@ -43,12 +46,21 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
-        <a-descriptions-item label="产品名称">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="产品编码">{{product.code}}</a-descriptions-item>
+        <a-descriptions-item label="货品编码">{{product.name }}</a-descriptions-item>
+        <a-descriptions-item label="货品名称">{{product.code}}</a-descriptions-item>
         <a-descriptions-item label="规格型号">{{product.type}}</a-descriptions-item>
+        <a-descriptions-item label="货品条码">{{product.type}}</a-descriptions-item>
         <a-descriptions-item label="计量单位">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="销售单价">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="采购单价">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="包装单位">{{product.sales_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="换算关系">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="货品分类">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="货品说明">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="批次管理">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="生成批次结存帐">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="安全库存">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="起订量">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="采购批量">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="自定义追加项">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -86,17 +98,19 @@ Vue.use(Transfer)
 const columns = [
   {
     key: '0',
-    title: '产品名称',
+    title: '货品编码',
     dataIndex: 'name',
     defaultSortOrder: 'descend',
+    width:100,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
   {
     key: '1',
-    title: '产品编码',
+    title: '货品名称',
     dataIndex: 'code',
     defaultSortOrder: 'descend',
+    width:100,
     sorter: (a, b) => a.name - b.name
   },
 
@@ -105,34 +119,110 @@ const columns = [
     title: '规格型号',
     dataIndex: 'type',
     defaultSortOrder: 'descend',
+    width:100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '计量单位',
+    title: '货品条码',
     dataIndex: 'unit',
     defaultSortOrder: 'descend',
+    width:100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '销售单价',
+    title: '计量单位',
     dataIndex: 'sales_unit_price',
     defaultSortOrder: 'descend',
+    width:100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '采购单价',
+    title: '包装单位',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width:100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
+    title: '换算关系',
+    dataIndex: 'purchase_unit_price',
+    defaultSortOrder: 'descend',
+    width:100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '7',
+    title: '货品分类',
+    dataIndex: 'purchase_unit_price',
+    defaultSortOrder: 'descend',
+    width:100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '8',
+    title: '货品说明',
+    dataIndex: 'purchase_unit_price',
+    defaultSortOrder: 'descend',
+    width:100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '9',
+    title: '批次管理',
+    dataIndex: 'purchase_unit_price',
+    defaultSortOrder: 'descend',
+    width:100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '10',
+    title: '生成批次结存帐',
+    dataIndex: 'purchase_unit_price',
+    defaultSortOrder: 'descend',
+    width:100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '11',
+    title: '安全库存',
+    dataIndex: 'purchase_unit_price',
+    defaultSortOrder: 'descend',
+    width:100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '12',
+    title: '起订量',
+    dataIndex: 'purchase_unit_price',
+    defaultSortOrder: 'descend',
+    width:100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '13',
+    title: '采购批量',
+    dataIndex: 'purchase_unit_price',
+    defaultSortOrder: 'descend',
+    width:100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '14',
+    title: '自定义追加项',
+    dataIndex: 'purchase_unit_price',
+    defaultSortOrder: 'descend',
+    width:100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '15',
     title: '操作',
     dataIndex: 'action',
-    width: '150px',
+    width: '100px',
     scopedSlots: { customRender: 'action' }
   }
 ]
@@ -189,6 +279,7 @@ export default {
     onSearch(value) {
       console.log('value', value)
       const data = [...this.data]
+      //this.data = data.filter(item => item.code == value)
       this.data = this.data.filter(function(data) {
         return Object.keys(data).some(function(key) {
           return (

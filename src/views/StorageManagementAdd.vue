@@ -7,34 +7,27 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item ref="name" label="类型" required>
-        <a-select
-          show-search
-          :model="value"
-          default-value="1"
-          placeholder="请选择入库类型"
-          option-filter-prop="children"
-          :filter-option="filterOption"
-          @focus="handleFocus"
-          @blur="handleBlur"
-          @change="handleSearchChange"
-        >
-          <a-select-option value="1">采购入库</a-select-option>
-          <a-select-option value="2">芯片</a-select-option>
-          <a-select-option value="3">汽车零部件</a-select-option>
-        </a-select>
-      </a-form-model-item>
-      <a-form-model-item label="编号" required prop="Num">
+      <a-form-model-item ref="name" label="入库单编码" required>
         <a-input
           v-model="form.Num"
-          placeholder="请输入编号"
+          placeholder="请输入入库单编码"
           @blur="
           () => {
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
         </a-input>
+      </a-form-model-item>
+      <a-form-model-item label="入库类型编码" required prop="Num">
+        <a-input
+          v-model="form.Num"
+          placeholder="请输入入库类型编码"
+          @blur="
+          () => {
+            
+          }"
+        ></a-input>
       </a-form-model-item>
 
       <a-modal v-model="visible" title="选择编号" width="1000px" @ok="handleOk">
@@ -49,10 +42,21 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item label="仓库" prop="Warehouse">
-        <a-input v-model="form.Warehouse" placeholder="请选择仓库">
-          <a-button slot="suffix" type="link">选择</a-button>
+      <a-form-model-item label="关联单据" prop="Warehouse">
+        <a-input v-model="form.Warehouse" placeholder="请选择关联单据">
+            <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
         </a-input>
+      </a-form-model-item>
+
+      <a-form-model-item label="供应商编码" prop="Warehouse">
+        <a-input v-model="form.Warehouse" placeholder="请选择供应商编码"></a-input>
+      </a-form-model-item>
+
+      <a-form-model-item label="客户编码" prop="Warehouse">
+        <a-input v-model="form.Warehouse" placeholder="请选择客户编码"></a-input>
+      </a-form-model-item>
+      <a-form-model-item label="部门编码" prop="Warehouse">
+        <a-input v-model="form.Warehouse" placeholder="请选择部门编码"></a-input>
       </a-form-model-item>
       <a-form-model-item ref="date" label="入库日期" prop="date">
         <a-date-picker
@@ -63,10 +67,10 @@
           style="width: 100%;"
         />
       </a-form-model-item>
-      <a-form-model-item ref="Principal" label="负责人">
+      <a-form-model-item ref="Principal" label="存货编码">
         <a-input
           v-model="form.Principal"
-          placeholder="请选择负责人"
+          placeholder="请选择存货编码"
           @blur="
           () => {
           
@@ -74,14 +78,26 @@
           }
         "
         >
-          <a-button slot="suffix" type="link">选择</a-button>
-        </a-input>
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+          </a-input>
       </a-form-model-item>
 
-      <a-form-model-item ref="name" label="关联单据" prop="RelateDocuments">
+      <a-form-model-item ref="name" label="存货名称" prop="RelateDocuments">
         <a-input
           v-model="form.RelateDocuments"
-          placeholder="请选择需要关联的单据"
+          placeholder="请选择存货名称"
+          @blur="
+          () => {
+          
+         
+          }
+        "
+        ></a-input>
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="货位编码" prop="RelateDocuments">
+        <a-input
+          v-model="form.RelateDocuments"
+          placeholder="请选择货位编码"
           @blur="
           () => {
           
@@ -89,21 +105,75 @@
           }
         "
         >
-          <a-button slot="suffix" type="link">选择</a-button>
-        </a-input>
+            <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+       </a-input>
       </a-form-model-item>
 
-      <a-form-model-item label="入库产品" prop="StorageProduct">
-        <a-input v-model="form.StorageProduct" placeholder="请输入入库产品" @blur="
+      <a-form-model-item label="批次编码" prop="StorageProduct">
+        <a-input v-model="form.StorageProduct" placeholder="请输入批次编码" @blur="
           () => { }">
-          <a-button slot="suffix" type="link">选择</a-button>
+            <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="备注">
+      <a-form-model-item label="数量">
         <a-input
           v-model="form.Remarks"
-          placeholder="请输入备注"
-          type="textarea"
+          placeholder="请输入数量"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="计量单位">
+        <a-input
+          v-model="form.Remarks"
+          placeholder="请输入计量单位"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="包装数量">
+        <a-input
+          v-model="form.Remarks"
+          placeholder="请输入包装数量"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="包装单位">
+        <a-input
+          v-model="form.Remarks"
+          placeholder="请输入包装单位"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="单价">
+        <a-input
+          v-model="form.Remarks"
+          placeholder="请输入单价"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="金额">
+        <a-input
+          v-model="form.Remarks"
+          placeholder="请输入金额"
           @blur="
           () => {
             
@@ -124,8 +194,8 @@
       </a-form-model-item>
 
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="onSubmit">保存</a-button>
-        <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
+        <a-button type @click="resetForm">保存并继续</a-button>
+        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>
@@ -190,8 +260,8 @@ const data = [
 export default {
   data() {
     return {
-      visible: false, ///////////////
-      selectedRowKeys: [], ////////////////////////
+      visible: false,
+      selectedRowKeys: [],
       data,
       columns,
       headers: {

@@ -7,6 +7,18 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
+      <a-form-model-item label="供应商编码" required prop="SupplierCode">
+        <a-input
+          v-model="form.SupplierCode"
+          placeholder="请输入供应商编码"
+          @blur="
+          () => {
+            
+          }"
+        >
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+        </a-input>
+      </a-form-model-item>
       <a-form-model-item ref="name" label="供应商名称" prop="supplierName">
         <a-input
           v-model="form.supplierName"
@@ -14,16 +26,6 @@
           @blur="
           () => {
             $refs.name.onFieldBlur();
-          }"
-        />
-      </a-form-model-item>
-      <a-form-model-item label="供应商编号" required prop="SupplierCode">
-        <a-input
-          v-model="form.SupplierCode"
-          placeholder="请输入供应商编号"
-          @blur="
-          () => {
-            
           }"
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
@@ -43,16 +45,25 @@
       </a-modal>
 
       <a-form-model-item label="供应商类型">
-        <a-input v-model="form.SupplierType" placeholder="请选择供应商类型">
-          <a-button slot="suffix" type="link">选择</a-button>
-        </a-input>
+        <a-input v-model="form.SupplierType" placeholder="请输入供应商类型"></a-input>
       </a-form-model-item>
       <a-form-model-item label="负责人" prop="region">
-        <a-input v-model="form.region" placeholder="请选择负责人">
-          <a-button slot="suffix" type="link">选择</a-button>
-        </a-input>
+        <a-input v-model="form.region" placeholder="请选择负责人"></a-input>
       </a-form-model-item>
-
+      <a-form-model-item ref="name" label="联系人编码">
+        <a-input
+          v-model="form.ContactPerson"
+          placeholder="请输入联系人编码"
+          @blur="
+          () => {
+            $refs.name.onFieldBlur();
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="备注">
+        <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
+      </a-form-model-item>
       <a-form-model-item ref="name" label="纳税人识别号">
         <a-input
           v-model="form.TaxpayerIdentificationNumber"
@@ -64,32 +75,7 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="联系人">
-        <a-input
-          v-model="form.ContactPerson"
-          placeholder="请输入联系人"
-          @blur="
-          () => {
-            $refs.name.onFieldBlur();
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="联系电话">
-        <a-input
-          v-model="form.Tel"
-          placeholder="请输入联系电话"
-          @blur="
-          () => {
-            $refs.name.onFieldBlur();
-          }
-        "
-        />
-      </a-form-model-item>
 
-      <a-form-model-item label="备注">
-        <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
-      </a-form-model-item>
       <a-form-model-item label="附件">
         <a-upload
           name="file"
@@ -102,8 +88,8 @@
         </a-upload>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="onSubmit">保存</a-button>
-        <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
+        <a-button type @click="resetForm">保存并继续</a-button>
+        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>

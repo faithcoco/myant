@@ -46,13 +46,13 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
+        <a-descriptions-item label="供应商编码">{{product.code}}</a-descriptions-item>
         <a-descriptions-item label="供应商名称">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="供应商编号">{{product.code}}</a-descriptions-item>
         <a-descriptions-item label="供应商类型">{{product.type}}</a-descriptions-item>
         <a-descriptions-item label="负责人">{{product.principal}}</a-descriptions-item>
+        <a-descriptions-item label="联系人编码">{{product.ContactPerson}}</a-descriptions-item>
+        <a-descriptions-item label="备注">{{product.ContactPerson}}</a-descriptions-item>
         <a-descriptions-item label="纳税人识别号">{{product.TaxpayerIdentificationNumber}}</a-descriptions-item>
-        <a-descriptions-item label="联系人">{{product.ContactPerson}}</a-descriptions-item>
-        <a-descriptions-item label="联系电话">{{product.tel}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -90,18 +90,19 @@ Vue.use(Transfer)
 const columns = [
   {
     key: '0',
+    title: '供应商编码',
+    dataIndex: 'code',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.name - b.name
+  },
+
+  {
+    key: '1',
     title: '供应商名称',
     dataIndex: 'name',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
-  },
-  {
-    key: '1',
-    title: '供应商编号',
-    dataIndex: 'code',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.name - b.name
   },
 
   {
@@ -119,23 +120,23 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '4',
-    title: '纳税人识别号',
-    dataIndex: 'TaxpayerIdentificationNumber',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
     key: '5',
-    title: '联系人',
+    title: '联系人编码',
     dataIndex: 'ContactPerson',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '联系电话',
+    title: '备注',
     dataIndex: 'tel',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '4',
+    title: '纳税人识别号',
+    dataIndex: 'TaxpayerIdentificationNumber',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },

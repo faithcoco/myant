@@ -7,6 +7,18 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
+      <a-form-model-item label="客户编码" prop="CustomerCode">
+        <a-input
+          v-model="form.CustomerCode"
+          placeholder="请输入客户编码"
+          @blur="
+          () => {
+            
+          }"
+        >
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+        </a-input>
+      </a-form-model-item>
       <a-form-model-item ref="name" label="客户名称" prop="CustomerName">
         <a-input
           v-model="form.CustomerName"
@@ -17,21 +29,18 @@
           }"
         />
       </a-form-model-item>
-
-      <a-form-model-item label="客户编号" prop="CustomerNumber">
+      <a-form-model-item ref="name" label="客户类型">
         <a-input
-          v-model="form.CustomerNumber"
-          placeholder="请输入客户编号"
+          v-model="form.CustomerName"
+          placeholder="请输入客户类型"
           @blur="
           () => {
             
           }"
-        >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
+        />
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="客户编号" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="客户类型" width="1000px" @ok="handleOk">
         <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -42,53 +51,16 @@
           <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
       </a-modal>
-      <a-form-model-item label="客户性质" prop="CustomerNature">
-        <a-input v-model="form.CustomerNature" placeholder="请输入客户性质" />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="所属行业">
-        <a-input
-          v-model="form.Industry"
-          placeholder="请输入所属行业"
-          @blur="
-          () => {
-         
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="办公地址">
-        <a-input
-          v-model="form.Address"
-          placeholder="请输入办公地址"
-          @blur="
-          () => {
-          
-         
-          }
-        "
-        />
-
-        <a-input v-model="form.DetailAddress" type="textarea" placeholder="请输入详细地址" />
-      </a-form-model-item>
-
       <a-form-model-item label="负责人" prop="principal">
-        <a-input v-model="form.principal" placeholder="请选择负责人">
-          <a-button slot="suffix" type="link">选择</a-button>
-        </a-input>
+        <a-input v-model="form.principal" placeholder="请输入负责人">
+              </a-input>
       </a-form-model-item>
-
-      <a-form-model-item label="附件">
-        <a-upload
-          name="file"
-          :multiple="true"
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          :headers="headers"
-          @change="handleChange"
-        >
-          <a-button type="link" :size="size">添加附件</a-button>
-        </a-upload>
+      <a-form-model-item label="联系人编码" prop="CustomerNature">
+        <a-input v-model="form.CustomerNature" placeholder="请输入联系人编码" />
       </a-form-model-item>
-
+      <a-form-model-item label="备注">
+        <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
+      </a-form-model-item>
       <a-form-model-item ref="name" label="发票抬头">
         <a-input
           v-model="form.Invoice"
@@ -114,10 +86,24 @@
       <a-form-model-item label="开户银行">
         <a-input v-model="form.BankAccount" placeholder="请输入开户银行" />
       </a-form-model-item>
+      <a-form-model-item label="银行账号">
+        <a-input v-model="form.BankAccount" placeholder="请输入银行账号" />
+      </a-form-model-item>
+      <a-form-model-item label="附件">
+        <a-upload
+          name="file"
+          :multiple="true"
+          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+          :headers="headers"
+          @change="handleChange"
+        >
+          <a-button type="link" :size="size">添加附件</a-button>
+        </a-upload>
+      </a-form-model-item>
 
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="onSubmit">保存</a-button>
-        <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
+        <a-button type @click="resetForm">保存并继续</a-button>
+        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>
@@ -136,9 +122,9 @@ const columns = [
     width: 80
   },
   {
-    title: '客户编号',
-    dataIndex: 'CustomerNumber',
-    key: 'CustomerNumber',
+    title: '客户编码',
+    dataIndex: 'CustomerCode',
+    key: 'CustomerCode',
     width: 80
   },
   {
@@ -159,21 +145,21 @@ const data = [
   {
     key: '1',
     CustomerName: 'John Brown',
-    CustomerNumber: 32,
+    CustomerCode: 32,
     CustomerNature: '国有',
-    Industry: "高新技术"
+    Industry: '高新技术'
   },
   {
     key: '2',
     CustomerName: 'Jim Green',
-    CustomerNumber: 42,
+    CustomerCode: 42,
     CustomerNature: '私营',
-    Industry: "劳动密集型"
+    Industry: '劳动密集型'
   },
   {
     key: '3',
     CustomerName: 'Joe Black',
-    CustomerNumber: 32,
+    CustomerCode: 32,
     CustomerNature: '私营',
     Industry: '加工'
   }
@@ -195,7 +181,7 @@ export default {
       other: '',
       form: {
         CustomerName: '', //客户名称
-        CustomerNumber: '',
+        CustomerCode: '',
         CustomerNature: '',
         Invoice: '',
         principal: '', //负责人
@@ -210,7 +196,7 @@ export default {
           { required: true, message: '请输入客户名称', trigger: 'blur' },
           { min: 1, max: 3, message: '', trigger: 'blur' }
         ],
-        principal: [{ required: true, message: '请选择负责人', trigger: 'blur' }]
+        principal: [{ required: true, message: '请输入负责人', trigger: 'blur' }]
       }
     }
   },

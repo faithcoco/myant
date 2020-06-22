@@ -46,15 +46,16 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
+        <a-descriptions-item label="客户编码">{{code}}</a-descriptions-item>
         <a-descriptions-item label="客户名称">{{name }}</a-descriptions-item>
-        <a-descriptions-item label="客户编号">{{code}}</a-descriptions-item>
-        <a-descriptions-item label="客户性质">{{code}}</a-descriptions-item>
-        <a-descriptions-item label="所属行业">{{Industry}}</a-descriptions-item>
-        <a-descriptions-item label="办公地址">{{address}}</a-descriptions-item>
+        <a-descriptions-item label="客户类型">{{code}}</a-descriptions-item>
         <a-descriptions-item label="负责人">{{principal}}</a-descriptions-item>
+        <a-descriptions-item label="联系人编码">{{principal}}</a-descriptions-item>
+        <a-descriptions-item label="备注">{{principal}}</a-descriptions-item>
         <a-descriptions-item label="发票抬头">{{Invoice}}</a-descriptions-item>
         <a-descriptions-item label="纳税人识别号">{{TaxpayerIdentificationNumber}}</a-descriptions-item>
         <a-descriptions-item label="开户银行">{{BankAccount}}</a-descriptions-item>
+        <a-descriptions-item label="银行账号">{{BankAccount}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -92,7 +93,7 @@ Vue.use(Transfer)
 const columns = [
   {
     key: '0',
-    title: '客户名称',
+    title: '客户编码',
     dataIndex: 'name',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
@@ -100,7 +101,7 @@ const columns = [
   },
   {
     key: '1',
-    title: '客户编号',
+    title: '客户名称',
     dataIndex: 'code',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.name - b.name
@@ -108,28 +109,28 @@ const columns = [
 
   {
     key: '2',
-    title: '客户性质',
+    title: '客户类型',
     dataIndex: 'type',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '所属行业',
+    title: '负责人',
     dataIndex: 'Industry',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '办公地址',
+    title: '联系人编码',
     dataIndex: 'address',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '负责人',
+    title: '备注',
     dataIndex: 'principal',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
@@ -156,10 +157,17 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
+    key: '8',
+    title: '银行账号',
+    dataIndex: 'BankAccount',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
     key: '9',
     title: '操作',
     dataIndex: 'action',
-    width: '150px',
+    width: 100,
     scopedSlots: { customRender: 'action' }
   }
 ]
@@ -170,12 +178,12 @@ for (let i = 0; i < 46; i++) {
     code: `000${i}`,
     name: `电热毛巾架${i}`,
     type: `国营`,
-    Industry:'加工业',
-    address:'上海交通大学',
-    principal:'lisi',
-    Invoice:'固圣科技公司',
-    TaxpayerIdentificationNumber:10000+i,
-    BankAccount:'中国银行'
+    Industry: '加工业',
+    address: '上海交通大学',
+    principal: 'lisi',
+    Invoice: '固圣科技公司',
+    TaxpayerIdentificationNumber: 10000 + i,
+    BankAccount: '中国银行'
   })
 }
 const product = {}

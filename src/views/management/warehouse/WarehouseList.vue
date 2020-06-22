@@ -46,12 +46,14 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
+        <a-descriptions-item label="仓库编码">{{product.code}}</a-descriptions-item>
         <a-descriptions-item label="仓库名称">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="仓库编号">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="关联项目">{{product.type}}</a-descriptions-item>
+        <a-descriptions-item label="仓库负责人">{{product.type}}</a-descriptions-item>
         <a-descriptions-item label="仓库地址">{{product.unit}}</a-descriptions-item>
+        <a-descriptions-item label="详细地址">{{product.unit}}</a-descriptions-item>
         <a-descriptions-item label="仓库负责人">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="联系电话">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="货位管理">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="批次管理">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -89,7 +91,7 @@ Vue.use(Transfer)
 const columns = [
   {
     key: '0',
-    title: '仓库名称',
+    title: '仓库编码',
     dataIndex: 'name',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
@@ -97,7 +99,7 @@ const columns = [
   },
   {
     key: '1',
-    title: '仓库编号',
+    title: '仓库名称',
     dataIndex: 'code',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.name - b.name
@@ -105,7 +107,7 @@ const columns = [
 
   {
     key: '2',
-    title: '关联项目',
+    title: '仓库负责人',
     dataIndex: 'type',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
@@ -119,14 +121,21 @@ const columns = [
   },
   {
     key: '4',
-    title: '仓库负责人',
+    title: '详细地址',
     dataIndex: 'sales_unit_price',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '联系电话',
+    title: '货位管理',
+    dataIndex: 'purchase_unit_price',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '5',
+    title: '批次管理',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age

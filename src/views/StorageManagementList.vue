@@ -2,10 +2,10 @@
   <div>
     <a-card>
       <a-row>
-        <a-col :span="21">
+        <a-col :span="19">
           <a-input-search @search="onSearch" placeholder="请输入搜索内容" />
         </a-col>
-        <a-col :span="3">
+        <a-col :span="5">
           <span
             class="table-page-search-submitButtons"
             :style="{ float: 'right', overflow: 'hidden' } || {} "
@@ -46,13 +46,23 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
-        <a-descriptions-item label="类型">{{product.Type}}</a-descriptions-item>
-        <a-descriptions-item label="编号">{{product.Num}}</a-descriptions-item>
-        <a-descriptions-item label="仓库">{{product.Warehouse}}</a-descriptions-item>
+        <a-descriptions-item label="入库单编码">{{product.Type}}</a-descriptions-item>
+        <a-descriptions-item label="入库类型编码">{{product.Num}}</a-descriptions-item>
+        <a-descriptions-item label="关联单据">{{product.Warehouse}}</a-descriptions-item>
         <a-descriptions-item label="入库日期">{{product.StorageDate}}</a-descriptions-item>
-        <a-descriptions-item label="负责人">{{product.Principal}}</a-descriptions-item>
-        <a-descriptions-item label="关联单据">{{product.RelatedDocuments}}</a-descriptions-item>
-        <a-descriptions-item label="入库产品">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="供应商编码">{{product.Principal}}</a-descriptions-item>
+        <a-descriptions-item label="客户编码">{{product.RelatedDocuments}}</a-descriptions-item>
+        <a-descriptions-item label="部门编码">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="存货编码">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="存货名称">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="货位编码">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="批次编码">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="数量">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="计量单位">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="包装数量">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="包装单位">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="单价">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="金额">{{product.StorageProduct}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -90,60 +100,147 @@ Vue.use(Transfer)
 const columns = [
   {
     key: '0',
-    title: '类型',
+    title: '入库单编码',
     dataIndex: 'Type',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
   {
     key: '1',
-    title: '编号',
+    title: '入库类型编码',
     dataIndex: 'Num',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.name - b.name
   },
 
   {
     key: '2',
-    title: '仓库',
+    title: '关联单据',
     dataIndex: 'Warehouse',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '入库日期',
+    title: '供应商编码',
     dataIndex: 'StorageDate',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '负责人',
+    title: '客户编码',
     dataIndex: 'Principal',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '关联单据',
+    title: '部门编码',
     dataIndex: 'RelatedDocuments',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '入库产品',
+    title: '存货编码',
     dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
+    title: '存货名称',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '8',
+    title: '货位编码',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '9',
+    title: '批次编码',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '10',
+    title: '数量',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '11',
+    title: '存货编码',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '12',
+    title: '计量单位',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '13',
+    title: '包装数量',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '14',
+    title: '包装单位',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '15',
+    title: '单价',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '16',
+    title: '金额',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '17',
     title: '操作',
     dataIndex: 'action',
-    width: '150px',
+    width: 100,
     scopedSlots: { customRender: 'action' }
   }
 ]
@@ -154,10 +251,10 @@ for (let i = 0; i < 30; i++) {
     Num: `000${i}`,
     Type: '生活用品',
     Warehouse: `K${i}`,
-    StorageDate: `1月${i+1}`,
-    Principal:'zhangsan',
-    RelatedDocuments:`qwsadas${i}`,
-    StorageProduct:`电热毛巾架${i}`
+    StorageDate: `1月${i + 1}`,
+    Principal: 'zhangsan',
+    RelatedDocuments: `qwsadas${i}`,
+    StorageProduct: `000${i}`
   })
 }
 const product = {}

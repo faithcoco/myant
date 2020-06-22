@@ -7,38 +7,32 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="类型" required>
-        <a-select
-          :model="value"
-          show-search
-          default-value="1"
-          placeholder="请选择出库类型"
-          option-filter-prop="children"
-          :filter-option="filterOption"
-          @focus="handleFocus"
-          @blur="handleBlur"
-          @change="handleSearchChange"
+      <a-form-model-item label="出库单编码" required>
+        <a-input
+          v-model="form.Desc"
+          placeholder="请输入出库单编码"
+          @blur="
+          () => {
+            
+          }
+        "
         >
-          <a-select-option value="1">销售出库1</a-select-option>
-          <a-select-option value="2">销售出库2</a-select-option>
-          <a-select-option value="3">销售出库3</a-select-option>
-        </a-select>
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+        </a-input>
       </a-form-model-item>
 
-      <a-form-model-item label="编号" required prop="Num">
+      <a-form-model-item label="出库类型编码" required prop="Num">
         <a-input
           v-model="form.Num"
-          placeholder="请输入编号"
+          placeholder="请输入出库类型编码"
           @blur="
           () => {
             
           }"
-        >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
+        ></a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
         <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -49,10 +43,10 @@
           <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
       </a-modal>
-      <a-form-model-item ref="name" label="仓库" prop="Warehouse">
+      <a-form-model-item ref="name" label="关联单据" prop="Warehouse">
         <a-input
           v-model="form.Warehouse"
-          placeholder="请选择仓库"
+          placeholder="请选择关联单据"
           @blur="
           () => {
             
@@ -61,32 +55,64 @@
           <a-button slot="suffix" type="link">选择</a-button>
         </a-input>
       </a-form-model-item>
+      <a-form-model-item ref="name" label="供应商编码" prop="Warehouse">
+        <a-input
+          v-model="form.Warehouse"
+          placeholder="请输入供应商编码"
+          @blur="
+          () => {
+            
+          }"
+        >
+         </a-input>
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="客户编码" prop="Warehouse">
+        <a-input
+          v-model="form.Warehouse"
+          placeholder="请输入客户编码"
+          @blur="
+          () => {
+            
+          }"
+        >
+         </a-input>
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="部门编码" prop="Warehouse">
+        <a-input
+          v-model="form.Warehouse"
+          placeholder="请输入部门编码"
+          @blur="
+          () => {
+            
+          }"
+        >
+         </a-input>
+      </a-form-model-item>
       <a-form-model-item label="出库日期" prop="OutDate">
         <a-date-picker
           v-model="form.OutDate"
           show-time
           type="date"
-          placeholder="请选择出库日期"
+          placeholder="请输入出库日期"
           style="width: 100%;"
         />
       </a-form-model-item>
-      <a-form-model-item label="负责人">
+      <a-form-model-item label="存货编码">
         <a-input
           v-model="form.Principal"
-          placeholder="请选择负责人"
+          placeholder="请输入存货编码"
           @blur="
           () => {
          
           }
         "
         >
-          <a-button slot="suffix" type="link">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="关联单据" prop="RelatedDocuments">
+      <a-form-model-item ref="name" label="存货名称" prop="RelatedDocuments">
         <a-input
           v-model="form.RelatedDocuments"
-          placeholder="请选择需要关联的单据"
+          placeholder="请输入存货名称"
           @blur="
           () => {
           
@@ -94,27 +120,90 @@
           }
         "
         >
-          <a-button slot="suffix" type="link">选择</a-button>
-        </a-input>
+         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="出库产品" prop="OutProduct">
+      <a-form-model-item label="货位编码" prop="OutProduct">
         <a-input
           v-model="form.OutProduct"
-          placeholder="请输入出库产品"
+          placeholder="请输入货位编码"
           @blur="
           () => {
             
           }
         "
         >
-          <a-button slot="suffix" type="link">选择</a-button>
-        </a-input>
+          </a-input>
       </a-form-model-item>
-      <a-form-model-item label="备注">
+      <a-form-model-item label="批次编码">
         <a-input
           v-model="form.Desc"
-          placeholder="请输入备注"
-          type="textarea"
+          placeholder="请输入批次编码"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="数量">
+        <a-input
+          v-model="form.Desc"
+          placeholder="请输入数量"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="计量单位">
+        <a-input
+          v-model="form.Desc"
+          placeholder="请输入计量单位"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="包装数量">
+        <a-input
+          v-model="form.Desc"
+          placeholder="请输入包装数量"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="包装单位">
+        <a-input
+          v-model="form.Desc"
+          placeholder="请输入包装单位"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="单价">
+        <a-input
+          v-model="form.Desc"
+          placeholder="请输入单价"
+          @blur="
+          () => {
+            
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="金额">
+        <a-input
+          v-model="form.Desc"
+          placeholder="请输入金额"
           @blur="
           () => {
             
@@ -139,8 +228,8 @@
         <a href="#">如何设置</a>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="onSubmit">保存</a-button>
-        <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
+        <a-button type @click="resetForm">保存并继续</a-button>
+        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>
@@ -223,7 +312,7 @@ export default {
         Principal: '', //负责人
         RelatedDocuments: '', //关联单据
         OutProduct: '', //出库产品
-        Desc: '',//备注
+        Desc: '' //备注
       },
       rules: {
         Num: [{ required: true, message: '请输入出库编号', trigger: 'blur' }],
@@ -231,11 +320,11 @@ export default {
           { required: true, message: '请选择出库类型', trigger: 'blur' },
           { min: 1, max: 3, message: '', trigger: 'blur' }
         ],
-        Warehouse: [{ required: true, message: '请选择仓库', trigger: 'blur' }],
+        Warehouse: [{ required: true, message: '请输入仓库', trigger: 'blur' }],
 
         OutDate: [{ required: true, message: '请选择出库日期', trigger: 'change' }],
         RelatedDocuments: [{ required: true, message: '请选择需要关联的单据', trigger: 'blur' }],
-        OutProduct: [{ required: true, message: '请选择出库产品', trigger: 'blur' }]
+        OutProduct: [{ required: true, message: '请输入出库产品', trigger: 'blur' }]
       }
     }
   },

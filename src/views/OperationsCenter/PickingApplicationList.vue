@@ -54,12 +54,16 @@
         <a-descriptions-item label="存货编码">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="存货名称">{{product.sales_unit_price}}</a-descriptions-item>
         <a-descriptions-item label="批次编码">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="数量">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="计量单位">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="包装数量">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="包装单位">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="单价">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="金额">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="数量">{{product.Quantity}}</a-descriptions-item>
+        <a-descriptions-item label="计量单位">{{product.Unit}}</a-descriptions-item>
+        <a-descriptions-item label="包装数量">{{product.PackingQuantity}}</a-descriptions-item>
+        <a-descriptions-item label="包装单位">{{product.PackingUnit}}</a-descriptions-item>
+        <a-descriptions-item label="单价">{{product.UnitPrice}}</a-descriptions-item>
+        <a-descriptions-item label="含税单价">{{product.TaxIncludedUnitPrice}}</a-descriptions-item>
+        <a-descriptions-item label="税率">{{product.TaxRate}}</a-descriptions-item>
+        <a-descriptions-item label="金额">{{product.Amount}}</a-descriptions-item>
+        <a-descriptions-item label="含税金额">{{product.TaxIncludedAmount}}</a-descriptions-item>
+        <a-descriptions-item label="税额">{{product.Tax}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -100,6 +104,7 @@ const columns = [
     title: '领料申请单编码',
     dataIndex: 'name',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
@@ -108,6 +113,7 @@ const columns = [
     title: '部门编码',
     dataIndex: 'unit',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -115,6 +121,7 @@ const columns = [
     title: '业务员编码',
     dataIndex: 'unit',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -122,6 +129,7 @@ const columns = [
     title: '预计出库日期',
     dataIndex: 'sales_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -129,6 +137,7 @@ const columns = [
     title: '预计出库仓库编码',
     dataIndex: 'sales_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -136,6 +145,7 @@ const columns = [
     title: '存货编码',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -143,6 +153,7 @@ const columns = [
     title: '存货名称',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
 
@@ -151,55 +162,94 @@ const columns = [
     title: '批次编码',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '8',
     title: '数量',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
     title: '计量单位',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'Unit',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '10',
     title: '包装数量',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'PackingQuantity',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '11',
     title: '包装单位',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'PackingUnit',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '12',
     title: '单价',
-    dataIndex: 'purchase_unit_price',
+    dataIndex: 'UnitPrice',
+    width: 100,
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '13',
-    title: '金额',
-    dataIndex: 'purchase_unit_price',
+    title: '含税单价',
+    dataIndex: 'TaxIncludedUnitPrice',
     defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '14',
+    title: '税率',
+    dataIndex: 'TaxRate',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '15',
+    title: '金额',
+    dataIndex: 'Amount',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '16',
+    title: '含税金额',
+    dataIndex: 'TaxIncludedAmount',
+    width: 100,
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '17',
+    title: '税额',
+    dataIndex: 'Tax',
+    defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '14',
     title: '操作',
     dataIndex: 'action',
-    width: '150px',
+    width: 100,
     scopedSlots: { customRender: 'action' }
   }
 ]

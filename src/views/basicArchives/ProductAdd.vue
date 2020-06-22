@@ -108,19 +108,8 @@
           <a-select-option value="3">汽车零部件</a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="产品说明">
-        <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="货品说明">
-        <a-input
-          v-model="form.SalePrice"
-          placeholder="请输入货品说明"
-          @blur="
-          () => {
-            $refs.name.onFieldBlur();
-          }
-        "
-        />
+      <a-form-model-item label="货品说明">
+        <a-input v-model="form.desc" type="textarea" placeholder="30字以内货品说明" />
       </a-form-model-item>
       <a-form-model-item ref="name" label="批次管理">
         <a-select
@@ -368,7 +357,7 @@ export default {
     },
 
     showModal() {
-      this.form.code='PT2020062200001'
+      this.visible = true
     },
     handleOk(e) {
       console.log(e)

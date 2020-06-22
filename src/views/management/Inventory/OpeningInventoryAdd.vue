@@ -16,11 +16,11 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
         </a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
         <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -136,8 +136,8 @@
       </a-form-model-item>
 
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="onSubmit">保存</a-button>
-        <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
+        <a-button type @click="resetForm">保存并继续</a-button>
+        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>
@@ -149,37 +149,61 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
-    title: 'Name',
+    title: '存货编码',
     dataIndex: 'name',
     key: 'name',
     scopedSlots: { customRender: 'name' }
   },
   {
-    title: 'Age',
+    title: '仓库编码',
     dataIndex: 'age',
     key: 'age',
     width: 80
   },
   {
-    title: 'Address',
+    title: '货位编码',
     dataIndex: 'address',
     key: 'address 1',
     ellipsis: true
   },
   {
-    title: 'Long Column Long Column Long Column',
+    title: '批次编码',
     dataIndex: 'address',
     key: 'address 2',
     ellipsis: true
   },
   {
-    title: 'Long Column Long Column',
+    title: '数量',
     dataIndex: 'address',
     key: 'address 3',
     ellipsis: true
   },
   {
-    title: 'Long Column',
+    title: '计量单位',
+    dataIndex: 'address',
+    key: 'address 4',
+    ellipsis: true
+  },
+  {
+    title: '包装数量',
+    dataIndex: 'address',
+    key: 'address 4',
+    ellipsis: true
+  },
+  {
+    title: '包装单位',
+    dataIndex: 'address',
+    key: 'address 4',
+    ellipsis: true
+  },
+  {
+    title: '单价',
+    dataIndex: 'address',
+    key: 'address 4',
+    ellipsis: true
+  },
+  {
+    title: '金额',
     dataIndex: 'address',
     key: 'address 4',
     ellipsis: true

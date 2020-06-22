@@ -16,29 +16,27 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+          <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
         </a-input>
       </a-form-model-item>
       <a-form-model-item label="仓库名称" prop="date1">
         <a-input v-model="form.date1" placeholder="请输入仓库名称"></a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
-        <a-table
-          :row-selection="rowSelection"
-          :columns="columns"
-          :data-source="data"
-          :pagination="false"
-          bordered
-        >
+      <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
+        <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
+          <span slot="checked" style="margin: 0" slot-scope="text,record">
+            <a-checkbox v-model="record.checked" @change="onChange(record)" />
+          </span>
           <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
       </a-modal>
 
       <a-form-model-item label="仓库负责人" prop="code">
         <a-input v-model="form.code" placeholder="请选择仓库负责人">
-          <a-button slot="suffix" type="link">选择</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
+        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
 
       <a-form-model-item ref="name" label="仓库地址">
@@ -117,6 +115,51 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
+    title: '选择',
+    dataIndex: 'checked',
+    key: 'checked',
+    width: 80,
+    scopedSlots: { customRender: 'checked' }
+  },
+  {
+    title: '仓库编码',
+    dataIndex: 'name',
+    key: 'name',
+    scopedSlots: { customRender: 'name' }
+  },
+  {
+    title: '仓库名称',
+    dataIndex: 'age',
+    key: 'age'
+  },
+  {
+    title: '仓库负责人',
+    dataIndex: 'address',
+    key: 'address 1'
+  },
+  {
+    title: '仓库地址',
+    dataIndex: 'address',
+    key: 'address 2'
+  },
+  {
+    title: '详细地址',
+    dataIndex: 'address',
+    key: 'address 3'
+  },
+  {
+    title: '货位管理',
+    dataIndex: 'address',
+    key: 'address 4'
+  },
+  {
+    title: '批次管理',
+    dataIndex: 'address',
+    key: 'address 4'
+  }
+]
+const selectcolumns = [
+  {
     title: '仓库编码',
     dataIndex: 'name',
     key: 'name',
@@ -159,28 +202,31 @@ const data = [
     key: '1',
     name: 'John Brown',
     age: 32,
-    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
+    address: 'New York ',
     tags: ['nice', 'developer']
   },
   {
     key: '2',
     name: 'Jim Green',
     age: 42,
-    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
+    address: 'London ',
     tags: ['loser']
   },
   {
     key: '3',
     name: 'Joe Black',
     age: 32,
-    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
+    address: 'Sidney ',
     tags: ['cool', 'teacher']
   }
 ]
-
+const numberRow = []
 export default {
   data() {
     return {
+      numberRow,
+      selectedRow: [],
+      selectcolumns,
       visible: false,
       selectedRowKeys: [],
       data,
@@ -283,13 +329,25 @@ export default {
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
-
+    elect() {
+      this.form.name = 'PT2020062200001'
+    },
     showModal() {
       this.visible = true
     },
+
     handleOk(e) {
       console.log(e)
       this.visible = false
+      this.numberRow = this.selectedRow
+      console.log(this.numberRow)
+    },
+    onChange(record) {
+      console.log('check', record)
+      if (record.checked) {
+        this.selectedRow.push(record)
+        console.log(this.selectedRow)
+      }
     }
   }
 }

@@ -7,10 +7,10 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="报工申请单编码" required prop="coding">
+      <a-form-model-item label="报工申请单编码" required prop="WorkTimeReportApplicationCode">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.WorkTimeReportApplicationCode"
+          placeholder="请输入报工申请单编码"
           @blur="
           () => {
             
@@ -20,7 +20,7 @@
         </a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
         <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -33,8 +33,8 @@
       </a-modal>
       <a-form-model-item ref="name" label="部门编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.DepartmentCode"
+          placeholder="请输入部门编码"
           @blur="
           () => {
             
@@ -45,8 +45,8 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="业务员编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.SalesmanCode"
+          placeholder="请输入业务员编码"
           @blur="
           () => {
             
@@ -60,14 +60,14 @@
           v-model="form.ExpectedInWarehouseDate"
           show-time
           type="date"
-          placeholder="Pick a date"
+          placeholder="请选择预计入库日期"
           style="width: 100%;"
         />
       </a-form-model-item>
       <a-form-model-item ref="name" label="预计入库仓库编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.ExpectedInWarehouseCode"
+          placeholder="请输入预计入库仓库编码"
           @blur="
           () => {
             
@@ -78,8 +78,8 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="存货编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.InventoryCode"
+          placeholder="请输入存货编码"
           @blur="
           () => {
             
@@ -101,8 +101,8 @@
       </a-form-model-item>
       <a-form-model-item label="批次编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.BatchCode"
+          placeholder="请输入批次编码"
           @blur="
           () => {
             
@@ -236,72 +236,73 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    scopedSlots: { customRender: 'name' }
+    title: '报工申请单编码',
+    dataIndex: 'WorkTimeReportApplicationCode',
+    key: 'WorkTimeReportApplicationCode',
+    scopedSlots: { customRender: 'WorkTimeReportApplicationCode' }
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-    width: 80
+    title: '部门编码',
+    dataIndex: 'DepartmentCode',
+    key: 'DepartmentCode'
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address 1',
-    ellipsis: true
+    title: '业务员编码',
+    dataIndex: 'SalesmanCode',
+    key: 'SalesmanCode'
   },
   {
-    title: 'Long Column Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 2',
-    ellipsis: true
+    title: '预计入库仓库编码',
+    dataIndex: 'ExpectedInWarehouseCode',
+    key: 'ExpectedInWarehouseCode'
   },
   {
-    title: 'Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 3',
-    ellipsis: true
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
+    key: 'InventoryCode'
   },
   {
-    title: 'Long Column',
-    dataIndex: 'address',
-    key: 'address 4',
-    ellipsis: true
+    title: '批次编码',
+    dataIndex: 'BatchCode',
+    key: 'BatchCode'
   }
 ]
 
 const data = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    tags: ['nice', 'developer']
+    WorkTimeReportApplicationCode: 'a121345',
+    DepartmentCode: 'a121345',
+    SalesmanCode: 'a121345',
+    ExpectedInWarehouseCode: 'a121345',
+    InventoryCode: 'a121345',
+    BatchCode: 'a121345'
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-    tags: ['loser']
+    WorkTimeReportApplicationCode: 'a121345',
+    DepartmentCode: 'a121345',
+    SalesmanCode: 'a121345',
+    ExpectedInWarehouseCode: 'a121345',
+    InventoryCode: 'a121345',
+    BatchCode: 'a121345'
   },
   {
     key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher']
+    WorkTimeReportApplicationCode: 'a121345',
+    DepartmentCode: 'a121345',
+    SalesmanCode: 'a121345',
+    ExpectedInWarehouseCode: 'a121345',
+    InventoryCode: 'a121345',
+    BatchCode: 'a121345'
   }
 ]
 
 export default {
   data() {
     return {
-      visible: false, ///////////////
-      selectedRowKeys: [], ////////////////////////
+      visible: false,
+      selectedRowKeys: [],
       data,
       columns,
       headers: {
@@ -316,7 +317,7 @@ export default {
         DepartmentCode: '', //部门编码
         SalesmanCode: '',
         ExpectedInWarehouseDate: '', //日期
-        ExpectedInWarehouseCode: '',
+        ExpectedInWarehouseCode: '', //预计入库仓库编码
         InventoryCode: '', //存货编码
         InventoryName: '', //存货名称
         BatchCode: '', //批次编码
@@ -332,9 +333,9 @@ export default {
         Tax: '' //税额
       },
       rules: {
-        name: [
-          { required: true, message: '请输入产品编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
+        WorkTimeReportApplicationCode: [
+          { required: true, message: '请输入报工申请单编码', trigger: 'blur' },
+          { min: 1, max: 3, message: '请输入报工申请单编码', trigger: 'blur' }
         ],
         region: [{ required: true, message: '', trigger: 'change' }],
         date1: [{ required: true, message: '', trigger: 'change' }],

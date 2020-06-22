@@ -7,10 +7,10 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="发货通知单编码" required prop="coding">
+      <a-form-model-item label="发货通知单编码" required prop="ShippingNoticeCode">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.ShippingNoticeCode"
+          placeholder="请输入发货通知单编码"
           @blur="
           () => {
             
@@ -20,7 +20,7 @@
         </a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="Basic Modal" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="请选择编码" width="1000px" @ok="handleOk">
         <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -32,10 +32,10 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item ref="name" label="客户编码" prop="name">
+      <a-form-model-item ref="name" label="客户编码" prop="CustomerCode">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.CustomerCode"
+          placeholder="请输入客户编码"
           @blur="
           () => {
             
@@ -46,8 +46,8 @@
       </a-form-model-item>
       <a-form-model-item label="客户地址编码" prop="code">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.CustomerAddressCode"
+          placeholder="请输入客户地址编码"
           @blur="
           () => {
             
@@ -58,8 +58,8 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.DepartmentCode"
+          placeholder="请输入部门编码"
           @blur="
           () => {
             
@@ -70,8 +70,8 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="业务员编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.SalesmanCode"
+          placeholder="请输入业务员编码"
           @blur="
           () => {
             
@@ -82,17 +82,17 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="预计出库日期">
         <a-date-picker
-          v-model="form.ExpectedOutWarehouseCode"
+          v-model="form.ExpectedOutWarehouseDate"
           show-time
           type="date"
-          placeholder="Pick a date"
+          placeholder="请选择预计出库日期"
           style="width: 100%;"
         />
       </a-form-model-item>
       <a-form-model-item ref="name" label="发货仓库编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.ShippingWarehouseCode"
+          placeholder="请输入发货仓库编码"
           @blur="
           () => {
             
@@ -103,8 +103,8 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="存货编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.InventoryCode"
+          placeholder="请输入存货编码"
           @blur="
           () => {
             
@@ -126,8 +126,8 @@
       </a-form-model-item>
       <a-form-model-item label="批次编码">
         <a-input
-          v-model="form.name"
-          placeholder="请输入产品编码"
+          v-model="form.BatchCode"
+          placeholder="请输入批次编码"
           @blur="
           () => {
             
@@ -205,7 +205,7 @@
       <a-form-model-item label="税率">
         <a-input
           v-model="form.TaxRate"
-          placeholder="请输入含税单价"
+          placeholder="请输入税率"
           @blur="
           () => {
             
@@ -227,7 +227,7 @@
       <a-form-model-item label="含税金额">
         <a-input
           v-model="form.TaxIncludedAmount"
-          placeholder="请输入金额"
+          placeholder="请输入含税金额"
           @blur="
           () => {
             
@@ -238,7 +238,7 @@
       <a-form-model-item label="税额">
         <a-input
           v-model="form.Tax"
-          placeholder="请输入金额"
+          placeholder="请输入税额"
           @blur="
           () => {
             
@@ -261,72 +261,89 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
-    title: 'Name',
-    dataIndex: 'name',
-    key: 'name',
-    scopedSlots: { customRender: 'name' }
+    title: '发货通知单编码',
+    dataIndex: 'ShippingNoticeCode',
+    key: 'ShippingNoticeCode',
+    scopedSlots: { customRender: 'ShippingNoticeCode' }
   },
   {
-    title: 'Age',
-    dataIndex: 'age',
-    key: 'age',
-    width: 80
+    title: '客户编码',
+    dataIndex: 'CustomerCode',
+    key: 'CustomerCode'
   },
   {
-    title: 'Address',
-    dataIndex: 'address',
-    key: 'address 1',
-    ellipsis: true
+    title: '客户地址编码',
+    dataIndex: 'CustomerAddressCode',
+    key: 'CustomerAddressCode'
   },
   {
-    title: 'Long Column Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 2',
-    ellipsis: true
+    title: '部门编码',
+    dataIndex: 'DepartmentCode',
+    key: 'DepartmentCode'
   },
   {
-    title: 'Long Column Long Column',
-    dataIndex: 'address',
-    key: 'address 3',
-    ellipsis: true
+    title: '业务员编码',
+    dataIndex: 'SalesmanCode',
+    key: 'SalesmanCode'
   },
   {
-    title: 'Long Column',
-    dataIndex: 'address',
-    key: 'address 4',
-    ellipsis: true
+    title: '发货仓库编码',
+    dataIndex: 'ShippingWarehouseCode',
+    key: 'ShippingWarehouseCode'
+  },
+  {
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
+    key: 'InventoryCode'
+  },
+  {
+    title: '批次编码',
+    dataIndex: 'BatchCode',
+    key: 'BatchCode'
   }
 ]
 
 const data = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York No. 1 Lake Park, New York No. 1 Lake Park',
-    tags: ['nice', 'developer']
+    ShippingNoticeCode: 'a121345',
+    CustomerCode: 'a121345',
+    CustomerAddressCode: 'a121345',
+    DepartmentCode: 'a121345',
+    SalesmanCode: 'a121345',
+    ShippingWarehouseCode: 'a121345',
+    InventoryCode: 'a121345',
+    BatchCode: 'a121345'
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London No. 2 Lake Park, London No. 2 Lake Park',
-    tags: ['loser']
+    ShippingNoticeCode: 'a121345',
+    CustomerCode: 'a121345',
+    CustomerAddressCode: 'a121345',
+    DepartmentCode: 'a121345',
+    SalesmanCode: 'a121345',
+    ShippingWarehouseCode: 'a121345',
+    InventoryCode: 'a121345',
+    BatchCode: 'a121345'
   },
   {
     key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park, Sidney No. 1 Lake Park',
-    tags: ['cool', 'teacher']
+    ShippingNoticeCode: 'a121345',
+    CustomerCode: 'a121345',
+    CustomerAddressCode: 'a121345',
+    DepartmentCode: 'a121345',
+    SalesmanCode: 'a121345',
+    ShippingWarehouseCode: 'a121345',
+    InventoryCode: 'a121345',
+    BatchCode: 'a121345'
   }
 ]
 
 export default {
   data() {
     return {
-      visible: false, ///////////////
-      selectedRowKeys: [], ////////////////////////
+      visible: false,
+      selectedRowKeys: [],
       data,
       columns,
       headers: {
@@ -337,12 +354,12 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        ShippingNoticeCode: '',
-        CustomerCode: '',
-        CustomerAddressCode: '',
+        ShippingNoticeCode: '', //发货通知单编码
+        CustomerCode: '', //客户编码
+        CustomerAddressCode: '', //客户地址编码
         DepartmentCode: '', //部门编码
         SalesmanCode: '', //业务员编码
-        ExpectedOutWarehouseCode: '', //日期
+        ExpectedOutWarehouseDate: '', //日期
         ShippingWarehouseCode: '', //发货仓库编码
         InventoryCode: '', //存货编码
         InventoryName: '', //存货名称
@@ -359,22 +376,11 @@ export default {
         Tax: '' //税额
       },
       rules: {
-        name: [
-          { required: true, message: '请输入产品编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
+        ShippingNoticeCode: [
+          { required: true, message: '请输入发货通知单编码', trigger: 'blur' },
+          { min: 1, max: 3, message: '请输入发货通知单编码', trigger: 'blur' }
         ],
-        region: [{ required: true, message: '', trigger: 'change' }],
-        date1: [{ required: true, message: '', trigger: 'change' }],
-        type: [
-          {
-            type: 'array',
-            required: true,
-            message: 'Please select at least one activity type',
-            trigger: 'change'
-          }
-        ],
-        resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
+        CustomerCode: [{ required: true, message: '请输入客户编码', trigger: 'change' }]
       }
     }
   },

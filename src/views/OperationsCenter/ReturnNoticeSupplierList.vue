@@ -2,10 +2,10 @@
   <div>
     <a-card>
       <a-row>
-        <a-col :span="21">
+        <a-col :span="19">
           <a-input-search @search="onSearch" placeholder="请输入搜索内容" />
         </a-col>
-        <a-col :span="3">
+        <a-col :span="5">
           <span
             class="table-page-search-submitButtons"
             :style="{ float: 'right', overflow: 'hidden' } || {} "
@@ -46,27 +46,26 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
-        <a-descriptions-item label="退货通知单编码">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="供应商编码">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="客户地址编码">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="联系人编码">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="部门编码">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="业务员编码">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="预计入库日期">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="退货仓库编码">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="存货编码">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="存货名称">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="批次编码">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="数量">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="计量单位">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="包装数量">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="包装单位">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="单价">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="含税单价">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="税率">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="金额">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="含税金额">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="税额">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="退货通知单编码">{{product.ReturnNotificationCode }}</a-descriptions-item>
+        <a-descriptions-item label="供应商编码">{{product.SupplierCode}}</a-descriptions-item>
+        <a-descriptions-item label="联系人编码">{{product.ContactCode}}</a-descriptions-item>
+        <a-descriptions-item label="部门编码">{{product.DepartmentCode}}</a-descriptions-item>
+        <a-descriptions-item label="业务员编码">{{product.SalesmanCode}}</a-descriptions-item>
+        <a-descriptions-item label="预计入库日期">{{product.ExpectedInWarehouseDate}}</a-descriptions-item>
+        <a-descriptions-item label="退货仓库编码">{{product.ReturnWarehouseCode}}</a-descriptions-item>
+        <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
+        <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
+        <a-descriptions-item label="批次编码">{{product.BatchCode}}</a-descriptions-item>
+        <a-descriptions-item label="数量">{{product.Quantity}}</a-descriptions-item>
+        <a-descriptions-item label="计量单位">{{product.Unit}}</a-descriptions-item>
+        <a-descriptions-item label="包装数量">{{product.PackingQuantity}}</a-descriptions-item>
+        <a-descriptions-item label="包装单位">{{product.PackingUnit}}</a-descriptions-item>
+        <a-descriptions-item label="单价">{{product.UnitPrice}}</a-descriptions-item>
+        <a-descriptions-item label="含税单价">{{product.TaxIncludedUnitPrice}}</a-descriptions-item>
+        <a-descriptions-item label="税率">{{product.TaxRate}}</a-descriptions-item>
+        <a-descriptions-item label="金额">{{product.Amount}}</a-descriptions-item>
+        <a-descriptions-item label="含税金额">{{product.TaxIncludedAmount}}</a-descriptions-item>
+        <a-descriptions-item label="税额">{{product.Tax}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -105,154 +104,166 @@ const columns = [
   {
     key: '0',
     title: '退货通知单编码',
-    dataIndex: 'name',
+    dataIndex: 'ReturnNotificationCode',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
+    width: 100,
     scopedSlots: { customRender: 'name' }
   },
   {
     key: '1',
     title: '供应商编码',
-    dataIndex: 'code',
+    dataIndex: 'SupplierCode',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.name - b.name
   },
-
   {
     key: '2',
-    title: '客户地址编码',
-    dataIndex: 'type',
+    title: '联系人编码',
+    dataIndex: 'ContactCode',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '联系人编码',
-    dataIndex: 'unit',
+    title: '部门编码',
+    dataIndex: 'DepartmentCode',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '部门编码',
-    dataIndex: 'unit',
+    title: '业务员编码',
+    dataIndex: 'SalesmanCode',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '业务员编码',
-    dataIndex: 'sales_unit_price',
+    title: '预计入库日期',
+    dataIndex: 'ExpectedInWarehouseDate',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '预计入库日期',
-    dataIndex: 'sales_unit_price',
+    title: '退货仓库编码',
+    dataIndex: 'ReturnWarehouseCode',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
-    title: '退货仓库编码',
-    dataIndex: 'sales_unit_price',
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '8',
-    title: '存货编码',
-    dataIndex: 'purchase_unit_price',
+    title: '存货名称',
+    dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
-    title: '存货名称',
-    dataIndex: 'purchase_unit_price',
+    title: '批次编码',
+    dataIndex: 'BatchCode',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '10',
-    title: '批次编码',
-    dataIndex: 'purchase_unit_price',
+    title: '数量',
+    dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '11',
-    title: '数量',
-    dataIndex: 'purchase_unit_price',
+    title: '计量单位',
+    dataIndex: 'Unit',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '12',
-    title: '计量单位',
-    dataIndex: 'purchase_unit_price',
+    title: '包装数量',
+    dataIndex: 'PackingQuantity',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '13',
-    title: '包装数量',
-    dataIndex: 'purchase_unit_price',
+    title: '包装单位',
+    dataIndex: 'PackingUnit',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '14',
-    title: '包装单位',
-    dataIndex: 'purchase_unit_price',
+    title: '单价',
+    dataIndex: 'UnitPrice',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '15',
-    title: '单价',
-    dataIndex: 'purchase_unit_price',
+    title: '含税单价',
+    dataIndex: 'TaxIncludedUnitPrice',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '16',
-    title: '含税单价',
-    dataIndex: 'purchase_unit_price',
+    title: '税率',
+    dataIndex: 'TaxRate',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '17',
-    title: '税率',
-    dataIndex: 'purchase_unit_price',
+    title: '金额',
+    dataIndex: 'Amount',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '18',
-    title: '金额',
-    dataIndex: 'purchase_unit_price',
+    title: '含税金额',
+    dataIndex: 'TaxIncludedAmount',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '19',
-    title: '含税金额',
-    dataIndex: 'purchase_unit_price',
+    title: '税额',
+    dataIndex: 'Tax',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '20',
-    title: '税额',
-    dataIndex: 'purchase_unit_price',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '21',
     title: '操作',
     dataIndex: 'action',
     width: '150px',
@@ -263,12 +274,26 @@ const data = []
 for (let i = 0; i < 46; i++) {
   data.push({
     key: i,
-    code: `000${i}`,
-    name: `电热毛巾架${i}`,
-    type: `K-0000T-${i}`,
-    unit: 46 - i,
-    sales_unit_price: 5,
-    purchase_unit_price: 3
+    ReturnNotificationCode: `000${i}`,
+    SupplierCode: `000${i}`,
+    ContactCode: `000${i}`,
+    DepartmentCode: `000${i}`,
+    SalesmanCode: `000${i}`,
+    ExpectedInWarehouseDate: `6月${i + 1}日`,
+    ReturnWarehouseCode: `000${i}`,
+    InventoryCode: `000${i}`,
+    InventoryName: `书包`,
+    BatchCode: `000${i}`,
+    Quantity: `1000${i}`,
+    Unit: `个`,
+    PackingQuantity: `1000${i}`,
+    PackingUnit: `箱`,
+    UnitPrice: `50`,
+    TaxIncludedUnitPrice: `60`,
+    TaxRate: `20%`,
+    Amount: `10000${i}`,
+    TaxIncludedAmount: `12000${i}`,
+    Tax: `2000${i}`
   })
 }
 const product = {}

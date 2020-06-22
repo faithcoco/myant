@@ -1,32 +1,33 @@
 <template>
   <div>
     <a-card>
-      <a-row>
-        <a-col :span="21">
-          <a-input-search @search="onSearch" placeholder="请输入搜索内容" />
-        </a-col>
-        <a-col :span="3">
-          <span
-            class="table-page-search-submitButtons"
-            :style="{ float: 'right', overflow: 'hidden' } || {} "
-          >
-            <a-button style="margin-left: 5px" type="primary" @click="handleSetting()">设置</a-button>
-            <a-button style="margin-left: 5px" @click="() => queryParam = {}">导入</a-button>
-            <a-button style="margin-left: 5px" @click="() => queryParam = {}">导出</a-button>
-          </span>
-        </a-col>
-      </a-row>
-      <a-table :row-selection="rowSelection" :columns="targetTitle" :data-source="data">
-        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
-        <span slot="action" slot-scope="text, record">
-          <template>
-            <a @click="handleEdit(record)">编辑</a>
-            <a-divider type="vertical" />
-            <a-popconfirm v-if="data.length" title="确定要删除吗?" @confirm="() => onDelete(record.key)">
-              <a href="javascript:;">删除</a>
-            </a-popconfirm>
-          </template>
+      <a-table :columns="targetTitle" :data-source="data">
+        <span slot="use" style="margin: 0">
+          <a-checkbox @change="onChange" />
         </span>
+        <span slot="prefix">
+          <a-input value="pt" style="width: 50px" />
+        </span>
+        <span slot="suffix">
+          <a-input value="5" style="width: 50px" />
+        </span>
+        <span slot="initial" style="margin: 0">
+          <a-input value="1" style="width: 50px" />
+        </span>
+        <span slot="date" slot-scope="text, record" @click="handleDate(record)">
+          <a-dropdown>
+            <a class="ant-dropdown-link" @click="e => e.preventDefault()">
+              {{text}}
+            </a>
+            <a-menu slot="overlay" @click="onClick">
+              <a-menu-item key="1">年</a-menu-item>
+              <a-menu-item key="2">年/月</a-menu-item>
+              <a-menu-item key="3">年/月/日</a-menu-item>
+              <a-menu-item key="4">不包含日期</a-menu-item>
+            </a-menu>
+          </a-dropdown>
+        </span>
+        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
       </a-table>
     </a-card>
     <a-drawer
@@ -39,14 +40,14 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
-        <a-descriptions-item label="产品名称">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="产品编码">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="规格型号">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="计量单位">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="销售单价">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="采购单价">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="功能模块">{{product.name }}</a-descriptions-item>
+        <a-descriptions-item label="字符名称">{{product.code}}</a-descriptions-item>
+        <a-descriptions-item label="前缀编号">{{product.type}}</a-descriptions-item>
+        <a-descriptions-item label="日期">{{product.unit}}</a-descriptions-item>
+        <a-descriptions-item label="后缀位数">{{product.sales_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="初始值">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item
-          label="Address"
+          label="示例"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
       </a-descriptions>
     </a-drawer>
@@ -80,68 +81,65 @@ Vue.use(Descriptions)
 Vue.use(Transfer)
 
 const columns = [
+  { title: '启用', dataIndex: '', key: 'address', scopedSlots: { customRender: 'use' } },
   {
     key: '0',
-    title: '产品名称',
+    title: '功能模块',
     dataIndex: 'name',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age,
+
     scopedSlots: { customRender: 'name' }
   },
   {
     key: '1',
-    title: '产品编码',
-    dataIndex: 'code',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.name - b.name
+    title: '字符名称',
+    dataIndex: 'code'
   },
 
   {
     key: '2',
-    title: '规格型号',
-    dataIndex: 'type',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
+    title: '前缀编号',
+    dataIndex: 'prefix',
+
+    scopedSlots: { customRender: 'prefix' }
   },
   {
     key: '3',
-    title: '计量单位',
-    dataIndex: 'unit',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
+    title: '日期',
+    dataIndex: 'date',
+
+    scopedSlots: { customRender: 'date' }
   },
   {
     key: '4',
-    title: '销售单价',
+    title: '后缀位数',
     dataIndex: 'sales_unit_price',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
+    scopedSlots: { customRender: 'suffix' }
   },
   {
     key: '5',
-    title: '采购单价',
+    title: '初始值',
     dataIndex: 'purchase_unit_price',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
+    scopedSlots: { customRender: 'initial' }
   },
   {
     key: '6',
-    title: '操作',
-    dataIndex: 'action',
+    title: '示例',
+    dataIndex: 'example',
     width: '150px',
-    scopedSlots: { customRender: 'action' }
+    scopedSlots: { customRender: 'example' }
   }
 ]
 const data = []
 for (let i = 0; i < 46; i++) {
   data.push({
     key: i,
-    code: `000${i}`,
-    name: `电热毛巾架${i}`,
-    type: `K-0000T-${i}`,
+    code: `合同编号`,
+    name: `应收合同普通`,
     unit: 46 - i,
     sales_unit_price: 5,
-    purchase_unit_price: 3
+    purchase_unit_price: 3,
+    example: 'PT2020062200001',
+    date: '年'
   })
 }
 const product = {}
@@ -161,7 +159,8 @@ export default {
       confirmLoading: false,
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
-      disabled: false
+      disabled: false,
+      
     }
   },
   computed: {
@@ -176,6 +175,10 @@ export default {
     }
   },
   methods: {
+    onClick({key}) {
+    
+    console.log(`Click on item ${key}`);
+    },
     afterVisibleChange(val) {
       console.log('visible', val)
     },
@@ -198,6 +201,9 @@ export default {
     },
     handleSearch(record) {
       console.log(record), (this.visible = true), (this.product = record)
+    },
+    handleDate(record) {
+      console.log(record)
     },
     handleSetting(record) {
       console.log(record), (this.modal_visible = true)
@@ -237,7 +243,10 @@ export default {
     handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
       this.selectedKeys = [...sourceSelectedKeys, ...targetSelectedKeys]
     },
-    handleScroll(direction, e) {}
+    handleScroll(direction, e) {},
+    onChange(e) {
+      console.log(`checked = ${e.target.checked}`)
+    }
   }
 }
 </script>

@@ -2,18 +2,15 @@
   <div>
     <a-card>
       <a-row>
-        <a-col :span="21">
+        <a-col :span="19">
           <a-input-search @search="onSearch" placeholder="请输入搜索内容" />
         </a-col>
-        <a-col :span="3">
-          <span
-            class="table-page-search-submitButtons"
-            :style="{ float: 'right', overflow: 'hidden' } || {} "
-          >
+        <a-col :span="5">
+         
             <a-button style="margin-left: 5px" type="primary" @click="handleSetting()">设置</a-button>
             <a-button style="margin-left: 5px" @click="() => queryParam = {}">导入</a-button>
             <a-button style="margin-left: 5px" @click="() => queryParam = {}">导出</a-button>
-          </span>
+         
         </a-col>
       </a-row>
       <a-table
@@ -192,7 +189,6 @@ export default {
     onSearch(value) {
       console.log('value', value)
       const data = [...this.data]
-      //this.data = data.filter(item => item.code == value)
       this.data = this.data.filter(function(data) {
         return Object.keys(data).some(function(key) {
           return (

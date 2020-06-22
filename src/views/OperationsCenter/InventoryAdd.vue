@@ -16,18 +16,15 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+          <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
         </a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="请选择编码" width="1000px" @ok="handleOk">
-        <a-table
-          :row-selection="rowSelection"
-          :columns="columns"
-          :data-source="data"
-          :pagination="false"
-          bordered
-        >
+      <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
+        <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
+          <span slot="checked" style="margin: 0" slot-scope="text,record">
+            <a-checkbox v-model="record.checked" @change="onChange(record)" />
+          </span>
           <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
       </a-modal>
@@ -43,6 +40,7 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
+        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码">
         <a-input
@@ -193,6 +191,46 @@ Vue.use(formModel, Button)
 
 const columns = [
   {
+    title: '选择',
+    dataIndex: 'checked',
+    key: 'checked',
+    width: 80,
+    scopedSlots: { customRender: 'checked' }
+  },
+  {
+    title: '盘点单编码',
+    dataIndex: 'InventoryListCode',
+    key: 'InventoryListCode',
+    scopedSlots: { customRender: 'InventoryListCode' }
+  },
+  {
+    title: '盘点仓库编码',
+    dataIndex: 'InventoryWarehouseCode',
+    key: 'InventoryWarehouseCode'
+  },
+  {
+    title: '部门编码',
+    dataIndex: 'DepartmentCode',
+    key: 'DepartmentCode'
+  },
+  {
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
+    key: 'InventoryCode'
+  },
+  {
+    title: '货位编码',
+    dataIndex: 'LocationCode',
+    key: 'LocationCode'
+  },
+  {
+    title: '批次编码',
+    dataIndex: 'BatchCode',
+    key: 'BatchCode'
+  }
+]
+const selectcolumns = [
+  {
     title: '盘点单编码',
     dataIndex: 'InventoryListCode',
     key: 'InventoryListCode',
@@ -257,10 +295,13 @@ const data = [
     BatchCode: 'a121345'
   }
 ]
-
+const numberRow = []
 export default {
   data() {
     return {
+      numberRow,
+      selectedRow: [],
+      selectcolumns,
       visible: false,
       selectedRowKeys: [],
       data,
@@ -349,13 +390,25 @@ export default {
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
-
+    elect() {
+      this.form.InventoryListCode = 'PT2020062200001'
+    },
     showModal() {
       this.visible = true
     },
+
     handleOk(e) {
       console.log(e)
       this.visible = false
+      this.numberRow = this.selectedRow
+      console.log(this.numberRow)
+    },
+    onChange(record) {
+      console.log('check', record)
+      if (record.checked) {
+        this.selectedRow.push(record)
+        console.log(this.selectedRow)
+      }
     }
   }
 }

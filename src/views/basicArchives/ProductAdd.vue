@@ -7,20 +7,20 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="产品编码" required prop="code">
+      <a-form-model-item label="货品编码" required prop="code">
         <a-input
           v-model="form.code"
-          placeholder="请输入产品编码"
+          placeholder="请输入货品编码"
           @blur="
           () => {
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
         </a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="产品编码" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
         <a-table
           :row-selection="rowSelection"
           :columns="columns"
@@ -32,18 +32,15 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item ref="ProductName" label="产品名称" prop="ProductName">
+      <a-form-model-item ref="ProductName" label="货品名称" prop="ProductName">
         <a-input
           v-model="form.ProductName"
-          placeholder="请输入产品名称"
+          placeholder="请输入货品名称"
           @blur="
           () => {
             
           }"
         />
-      </a-form-model-item>
-      <a-form-model-item label="产品条码" prop="Barcode">
-        <a-input v-model="form.Barcode" placeholder="请输入产品条码" />
       </a-form-model-item>
       <a-form-model-item ref="name" label="规格型号">
         <a-input
@@ -55,6 +52,9 @@
           }
         "
         />
+      </a-form-model-item>
+      <a-form-model-item label="货品条码" prop="Barcode">
+        <a-input v-model="form.Barcode" placeholder="请输入货品条码" />
       </a-form-model-item>
       <a-form-model-item ref="name" label="计量单位">
         <a-input
@@ -68,11 +68,35 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item label="产品分类">
+      <a-form-model-item ref="name" label="包装单位">
+        <a-input
+          v-model="form.MeasurementUnit"
+          placeholder="请输入包装单位"
+          @blur="
+          () => {
+          
+         
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="换算关系">
+        <a-input
+          v-model="form.MeasurementUnit"
+          placeholder="请输入换算关系"
+          @blur="
+          () => {
+          
+         
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item label="货品分类">
         <a-select
           show-search
           default-value="1"
-          placeholder="请选择产品分类"
+          placeholder="请选择货品分类"
           option-filter-prop="children"
           :filter-option="filterOption"
           @focus="handleFocus"
@@ -84,10 +108,13 @@
           <a-select-option value="3">汽车零部件</a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="销售单价">
+      <a-form-model-item label="产品说明">
+        <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="货品说明">
         <a-input
           v-model="form.SalePrice"
-          placeholder="请输入销售单价"
+          placeholder="请输入货品说明"
           @blur="
           () => {
             $refs.name.onFieldBlur();
@@ -95,19 +122,88 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="采购单价">
+      <a-form-model-item ref="name" label="批次管理">
+        <a-select
+          show-search
+          default-value="1"
+          placeholder="请选择批次管理"
+          option-filter-prop="children"
+          :filter-option="filterOption"
+          @focus="handleFocus"
+          @blur="handleBlur"
+          @change="handleSearchChange"
+        >
+          <a-select-option value="1">做批次管理</a-select-option>
+          <a-select-option value="2">不做批次管理</a-select-option>
+        </a-select>
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="生成批次结存帐">
+        <a-select
+          show-search
+          default-value="1"
+          placeholder="请选择生成批次结存帐"
+          option-filter-prop="children"
+          :filter-option="filterOption"
+          @focus="handleFocus"
+          @blur="handleBlur"
+          @change="handleSearchChange"
+        >
+          <a-select-option value="1">严格控制批次出库</a-select-option>
+          <a-select-option value="2">不严格控制批次出库</a-select-option>
+        </a-select>
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="安全库存">
         <a-input
-          v-model="form.PurchasePrice"
-          placeholder="请输入采购单价"
+          v-model="form.SalePrice"
+          placeholder="请输入安全库存"
           @blur="
           () => {
-            
+            $refs.name.onFieldBlur();
           }
         "
         />
       </a-form-model-item>
-      <a-form-model-item label="产品说明">
-        <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
+      <a-form-model-item ref="name" label="起订量">
+        <a-input
+          v-model="form.SalePrice"
+          placeholder="请输入起订量"
+          @blur="
+          () => {
+            $refs.name.onFieldBlur();
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="采购批量">
+        <a-input
+          v-model="form.SalePrice"
+          placeholder="请输入采购批量"
+          @blur="
+          () => {
+            $refs.name.onFieldBlur();
+          }
+        "
+        />
+      </a-form-model-item>
+      <a-form-model-item ref="name" label="自定义追加项">
+        <a-input
+          v-model="form.SalePrice"
+          placeholder="请输入自定义追加项"
+          @blur="
+          () => {
+            $refs.name.onFieldBlur();
+          }
+        "
+        />
+        <a-input
+          v-model="form.SalePrice"
+          placeholder="请输入自定义追加项"
+          @blur="
+          () => {
+            $refs.name.onFieldBlur();
+          }
+        "
+        />
       </a-form-model-item>
       <a-form-model-item label="附件">
         <a-upload
@@ -121,8 +217,8 @@
         </a-upload>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="onSubmit">保存</a-button>
-        <a-button style="margin-left: 10px;" @click="resetForm">取消</a-button>
+        <a-button type="" @click="resetForm">保存并继续</a-button>
+        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>

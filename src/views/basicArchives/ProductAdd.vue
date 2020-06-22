@@ -357,7 +357,7 @@ export default {
     },
 
     showModal() {
-      this.visible = true
+      this.form.code='PT2020062200001'
     },
     handleOk(e) {
       console.log(e)

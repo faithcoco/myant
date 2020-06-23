@@ -16,6 +16,7 @@
           </span>
         </a-col>
       </a-row>
+      <br />
       <a-table
         :row-selection="rowSelection"
         :columns="targetTitle"
@@ -228,7 +229,7 @@ for (let i = 0; i < 30; i++) {
     TargetLocationCode: `000${i}`,
     DepartmentCode: `000${i}`,
     SalesmanCode: `000${i}`,
-    AdjustmentDate: `1月${i+1}日`,
+    AdjustmentDate: `1月${i + 1}日`,
     InventoryDate: `000${i}`,
     InventoryCode: `000${i}`,
     InventoryName: `口香糖`,

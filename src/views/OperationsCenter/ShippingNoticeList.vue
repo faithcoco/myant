@@ -16,6 +16,7 @@
           </span>
         </a-col>
       </a-row>
+      <br />
       <a-table
         :row-selection="rowSelection"
         :columns="targetTitle"
@@ -108,7 +109,7 @@ const columns = [
     dataIndex: 'ShippingNoticeCode',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
-    width:100,
+    width: 100,
     scopedSlots: { customRender: 'name' }
   },
   {
@@ -116,7 +117,7 @@ const columns = [
     title: '客户编码',
     dataIndex: 'CustomerCode',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.name - b.name
   },
 
@@ -125,7 +126,7 @@ const columns = [
     title: '客户地址编码',
     dataIndex: 'CustomerAddressCode',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -133,7 +134,7 @@ const columns = [
     title: '联系人编码',
     dataIndex: 'CustomerAddressCode',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -141,7 +142,7 @@ const columns = [
     title: '部门编码',
     dataIndex: 'DepartmentCode',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -149,7 +150,7 @@ const columns = [
     title: '业务员编码',
     dataIndex: 'SalesmanCode',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -157,7 +158,7 @@ const columns = [
     title: '预计出库日期',
     dataIndex: 'ExpectedOutWarehouseCode',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -165,7 +166,7 @@ const columns = [
     title: '发货仓库编码',
     dataIndex: 'ShippingWarehouseCode',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -173,7 +174,7 @@ const columns = [
     title: '存货编码',
     dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -181,7 +182,7 @@ const columns = [
     title: '存货名称',
     dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -189,7 +190,7 @@ const columns = [
     title: '批次编码',
     dataIndex: 'BatchCode',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -197,7 +198,7 @@ const columns = [
     title: '数量',
     dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -205,7 +206,7 @@ const columns = [
     title: '计量单位',
     dataIndex: 'Unit',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -213,7 +214,7 @@ const columns = [
     title: '包装数量',
     dataIndex: 'PackingQuantity',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -221,7 +222,7 @@ const columns = [
     title: '包装单位',
     dataIndex: 'PackingUnit',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -229,7 +230,7 @@ const columns = [
     title: '单价',
     dataIndex: 'UnitPrice',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -237,7 +238,7 @@ const columns = [
     title: '含税单价',
     dataIndex: 'TaxIncludedUnitPrice',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -245,7 +246,7 @@ const columns = [
     title: '税率',
     dataIndex: 'TaxRate',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -253,7 +254,7 @@ const columns = [
     title: '金额',
     dataIndex: 'Amount',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -261,7 +262,7 @@ const columns = [
     title: '含税金额',
     dataIndex: 'TaxIncludedAmount',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -269,7 +270,7 @@ const columns = [
     title: '税额',
     dataIndex: 'Tax',
     defaultSortOrder: 'descend',
-    width:100,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -289,8 +290,8 @@ for (let i = 0; i < 46; i++) {
     CustomerAddressCode: `000${i}`,
     DepartmentCode: `000${i}`,
     SalesmanCode: `000${i}`,
-    ExpectedOutWarehouseCode: `1月${i+1}日`,
-    ShippingWarehouseCode: `A${i+1}`,
+    ExpectedOutWarehouseCode: `1月${i + 1}日`,
+    ShippingWarehouseCode: `A${i + 1}`,
     InventoryCode: `000${i}`,
     InventoryName: `华硕飞行堡垒${i}型`,
     BatchCode: `000${i}`,

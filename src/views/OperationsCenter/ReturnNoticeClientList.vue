@@ -16,6 +16,7 @@
           </span>
         </a-col>
       </a-row>
+      <br />
       <a-table
         :row-selection="rowSelection"
         :columns="targetTitle"

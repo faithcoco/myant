@@ -16,6 +16,7 @@
           </span>
         </a-col>
       </a-row>
+      <br />
       <a-table
         :row-selection="rowSelection"
         :columns="targetTitle"
@@ -52,7 +53,7 @@
         <a-descriptions-item label="业务员编码">{{product.SalesmanCode}}</a-descriptions-item>
         <a-descriptions-item label="装箱日期">{{product.PackingDate}}</a-descriptions-item>
         <a-descriptions-item label="装箱状态">{{product.Status}}</a-descriptions-item>
-         <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
+        <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
         <a-descriptions-item label="批次编码">{{product.BatchCode}}</a-descriptions-item>
         <a-descriptions-item label="货位编码">{{product.BatchCode}}</a-descriptions-item>
         <a-descriptions-item label="数量">{{product.Quantity}}</a-descriptions-item>
@@ -60,7 +61,7 @@
         <a-descriptions-item label="包装数量">{{product.PackingQuantity}}</a-descriptions-item>
         <a-descriptions-item label="包装单位">{{product.PackingUnit}}</a-descriptions-item>
         <a-descriptions-item label="单价">{{product.UnitPrice}}</a-descriptions-item>
-         <a-descriptions-item label="金额">{{product.Amount}}</a-descriptions-item>
+        <a-descriptions-item label="金额">{{product.Amount}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>

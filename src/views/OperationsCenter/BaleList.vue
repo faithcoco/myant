@@ -52,8 +52,7 @@
         <a-descriptions-item label="业务员编码">{{product.SalesmanCode}}</a-descriptions-item>
         <a-descriptions-item label="装箱日期">{{product.PackingDate}}</a-descriptions-item>
         <a-descriptions-item label="装箱状态">{{product.Status}}</a-descriptions-item>
-        <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
-        <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
+         <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
         <a-descriptions-item label="批次编码">{{product.BatchCode}}</a-descriptions-item>
         <a-descriptions-item label="货位编码">{{product.BatchCode}}</a-descriptions-item>
         <a-descriptions-item label="数量">{{product.Quantity}}</a-descriptions-item>
@@ -61,11 +60,7 @@
         <a-descriptions-item label="包装数量">{{product.PackingQuantity}}</a-descriptions-item>
         <a-descriptions-item label="包装单位">{{product.PackingUnit}}</a-descriptions-item>
         <a-descriptions-item label="单价">{{product.UnitPrice}}</a-descriptions-item>
-        <a-descriptions-item label="含税单价">{{product.TaxIncludedUnitPrice}}</a-descriptions-item>
-        <a-descriptions-item label="税率">{{product.TaxRate}}</a-descriptions-item>
-        <a-descriptions-item label="金额">{{product.Amount}}</a-descriptions-item>
-        <a-descriptions-item label="含税金额">{{product.TaxIncludedAmount}}</a-descriptions-item>
-        <a-descriptions-item label="税额">{{product.Tax}}</a-descriptions-item>
+         <a-descriptions-item label="金额">{{product.Amount}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -144,13 +139,7 @@ const columns = [
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
-  {
-    key: '6',
-    title: '存货编码',
-    dataIndex: 'InventoryCode',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
+
   {
     key: '7',
     title: '存货名称',
@@ -209,37 +198,9 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '14',
-    title: '含税单价',
-    dataIndex: 'TaxIncludedUnitPrice',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '15',
-    title: '税率',
-    dataIndex: 'TaxRate',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
     key: '16',
     title: '金额',
     dataIndex: 'Amount',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '17',
-    title: '含税金额',
-    dataIndex: 'TaxIncludedAmount',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '18',
-    title: '税额',
-    dataIndex: 'Tax',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },

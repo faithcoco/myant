@@ -23,7 +23,7 @@
         :data-source="data"
         bordered
         size="default"
-        :pagination="{ pageSize: 5 }"
+        :pagination="{ pageSize: 10 }"
          :scroll="{ x: 'calc(700px + 50%)'}"
       >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>

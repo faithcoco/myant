@@ -127,7 +127,7 @@ const columns = [
   {
     key: '3',
     title: '供应商编码',
-    dataIndex: 'StorageDate',
+    dataIndex: 'Principal',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
@@ -150,15 +150,15 @@ const columns = [
   },
   {
     key: '6',
-    title: '存货编码',
-    dataIndex: 'StorageProduct',
+    title: '入库日期',
+    dataIndex: 'StorageDate',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
-    title: '存货名称',
+    title: '存货编码',
     dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     width: 100,
@@ -166,7 +166,7 @@ const columns = [
   },
   {
     key: '8',
-    title: '货位编码',
+    title: '存货名称',
     dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     width: 100,
@@ -174,7 +174,7 @@ const columns = [
   },
   {
     key: '9',
-    title: '批次编码',
+    title: '货位编码',
     dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     width: 100,
@@ -182,7 +182,7 @@ const columns = [
   },
   {
     key: '10',
-    title: '数量',
+    title: '批次编码',
     dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     width: 100,
@@ -190,7 +190,7 @@ const columns = [
   },
   {
     key: '11',
-    title: '存货编码',
+    title: '数量',
     dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     width: 100,
@@ -251,7 +251,7 @@ for (let i = 0; i < 30; i++) {
     Num: `000${i}`,
     Type: '生活用品',
     Warehouse: `K${i}`,
-    StorageDate: `1月${i + 1}`,
+    StorageDate: `1月${i + 1}日`,
     Principal: 'zhangsan',
     RelatedDocuments: `qwsadas${i}`,
     StorageProduct: `000${i}`

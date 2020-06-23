@@ -222,14 +222,6 @@ const columns = [
   },
   {
     key: '6',
-    title: '出库日期',
-    dataIndex: 'OutProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '6',
     title: '单价',
     dataIndex: 'OutProduct',
     defaultSortOrder: 'descend',

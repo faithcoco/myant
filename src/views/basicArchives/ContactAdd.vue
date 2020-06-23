@@ -21,6 +21,11 @@
       </a-form-model-item>
 
       <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
+        <a-input-search
+          placeholder="搜索"
+          style="width: 400px;margin-bottom:20px"
+          @search="onSearch"
+        />
         <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
           <span slot="checked" style="margin: 0" slot-scope="text,record">
             <a-checkbox v-model="record.checked" @change="onChange(record)" />
@@ -257,6 +262,9 @@ export default {
     }
   },
   methods: {
+    onSearch(value) {
+      console.log(value)
+    },
     handleChange(info) {
       if (info.file.status !== 'uploading') {
         console.log(info.file, info.fileList)
@@ -296,7 +304,7 @@ export default {
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
-       elect() {
+    elect() {
       this.form.ContactCode = 'PT2020062200001'
     },
     showModal() {

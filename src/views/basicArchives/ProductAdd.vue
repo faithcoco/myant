@@ -6,8 +6,9 @@
       :rules="rules"
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
+   
     >
-      <a-form-model-item label="货品编码" required prop="code">
+      <a-form-model-item label="货品编码" required prop="code" >
         <a-input
           v-model="form.code"
           placeholder="请输入货品编码"

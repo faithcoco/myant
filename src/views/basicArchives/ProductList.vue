@@ -22,7 +22,9 @@
         :columns="targetTitle"
         :data-source="data"
         bordered
-        size="middle"
+        size="default"
+        :pagination="{ pageSize: 5 }"
+         :scroll="{ x: 'calc(700px + 50%)'}"
       >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
         <span slot="action" slot-scope="text, record">
@@ -101,7 +103,7 @@ const columns = [
     title: '货品编码',
     dataIndex: 'name',
     defaultSortOrder: 'descend',
-    width:100,
+    width:120,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
@@ -110,7 +112,7 @@ const columns = [
     title: '货品名称',
     dataIndex: 'code',
     defaultSortOrder: 'descend',
-    width:100,
+    width:120,
     sorter: (a, b) => a.name - b.name
   },
 
@@ -119,7 +121,7 @@ const columns = [
     title: '规格型号',
     dataIndex: 'type',
     defaultSortOrder: 'descend',
-    width:100,
+    width:120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -127,7 +129,7 @@ const columns = [
     title: '货品条码',
     dataIndex: 'unit',
     defaultSortOrder: 'descend',
-    width:100,
+     width:120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -135,7 +137,7 @@ const columns = [
     title: '计量单位',
     dataIndex: 'sales_unit_price',
     defaultSortOrder: 'descend',
-    width:100,
+     width:120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -143,7 +145,7 @@ const columns = [
     title: '包装单位',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
-    width:100,
+    width:120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -151,7 +153,7 @@ const columns = [
     title: '换算关系',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
-    width:100,
+    width:120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -159,7 +161,7 @@ const columns = [
     title: '货品分类',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
-    width:100,
+     width:120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -167,7 +169,7 @@ const columns = [
     title: '货品说明',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
-    width:100,
+    width:120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -175,7 +177,7 @@ const columns = [
     title: '批次管理',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
-    width:100,
+     width:120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -183,7 +185,7 @@ const columns = [
     title: '生成批次结存帐',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
-    width:100,
+   width:160,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -191,7 +193,7 @@ const columns = [
     title: '安全库存',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
-    width:100,
+     width:120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -199,7 +201,7 @@ const columns = [
     title: '起订量',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
-    width:100,
+    width:120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -207,7 +209,7 @@ const columns = [
     title: '采购批量',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
-    width:100,
+     width:120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -215,14 +217,14 @@ const columns = [
     title: '自定义追加项',
     dataIndex: 'purchase_unit_price',
     defaultSortOrder: 'descend',
-    width:100,
+     width:140,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '15',
     title: '操作',
     dataIndex: 'action',
-    width: '100px',
+     width:120,
     scopedSlots: { customRender: 'action' }
   }
 ]

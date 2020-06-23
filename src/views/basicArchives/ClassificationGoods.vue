@@ -1,5 +1,21 @@
 <template>
+
   <a-card>
+      <a-row>
+        <a-col :span="19">
+        
+        </a-col>
+        <a-col :span="5">
+          <span
+            class="table-page-search-submitButtons"
+            :style="{ float: 'right', overflow: 'hidden' } || {} "
+          >
+            <a-button style="margin-left: 5px" type="primary" @click="handleSetting()">新增</a-button>
+
+          </span>
+        </a-col>
+      </a-row>
+    <br />
     <a-table :columns="columns" :data-source="data" :defaultExpandAllRows="true">
       <span slot="action" slot-scope="text, record">
         <template>

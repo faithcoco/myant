@@ -16,13 +16,13 @@
           </span>
         </a-col>
       </a-row>
+    <br />
       <a-table
         :row-selection="rowSelection"
         :columns="targetTitle"
         :data-source="data"
         bordered
         size="middle"
-        :scroll="{ x: 'calc(400px + 50%)', y: 400 }"
       >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
         <span slot="action" slot-scope="text, record">

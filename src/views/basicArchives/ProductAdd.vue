@@ -21,6 +21,9 @@
       </a-form-model-item>
 
       <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
+        <a-input-search placeholder="请输入搜索内容" @search="onSearch" />
+        <br />
+        <br />
         <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
           <span slot="checked" style="margin: 0" slot-scope="text,record">
             <a-checkbox v-model="record.checked" @change="onChange(record)" />

@@ -28,9 +28,9 @@
             $refs.name.onFieldBlur();
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+       
         </a-input>
-        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
+       
       </a-form-model-item>
 
       <a-modal v-model="visible" title="选择编号" width="1000px" @ok="handleOk">

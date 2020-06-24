@@ -42,9 +42,9 @@
             
           }"
         >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+         
         </a-input>
-        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
+      
       </a-form-model-item>
       <a-form-model-item ref="name" label="规格型号">
         <a-input

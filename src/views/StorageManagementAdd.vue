@@ -30,7 +30,7 @@
         ></a-input>
       </a-form-model-item>
 
-      <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
+      <a-modal v-model="visible" title="选择编码" width="1200px" @ok="handleOk">
         <a-input-search
           placeholder="搜索"
           style="width: 400px;margin-bottom:20px"
@@ -71,7 +71,7 @@
           style="width: 100%;"
         />
       </a-form-model-item>
-      <a-form-model-item ref="Principal" label="存货编码">
+      <a-form-model-item ref="Principal" label="商品清单：">
         <a-input
           v-model="form.Principal"
           placeholder="请选择存货编码"
@@ -87,121 +87,7 @@
         <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
 
-      <a-form-model-item ref="name" label="存货名称" prop="RelateDocuments">
-        <a-input
-          v-model="form.RelateDocuments"
-          placeholder="请选择存货名称"
-          @blur="
-          () => {
-          
-         
-          }
-        "
-        >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
-        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="货位编码">
-        <a-input
-          v-model="form.RelateDocuments"
-          placeholder="请选择货位编码"
-          @blur="
-          () => {
-          
-         
-          }
-        "
-        >
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
-        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
-      </a-form-model-item>
-
-      <a-form-model-item label="批次编码" prop="StorageProduct">
-        <a-input v-model="form.StorageProduct" placeholder="请输入批次编码" @blur="
-          () => { }">
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
-        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
-      </a-form-model-item>
-      <a-form-model-item label="数量">
-        <a-input
-          v-model="form.Remarks"
-          placeholder="请输入数量"
-          @blur="
-          () => {
-            
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item label="计量单位">
-        <a-input
-          v-model="form.Remarks"
-          placeholder="请输入计量单位"
-          @blur="
-          () => {
-            
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item label="包装数量">
-        <a-input
-          v-model="form.Remarks"
-          placeholder="请输入包装数量"
-          @blur="
-          () => {
-            
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item label="包装单位">
-        <a-input
-          v-model="form.Remarks"
-          placeholder="请输入包装单位"
-          @blur="
-          () => {
-            
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item label="单价">
-        <a-input
-          v-model="form.Remarks"
-          placeholder="请输入单价"
-          @blur="
-          () => {
-            
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item label="金额">
-        <a-input
-          v-model="form.Remarks"
-          placeholder="请输入金额"
-          @blur="
-          () => {
-            
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item label="附件">
-        <a-upload
-          name="file"
-          :multiple="true"
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          :headers="headers"
-          @change="handleChange"
-        >
-          <a-button type="link" :size="size">添加附件</a-button>
-        </a-upload>
-      </a-form-model-item>
+     
 
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
         <a-button type @click="resetForm">保存并继续</a-button>
@@ -220,45 +106,82 @@ const columns = [
     title: '选择',
     dataIndex: 'checked',
     key: 'checked',
-    width: 80,
+    width: 100,
     scopedSlots: { customRender: 'checked' }
+  },
+  {
+    title: '入库单编码',
+    dataIndex: 'Type',
+    key: 'Type',
+    scopedSlots: { customRender: 'Type' },
+    width: 100
   },
   {
     title: '存货编码',
     dataIndex: 'Type',
     key: 'Type',
     scopedSlots: { customRender: 'Type' },
-    width: 80
+    width: 100
   },
   {
     title: '存货名称',
     dataIndex: 'Num',
     key: 'Num',
-    width: 80
+    width: 100
   },
   {
     title: '货位编码',
     dataIndex: 'Warehouse',
     key: 'Warehouse',
-    width: 80
+    width: 100
   },
   {
     title: '批次编码',
     dataIndex: 'StorageProduct',
     key: 'StorageProduct',
-    width: 80
-  }
+    width: 100
+  },{
+    title: '数量',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '计量单位',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '包装数量',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '包装单位',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '单价',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '金额',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },
 ]
 const selectcolumns = [
   {
-    title: '存货编码',
+    title: '单据编码',
     dataIndex: 'Type',
     key: 'Type',
     scopedSlots: { customRender: 'Type' },
     width: 80
   },
   {
-    title: '存货名称',
+    title: '单据名称',
     dataIndex: 'Num',
     key: 'Num',
     width: 80

@@ -9,7 +9,7 @@
     >
       <a-form-model-item ref="name" label="入库单编码" required>
         <a-input
-          v-model="form.Num"
+          v-model="form.code"
           placeholder="请输入入库单编码"
           @blur="
           () => {
@@ -46,7 +46,7 @@
 
       <a-form-model-item label="关联单据" prop="Warehouse">
         <a-input v-model="form.Warehouse" placeholder="请选择关联单据">
-          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
 
@@ -54,7 +54,6 @@
         <a-input v-model="form.Warehouse" placeholder="请选择供应商编码">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
 
       <a-form-model-item label="客户编码" prop="Warehouse">
@@ -83,8 +82,9 @@
           }
         "
         >
-          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
+        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
 
       <a-form-model-item ref="name" label="存货名称" prop="RelateDocuments">
@@ -97,9 +97,12 @@
          
           }
         "
-        ></a-input>
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
+        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="货位编码" prop="RelateDocuments">
+      <a-form-model-item ref="name" label="货位编码">
         <a-input
           v-model="form.RelateDocuments"
           placeholder="请选择货位编码"
@@ -110,15 +113,17 @@
           }
         "
         >
-          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
+        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
 
       <a-form-model-item label="批次编码" prop="StorageProduct">
         <a-input v-model="form.StorageProduct" placeholder="请输入批次编码" @blur="
           () => { }">
-          <a-button slot="suffix" type="link" @click="showModal">自动获取</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
+        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
       <a-form-model-item label="数量">
         <a-input
@@ -219,26 +224,26 @@ const columns = [
     scopedSlots: { customRender: 'checked' }
   },
   {
-    title: '类型',
+    title: '存货编码',
     dataIndex: 'Type',
     key: 'Type',
     scopedSlots: { customRender: 'Type' },
     width: 80
   },
   {
-    title: '编号',
+    title: '存货名称',
     dataIndex: 'Num',
     key: 'Num',
     width: 80
   },
   {
-    title: '仓库',
+    title: '货位编码',
     dataIndex: 'Warehouse',
     key: 'Warehouse',
     width: 80
   },
   {
-    title: '入库产品',
+    title: '批次编码',
     dataIndex: 'StorageProduct',
     key: 'StorageProduct',
     width: 80
@@ -246,26 +251,26 @@ const columns = [
 ]
 const selectcolumns = [
   {
-    title: '类型',
+    title: '存货编码',
     dataIndex: 'Type',
     key: 'Type',
     scopedSlots: { customRender: 'Type' },
     width: 80
   },
   {
-    title: '编号',
+    title: '存货名称',
     dataIndex: 'Num',
     key: 'Num',
     width: 80
   },
   {
-    title: '仓库',
+    title: '货位编码',
     dataIndex: 'Warehouse',
     key: 'Warehouse',
     width: 80
   },
   {
-    title: '入库产品',
+    title: '批次编码',
     dataIndex: 'StorageProduct',
     key: 'StorageProduct',
     width: 80
@@ -275,24 +280,24 @@ const selectcolumns = [
 const data = [
   {
     key: '1',
-    Type: '机箱',
+    Type: 'A11111',
     Num: 322311,
     Warehouse: 'A1',
-    StorageProduct: 'ASUS'
+    StorageProduct: 'S11111'
   },
   {
     key: '2',
-    Type: '主板',
+    Type: 'A222222',
     Num: 421231,
     Warehouse: 'A1',
-    StorageProduct: '技嘉'
+    StorageProduct: 'S222222'
   },
   {
     key: '3',
-    Type: '显卡',
+    Type: 'A33333',
     Num: 3221312,
     Warehouse: 'A1',
-    StorageProduct: 'RTX2080TI'
+    StorageProduct: 'S333333'
   }
 ]
 const numberRow = []
@@ -393,7 +398,7 @@ export default {
       this.selectedRowKeys = selectedRowKeys
     },
     elect() {
-      this.form.Num = 'PT2020062200001'
+      this.form.code = 'PT2020062200001'
     },
     showModal() {
       this.visible = true

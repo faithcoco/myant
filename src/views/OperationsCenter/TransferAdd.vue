@@ -45,7 +45,6 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
       <a-form-model-item label="目标仓库编码" prop="TargetWarehouseCode">
         <a-input
@@ -84,7 +83,10 @@
           () => {
             
           }"
-        ></a-input>
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
+        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
       <a-form-model-item ref="name" label="存货名称">
         <a-input
@@ -95,7 +97,10 @@
             
           }
         "
-        />
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
+        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
       <a-form-model-item label="货位编码">
         <a-input
@@ -105,7 +110,10 @@
           () => {
             
           }"
-        ></a-input>
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
+        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
       <a-form-model-item label="批次编码">
         <a-input
@@ -115,7 +123,10 @@
           () => {
             
           }"
-        ></a-input>
+        >
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+        </a-input>
+        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
       <a-form-model-item label="数量">
         <a-input

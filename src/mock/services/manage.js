@@ -28,7 +28,14 @@ const serverList = (options) => {
       role:'部门主管，财务',
       tellphone:'',
       field_name:'客户名称',
-      field_type:'文本类型'
+      field_type:'文本类型',
+      Num: `000${i}`,
+      Type: '生活用品',
+      Warehouse: `K${i}`,
+      StorageDate: `1月${i + 1}日`,
+      Principal: 'zhangsan',
+      RelatedDocuments: `qwsadas${i}`,
+      StorageProduct: `000${i}`
     })
   }
 

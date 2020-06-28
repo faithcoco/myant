@@ -17,25 +17,26 @@
         </a-col>
       </a-row>
       <br />
-      <a-table
-        :row-selection="rowSelection"
+      <s-table
+        ref="table"
+        size="default"
         :columns="targetTitle"
-        :data-source="data"
+        :data="loadData"
+        :alert="false"
+        :scroll="{ x: 1500 }"
         bordered
-        size="middle"
-        :scroll="{ x: 'calc(400px + 50%)', y: 400 }"
       >
-        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
+        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
+
         <span slot="action" slot-scope="text, record">
-          <template>
+          <template v-if="$auth('table.update')">
             <a @click="handleEdit(record)">编辑</a>
             <a-divider type="vertical" />
-            <a-popconfirm v-if="data.length" title="确定要删除吗?" @confirm="() => onDelete(record.key)">
-              <a href="javascript:;">删除</a>
-            </a-popconfirm>
+            <a @click="handleEdit(record)">删除</a>
           </template>
         </span>
-      </a-table>
+        6t
+      </s-table>
     </a-card>
     <a-drawer
       title="产品详情"
@@ -47,17 +48,18 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
-        <a-descriptions-item label="供应商编码">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="供应商名称">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="供应商类型">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="负责人">{{product.principal}}</a-descriptions-item>
-        <a-descriptions-item label="联系人编码">{{product.ContactPerson}}</a-descriptions-item>
-        <a-descriptions-item label="备注">{{product.ContactPerson}}</a-descriptions-item>
-        <a-descriptions-item label="纳税人识别号">{{product.TaxpayerIdentificationNumber}}</a-descriptions-item>
+        <a-descriptions-item label="供应商编码">{{product.Type}}</a-descriptions-item>
+        <a-descriptions-item label="供应商名称">{{product.StorageProduct }}</a-descriptions-item>
+        <a-descriptions-item label="供应商类型">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="负责人">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="联系人编码">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="备注">{{product.StorageProduct}}</a-descriptions-item>
+        <a-descriptions-item label="纳税人识别号">{{product.StorageProduct}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
       </a-descriptions>
+      <a-button type="primary" @click="chatClick">聊一聊</a-button>
     </a-drawer>
     <a-modal
       title="Title"
@@ -78,74 +80,133 @@
         @scroll="handleScroll"
       />
     </a-modal>
+    <a-modal
+      width="1000px"
+      title="评论"
+      :visible="chat_visible"
+      :confirm-loading="confirmLoading"
+      @ok="chatOk"
+      @cancel="chatCancel"
+    >
+      <div>
+        <a-list
+          v-if="comments.length"
+          :data-source="comments"
+          :header="`${comments.length} ${comments.length > 1 ? '回复' : '回复'}`"
+          item-layout="horizontal"
+        >
+          <a-list-item slot="renderItem" slot-scope="item">
+            <a-comment
+              :author="item.author"
+              :avatar="item.avatar"
+              :content="item.content"
+              :datetime="item.datetime"
+            />
+          </a-list-item>
+        </a-list>
+        <a-comment>
+          <a-avatar
+            slot="avatar"
+            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+            alt="Han Solo"
+          />
+          <div slot="content">
+            <a-form-item>
+              <a-textarea :rows="4" :value="value" @change="chatChange" />
+            </a-form-item>
+            <a-form-item>
+              <a-button
+                html-type="submit"
+                :loading="submitting"
+                type="primary"
+                @click="handleSubmit"
+              >评论</a-button>
+            </a-form-item>
+          </div>
+        </a-comment>
+      </div>
+    </a-modal>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 import Vue from 'vue'
 import { Descriptions } from 'ant-design-vue'
 import { Transfer } from 'ant-design-vue'
+import { Comment } from 'ant-design-vue'
 Vue.use(Descriptions)
 Vue.use(Transfer)
+Vue.use(Comment)
+import STree from '@/components/Tree/Tree'
+import { STable } from '@/components'
+import { getOrgTree, getServiceList } from '@/api/manage'
 
 const columns = [
   {
     key: '0',
     title: '供应商编码',
-    dataIndex: 'code',
+    dataIndex: 'Type',
     defaultSortOrder: 'descend',
-    sorter: (a, b) => a.name - b.name
+    width: 100,
+    sorter: (a, b) => a.name - b.name,
+    scopedSlots: { customRender: 'name' }
   },
 
   {
     key: '1',
     title: '供应商名称',
-    dataIndex: 'name',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age,
-    scopedSlots: { customRender: 'name' }
+    width: 100,
+    sorter: (a, b) => a.age - b.age
   },
-
   {
     key: '2',
     title: '供应商类型',
-    dataIndex: 'type',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
     title: '负责人',
-    dataIndex: 'principal',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '5',
-    title: '联系人编码',
-    dataIndex: 'ContactPerson',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '6',
-    title: '备注',
-    dataIndex: 'tel',
-    defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
     title: '纳税人识别号',
-    dataIndex: 'TaxpayerIdentificationNumber',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '5',
+    title: '联系人编码',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '6',
+    title: '备注',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
     title: '操作',
-    dataIndex: 'action',
-    width: '150px',
+    dataIndex: 'StorageProduct',
+    width: 120,
+    fixed: 'right',
     scopedSlots: { customRender: 'action' }
   }
 ]
@@ -162,14 +223,20 @@ for (let i = 0; i < 46; i++) {
     tel: '13333333333'
   })
 }
+const width = 120
 const product = {}
 const targetTitle = columns
 export default {
+  components: {
+    STable,
+    STree
+  },
   data() {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
       visible: false,
+      chat_visible: false,
       data,
       product,
       columns,
@@ -179,7 +246,17 @@ export default {
       confirmLoading: false,
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
-      disabled: false
+      disabled: false,
+      loadData: parameter => {
+        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log('/service-->', JSON.stringify(res.result))
+          return res.result
+        })
+      },
+      comments: [],
+      submitting: false,
+      value: '',
+      moment
     }
   },
   computed: {
@@ -255,7 +332,40 @@ export default {
     handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
       this.selectedKeys = [...sourceSelectedKeys, ...targetSelectedKeys]
     },
-    handleScroll(direction, e) {}
+    handleScroll(direction, e) {},
+    handleSubmit() {
+      if (!this.value) {
+        return
+      }
+
+      this.submitting = true
+
+      setTimeout(() => {
+        this.submitting = false
+        this.comments = [
+          {
+            author: 'Han Solo',
+            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+            content: this.value,
+            datetime: moment().fromNow()
+          },
+          ...this.comments
+        ]
+        this.value = ''
+      }, 1000)
+    },
+    chatChange(e) {
+      this.value = e.target.value
+    },
+    chatClick() {
+      this.chat_visible = true
+    },
+    chatOk(e) {
+      this.chat_visible = false
+    },
+    chatCancel(e) {
+      this.chat_visible = false
+    }
   }
 }
 </script>

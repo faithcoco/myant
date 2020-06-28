@@ -17,25 +17,26 @@
         </a-col>
       </a-row>
       <br />
-      <a-table
-        :row-selection="rowSelection"
+      <s-table
+        ref="table"
+        size="default"
         :columns="targetTitle"
-        :data-source="data"
+        :data="loadData"
+        :alert="false"
+        :scroll="{ x: 1500 }"
         bordered
-        size="middle"
-        :scroll="{ x: 'calc(1200px + 50%)', y: 400 }"
       >
-        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
+        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
+
         <span slot="action" slot-scope="text, record">
-          <template>
+          <template v-if="$auth('table.update')">
             <a @click="handleEdit(record)">编辑</a>
             <a-divider type="vertical" />
-            <a-popconfirm v-if="data.length" title="确定要删除吗?" @confirm="() => onDelete(record.key)">
-              <a href="javascript:;">删除</a>
-            </a-popconfirm>
+            <a @click="handleEdit(record)">删除</a>
           </template>
         </span>
-      </a-table>
+        6t
+      </s-table>
     </a-card>
     <a-drawer
       title="产品详情"
@@ -66,6 +67,7 @@
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
       </a-descriptions>
+      <a-button type="primary" @click="chatClick">聊一聊</a-button>
     </a-drawer>
     <a-modal
       title="Title"
@@ -86,57 +88,109 @@
         @scroll="handleScroll"
       />
     </a-modal>
+    <a-modal
+      width="1000px"
+      title="评论"
+      :visible="chat_visible"
+      :confirm-loading="confirmLoading"
+      @ok="chatOk"
+      @cancel="chatCancel"
+    >
+      <div>
+        <a-list
+          v-if="comments.length"
+          :data-source="comments"
+          :header="`${comments.length} ${comments.length > 1 ? '回复' : '回复'}`"
+          item-layout="horizontal"
+        >
+          <a-list-item slot="renderItem" slot-scope="item">
+            <a-comment
+              :author="item.author"
+              :avatar="item.avatar"
+              :content="item.content"
+              :datetime="item.datetime"
+            />
+          </a-list-item>
+        </a-list>
+        <a-comment>
+          <a-avatar
+            slot="avatar"
+            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+            alt="Han Solo"
+          />
+          <div slot="content">
+            <a-form-item>
+              <a-textarea :rows="4" :value="value" @change="chatChange" />
+            </a-form-item>
+            <a-form-item>
+              <a-button
+                html-type="submit"
+                :loading="submitting"
+                type="primary"
+                @click="handleSubmit"
+              >评论</a-button>
+            </a-form-item>
+          </div>
+        </a-comment>
+      </div>
+    </a-modal>
   </div>
 </template>
 
 <script>
+import moment from 'moment'
 import Vue from 'vue'
 import { Descriptions } from 'ant-design-vue'
 import { Transfer } from 'ant-design-vue'
+import { Comment } from 'ant-design-vue'
 Vue.use(Descriptions)
 Vue.use(Transfer)
+Vue.use(Comment)
+import STree from '@/components/Tree/Tree'
+import { STable } from '@/components'
+import { getOrgTree, getServiceList } from '@/api/manage'
 
 const columns = [
   {
     key: '0',
     title: '装箱单编码',
-    dataIndex: 'PackingListCode',
+    dataIndex: 'Type',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
-    scopedSlots: { customRender: 'PackingListCode' }
+    scopedSlots: { customRender: 'name' }
   },
   {
     key: '1',
     title: '装箱仓库编码',
-    dataIndex: 'PackingWarehouseCode',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.name - b.name
   },
   {
     key: '2',
     title: '部门编码',
-    dataIndex: 'DepartmentCode',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
     title: '业务员编码',
-    dataIndex: 'SalesmanCode',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
     title: '装箱日期',
-    dataIndex: 'PackingDate',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
     title: '装箱状态',
-    dataIndex: 'Status',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
@@ -144,7 +198,7 @@ const columns = [
   {
     key: '7',
     title: '存货名称',
-    dataIndex: 'InventoryName',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
@@ -152,64 +206,65 @@ const columns = [
   {
     key: '8',
     title: '批次编码',
-    dataIndex: 'BatchCode',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '货位编码',
-    dataIndex: 'BatchCode',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
-    title: '数量',
-    dataIndex: 'Quantity',
+    title: '货位编码',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '10',
-    title: '计量单位',
-    dataIndex: 'Unit',
+    title: '数量',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '11',
-    title: '包装数量',
-    dataIndex: 'PackingQuantity',
+    title: '计量单位',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '12',
-    title: '包装单位',
-    dataIndex: 'PackingUnit',
+    title: '包装数量',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '13',
+    title: '包装单位',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '14',
     title: '单价',
-    dataIndex: 'UnitPrice',
+    dataIndex: 'StorageProduct',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '15',
+    title: '金额',
+    dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '16',
-    title: '金额',
-    dataIndex: 'Amount',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '19',
     title: '操作',
     dataIndex: 'action',
-    width: '150px',
+    width: 120,
+    fixed: 'right',
     scopedSlots: { customRender: 'action' }
   }
 ]
@@ -238,14 +293,20 @@ for (let i = 0; i < 46; i++) {
     Tax: `1000${i}`
   })
 }
+const width = 120
 const product = {}
 const targetTitle = columns
 export default {
+  components: {
+    STable,
+    STree
+  },
   data() {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
       visible: false,
+      chat_visible: false,
       data,
       product,
       columns,
@@ -255,7 +316,17 @@ export default {
       confirmLoading: false,
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
-      disabled: false
+      disabled: false,
+      loadData: parameter => {
+        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log('/service-->', JSON.stringify(res.result))
+          return res.result
+        })
+      },
+      comments: [],
+      submitting: false,
+      value: '',
+      moment
     }
   },
   computed: {
@@ -331,7 +402,40 @@ export default {
     handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
       this.selectedKeys = [...sourceSelectedKeys, ...targetSelectedKeys]
     },
-    handleScroll(direction, e) {}
+    handleScroll(direction, e) {},
+    handleSubmit() {
+      if (!this.value) {
+        return
+      }
+
+      this.submitting = true
+
+      setTimeout(() => {
+        this.submitting = false
+        this.comments = [
+          {
+            author: 'Han Solo',
+            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+            content: this.value,
+            datetime: moment().fromNow()
+          },
+          ...this.comments
+        ]
+        this.value = ''
+      }, 1000)
+    },
+    chatChange(e) {
+      this.value = e.target.value
+    },
+    chatClick() {
+      this.chat_visible = true
+    },
+    chatOk(e) {
+      this.chat_visible = false
+    },
+    chatCancel(e) {
+      this.chat_visible = false
+    }
   }
 }
 </script>

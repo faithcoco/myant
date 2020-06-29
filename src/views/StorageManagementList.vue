@@ -17,7 +17,14 @@
         </a-col>
       </a-row>
       <br />
-      <s-table ref="table" size="default" :columns="targetTitle" :data="loadData" :alert="false" :scroll="{ x: 1500 }">
+      <s-table
+        ref="table"
+        size="default"
+        :columns="targetTitle"
+        :data="loadData"
+        :alert="false"
+        :scroll="{ x: 1500 }"
+      >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
 
         <span slot="action" slot-scope="text, record">
@@ -61,7 +68,7 @@
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
       </a-descriptions>
-      <a-button type="primary"  @click="chatClick">聊一聊</a-button>
+      <a-button type="primary" @click="chatClick">聊一聊</a-button>
     </a-drawer>
     <a-modal
       title="Title"
@@ -83,8 +90,8 @@
       />
     </a-modal>
     <a-modal
-      width="1000px" 
-      title="评论"
+      width="1000px"
+      title="聊天"
       :visible="chat_visible"
       :confirm-loading="confirmLoading"
       @ok="chatOk"
@@ -92,18 +99,18 @@
     >
       <div>
         <a-list
-          v-if="comments.length"
-          :data-source="comments"
-          :header="`${comments.length} ${comments.length > 1 ? '回复' : '回复'}`"
+          class="comment-list"
           item-layout="horizontal"
+          :data-source="comments"
         >
           <a-list-item slot="renderItem" slot-scope="item">
-            <a-comment
-              :author="item.author"
-              :avatar="item.avatar"
-              :content="item.content"
-              :datetime="item.datetime"
-            />
+            <a-comment :author="item.author" :avatar="item.avatar">
+              <template slot="actions">
+                <span v-for="action in item.actions" :key="action" @click="reply(item)">{{ action }}</span>
+              </template>
+              <p slot="content">{{ item.content }}</p>
+                <span>{{ item.datetime.fromNow() }}</span>
+            </a-comment>
           </a-list-item>
         </a-list>
         <a-comment>
@@ -122,11 +129,12 @@
                 :loading="submitting"
                 type="primary"
                 @click="handleSubmit"
-              >评论</a-button>
+              >回复</a-button>
             </a-form-item>
           </div>
         </a-comment>
       </div>
+       <div slot="footer"></div>
     </a-modal>
   </div>
 </template>
@@ -159,8 +167,8 @@ const columns = [
     title: '入库类型编码',
     dataIndex: 'Num',
     width: 170,
-     defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age,
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
   },
 
   {
@@ -240,7 +248,7 @@ const columns = [
     title: '数量',
     dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
-    width:120,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -292,7 +300,7 @@ const columns = [
     scopedSlots: { customRender: 'action' }
   }
 ]
-const width=120
+
 const data = []
 for (let i = 0; i < 30; i++) {
   data.push({
@@ -336,7 +344,25 @@ export default {
           return res.result
         })
       },
-      comments: [],
+      comments: [
+        {
+          actions: ['回复'],
+          author: 'TOM',
+          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+          content:
+            ' 你好 请问有什么可以帮助你',
+          datetime: moment().subtract(1, 'days')
+        },
+        {
+          actions: ['回复'],
+          author: 'Jerry',
+          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+          content:
+            '很高兴见到你',
+          datetime: moment().subtract(2, 'days')
+         
+        }
+      ],
       submitting: false,
       value: '',
       moment
@@ -349,7 +375,7 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection 
+        onSelection: this.onSelection
       }
     }
   },
@@ -416,38 +442,43 @@ export default {
       this.selectedKeys = [...sourceSelectedKeys, ...targetSelectedKeys]
     },
     handleScroll(direction, e) {},
-     handleSubmit() {
+    handleSubmit() {
       if (!this.value) {
-        return;
+        return
       }
 
-      this.submitting = true;
+      this.submitting = true
 
       setTimeout(() => {
-        this.submitting = false;
+        this.submitting = false
         this.comments = [
           {
             author: 'Han Solo',
             avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
             content: this.value,
-            datetime: moment().fromNow(),
+            datetime: moment(),
+             actions: ['回复'],
           },
-          ...this.comments,
-        ];
-        this.value = '';
-      }, 1000);
+          ...this.comments
+        ]
+        this.value = ''
+      }, 1000)
     },
     chatChange(e) {
-      this.value = e.target.value;
-    },chatClick(){
-      this.chat_visible=true;
-    },  chatOk(e) {
+      this.value = e.target.value
+    },
+    chatClick() {
+      this.chat_visible = true
+    },
+    chatOk(e) {
       this.chat_visible = false
-     
     },
     chatCancel(e) {
       this.chat_visible = false
-    },
+    },reply(item){
+      this.value=`回复 ${item.author}:`
+       console.log(item.datetime)
+    }
   }
 }
 </script>

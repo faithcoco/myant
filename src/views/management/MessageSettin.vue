@@ -12,37 +12,13 @@
         ></s-tree>
       </a-col>
       <a-col :span="19">
-        <a-descriptions layout="vertical" bordered :column="4">
-          <a-descriptions-item label="推送内容">系统将合同推送给</a-descriptions-item>
-          <a-descriptions-item label="推送人员/角色">
-            <div
-              :style="{textAlign: 'center',height: '40px',lineHeight: '40px',color: '#777'}">合同推进人</div>
-            <a-divider />
-            <p>
-              人员:
-              <a-input placeholder="input search text" style="width: 200px" />
-            </p>
-            <a-divider />
-            <p>
-              人员:
-              <a-input placeholder="input search text" style="width: 200px" />
-            </p>
-          </a-descriptions-item>
-          <a-descriptions-item label="是否推送">
-            <p>
-              <a-checkbox @change="onChange" />
-            </p>
-            <a-divider />
-            <p>
-              <a-checkbox @change="onChange" />
-            </p>
-            <a-divider />
-            <p>
-              <a-checkbox @change="onChange" />
-            </p>
-          </a-descriptions-item>
-          <a-descriptions-item label="推送时间">消息会实时推送</a-descriptions-item>
-        </a-descriptions>
+           <a-table :columns="columns" :data-source="data" bordered>
+      <template slot="checked" >
+         <a-checkbox @change="onChange">
+  </a-checkbox>
+      </template>
+    
+    </a-table>
       </a-col>
     </a-row>
 
@@ -59,7 +35,41 @@ import Vue from 'vue'
 import { Layout } from 'ant-design-vue'
 import { Descriptions } from 'ant-design-vue'
 Vue.use(Descriptions)
+const renderContent = (value, row, index) => {
+  const obj = {
+    children: value,
+    attrs: {}
+  }
+  if (index === 4) {
+    obj.attrs.colSpan = 0
+  }
+  return obj
+}
 
+const data = [
+  {
+    key: '1',
+    name: '系统将新建合同消息推送给',
+    address: '消息会实时推送'
+  },
+  {
+    key: '2',
+    name: 'John Brown',
+    tel: '0571-22098333',
+    phone: 18889898888,
+    age: 42,
+    address: '消息会实时推送'
+  },
+  {
+    key: '3',
+    name: 'John Brown',
+    age: 32,
+    tel: '0575-22098909',
+    phone: 18900010002,
+    address: '消息会实时推送'
+  }
+  
+]
 export default {
   name: 'TreeList',
   components: {
@@ -68,6 +78,79 @@ export default {
     OrgModal
   },
   data() {
+     const columns = [
+      {
+         colSpan: 1,
+        title: '推送内容',
+        dataIndex: 'name',
+ 
+        customRender: (value, row, index) => {
+          const obj = {
+            children: value,
+            attrs: {}
+          }
+          if (index === 0) {
+            obj.attrs.rowSpan = 3
+          }
+          // These two are merged into above cell
+          if (index === 1) {
+            obj.attrs.rowSpan = 0
+          }
+          
+          if (index === 2) {
+            obj.attrs.colSpan = 0
+          }
+          return obj
+        }
+      },
+      {
+        title: '推送人员或角色',
+        dataIndex: 'age',
+        customRender: (text, row, index) => {
+          if (index == 0) {
+            return <p>合同推送人</p>;
+          }
+          if (index==1){
+            return <p>人员： <a-input style="width: 400px"  /></p>
+          }if (index==2){
+            return <p>角色： <a-input style="width: 400px"  /></p>
+          }
+          return {
+            children: <a href="javascript:;">{text}</a>,
+           
+          };
+        },
+      },
+      {
+        title: '是否推送',
+        colSpan: 1,
+        dataIndex: 'tel',
+         scopedSlots: { customRender: 'checked' },
+      },
+      {
+        title: '推送时间',
+        dataIndex: 'address',
+        customRender: renderContent,
+                customRender: (value, row, index) => {
+          const obj = {
+            children: value,
+            attrs: {}
+          }
+          if (index === 0) {
+            obj.attrs.rowSpan = 3
+          }
+          // These two are merged into above cell
+          if (index === 1) {
+            obj.attrs.rowSpan = 0
+          }
+          
+          if (index === 2) {
+            obj.attrs.colSpan = 0
+          }
+          return obj
+        }
+      }
+    ]
     return {
       openKeys: ['key-01'],
       // 查询参数
@@ -75,7 +158,9 @@ export default {
       // 表头
       orgTree: [],
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
+       data,
+      columns
     }
   },
   created() {

@@ -240,7 +240,7 @@ const columns = [
     title: '数量',
     dataIndex: 'StorageProduct',
     defaultSortOrder: 'descend',
-    width: 100,
+    width:120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -292,6 +292,7 @@ const columns = [
     scopedSlots: { customRender: 'action' }
   }
 ]
+const width=120
 const data = []
 for (let i = 0; i < 30; i++) {
   data.push({
@@ -305,7 +306,7 @@ for (let i = 0; i < 30; i++) {
     StorageProduct: `000${i}`
   })
 }
-const width=120
+
 const product = {}
 const targetTitle = columns
 export default {
@@ -348,7 +349,7 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection 
       }
     }
   },

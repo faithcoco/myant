@@ -7,7 +7,7 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="出库单编码" required>
+      <a-form-model-item label="出库单编码" required prop="Desc">
         <a-input
           v-model="form.Desc"
           placeholder="请输入出库单编码"
@@ -46,9 +46,9 @@
           <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
       </a-modal>
-      <a-form-model-item ref="name" label="关联单据" prop="Warehouse">
+      <a-form-model-item ref="name" label="关联单据" prop="RelatedDocuments">
         <a-input
-          v-model="form.Warehouse"
+          v-model="form.RelatedDocuments"
           placeholder="请选择关联单据"
           @blur="
           () => {
@@ -68,9 +68,9 @@
           }"
         ></a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="客户编码" prop="Warehouse">
+      <a-form-model-item ref="name" label="客户编码" prop="Warehouse1">
         <a-input
-          v-model="form.Warehouse"
+          v-model="form.Warehouse1"
           placeholder="请输入客户编码"
           @blur="
           () => {
@@ -78,9 +78,9 @@
           }"
         ></a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="部门编码" prop="Warehouse">
+      <a-form-model-item ref="name" label="部门编码" prop="Warehouse2">
         <a-input
-          v-model="form.Warehouse"
+          v-model="form.Warehouse2"
           placeholder="请输入部门编码"
           @blur="
           () => {
@@ -196,31 +196,68 @@ const columns = [
   },
 ]
 const selectcolumns = [
-  {
-    title: '单据编码',
+ {
+    title: '出库单编码',
     dataIndex: 'Type',
     key: 'Type',
     scopedSlots: { customRender: 'Type' },
-    width: 80
+    width: 100
   },
   {
-    title: '单据名称',
+    title: '存货编码',
+    dataIndex: 'Type',
+    key: 'Type',
+    scopedSlots: { customRender: 'Type' },
+    width: 100
+  },
+  {
+    title: '存货名称',
     dataIndex: 'Num',
     key: 'Num',
-    width: 80
+    width: 100
   },
   {
     title: '货位编码',
     dataIndex: 'Warehouse',
     key: 'Warehouse',
-    width: 80
+    width: 100
   },
   {
     title: '批次编码',
     dataIndex: 'StorageProduct',
     key: 'StorageProduct',
-    width: 80
-  }
+    width: 100
+  },{
+    title: '数量',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '计量单位',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '包装数量',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '包装单位',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '单价',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '金额',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },
 ]
 
 const data = [
@@ -272,15 +309,19 @@ export default {
         Principal: '', //负责人
         RelatedDocuments: '', //关联单据
         OutProduct: '', //出库产品
-        Desc: '' //备注
+        Desc: ''
       },
       rules: {
-        Num: [{ required: true, message: '请输入出库编号', trigger: 'blur' }],
+        Num: [{ required: true, message: '请输入出库类型编码', trigger: 'blur' }],
         type: [
           { required: true, message: '请选择出库类型', trigger: 'blur' },
           { min: 1, max: 3, message: '', trigger: 'blur' }
         ],
-        Warehouse: [{ required: true, message: '请输入仓库', trigger: 'blur' }],
+        RelatedDocuments: [{ required: true, message: '请选择关联单据', trigger: 'blur' }],
+        Warehouse: [{ required: true, message: '请输入供应商编码', trigger: 'blur' }],
+        Warehouse1: [{ required: true, message: '请输入客户编码', trigger: 'blur' }],
+        Warehouse2: [{ required: true, message: '请输入部门编码', trigger: 'blur' }],
+        Desc: [{ required: true, message: '请输入出库单编码', trigger: 'blur' }],
 
         OutDate: [{ required: true, message: '请选择出库日期', trigger: 'change' }],
         RelatedDocuments: [{ required: true, message: '请选择需要关联的单据', trigger: 'blur' }],

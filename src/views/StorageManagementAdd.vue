@@ -7,7 +7,7 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item ref="name" label="入库单编码" required>
+      <a-form-model-item ref="name" label="入库单编码" required prop="code">
         <a-input
           v-model="form.code"
           placeholder="请输入入库单编码"
@@ -44,23 +44,23 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item label="关联单据" prop="Warehouse">
-        <a-input v-model="form.Warehouse" placeholder="请选择关联单据">
+      <a-form-model-item label="关联单据" prop="order">
+        <a-input v-model="form.order" placeholder="请选择关联单据">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
 
-      <a-form-model-item label="供应商编码" prop="Warehouse">
-        <a-input v-model="form.Warehouse" placeholder="请选择供应商编码">
+      <a-form-model-item label="供应商编码" prop="supplierCode">
+        <a-input v-model="form.supplierCode" placeholder="请选择供应商编码">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
 
-      <a-form-model-item label="客户编码" prop="Warehouse">
-        <a-input v-model="form.Warehouse" placeholder="请选择客户编码"></a-input>
+      <a-form-model-item label="客户编码" prop="ClientCode">
+        <a-input v-model="form.ClientCode" placeholder="请选择客户编码"></a-input>
       </a-form-model-item>
-      <a-form-model-item label="部门编码" prop="Warehouse">
-        <a-input v-model="form.Warehouse" placeholder="请选择部门编码"></a-input>
+      <a-form-model-item label="部门编码" prop="DepartmentCode">
+        <a-input v-model="form.DepartmentCode" placeholder="请选择部门编码"></a-input>
       </a-form-model-item>
       <a-form-model-item ref="date" label="入库日期" prop="date">
         <a-date-picker
@@ -173,31 +173,68 @@ const columns = [
   },
 ]
 const selectcolumns = [
-  {
-    title: '单据编码',
+ {
+    title: '入库单编码',
     dataIndex: 'Type',
     key: 'Type',
     scopedSlots: { customRender: 'Type' },
-    width: 80
+    width: 100
   },
   {
-    title: '单据名称',
+    title: '存货编码',
+    dataIndex: 'Type',
+    key: 'Type',
+    scopedSlots: { customRender: 'Type' },
+    width: 100
+  },
+  {
+    title: '存货名称',
     dataIndex: 'Num',
     key: 'Num',
-    width: 80
+    width: 100
   },
   {
     title: '货位编码',
     dataIndex: 'Warehouse',
     key: 'Warehouse',
-    width: 80
+    width: 100
   },
   {
     title: '批次编码',
     dataIndex: 'StorageProduct',
     key: 'StorageProduct',
-    width: 80
-  }
+    width: 100
+  },{
+    title: '数量',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '计量单位',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '包装数量',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '包装单位',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '单价',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },{
+    title: '金额',
+    dataIndex: 'StorageProduct',
+    key: 'StorageProduct',
+    width: 100
+  },
 ]
 
 const data = [
@@ -252,15 +289,23 @@ export default {
         Remarks: '', //备注
         desc: '',
         code: '',
+        order: '',
+        supplierCode: '',
+        ClientCode: '',
+        DepartmentCode: '',
         price: ''
       },
       rules: {
-        type: [{ required: true, message: '请选择入库类型', trigger: 'blur' }],
-        Num: [{ required: true, message: '请输入编号', trigger: 'change' }],
-        Warehouse: [{ required: true, message: '请选择仓库', trigger: 'change' }],
+        type: [{ required: true, message: '请选择入库类型编码', trigger: 'blur' }],
+        code: [{ required: true, message: '请输入入库单编码', trigger: 'blur' }],
+        Num: [{ required: true, message: '请选择入库类型编码', trigger: 'change' }],
+        Warehouse: [{ required: true, message: '请选择需要关联的单据', trigger: 'change' }],
+        supplierCode: [{ required: true, message: '请选择供应商编码', trigger: 'change' }],
+        ClientCode: [{ required: true, message: '请选择客户编码', trigger: 'change' }],
+        DepartmentCode: [{ required: true, message: '请选择部门编码', trigger: 'change' }],
 
         StorageDate: [{ required: true, message: '请选择入库日期', trigger: 'change' }],
-        RelateDocuments: [{ required: true, message: '请选择需要关联的单据', trigger: 'blur' }],
+        order: [{ required: true, message: '请选择需要关联的单据', trigger: 'blur' }],
         StorageProduct: [{ required: true, message: '请输入入库产品', trigger: 'blur' }]
       }
     }

@@ -224,7 +224,7 @@ export default {
           { min: 3, max: 5, message: '', trigger: 'blur' }
         ],
         region: [{ required: true, message: '请选择负责人', trigger: 'change' }],
-        SupplierCode: [{ required: true, message: '请输入供应商编号', trigger: 'change' }]
+        SupplierCode: [{ required: true, message: '请输入供应商编码', trigger: 'change' }]
       }
     }
   },

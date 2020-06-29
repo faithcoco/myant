@@ -336,7 +336,7 @@ export default {
       },
       rules: {
         ProductName: [
-          { required: true, message: '请输入产品编码', trigger: 'blur' },
+          { required: true, message: '请输入货品名称', trigger: 'blur' },
           { min: 1, max: 3, message: '', trigger: 'blur' }
         ],
         code: [{ required: true, message: '请输入产品编码', trigger: 'change' }],

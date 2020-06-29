@@ -245,7 +245,6 @@ export default {
       rules: {
         ContactCode: [
           { required: true, message: '请输入产品编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
         ]
       }
     }

@@ -85,26 +85,22 @@
     </a-modal>
     <a-modal
       width="1000px"
-      title="评论"
+      title="聊天"
       :visible="chat_visible"
       :confirm-loading="confirmLoading"
       @ok="chatOk"
       @cancel="chatCancel"
     >
       <div>
-        <a-list
-          v-if="comments.length"
-          :data-source="comments"
-          :header="`${comments.length} ${comments.length > 1 ? '回复' : '回复'}`"
-          item-layout="horizontal"
-        >
+        <a-list class="comment-list" item-layout="horizontal" :data-source="comments">
           <a-list-item slot="renderItem" slot-scope="item">
-            <a-comment
-              :author="item.author"
-              :avatar="item.avatar"
-              :content="item.content"
-              :datetime="item.datetime"
-            />
+            <a-comment :author="item.author" :avatar="item.avatar">
+              <template slot="actions">
+                <span v-for="action in item.actions" :key="action" @click="reply(item)">{{ action }}</span>
+              </template>
+              <p slot="content">{{ item.content }}</p>
+              <span>{{ item.datetime.fromNow() }}</span>
+            </a-comment>
           </a-list-item>
         </a-list>
         <a-comment>
@@ -268,7 +264,22 @@ export default {
           return res.result
         })
       },
-      comments: [],
+      comments: [
+        {
+          actions: ['回复'],
+          author: 'TOM',
+          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+          content: ' 你好 请问有什么可以帮助你',
+          datetime: moment().subtract(1, 'days')
+        },
+        {
+          actions: ['回复'],
+          author: 'Jerry',
+          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
+          content: '很高兴见到你',
+          datetime: moment().subtract(2, 'days')
+        }
+      ],
       submitting: false,
       value: '',
       moment
@@ -362,7 +373,8 @@ export default {
             author: 'Han Solo',
             avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
             content: this.value,
-            datetime: moment().fromNow()
+            datetime: moment(),
+            actions: ['回复']
           },
           ...this.comments
         ]
@@ -380,6 +392,10 @@ export default {
     },
     chatCancel(e) {
       this.chat_visible = false
+    },
+    reply(item) {
+      this.value = `回复 ${item.author}:`
+      console.log(item.datetime)
     }
   }
 }

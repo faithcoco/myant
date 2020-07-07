@@ -47,6 +47,9 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
+        <a-descriptions-item label="审批状态">
+          <a-tag color="#108ee9">{{status}}</a-tag>
+        </a-descriptions-item>
         <a-descriptions-item label="入库单编码">{{product.Type}}</a-descriptions-item>
         <a-descriptions-item label="入库类型编码">{{product.Num}}</a-descriptions-item>
         <a-descriptions-item label="关联单据">{{product.Warehouse}}</a-descriptions-item>
@@ -68,7 +71,32 @@
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
       </a-descriptions>
-      <a-button type="primary" @click="chatClick">聊一聊</a-button>
+      <a-divider>审批详情</a-divider>
+      <a-timeline>
+        <a-timeline-item v-for="item in timelinelist" :key="item.key">
+          <p>
+            <a-row>
+              <a-col :span="5">
+                <b>{{item.title}}</b>
+              </a-col>
+              <a-col :span="12">{{item.time}}</a-col>
+            </a-row>
+          </p>
+          <p>{{item.content}}</p>
+        </a-timeline-item>
+      </a-timeline>
+       <a-row>
+      <a-col :span="3">
+         <a-button type="primary" @click="approvalClick">审批</a-button>
+      </a-col>
+      <a-col :span="3">
+        <a-button type="danger" @click="cancelClick">撤销</a-button>
+      </a-col>
+       <a-col :span="3">
+        <a-button type="primary" @click="chatClick">评论</a-button>
+      </a-col>
+    </a-row>
+     
     </a-drawer>
     <a-modal
       title="Title"
@@ -98,21 +126,6 @@
       @cancel="chatCancel"
     >
       <div>
-        <a-list
-          class="comment-list"
-          item-layout="horizontal"
-          :data-source="comments"
-        >
-          <a-list-item slot="renderItem" slot-scope="item">
-            <a-comment :author="item.author" :avatar="item.avatar">
-              <template slot="actions">
-                <span v-for="action in item.actions" :key="action" @click="reply(item)">{{ action }}</span>
-              </template>
-              <p slot="content">{{ item.content }}</p>
-                <span>{{ item.datetime.fromNow() }}</span>
-            </a-comment>
-          </a-list-item>
-        </a-list>
         <a-comment>
           <a-avatar
             slot="avatar"
@@ -121,7 +134,11 @@
           />
           <div slot="content">
             <a-form-item>
-              <a-textarea :rows="4" :value="value" @change="chatChange" />
+              <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
+                <a-mentions-option value="高明亮">高明亮</a-mentions-option>
+                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="吴杨">吴杨</a-mentions-option>
+              </a-mentions>
             </a-form-item>
             <a-form-item>
               <a-button
@@ -129,12 +146,12 @@
                 :loading="submitting"
                 type="primary"
                 @click="handleSubmit"
-              >回复</a-button>
+              >评论</a-button>
             </a-form-item>
           </div>
         </a-comment>
       </div>
-       <div slot="footer"></div>
+      <div slot="footer"></div>
     </a-modal>
   </div>
 </template>
@@ -148,10 +165,28 @@ import { Comment } from 'ant-design-vue'
 Vue.use(Descriptions)
 Vue.use(Transfer)
 Vue.use(Comment)
+import { Timeline } from 'ant-design-vue'
+Vue.use(Timeline)
+import { Mentions } from 'ant-design-vue'
+Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import { getOrgTree, getServiceList } from '@/api/manage'
 
+const timelinelist = [
+  {
+    key: '0',
+    title: 'curry 提交合同申请',
+    time: '2020-07-01 10:00',
+    content: ''
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-02 10:00',
+    content: '了解一下功能'
+  }
+]
 const columns = [
   {
     key: '0',
@@ -329,8 +364,10 @@ export default {
       visible: false,
       chat_visible: false,
       data,
+      status:'正在审批',
       product,
       columns,
+      timelinelist,
       targetTitle,
       selectedRowKeys: [], // Check here to configure the default column
       modal_visible: false,
@@ -349,18 +386,15 @@ export default {
           actions: ['回复'],
           author: 'TOM',
           avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content:
-            ' 你好 请问有什么可以帮助你',
+          content: ' 你好 请问有什么可以帮助你',
           datetime: moment().subtract(1, 'days')
         },
         {
           actions: ['回复'],
           author: 'Jerry',
           avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content:
-            '很高兴见到你',
+          content: '很高兴见到你',
           datetime: moment().subtract(2, 'days')
-         
         }
       ],
       submitting: false,
@@ -448,37 +482,45 @@ export default {
       }
 
       this.submitting = true
-
+      const time=new Date()
       setTimeout(() => {
         this.submitting = false
-        this.comments = [
-          {
-            author: 'Han Solo',
-            avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-            content: this.value,
-            datetime: moment(),
-             actions: ['回复'],
-          },
-          ...this.comments
-        ]
-        this.value = ''
+        this.timelinelist.push({
+          key: '1',
+          title: 'curry 评论',
+          time: moment(new Date()).format('YYYY-MM-DD HH:mm'),
+          content: this.value
+        })
       }, 1000)
+      this.chat_visible = false
     },
     chatChange(e) {
       this.value = e.target.value
     },
     chatClick() {
+      this.value = ''
       this.chat_visible = true
+    }, cancelClick() {
+      this.status='已撤销'
+    
+    }, approvalClick() {
+      this.status='已审批'
     },
     chatOk(e) {
       this.chat_visible = false
     },
     chatCancel(e) {
       this.chat_visible = false
-    },reply(item){
-      this.value=`回复 ${item.author}:`
-       console.log(item.datetime)
-    }
+    },
+    reply(item) {
+      this.value = `回复 ${item.author}:`
+      console.log(item.datetime)
+    },onSelect(option) {
+      console.log('select', option);
+    },
+    onChange(value) {
+      console.log('Change:', value);
+    },
   }
 }
 </script>

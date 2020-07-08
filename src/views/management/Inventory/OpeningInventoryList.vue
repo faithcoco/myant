@@ -49,7 +49,7 @@
     >
       <a-descriptions title :column="1">
         <a-descriptions-item label="审批状态">
-          <a-tag color="#108ee9">{{status}}</a-tag>
+          <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
         <a-descriptions-item label="存货编码">{{product.name }}</a-descriptions-item>
         <a-descriptions-item label="仓库编码">{{product.code}}</a-descriptions-item>
@@ -132,6 +132,15 @@
                 <a-mentions-option value="黄平">黄平</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
+              <a-upload
+                name="file"
+                :multiple="true"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :headers="headers"
+                @change="fileChange"
+              >
+                <a-button type="link" :size="size">添加附件</a-button>
+              </a-upload>
             </a-form-item>
             <a-form-item>
               <a-button
@@ -184,8 +193,8 @@ const timelinelist = [
 const columns = [
   {
     key: '0',
-    title: '存货编码',
-    dataIndex: 'Type',
+    title: '仓库',
+    dataIndex: 'Warehouse',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
@@ -193,64 +202,106 @@ const columns = [
   {
     key: '1',
     title: '仓库编码',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'WarehouseCode',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.name - b.name
   },
 
   {
     key: '2',
-    title: '货位编码',
-    dataIndex: 'StorageProduct',
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '批次编码',
-    dataIndex: 'StorageProduct',
+    title: '存货名称',
+    dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '数量',
-    dataIndex: 'StorageProduct',
+    title: '规格型号',
+    dataIndex: 'SpecificationModel',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '计量单位',
-    dataIndex: 'StorageProduct',
+    title: '主计量单位',
+    dataIndex: 'MainUint',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '包装数量',
-    dataIndex: 'StorageProduct',
+    title: '数量',
+    dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
-    title: '包装单位',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
     title: '单价',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'UnitPrice',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
     title: '金额',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'Amount',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '9',
+    title: '颜色',
+    dataIndex: 'Color',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '9',
+    title: '批号',
+    dataIndex: 'BatchNumber',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '9',
+    title: '生产日期',
+    dataIndex: 'ProducteDate',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '9',
+    title: '失效日期',
+    dataIndex: 'ExpirationDate',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '9',
+    title: '货位',
+    dataIndex: 'CargoSpace',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '9',
+    title: '入库类别',
+    dataIndex: 'StorageCategory',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '9',
+    title: '部门',
+    dataIndex: 'Department',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
@@ -290,6 +341,7 @@ export default {
       chat_visible: false,
       data,
       status: '正在审批',
+      color: '',
       product,
       columns,
       timelinelist,
@@ -303,6 +355,86 @@ export default {
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
           console.log('/service-->', JSON.stringify(res.result))
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                Warehouse: '手机主辅料仓库（有货位）',
+                WarehouseCode: '01',
+                InventoryCode: '0105D001',
+                InventoryName: '手机背光源',
+                SpecificationModel: '',
+                MainUint: '只',
+                Quantity: '4.00',
+                UnitPrice: '20.00',
+                Amount: '80.00',
+                Color: '黑色',
+                BatchNumber: '0105D00112101',
+                ProducteDate: '',
+                ExpirationDate: '',
+                CargoSpace: '其他外设',
+                StorageCategory: '采购入库',
+                Department: '仓储部'
+              },
+              {
+                Warehouse: '手机主辅料仓库（有货位）',
+                WarehouseCode: '01',
+                InventoryCode: '0105D002',
+                InventoryName: '手机背光源',
+                SpecificationModel: '替代',
+                MainUint: '只',
+                Quantity: '10.00',
+                UnitPrice: '21.00',
+                Amount: '210.00',
+                Color: '黑色',
+                BatchNumber: '0105D00112102',
+                ProducteDate: '',
+                ExpirationDate: '',
+                CargoSpace: '其他外设',
+                StorageCategory: '采购入库',
+                Department: '仓储部'
+              },
+              {
+                Warehouse: '手机主辅料仓库（有货位）',
+                WarehouseCode: '01',
+                InventoryCode: '01021001',
+                InventoryName: '蓝牙耳机',
+                SpecificationModel: '',
+                MainUint: '个',
+                Quantity: '2000.00',
+                UnitPrice: '60.00',
+                Amount: '120000.00',
+                Color: '',
+                BatchNumber: '',
+                ProducteDate: '',
+                ExpirationDate: '',
+                CargoSpace: '其他外设',
+                StorageCategory: '',
+                Department: ''
+              },
+              {
+                Warehouse: '手机主辅料仓库（有货位）',
+                WarehouseCode: '01',
+                InventoryCode: '010211',
+                InventoryName: '充电器',
+                SpecificationModel: '',
+                MainUint: '个',
+                Quantity: '2000.00',
+                UnitPrice: '10.00',
+                Amount: '20000.00',
+                Color: '',
+                BatchNumber: '',
+                ProducteDate: '',
+                ExpirationDate: '',
+                CargoSpace: '其他外设',
+                StorageCategory: '',
+                Department: ''
+              }
+            ]
+          }
           return res.result
         })
       },
@@ -428,9 +560,11 @@ export default {
     },
     cancelClick() {
       this.status = '已撤销'
+      this.color = '#f00707a6'
     },
     approvalClick() {
       this.status = '已审批'
+      this.color = '#108ee9'
     },
     chatOk(e) {
       this.chat_visible = false

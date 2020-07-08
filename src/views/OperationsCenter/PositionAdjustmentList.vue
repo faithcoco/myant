@@ -49,14 +49,12 @@
     >
       <a-descriptions title :column="1">
         <a-descriptions-item label="审批状态">
-          <a-tag color="#108ee9">{{status}}</a-tag>
+          <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
-        <a-descriptions-item label="货位调整单编码">{{product.Type}}</a-descriptions-item>
-        <a-descriptions-item label="源货位编码">{{product.SourceLocationCode}}</a-descriptions-item>
-        <a-descriptions-item label="目标货位编码">{{product.TargetLocationCode}}</a-descriptions-item>
+        <a-descriptions-item label="盘点单编码">{{product.InventoryListCode }}</a-descriptions-item>
+        <a-descriptions-item label="盘点仓库编码">{{product.InventoryWarehouseCode}}</a-descriptions-item>
         <a-descriptions-item label="部门编码">{{product.DepartmentCode}}</a-descriptions-item>
-        <a-descriptions-item label="业务员编码">{{product.SalesmanCode}}</a-descriptions-item>
-        <a-descriptions-item label="调整日期">{{product.AdjustmentDate}}</a-descriptions-item>
+        <a-descriptions-item label="盘点日期">{{product.InventoryDate}}</a-descriptions-item>
         <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
         <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
         <a-descriptions-item label="货位编码">{{product.LocationCode}}</a-descriptions-item>
@@ -138,6 +136,15 @@
                 <a-mentions-option value="黄平">黄平</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
+              <a-upload
+                name="file"
+                :multiple="true"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :headers="headers"
+                @change="fileChange"
+              >
+                <a-button type="link" :size="size">添加附件</a-button>
+              </a-upload>
             </a-form-item>
             <a-form-item>
               <a-button
@@ -190,164 +197,106 @@ const timelinelist = [
 const columns = [
   {
     key: '0',
-    title: '货位调整单编码',
-    dataIndex: 'Type',
+    title: '仓库',
+    dataIndex: 'Warehouse',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 100,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
   {
     key: '1',
-    title: '源货位编码',
-    dataIndex: 'StorageProduct',
+    title: '盘点日期',
+    dataIndex: 'InventoryDate',
     defaultSortOrder: 'descend',
-    width: 130,
+    width: 100,
     sorter: (a, b) => a.name - b.name
+  },
+  {
+    key: '2',
+    title: '调整单号',
+    dataIndex: 'AdjustmentNumber',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
   },
 
   {
-    key: '2',
-    title: '目标货位编码',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 140,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '3',
-    title: '部门编码',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
     key: '4',
-    title: '业务员编码',
-    dataIndex: 'StorageProduct',
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
-    width: 130,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '调拨日期',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '6',
-    title: '存货编码',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '7',
     title: '存货名称',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '货位编码',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 120,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
-    title: '批次编码',
-    dataIndex: 'StorageProduct',
+    title: '主计量单位',
+    dataIndex: 'MainUnit',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '10',
-    title: '数量',
-    dataIndex: 'StorageProduct',
+    title: '调整前货位',
+    dataIndex: 'BeforeItemlocation',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '11',
-    title: '计量单位',
-    dataIndex: 'StorageProduct',
+    title: '调整后货位',
+    dataIndex: 'AfterItemlocation',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '12',
-    title: '包装数量',
-    dataIndex: 'StorageProduct',
+    title: '数量',
+    dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '13',
-    title: '包装单位',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 120,
+    width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '14',
-    title: '单价',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '15',
-    title: '金额',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '16',
     title: '操作',
     dataIndex: 'action',
+    width: '150px',
     width: 120,
     fixed: 'right',
     scopedSlots: { customRender: 'action' }
   }
 ]
 const data = []
-for (let i = 0; i < 30; i++) {
+for (let i = 0; i < 46; i++) {
   data.push({
     key: i,
-    CargoSpaceAdjustmentCode: `000${i}`,
-    SourceLocationCode: `000${i}`,
-    TargetLocationCode: `000${i}`,
+    InventoryListCode: `000${i}`,
+    InventoryWarehouseCode: `000${i}`,
     DepartmentCode: `000${i}`,
-    SalesmanCode: `000${i}`,
-    AdjustmentDate: `1月${i + 1}日`,
     InventoryDate: `000${i}`,
     InventoryCode: `000${i}`,
-    InventoryName: `口香糖`,
-    LocationCode: `100${i}`,
+    InventoryName: `000${i}`,
+    LocationCode: `000${i}`,
     BatchCode: `000${i}`,
-    Quantity: `1000${i}`,
+    Quantity: `000${i}`,
     Unit: `000${i}`,
     PackingQuantity: `000${i}`,
     PackingUnit: `000${i}`,
-    UnitPrice: `1`,
-    Amount: `1000${i}`
+    UnitPrice: `000${i}`,
+    Amount: `000${i}`
   })
 }
 const width = 120
@@ -366,6 +315,7 @@ export default {
       chat_visible: false,
       data,
       status: '正在审批',
+      color: '',
       product,
       columns,
       timelinelist,
@@ -379,6 +329,69 @@ export default {
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
           console.log('/service-->', JSON.stringify(res.result))
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                Warehouse: '成品立体仓（货位+条码）',
+                InventoryDate: '2014-12-04',
+                AdjustmentNumber: '0000000003',
+                InventoryCode: 'SJ0001',
+                InventoryName: '布丁智能手机',
+                MainUnit: 'PCS',
+                BeforeItemlocation: '40号库A排1跨1层A位',
+                AfterItemlocation: '40号库F发货区货位',
+                Quantity: '1.00'
+              },
+              {
+                Warehouse: '成品立体仓（货位+条码）',
+                InventoryDate: '2014-12-04',
+                AdjustmentNumber: '0000000003',
+                InventoryCode: 'SJ0001',
+                InventoryName: '布丁智能手机',
+                MainUnit: 'PCS',
+                BeforeItemlocation: '40号库A排1跨1层A位',
+                AfterItemlocation: '40号库F发货区货位',
+                Quantity: '1.00'
+              },
+              {
+                Warehouse: '成品立体仓（货位+条码）',
+                InventoryDate: '2014-12-04',
+                AdjustmentNumber: '0000000003',
+                InventoryCode: 'SJDC01',
+                InventoryName: '手机电池',
+                MainUnit: 'PCS',
+                BeforeItemlocation: '40号库B排1跨1层A位',
+                AfterItemlocation: '40号库F发货区货位',
+                Quantity: '1.00'
+              },
+              {
+                Warehouse: '成品立体仓（货位+条码）',
+                InventoryDate: '2014-12-04',
+                AdjustmentNumber: '0000000003',
+                InventoryCode: 'SJK001',
+                InventoryName: '手机壳',
+                MainUnit: 'PCS',
+                BeforeItemlocation: '40号库B排1跨1层C位',
+                AfterItemlocation: '40号库F发货区货位',
+                Quantity: '2.00'
+              },
+              {
+                Warehouse: '成品立体仓（货位+条码）',
+                InventoryDate: '2014-12-04',
+                AdjustmentNumber: '0000000003',
+                InventoryCode: 'SJK001',
+                InventoryName: '手机壳',
+                MainUnit: 'PCS',
+                BeforeItemlocation: '40号库B排1跨1层A位',
+                AfterItemlocation: '40号库F发货区货位',
+                Quantity: '1.00'
+              }
+            ]
+          }
           return res.result
         })
       },
@@ -504,9 +517,11 @@ export default {
     },
     cancelClick() {
       this.status = '已撤销'
+      this.color = '#f00707a6'
     },
     approvalClick() {
       this.status = '已审批'
+      this.color = '#108ee9'
     },
     chatOk(e) {
       this.chat_visible = false

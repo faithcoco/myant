@@ -49,7 +49,7 @@
     >
       <a-descriptions title :column="1">
         <a-descriptions-item label="审批状态">
-          <a-tag color="#108ee9">{{status}}</a-tag>
+          <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
         <a-descriptions-item label="调拨单编码">{{product.TransferCode }}</a-descriptions-item>
         <a-descriptions-item label="源仓库编码">{{product.SourceWarehouseCode}}</a-descriptions-item>
@@ -137,6 +137,15 @@
                 <a-mentions-option value="黄平">黄平</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
+              <a-upload
+                name="file"
+                :multiple="true"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :headers="headers"
+                @change="fileChange"
+              >
+                <a-button type="link" :size="size">添加附件</a-button>
+              </a-upload>
             </a-form-item>
             <a-form-item>
               <a-button
@@ -189,8 +198,8 @@ const timelinelist = [
 const columns = [
   {
     key: '0',
-    title: '调拨单编码',
-    dataIndex: 'Type',
+    title: '日期',
+    dataIndex: 'TransferDate',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
     width: 110,
@@ -198,8 +207,8 @@ const columns = [
   },
   {
     key: '1',
-    title: '源仓库编码',
-    dataIndex: 'StorageProduct',
+    title: '单据号',
+    dataIndex: 'DocumentCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.name - b.name
@@ -207,32 +216,24 @@ const columns = [
 
   {
     key: '2',
-    title: '目标仓库编码',
-    dataIndex: 'StorageProduct',
+    title: '转出仓库',
+    dataIndex: 'TransferOutWarehouse',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '部门编码',
-    dataIndex: 'StorageProduct',
+    title: '转入仓库',
+    dataIndex: 'TransferStorageWarehouse',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '调拨日期',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 110,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '5',
     title: '存货编码',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -240,23 +241,23 @@ const columns = [
   {
     key: '6',
     title: '存货名称',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
-    title: '货位编码',
-    dataIndex: 'StorageProduct',
+    title: '规格型号',
+    dataIndex: 'SpecificationModel',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '8',
-    title: '批次编码',
-    dataIndex: 'StorageProduct',
+    title: '主计量单位',
+    dataIndex: 'MainUnit',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -264,47 +265,55 @@ const columns = [
   {
     key: '9',
     title: '数量',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '10',
-    title: '计量单位',
-    dataIndex: 'StorageProduct',
+    title: '单价',
+    dataIndex: 'UnitPrice',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '11',
-    title: '包装数量',
-    dataIndex: 'StorageProduct',
+    title: '金额',
+    dataIndex: 'Amount',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '12',
-    title: '包装单位',
-    dataIndex: 'StorageProduct',
+    title: '转出工厂编码',
+    dataIndex: 'OutFactoryCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '13',
-    title: '单价',
-    dataIndex: 'StorageProduct',
+    title: '转出工厂名称',
+    dataIndex: 'OutFactoryName',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '14',
-    title: '金额',
-    dataIndex: 'StorageProduct',
+    title: '转入工厂编码',
+    dataIndex: 'StoragFactoryCode',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '14',
+    title: '转入工厂名称',
+    dataIndex: 'StoragFactoryName',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -355,6 +364,7 @@ export default {
       chat_visible: false,
       data,
       status: '正在审批',
+      color: '',
       product,
       columns,
       timelinelist,
@@ -368,6 +378,99 @@ export default {
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
           console.log('/service-->', JSON.stringify(res.result))
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                TransferDate: '2014-12-03',
+                DocumentCode: '0000000001',
+                TransferOutWarehouse: 'PC机材料仓库',
+                TransferStorageWarehouse: 'PC原材料仓',
+                InventoryCode: '010204',
+                InventoryName: '大容量存储器',
+                SpecificationModel: '',
+                MainUnit: '个',
+                Quantity: '5.00',
+                UnitPrice: '',
+                Amount: '',
+                OutFactoryCode: '002',
+                OutFactoryName: '工厂二',
+                StoragFactoryCode: '001',
+                StoragFactoryName: '工厂一'
+              },
+              {
+                TransferDate: '2015-01-05',
+                DocumentCode: '0000000002',
+                TransferOutWarehouse: '办公用品仓',
+                TransferStorageWarehouse: '设计材料仓',
+                InventoryCode: '01019002065',
+                InventoryName: '硬盘-1000G',
+                SpecificationModel: '希捷 1000G',
+                MainUnit: 'PCS',
+                Quantity: '300.00',
+                UnitPrice: '',
+                Amount: '',
+                OutFactoryCode: '001',
+                OutFactoryName: '工厂一',
+                StoragFactoryCode: '001',
+                StoragFactoryName: '工厂一'
+              },
+              {
+                TransferDate: '2015-01-20',
+                DocumentCode: '0000000003',
+                TransferOutWarehouse: '电商总仓',
+                TransferStorageWarehouse: '电商南方仓',
+                InventoryCode: '0330',
+                InventoryName: '三星手机S6',
+                SpecificationModel: '',
+                MainUnit: '台',
+                Quantity: '30.00',
+                UnitPrice: '',
+                Amount: '',
+                OutFactoryCode: '001',
+                OutFactoryName: '工厂二',
+                StoragFactoryCode: '001',
+                StoragFactoryName: '工厂一'
+              },
+              {
+                TransferDate: '2015-01-20',
+                DocumentCode: '0000000003',
+                TransferOutWarehouse: '电商总仓',
+                TransferStorageWarehouse: '电商南方仓',
+                InventoryCode: '0390',
+                InventoryName: '三星手机S6贴膜',
+                SpecificationModel: '',
+                MainUnit: '盒',
+                Quantity: '10.00',
+                UnitPrice: '',
+                Amount: '',
+                OutFactoryCode: '001',
+                OutFactoryName: '工厂一',
+                StoragFactoryCode: '001',
+                StoragFactoryName: '工厂一'
+              },
+              {
+                TransferDate: '2015-01-20',
+                DocumentCode: '0000000004',
+                TransferOutWarehouse: '电商总仓',
+                TransferStorageWarehouse: '直营门店',
+                InventoryCode: '0330',
+                InventoryName: '三星手机S6',
+                SpecificationModel: '',
+                MainUnit: '台',
+                Quantity: '5.00',
+                UnitPrice: '',
+                Amount: '',
+                OutFactoryCode: '001',
+                OutFactoryName: '工厂一',
+                StoragFactoryCode: '001',
+                StoragFactoryName: '工厂一'
+              }
+            ]
+          }
           return res.result
         })
       },
@@ -493,9 +596,11 @@ export default {
     },
     cancelClick() {
       this.status = '已撤销'
+      this.color = '#f00707a6'
     },
     approvalClick() {
       this.status = '已审批'
+      this.color = '#108ee9'
     },
     chatOk(e) {
       this.chat_visible = false

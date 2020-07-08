@@ -49,15 +49,16 @@
     >
       <a-descriptions title :column="1">
         <a-descriptions-item label="审批状态">
-          <a-tag color="#108ee9">{{status}}</a-tag>
+          <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
-        <a-descriptions-item label="退货通知单编码">{{product.ReturnNotificationCode }}</a-descriptions-item>
-        <a-descriptions-item label="供应商编码">{{product.SupplierCode}}</a-descriptions-item>
-        <a-descriptions-item label="联系人编码">{{product.ContactCode}}</a-descriptions-item>
+        <a-descriptions-item label="发货通知单编码">{{product.ShippingNoticeCode}}</a-descriptions-item>
+        <a-descriptions-item label="客户编码">{{product.CustomerCode}}</a-descriptions-item>
+        <a-descriptions-item label="客户地址编码">{{product.CustomerAddressCode}}</a-descriptions-item>
+        <a-descriptions-item label="联系人编码">{{product.CustomerAddressCode}}</a-descriptions-item>
         <a-descriptions-item label="部门编码">{{product.DepartmentCode}}</a-descriptions-item>
         <a-descriptions-item label="业务员编码">{{product.SalesmanCode}}</a-descriptions-item>
-        <a-descriptions-item label="预计入库日期">{{product.ExpectedInWarehouseDate}}</a-descriptions-item>
-        <a-descriptions-item label="退货仓库编码">{{product.ReturnWarehouseCode}}</a-descriptions-item>
+        <a-descriptions-item label="预计出库日期">{{product.ExpectedOutWarehouseCode}}</a-descriptions-item>
+        <a-descriptions-item label="发货仓库编码">{{product.ShippingWarehouseCode}}</a-descriptions-item>
         <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
         <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
         <a-descriptions-item label="批次编码">{{product.BatchCode}}</a-descriptions-item>
@@ -142,6 +143,15 @@
                 <a-mentions-option value="黄平">黄平</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
+              <a-upload
+                name="file"
+                :multiple="true"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :headers="headers"
+                @change="fileChange"
+              >
+                <a-button type="link" :size="size">添加附件</a-button>
+              </a-upload>
             </a-form-item>
             <a-form-item>
               <a-button
@@ -194,8 +204,8 @@ const timelinelist = [
 const columns = [
   {
     key: '0',
-    title: '退货通知单编码',
-    dataIndex: 'Type',
+    title: '单据编号',
+    dataIndex: 'DocumentNumber',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
     width: 100,
@@ -203,56 +213,73 @@ const columns = [
   },
   {
     key: '1',
-    title: '供应商编码',
-    dataIndex: 'StorageProduct',
+    title: '单据日期',
+    dataIndex: 'DocumentDate',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.name - b.name
   },
+
   {
     key: '2',
-    title: '联系人编码',
-    dataIndex: 'StorageProduct',
+    title: '业务类型',
+    dataIndex: 'BusinessType',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '部门编码',
-    dataIndex: 'StorageProduct',
+    title: '销售类型',
+    dataIndex: 'SaleType',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '业务员编码',
-    dataIndex: 'StorageProduct',
+    title: '客户简称',
+    dataIndex: 'CustomerShortName',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '预计入库日期',
-    dataIndex: 'StorageProduct',
+    title: '销售部门',
+    dataIndex: 'SalesDepartment',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '退货仓库编码',
-    dataIndex: 'StorageProduct',
+    title: '业务员',
+    dataIndex: 'Salesman',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
+    title: '仓库',
+    dataIndex: 'Warehouse',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '8',
+    title: '需要开票',
+    dataIndex: 'Billing',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '8',
     title: '存货编码',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
@@ -260,101 +287,61 @@ const columns = [
   {
     key: '8',
     title: '存货名称',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'InventoryName',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '8',
+    title: '规格型号',
+    dataIndex: 'SpecificationModel',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '8',
+    title: '主计量单位',
+    dataIndex: 'MainUnit',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '8',
+    title: '申请数量',
+    dataIndex: 'ApplicationQuantity',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '8',
+    title: '批复数量',
+    dataIndex: 'ApprovalsQuantity',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '8',
+    title: '执行数量',
+    dataIndex: 'ExecutionQuantity',
+    defaultSortOrder: 'descend',
+    width: 100,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '8',
+    title: '报价',
+    dataIndex: 'Quote',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
-    title: '批次编码',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '10',
-    title: '数量',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '11',
-    title: '计量单位',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '12',
-    title: '包装数量',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '13',
-    title: '包装单位',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '14',
-    title: '单价',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '15',
-    title: '含税单价',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '16',
-    title: '税率',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '17',
-    title: '金额',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '18',
-    title: '含税金额',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '19',
-    title: '税额',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '20',
     title: '操作',
     dataIndex: 'action',
     width: 120,
@@ -366,26 +353,26 @@ const data = []
 for (let i = 0; i < 46; i++) {
   data.push({
     key: i,
-    ReturnNotificationCode: `000${i}`,
-    SupplierCode: `000${i}`,
-    ContactCode: `000${i}`,
+    ShippingNoticeCode: `000${i}`,
+    CustomerCode: `000${i}`,
+    CustomerAddressCode: `000${i}`,
     DepartmentCode: `000${i}`,
     SalesmanCode: `000${i}`,
-    ExpectedInWarehouseDate: `6月${i + 1}日`,
-    ReturnWarehouseCode: `000${i}`,
+    ExpectedOutWarehouseCode: `1月${i + 1}日`,
+    ShippingWarehouseCode: `A${i + 1}`,
     InventoryCode: `000${i}`,
-    InventoryName: `书包`,
+    InventoryName: `华硕飞行堡垒${i}型`,
     BatchCode: `000${i}`,
     Quantity: `1000${i}`,
-    Unit: `个`,
-    PackingQuantity: `1000${i}`,
-    PackingUnit: `箱`,
-    UnitPrice: `50`,
-    TaxIncludedUnitPrice: `60`,
-    TaxRate: `20%`,
-    Amount: `10000${i}`,
-    TaxIncludedAmount: `12000${i}`,
-    Tax: `2000${i}`
+    Unit: `台`,
+    PackingQuantity: `${i}`,
+    PackingUnit: `盒`,
+    UnitPrice: `555${i}`,
+    TaxIncludedUnitPrice: `556${i}`,
+    TaxRate: `5%`,
+    Amount: `11000${i}`,
+    TaxIncludedAmount: `11000${i}`,
+    Tax: `500${i}`
   })
 }
 const width = 120
@@ -404,6 +391,7 @@ export default {
       chat_visible: false,
       data,
       status: '正在审批',
+      color: '',
       product,
       columns,
       timelinelist,
@@ -417,6 +405,71 @@ export default {
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
           console.log('/service-->', JSON.stringify(res.result))
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                DocumentNumber: '0000000001',
+                DocumentDate: '2014-12-21',
+                BusinessType: '普通销售',
+                SaleType: '普通销售',
+                CustomerShortName: '美华集团',
+                SalesDepartment: '区域销售部',
+                Salesman: '师小容',
+                Warehouse: '',
+                Billing: '是',
+                InventoryCode: 'W1000A002',
+                InventoryName: '三星打印机',
+                SpecificationModel: '',
+                MainUnit: '台',
+                ApplicationQuantity: '1.00',
+                ApprovalsQuantity: '1.00',
+                ExecutionQuantity: '',
+                Quote: '5000.00'
+              },
+              {
+                DocumentNumber: '0000000002',
+                DocumentDate: '2014-12-30',
+                BusinessType: '普通销售',
+                SaleType: '普通销售',
+                CustomerShortName: '北京恒业',
+                SalesDepartment: '市场部',
+                Salesman: '刘天达',
+                Warehouse: '电商总仓',
+                Billing: '是',
+                InventoryCode: '0330',
+                InventoryName: '三星手机S6',
+                SpecificationModel: '',
+                MainUnit: '台',
+                ApplicationQuantity: '2.00',
+                ApprovalsQuantity: '2.00',
+                ExecutionQuantity: '',
+                Quote: '0.00'
+              },
+              {
+                DocumentNumber: '0000000002',
+                DocumentDate: '2014-12-30',
+                BusinessType: '普通销售',
+                SaleType: '普通销售',
+                CustomerShortName: '北京恒业',
+                SalesDepartment: '市场部',
+                Salesman: '刘天达',
+                Warehouse: '电商总仓',
+                Billing: '是',
+                InventoryCode: '0341',
+                InventoryName: '三星存储卡',
+                SpecificationModel: '32G  90M/s',
+                MainUnit: '个',
+                ApplicationQuantity: '1.00',
+                ApprovalsQuantity: '1.00',
+                ExecutionQuantity: '',
+                Quote: '0.00'
+              }
+            ]
+          }
           return res.result
         })
       },
@@ -542,9 +595,11 @@ export default {
     },
     cancelClick() {
       this.status = '已撤销'
+      this.color = '#f00707a6'
     },
     approvalClick() {
       this.status = '已审批'
+      this.color = '#108ee9'
     },
     chatOk(e) {
       this.chat_visible = false

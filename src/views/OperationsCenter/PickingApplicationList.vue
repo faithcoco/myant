@@ -49,7 +49,7 @@
     >
       <a-descriptions title :column="1">
         <a-descriptions-item label="审批状态">
-          <a-tag color="#108ee9">{{status}}</a-tag>
+          <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>F
         <a-descriptions-item label="领料申请单编码">{{product.name }}</a-descriptions-item>
         <a-descriptions-item label="部门编码">{{product.unit}}</a-descriptions-item>
@@ -140,6 +140,15 @@
                 <a-mentions-option value="黄平">黄平</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
+              <a-upload
+                name="file"
+                :multiple="true"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :headers="headers"
+                @change="fileChange"
+              >
+                <a-button type="link" :size="size">添加附件</a-button>
+              </a-upload>
             </a-form-item>
             <a-form-item>
               <a-button
@@ -192,8 +201,8 @@ const timelinelist = [
 const columns = [
   {
     key: '0',
-    title: '领料申请单编码',
-    dataIndex: 'Type',
+    title: '单据号',
+    dataIndex: 'DocumentNumber',
     defaultSortOrder: 'descend',
     width: 155,
     sorter: (a, b) => a.age - b.age,
@@ -201,48 +210,48 @@ const columns = [
   },
   {
     key: '1',
-    title: '部门编码',
-    dataIndex: 'StorageProduct',
+    title: '日期',
+    dataIndex: 'Date',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '2',
-    title: '业务员编码',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
+    title: '申请部门',
+    dataIndex: 'ApplicationDepartment',
+    DefaultSortOrder: 'descend',
     width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '预计出库日期',
-    dataIndex: 'StorageProduct',
+    title: '业务员',
+    dataIndex: 'Salesman',
     defaultSortOrder: 'descend',
     width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '预计出库仓库编码',
-    dataIndex: 'StorageProduct',
+    title: '出库类别',
+    dataIndex: 'OutCategory',
     defaultSortOrder: 'descend',
     width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '存货编码',
-    dataIndex: 'StorageProduct',
+    title: '审核日期',
+    dataIndex: 'ReviewDate',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '存货名称',
-    dataIndex: 'StorageProduct',
+    title: '仓库编码',
+    dataIndex: 'WarehouseCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -250,88 +259,64 @@ const columns = [
 
   {
     key: '7',
-    title: '批次编码',
-    dataIndex: 'StorageProduct',
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '8',
-    title: '数量',
-    dataIndex: 'StorageProduct',
+    title: '存货名称',
+    dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
-    title: '计量单位',
-    dataIndex: 'StorageProduct',
+    title: '规格型号',
+    dataIndex: 'SpecificationModel',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '10',
-    title: '包装数量',
-    dataIndex: 'StorageProduct',
+    title: '计量单位',
+    dataIndex: 'Unit',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '11',
-    title: '包装单位',
-    dataIndex: 'StorageProduct',
+    title: '数量',
+    dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '12',
-    title: '单价',
-    dataIndex: 'StorageProduct',
+    title: '需求日期',
+    dataIndex: 'DemandDate',
     width: 100,
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '13',
-    title: '含税单价',
-    dataIndex: 'StorageProduct',
+    title: '工厂编码',
+    dataIndex: 'FactoryCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '14',
-    title: '税率',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '15',
-    title: '金额',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '16',
-    title: '含税金额',
-    dataIndex: 'StorageProduct',
-    width: 110,
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '17',
-    title: '税额',
-    dataIndex: 'StorageProduct',
+    title: '工厂名称',
+    dataIndex: 'FactoryName',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
@@ -373,6 +358,7 @@ export default {
       chat_visible: false,
       data,
       status: '正在审批',
+      color: '',
       product,
       columns,
       timelinelist,
@@ -386,6 +372,99 @@ export default {
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
           console.log('/service-->', JSON.stringify(res.result))
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                DocumentNumber: '0000000002',
+                Date: '2014-12-03',
+                ApplicationDepartment: '',
+                Salesman: '',
+                OutCategory: '其他领用出库',
+                ReviewDate: '2014-12-03',
+                WarehouseCode: '',
+                InventoryCode: '1003',
+                InventoryName: '计算器',
+                SpecificationModel: '',
+                Unit: '台',
+                Quantity: '100.00',
+                DemandDate: '2014-12-02',
+                FactoryCode: '001',
+                FactoryName: '工厂一'
+              },
+              {
+                DocumentNumber: '0000000002',
+                Date: '2014-12-03',
+                ApplicationDepartment: '',
+                Salesman: '',
+                OutCategory: '其他领用出库',
+                ReviewDate: '2014-12-03',
+                WarehouseCode: '',
+                InventoryCode: '1005',
+                InventoryName: '数码相机',
+                SpecificationModel: '',
+                Unit: '台',
+                Quantity: '10,00',
+                DemandDate: '2014-12-03',
+                FactoryCode: '001',
+                FactoryName: '工厂一'
+              },
+              {
+                DocumentNumber: '0000000005',
+                Date: '2014-12-02',
+                ApplicationDepartment: '采购部',
+                Salesman: '顾潇',
+                OutCategory: '其他领用出库',
+                ReviewDate: '2014-12-02',
+                WarehouseCode: '30',
+                InventoryCode: '01019002088',
+                InventoryName: '随机资料',
+                SpecificationModel: '中性',
+                Unit: 'PCS',
+                Quantity: '5000.00',
+                DemandDate: '2014-12-20',
+                FactoryCode: '001',
+                FactoryName: '工厂一'
+              },
+              {
+                DocumentNumber: '0000000006',
+                Date: '2014-12-02',
+                ApplicationDepartment: '采购部',
+                Salesman: '查玫',
+                OutCategory: '其他领用出库',
+                ReviewDate: '2014-12-03',
+                WarehouseCode: '30',
+                InventoryCode: '01019002088',
+                InventoryName: '随机资料',
+                SpecificationModel: '中性',
+                Unit: 'PCS',
+                Quantity: '13000.00',
+                DemandDate: '2014-12-16',
+                FactoryCode: '001',
+                FactoryName: '工厂一'
+              },
+              {
+                DocumentNumber: '0000000007',
+                Date: '2014-12-02',
+                ApplicationDepartment: '采购部',
+                Salesman: '顾潇',
+                OutCategory: '其他领用出库',
+                ReviewDate: '2014-12-03',
+                WarehouseCode: '30',
+                InventoryCode: '01019002088',
+                InventoryName: '随机资料',
+                SpecificationModel: '中性',
+                Unit: 'PCS',
+                Quantity: '100.00',
+                DemandDate: '2014-12-02',
+                FactoryCode: '001',
+                FactoryName: '工厂一'
+              }
+            ]
+          }
           return res.result
         })
       },
@@ -511,9 +590,11 @@ export default {
     },
     cancelClick() {
       this.status = '已撤销'
+      this.color = '#f00707a6'
     },
     approvalClick() {
       this.status = '已审批'
+      this.color = '#108ee9'
     },
     chatOk(e) {
       this.chat_visible = false

@@ -49,7 +49,7 @@
     >
       <a-descriptions title :column="1">
         <a-descriptions-item label="审批状态">
-          <a-tag color="#108ee9">{{status}}</a-tag>
+          <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
         <a-descriptions-item label="报工申请单编码">{{product.WorkTimeReportApplicationCode }}</a-descriptions-item>
         <a-descriptions-item label="部门编码">{{product.DepartmentCode}}</a-descriptions-item>
@@ -140,6 +140,15 @@
                 <a-mentions-option value="黄平">黄平</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
+              <a-upload
+                name="file"
+                :multiple="true"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :headers="headers"
+                @change="fileChange"
+              >
+                <a-button type="link" :size="size">添加附件</a-button>
+              </a-upload>
             </a-form-item>
             <a-form-item>
               <a-button
@@ -385,6 +394,7 @@ export default {
       chat_visible: false,
       data,
       status: '正在审批',
+      color: '',
       product,
       columns,
       timelinelist,
@@ -524,9 +534,11 @@ export default {
     },
     cancelClick() {
       this.status = '已撤销'
+      this.color = '#f00707a6'
     },
     approvalClick() {
       this.status = '已审批'
+      this.color = '#108ee9'
     },
     chatOk(e) {
       this.chat_visible = false

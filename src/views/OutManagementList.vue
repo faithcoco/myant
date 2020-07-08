@@ -24,6 +24,7 @@
         :data="loadData"
         :alert="false"
         :scroll="{ x: 1500 }"
+        bordered
       >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
 
@@ -48,7 +49,7 @@
     >
       <a-descriptions title :column="1">
         <a-descriptions-item label="审批状态">
-          <a-tag color="#108ee9">{{status}}</a-tag>
+          <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
         <a-descriptions-item label="出库单编码">{{product.Type}}</a-descriptions-item>
         <a-descriptions-item label="出库类型编码">{{product.Num}}</a-descriptions-item>
@@ -138,6 +139,15 @@
                 <a-mentions-option value="黄平">黄平</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
+              <a-upload
+                name="file"
+                :multiple="true"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :headers="headers"
+                @change="fileChange"
+              >
+                <a-button type="link" :size="size">添加附件</a-button>
+              </a-upload>
             </a-form-item>
             <a-form-item>
               <a-button
@@ -190,8 +200,8 @@ const timelinelist = [
 const columns = [
   {
     key: '0',
-    title: '出库单编码',
-    dataIndex: 'Type',
+    title: '仓库编码',
+    dataIndex: 'WarehouseCode',
     defaultSortOrder: 'descend',
     width: 130,
     sorter: (a, b) => a.age - b.age,
@@ -199,8 +209,8 @@ const columns = [
   },
   {
     key: '1',
-    title: '出库类型编码',
-    dataIndex: 'Num',
+    title: '仓库',
+    dataIndex: 'Warehouse',
     defaultSortOrder: 'descend',
     width: 140,
     sorter: (a, b) => a.name - b.name
@@ -208,104 +218,104 @@ const columns = [
 
   {
     key: '2',
-    title: '关联单据',
-    dataIndex: 'Warehouse',
+    title: '出库日期',
+    dataIndex: 'OutDate',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '供应商编码',
-    dataIndex: 'StorageProduct',
+    title: '出库单号',
+    dataIndex: 'OutNumber',
     defaultSortOrder: 'descend',
     width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '客户编码',
-    dataIndex: 'Principal',
+    title: '出库类型编码',
+    dataIndex: 'OutCategoryCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '部门编码',
-    dataIndex: 'RelatedDocuments',
+    title: '出库类别',
+    dataIndex: 'OutCategory',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '出库日期',
-    dataIndex: 'StorageDate',
+    title: '部门编码',
+    dataIndex: 'DepartmentCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
-    title: '存货编码',
-    dataIndex: 'StorageProduct',
+    title: '销售部门',
+    dataIndex: 'Department',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '8',
-    title: '存货名称',
-    dataIndex: 'StorageProduct',
+    title: '业务员',
+    dataIndex: 'Salesman',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
-    title: '货位编码',
-    dataIndex: 'StorageProduct',
+    title: '客户',
+    dataIndex: 'Customer',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '10',
-    title: '批次编码',
-    dataIndex: 'StorageProduct',
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '11',
-    title: '数量',
-    dataIndex: 'StorageProduct',
+    title: '存货名称',
+    dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
     width: 80,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '12',
-    title: '计量单位',
-    dataIndex: 'StorageProduct',
+    title: '规格型号',
+    dataIndex: 'SpecificationModel',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '13',
-    title: '包装数量',
-    dataIndex: 'StorageProduct',
+    title: '主计量单位',
+    dataIndex: 'MainUnit',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '14',
-    title: '包装单位',
-    dataIndex: 'StorageProduct',
+    title: '数量',
+    dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
     width: 110,
     sorter: (a, b) => a.age - b.age
@@ -313,7 +323,7 @@ const columns = [
   {
     key: '15',
     title: '单价',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'UnitPrice',
     defaultSortOrder: 'descend',
     width: 80,
     sorter: (a, b) => a.age - b.age
@@ -321,13 +331,37 @@ const columns = [
   {
     key: '16',
     title: '金额',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'Amount',
     defaultSortOrder: 'descend',
     width: 80,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '17',
+    title: '审核时间',
+    dataIndex: 'ReviewTime',
+    defaultSortOrder: 'descend',
+    width: 80,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '18',
+    title: '工厂编码',
+    dataIndex: 'FactoryCode',
+    defaultSortOrder: 'descend',
+    width: 80,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '19',
+    title: '工厂名称',
+    dataIndex: 'FactoryName',
+    defaultSortOrder: 'descend',
+    width: 80,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '20',
     title: '操作',
     dataIndex: 'action',
     width: 110,
@@ -363,6 +397,7 @@ export default {
       chat_visible: false,
       data,
       status: '正在审批',
+      color: '',
       product,
       columns,
       timelinelist,
@@ -376,6 +411,124 @@ export default {
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
           console.log('/service-->', JSON.stringify(res.result))
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                WarehouseCode: '30',
+                Warehouse: 'PC原材料仓',
+                OutDate: '2014-12-01',
+                OutNumber: '0000000001',
+                OutCategoryCode: '22',
+                OutCategory: '销售出库',
+                DepartmentCode: '0302',
+                Department: '销售部',
+                Salesman: '崔可',
+                Customer: '泰山数码',
+                InventoryCode: '01019002065',
+                InventoryName: '硬盘-1000G',
+                SpecificationModel: '希捷 1000G',
+                MainUnit: 'PCS',
+                Quantity: '30.00',
+                UnitPrice: '',
+                Amount: '',
+                ReviewTime: '2014-12-02 11:12:44',
+                FactoryCode: '001',
+                FactoryName: '工厂一'
+              },
+              {
+                WarehouseCode: '02',
+                Warehouse: 'PC机原材料仓库',
+                OutDate: '2014-12-01',
+                OutNumber: '0000000001',
+                OutCategoryCode: '22',
+                OutCategory: '销售出库',
+                DepartmentCode: '0302',
+                Department: '销售部',
+                Salesman: '崔可',
+                Customer: '泰山数码',
+                InventoryCode: '1004',
+                InventoryName: '服务器存储配件',
+                SpecificationModel: '',
+                MainUnit: '台',
+                Quantity: '11.00',
+                UnitPrice: '',
+                Amount: '',
+                ReviewTime: '2014-12-02 11:14:22',
+                FactoryCode: '002',
+                FactoryName: '工厂二'
+              },
+              {
+                WarehouseCode: '30',
+                Warehouse: 'PC原材料仓',
+                OutDate: '2014-12-02',
+                OutNumber: '0000000003',
+                OutCategoryCode: '22',
+                OutCategory: '销售出库',
+                DepartmentCode: '0302',
+                Department: '销售部',
+                Salesman: '崔可',
+                Customer: '黄河科技',
+                InventoryCode: '01019002065',
+                InventoryName: '硬盘-1000G',
+                SpecificationModel: '希捷 1000G',
+                MainUnit: 'PCS',
+                Quantity: '200.00',
+                UnitPrice: '',
+                Amount: '',
+                ReviewTime: '2014-12-02 11:12:44',
+                FactoryCode: '001',
+                FactoryName: '工厂一'
+              },
+              {
+                WarehouseCode: '30',
+                Warehouse: 'PC原材料仓',
+                OutDate: '2014-12-02',
+                OutNumber: '0000000005',
+                OutCategoryCode: '22',
+                OutCategory: '销售出库',
+                DepartmentCode: '1001',
+                Department: '区域销售部',
+                Salesman: '师小容',
+                Customer: '美华集团',
+                InventoryCode: '01019002065',
+                InventoryName: '硬盘-1000G',
+                SpecificationModel: '希捷 1000G',
+                MainUnit: 'PCS',
+                Quantity: '30.00',
+                UnitPrice: '',
+                Amount: '',
+                ReviewTime: '2014-12-02 11:12:44',
+                FactoryCode: '001',
+                FactoryName: '工厂一'
+              },
+              {
+                WarehouseCode: '30',
+                Warehouse: 'PC原材料仓',
+                OutDate: '2014-12-02',
+                OutNumber: '0000000006',
+                OutCategoryCode: '22',
+                OutCategory: '销售出库',
+                DepartmentCode: '0302',
+                Department: '销售部',
+                Salesman: '徐海',
+                Customer: '星空电子',
+                InventoryCode: '01019002065',
+                InventoryName: '硬盘-1000G',
+                SpecificationModel: '希捷 1000G',
+                MainUnit: 'PCS',
+                Quantity: '1000.00',
+                UnitPrice: '',
+                Amount: '',
+                ReviewTime: '2014-12-02 11:12:44',
+                FactoryCode: '001',
+                FactoryName: '工厂一'
+              }
+            ]
+          }
           return res.result
         })
       },
@@ -501,9 +654,11 @@ export default {
     },
     cancelClick() {
       this.status = '已撤销'
+      this.color = '#f00707a6'
     },
     approvalClick() {
       this.status = '已审批'
+      this.color = '#108ee9'
     },
     chatOk(e) {
       this.chat_visible = false

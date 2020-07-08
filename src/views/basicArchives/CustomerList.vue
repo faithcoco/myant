@@ -49,7 +49,7 @@
     >
       <a-descriptions title :column="1">
         <a-descriptions-item label="审批状态">
-          <a-tag color="#108ee9">{{status}}</a-tag>
+          <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
         <a-descriptions-item label="客户编码">{{product.code}}</a-descriptions-item>
         <a-descriptions-item label="客户名称">{{product.name }}</a-descriptions-item>
@@ -132,6 +132,15 @@
                 <a-mentions-option value="黄平">黄平</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
+              <a-upload
+                name="file"
+                :multiple="true"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :headers="headers"
+                @change="fileChange"
+              >
+                <a-button type="link" :size="size">添加附件</a-button>
+              </a-upload>
             </a-form-item>
             <a-form-item>
               <a-button
@@ -185,7 +194,7 @@ const columns = [
   {
     key: '0',
     title: '客户编码',
-    dataIndex: 'Type',
+    dataIndex: 'CustomerCode',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
@@ -193,64 +202,64 @@ const columns = [
   {
     key: '1',
     title: '客户名称',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'CustomerName',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.name - b.name
   },
 
   {
     key: '2',
-    title: '客户类型',
-    dataIndex: 'StorageProduct',
+    title: '客户简称',
+    dataIndex: 'CustomerAbbreviation',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '负责人',
-    dataIndex: 'StorageProduct',
+    title: '地区名称',
+    dataIndex: 'Area',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '联系人编码',
-    dataIndex: 'StorageProduct',
+    title: '发展日期',
+    dataIndex: 'DevelopmentDate',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '备注',
-    dataIndex: 'StorageProduct',
+    title: '联系人',
+    dataIndex: 'ContactPerson',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '发票抬头',
-    dataIndex: 'StorageProduct',
+    title: '电话',
+    dataIndex: 'Tel',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
-    title: '纳税人识别号',
-    dataIndex: 'StorageProduct',
+    title: '专营业务员名称',
+    dataIndex: 'Salesman',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '8',
-    title: '开户银行',
-    dataIndex: 'StorageProduct',
+    title: '分管部门名称',
+    dataIndex: 'department',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
-    title: '银行账号',
-    dataIndex: 'StorageProduct',
+    title: '潜在客户编码',
+    dataIndex: 'PotentialCustomerCode',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
@@ -294,6 +303,7 @@ export default {
       chat_visible: false,
       data,
       status: '正在审批',
+      color: '',
       product,
       columns,
       timelinelist,
@@ -307,6 +317,74 @@ export default {
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
           console.log('/service-->', JSON.stringify(res.result))
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                CustomerCode: '000',
+                CustomerName: '000',
+                CustomerAbbreviation: '000',
+                Area: '',
+                DevelopmentDate: '2013-01-19',
+                ContactPerson: '',
+                Tel: '',
+                Salesman: '',
+                department: '总裁会',
+                PotentialCustomerCode: ''
+              },
+              {
+                CustomerCode: '00000001',
+                CustomerName: '世纪天华集团公司',
+                CustomerAbbreviation: '世纪天华',
+                Area: '北京',
+                DevelopmentDate: '2014-12-22',
+                ContactPerson: '刘婷',
+                Tel: '',
+                Salesman: '刘天达',
+                department: '市场部',
+                PotentialCustomerCode: 'p00000001'
+              },
+              {
+                CustomerCode: '00000002',
+                CustomerName: '中国电子科技集团公司',
+                CustomerAbbreviation: '中国电子科技集团公司第五十四研究所',
+                Area: '北京',
+                DevelopmentDate: '2014-12-23',
+                ContactPerson: '刘婷',
+                Tel: '',
+                Salesman: '刘天达',
+                department: '市场部',
+                PotentialCustomerCode: 'p00000058'
+              },
+              {
+                CustomerCode: '00000003',
+                CustomerName: '现代天浩机械有限公司',
+                CustomerAbbreviation: '现代天浩机械有限公司',
+                Area: '',
+                DevelopmentDate: '2014-12-23',
+                ContactPerson: '刘婷',
+                Tel: '',
+                Salesman: '刘天达',
+                department: '市场部',
+                PotentialCustomerCode: 'p00000060'
+              },
+              {
+                CustomerCode: '00000004',
+                CustomerName: '北京佳运科贸有限公司',
+                CustomerAbbreviation: '北京佳运科贸有限公司',
+                Area: '',
+                DevelopmentDate: '2014-12-23',
+                ContactPerson: '刘婷',
+                Tel: '',
+                Salesman: '刘天达',
+                department: '市场部',
+                PotentialCustomerCode: 'p00000062'
+              }
+            ]
+          }
           return res.result
         })
       },
@@ -432,9 +510,11 @@ export default {
     },
     cancelClick() {
       this.status = '已撤销'
+      this.color = '#f00707a6'
     },
     approvalClick() {
       this.status = '已审批'
+      this.color = '#108ee9'
     },
     chatOk(e) {
       this.chat_visible = false

@@ -49,7 +49,7 @@
     >
       <a-descriptions title :column="1">
         <a-descriptions-item label="审批状态">
-          <a-tag color="#108ee9">{{status}}</a-tag>
+          <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
         <a-descriptions-item label="供应商编码">{{product.Type}}</a-descriptions-item>
         <a-descriptions-item label="供应商名称">{{product.StorageProduct }}</a-descriptions-item>
@@ -129,6 +129,15 @@
                 <a-mentions-option value="黄平">黄平</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
+              <a-upload
+                name="file"
+                :multiple="true"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :headers="headers"
+                @change="fileChange"
+              >
+                <a-button type="link" :size="size">添加附件</a-button>
+              </a-upload>
             </a-form-item>
             <a-form-item>
               <a-button
@@ -181,7 +190,7 @@ const columns = [
   {
     key: '0',
     title: '供应商编码',
-    dataIndex: 'Type',
+    dataIndex: 'SupplierCode',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.name - b.name,
@@ -191,47 +200,47 @@ const columns = [
   {
     key: '1',
     title: '供应商名称',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'SupplierName',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '2',
-    title: '供应商类型',
-    dataIndex: 'StorageProduct',
+    title: '供应商简称',
+    dataIndex: 'SupplierAbbreviation',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '负责人',
-    dataIndex: 'StorageProduct',
+    title: '发展日期',
+    dataIndex: 'DevelopmentDate',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '纳税人识别号',
-    dataIndex: 'StorageProduct',
+    title: '电话',
+    dataIndex: 'Tel',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '联系人编码',
-    dataIndex: 'StorageProduct',
+    title: '专营业务员名称',
+    dataIndex: 'Salesman',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '备注',
-    dataIndex: 'StorageProduct',
+    title: '分管部门名称',
+    dataIndex: 'department',
     defaultSortOrder: 'descend',
     width: 100,
     sorter: (a, b) => a.age - b.age
@@ -274,6 +283,7 @@ export default {
       chat_visible: false,
       data,
       status: '正在审批',
+      color: '',
       product,
       columns,
       timelinelist,
@@ -287,6 +297,59 @@ export default {
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
           console.log('/service-->', JSON.stringify(res.result))
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                SupplierCode: '01002',
+                SupplierName: '深圳辰环手机配件有限公司',
+                SupplierAbbreviation: '辰环手机配件',
+                DevelopmentDate: '2004-10-01',
+                Tel: '',
+                Salesman: '顾潇',
+                department: '采购部'
+              },
+              {
+                SupplierCode: '01003',
+                SupplierName: '苏州光明处理器厂',
+                SupplierAbbreviation: '光明处理',
+                DevelopmentDate: '2004-10-01',
+                Tel: '',
+                Salesman: '顾潇',
+                department: '采购部'
+              },
+              {
+                SupplierCode: '01004',
+                SupplierName: '广州博大存储器公司',
+                SupplierAbbreviation: '博大存储',
+                DevelopmentDate: '2004-10-01',
+                Tel: '',
+                Salesman: '顾潇',
+                department: '采购部'
+              },
+              {
+                SupplierCode: '01005',
+                SupplierName: '深圳明亮外设商贸公司',
+                SupplierAbbreviation: '明亮外设商贸',
+                DevelopmentDate: '2004-10-01',
+                Tel: '',
+                Salesman: '顾潇',
+                department: '采购部'
+              },
+              {
+                SupplierCode: '03001',
+                SupplierName: 'AMD（中国）有限公司',
+                SupplierAbbreviation: 'AMD（中国）',
+                DevelopmentDate: '2004-10-01',
+                Tel: '(010)8518-3788',
+                Salesman: '傅奇',
+                department: '采购部'
+              }
+            ]
+          }
           return res.result
         })
       },
@@ -412,9 +475,11 @@ export default {
     },
     cancelClick() {
       this.status = '已撤销'
+      this.color = '#f00707a6'
     },
     approvalClick() {
       this.status = '已审批'
+      this.color = '#108ee9'
     },
     chatOk(e) {
       this.chat_visible = false

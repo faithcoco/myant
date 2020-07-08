@@ -49,23 +49,24 @@
     >
       <a-descriptions title :column="1">
         <a-descriptions-item label="审批状态">
-          <a-tag color="#108ee9">{{status}}</a-tag>
+          <!-- /////////////////////////////////////////////////////////////// -->
+          <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
         <a-descriptions-item label="货品编码">{{product.Type }}</a-descriptions-item>
         <a-descriptions-item label="货品名称">{{product.code}}</a-descriptions-item>
         <a-descriptions-item label="规格型号">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="货品条码">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="计量单位">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="包装单位">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="换算关系">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="货品分类">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="货品说明">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="批次管理">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="生成批次结存帐">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="安全库存">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="起订量">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="采购批量">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="自定义追加项">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="存货编码">{{product.type}}</a-descriptions-item>
+        <a-descriptions-item label="存货名称">{{product.unit}}</a-descriptions-item>
+        <a-descriptions-item label="主计量单位">{{product.sales_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="电商销售单位">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="分销单位">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="最低售价">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="商品描述">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="默认发货仓库">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="是否虚拟物品">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="图片">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="预发货日期">{{product.purchase_unit_price}}</a-descriptions-item>
+        <a-descriptions-item label="单位毛重">{{product.purchase_unit_price}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -137,6 +138,20 @@
                 <a-mentions-option value="黄平">黄平</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
+
+              <!-- /////////////////////// -->
+
+              <a-upload
+                name="file"
+                :multiple="true"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :headers="headers"
+                @change="fileChange"
+              >
+                <a-button type="link" :size="size">添加附件</a-button>
+              </a-upload>
+
+              <!-- /////////////////////// -->
             </a-form-item>
             <a-form-item>
               <a-button
@@ -176,13 +191,15 @@ const timelinelist = [
     key: '0',
     title: 'curry 提交合同申请',
     time: '2020-07-01 10:00',
-    content: ''
+    content: '',
+    info: '1111111'
   },
   {
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    info: '22222222'
   }
 ]
 
@@ -190,7 +207,7 @@ const columns = [
   {
     key: '0',
     title: '货品编码',
-    dataIndex: 'Type',
+    dataIndex: 'productCode',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age,
@@ -199,7 +216,7 @@ const columns = [
   {
     key: '1',
     title: '货品名称',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'productName',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.name - b.name
@@ -208,105 +225,105 @@ const columns = [
   {
     key: '2',
     title: '规格型号',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'SpecificationModel',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '货品条码',
-    dataIndex: 'StorageProduct',
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '计量单位',
-    dataIndex: 'StorageProduct',
+    title: '存货名称',
+    dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '包装单位',
-    dataIndex: 'StorageProduct',
+    title: '主计量单位',
+    dataIndex: 'MainUnit',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '换算关系',
-    dataIndex: 'StorageProduct',
+    title: '电商销售单位',
+    dataIndex: 'SalesUnit',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
-    title: '货品分类',
-    dataIndex: 'StorageProduct',
+    title: '分销单位',
+    dataIndex: 'DistributionUnit',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '8',
-    title: '货品说明',
-    dataIndex: 'StorageProduct',
+    title: '最低售价',
+    dataIndex: 'LowestPrice',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
-    title: '批次管理',
-    dataIndex: 'StorageProduct',
+    title: '商品描述',
+    dataIndex: 'description',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '10',
-    title: '生成批次结存帐',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 160,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '11',
-    title: '安全库存',
-    dataIndex: 'StorageProduct',
+    title: '默认发货仓库',
+    dataIndex: 'DefaultShippingWarehouse',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
+    key: '11',
+    title: '是否虚拟物品',
+    dataIndex: 'VirtualItem',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
     key: '12',
-    title: '起订量',
-    dataIndex: 'StorageProduct',
+    title: '图片',
+    dataIndex: 'Image',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '13',
-    title: '采购批量',
-    dataIndex: 'StorageProduct',
+    title: '预发货日期',
+    dataIndex: 'StorageDate',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '14',
-    title: '自定义追加项',
-    dataIndex: 'StorageProduct',
+    title: '单位毛重',
+    dataIndex: 'UnitGrossWeight',
     defaultSortOrder: 'descend',
-    width: 140,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -346,19 +363,222 @@ export default {
       chat_visible: false,
       data,
       status: '正在审批',
+      color: '', //////////////////////////////////////////////////
       product,
       columns,
       timelinelist,
       targetTitle,
       selectedRowKeys: [], // Check here to configure the default column
       modal_visible: false,
+
+      headers: {
+        authorization: 'authorization-text'
+      },
+      size: 'small',
+      info: '',
+
       confirmLoading: false,
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
+          // console.log('/service-->', JSON.stringify(res.result))
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                productCode: '01019002060001',
+                productName: '硬盘-1000G',
+                SpecificationModel: '希捷 1000G/7222RPM/32M/SATA2/企业级',
+                InventoryCode: '01019002065',
+                InventoryName: '硬盘-1000G',
+                MainUnit: 'PCS',
+                SalesUnit: 'PCS',
+                DistributionUnit: 'PCS',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '0390',
+                productName: '三星手机S6贴膜',
+                SpecificationModel: '',
+                InventoryCode: '0390',
+                InventoryName: '三星手机S6贴膜',
+                MainUnit: '盒',
+                SalesUnit: '张',
+                DistributionUnit: '张',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00000102040001',
+                productName: '大容量存储器',
+                SpecificationModel: '',
+                InventoryCode: '010204',
+                InventoryName: '大容量存储器',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00000102060001',
+                productName: '普通存储器',
+                SpecificationModel: '',
+                InventoryCode: '010206',
+                InventoryName: '普通存储器',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00000102070001',
+                productName: '高速处理器',
+                SpecificationModel: '',
+                InventoryCode: '010207',
+                InventoryName: '高速处理器',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00000102080001',
+                productName: '普通处理器',
+                SpecificationModel: '',
+                InventoryCode: '010208',
+                InventoryName: '普通处理器',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00010210010001',
+                productName: '蓝牙耳机',
+                SpecificationModel: '',
+                InventoryCode: '01021001',
+                InventoryName: '蓝牙耳机',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00000102110001',
+                productName: '充电器',
+                SpecificationModel: '',
+                InventoryCode: '010211',
+                InventoryName: '充电器',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00010211010001',
+                productName: '旅充',
+                SpecificationModel: '',
+                InventoryCode: '01021101',
+                InventoryName: '旅充',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00010211020001',
+                productName: '新式旅充',
+                SpecificationModel: '',
+                InventoryCode: '01021102',
+                InventoryName: '新式旅充',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00000102170001',
+                productName: '蓝牙',
+                SpecificationModel: '',
+                InventoryCode: '010217',
+                InventoryName: '蓝牙',
+                MainUnit: '只',
+                SalesUnit: '只',
+                DistributionUnit: '只',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+            ]
+          }
           return res.result
         })
       },
@@ -470,7 +690,8 @@ export default {
           key: '1',
           title: 'curry 评论',
           time: moment(new Date()).format('YYYY-MM-DD HH:mm'),
-          content: this.value
+          content: this.value,
+          info: this.info
         })
       }, 1000),
         (this.chat_visible = false)
@@ -482,33 +703,41 @@ export default {
       this.value = ''
       this.chat_visible = true
     },
+
+    ///////////////////////////////////////////////
+
     cancelClick() {
       this.status = '已撤销'
+      this.color = '#f00707a6'
     },
     approvalClick() {
       this.status = '已审批'
+      this.color = '#108ee9'
     },
+
+    ////////////////////////////////////////////////////////////
+
     chatOk(e) {
       this.chat_visible = false
     },
     chatCancel(e) {
       this.chat_visible = false
     },
-    reply(item) {
-      this.value = `回复 ${item.author}:`
-      console.log(item.datetime)
-    },
     onSelect(option) {
       console.log('select', option)
     },
     onChange(value) {
       console.log('Change:', value)
     },
-    onSelect(option) {
-      console.log('select', option)
-    },
-    onChange(value) {
-      console.log('Change:', value)
+    fileChange(info) {
+      if (info.file.status !== 'uploading') {
+        console.log(info.file, info.fileList)
+      }
+      if (info.file.status === 'done') {
+        this.$message.success(`${info.file.name} file uploaded successfully`)
+      } else if (info.file.status === 'error') {
+        this.$message.error(`${info.file.name} file upload failed.`)
+      }
     }
   }
 }

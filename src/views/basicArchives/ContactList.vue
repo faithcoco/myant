@@ -49,7 +49,7 @@
     >
       <a-descriptions title :column="1">
         <a-descriptions-item label="审批状态">
-          <a-tag color="#108ee9">{{status}}</a-tag>
+          <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
         <a-descriptions-item label="联系人编码">{{code}}</a-descriptions-item>
         <a-descriptions-item label="联系人名称">{{name }}</a-descriptions-item>
@@ -130,6 +130,15 @@
                 <a-mentions-option value="黄平">黄平</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
+              <a-upload
+                name="file"
+                :multiple="true"
+                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                :headers="headers"
+                @change="fileChange"
+              >
+                <a-button type="link" :size="size">添加附件</a-button>
+              </a-upload>
             </a-form-item>
             <a-form-item>
               <a-button
@@ -183,7 +192,7 @@ const columns = [
   {
     key: '0',
     title: '联系人编码',
-    dataIndex: 'Type',
+    dataIndex: 'ContactCode',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
@@ -191,55 +200,76 @@ const columns = [
   {
     key: '1',
     title: '联系人名称',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'ContactName',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.name - b.name
   },
 
   {
     key: '2',
-    title: '客户或供应商',
-    dataIndex: 'StorageProduct',
+    title: '所属客户',
+    dataIndex: 'Customer',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
-    title: '关联公司',
-    dataIndex: 'StorageProduct',
+    title: '负责人',
+    dataIndex: 'Principal',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '联系电话',
-    dataIndex: 'StorageProduct',
+    title: '是否是主要联系人',
+    dataIndex: 'PrimaryContact',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '职务',
-    dataIndex: 'StorageProduct',
+    title: '称呼',
+    dataIndex: 'Call',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '部门',
-    dataIndex: 'StorageProduct',
+    title: '性别',
+    dataIndex: 'Gender',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
-    title: '地址',
-    dataIndex: 'StorageProduct',
+    title: '默认联系人',
+    dataIndex: 'DefaultContact',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '8',
+    title: '职务',
+    dataIndex: 'Job',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '9',
+    title: '手机',
+    dataIndex: 'Tel',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '10',
+    title: '爱好',
+    dataIndex: 'Hobby',
+    defaultSortOrder: 'descend',
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '11',
     title: '操作',
     dataIndex: 'action',
     width: 120,
@@ -277,6 +307,7 @@ export default {
       chat_visible: false,
       data,
       status: '正在审批',
+      color: '',
       product,
       columns,
       timelinelist,
@@ -290,6 +321,79 @@ export default {
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
           console.log('/service-->', JSON.stringify(res.result))
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                ContactCode: '00000001',
+                ContactName: '王宏',
+                Customer: '',
+                Principal: '',
+                PrimaryContact: '否',
+                Call: '行政部经理',
+                Gender: '男',
+                DefaultContact: '否',
+                Job: '',
+                Tel: '13344567981',
+                Hobby: '234'
+              },
+              {
+                ContactCode: '00000002',
+                ContactName: '李豪',
+                Customer: '',
+                Principal: '',
+                PrimaryContact: '否',
+                Call: '',
+                Gender: '男',
+                DefaultContact: '否',
+                Job: '236',
+                Tel: '13125476890',
+                Hobby: '231'
+              },
+              {
+                ContactCode: '00000003',
+                ContactName: '陈光',
+                Customer: '',
+                Principal: '',
+                PrimaryContact: '否',
+                Call: '',
+                Gender: '男',
+                DefaultContact: '否',
+                Job: '',
+                Tel: '13344567981',
+                Hobby: '232'
+              },
+              {
+                ContactCode: '00000004',
+                ContactName: '王宏',
+                Customer: '',
+                Principal: '',
+                PrimaryContact: '否',
+                Call: '行政部经理',
+                Gender: '男',
+                DefaultContact: '否',
+                Job: '',
+                Tel: '13344567981',
+                Hobby: '232'
+              },
+              {
+                ContactCode: '00000002',
+                ContactName: '李豪',
+                Customer: '',
+                Principal: '',
+                PrimaryContact: '否',
+                Call: '',
+                Gender: '男',
+                DefaultContact: '否',
+                Job: '236',
+                Tel: '13125476890',
+                Hobby: '231'
+              }
+            ]
+          }
           return res.result
         })
       },
@@ -415,9 +519,11 @@ export default {
     },
     cancelClick() {
       this.status = '已撤销'
+      this.color = '#f00707a6'
     },
     approvalClick() {
       this.status = '已审批'
+      this.color = '#108ee9'
     },
     chatOk(e) {
       this.chat_visible = false

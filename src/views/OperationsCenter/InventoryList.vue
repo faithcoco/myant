@@ -133,7 +133,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -200,7 +200,7 @@ const columns = [
     title: '盘点日期',
     dataIndex: 'InventoryDate',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
@@ -209,7 +209,7 @@ const columns = [
     title: '盘点单号',
     dataIndex: 'InventoryNumber',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.name - b.name
   },
   {
@@ -217,16 +217,15 @@ const columns = [
     title: '盘点仓库',
     dataIndex: 'InventoryWarehouse',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
-
   {
-    key: '4',
+    key: '3',
     title: '入库类别',
-    dataIndex: 'StorageCategory ',
+    dataIndex: 'StorageCategory',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -234,7 +233,7 @@ const columns = [
     title: '出库类别',
     dataIndex: 'OutCategory',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -242,7 +241,7 @@ const columns = [
     title: '部门',
     dataIndex: 'Department',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -250,7 +249,7 @@ const columns = [
     title: '存货编码',
     dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -258,7 +257,7 @@ const columns = [
     title: '存货名称',
     dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -266,7 +265,7 @@ const columns = [
     title: '规格型号',
     dataIndex: 'SpecificationModel',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -274,7 +273,7 @@ const columns = [
     title: '主计量单位',
     dataIndex: 'MainUnit',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -282,7 +281,7 @@ const columns = [
     title: '账面数量',
     dataIndex: 'BookQuantity',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -290,7 +289,7 @@ const columns = [
     title: '调整入库数量',
     dataIndex: 'AdjustStorageQuantity',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -298,7 +297,7 @@ const columns = [
     title: '调整出库数量',
     dataIndex: 'AdjustOutQuantity',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -306,7 +305,7 @@ const columns = [
     title: '盘点数量',
     dataIndex: 'InventoryQuantity',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -314,7 +313,7 @@ const columns = [
     title: '盈亏数量',
     dataIndex: 'Profitloss',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -322,7 +321,7 @@ const columns = [
     title: '合理损耗率',
     dataIndex: 'ReasonableLossRate',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -330,7 +329,7 @@ const columns = [
     title: '盈亏比例%',
     dataIndex: 'ProfitLossRatio',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -401,22 +400,94 @@ export default {
             data: [
               {
                 InventoryDate: '2014-12-09',
-                InventoryNumber: '',
-                InventoryWarehouse: '',
-                StorageCategory: '',
-                OutCategory: '',
-                Department: '',
-                InventoryCode: '',
-                InventoryName: '',
+                InventoryNumber: '01019002060001',
+                InventoryWarehouse: '原料仓',
+                StorageCategory: '采购入库',
+                OutCategory: '销售出库',
+                Department: '销售部',
+                InventoryCode: '01019',
+                InventoryName: '手机配件',
                 SpecificationModel: '',
-                MainUnit: '',
-                BookQuantity: '',
-                AdjustStorageQuantity: '',
-                InventoryQuantity: '',
+                MainUnit: '盒',
+                BookQuantity: '100.00',
+                AdjustStorageQuantity: '20.00',
+                InventoryQuantity: '100.00',
                 Profitloss: '',
                 ReasonableLossRate: '',
                 ProfitLossRatio: ''
-              }
+              },
+              {
+                InventoryDate: '2014-12-10',
+                InventoryNumber: '01019002060002',
+                InventoryWarehouse: '原料仓',
+                StorageCategory: '采购入库',
+                OutCategory: '销售出库',
+                Department: '销售部',
+                InventoryCode: '01020',
+                InventoryName: '手机配件',
+                SpecificationModel: '',
+                MainUnit: '盒',
+                BookQuantity: '100.00',
+                AdjustStorageQuantity: '20.00',
+                InventoryQuantity: '100.00',
+                Profitloss: '',
+                ReasonableLossRate: '',
+                ProfitLossRatio: ''
+              },
+              {
+                InventoryDate: '2014-12-10',
+                InventoryNumber: '01019002060003',
+                InventoryWarehouse: '原料仓',
+                StorageCategory: '采购入库',
+                OutCategory: '销售出库',
+                Department: '销售部',
+                InventoryCode: '01021',
+                InventoryName: '手机配件',
+                SpecificationModel: '',
+                MainUnit: '盒',
+                BookQuantity: '100.00',
+                AdjustStorageQuantity: '20.00',
+                InventoryQuantity: '100.00',
+                Profitloss: '',
+                ReasonableLossRate: '',
+                ProfitLossRatio: ''
+              },
+              {
+                InventoryDate: '2014-12-11',
+                InventoryNumber: '01019002060004',
+                InventoryWarehouse: '原料仓',
+                StorageCategory: '采购入库',
+                OutCategory: '销售出库',
+                Department: '销售部',
+                InventoryCode: '01022',
+                InventoryName: '手机配件',
+                SpecificationModel: '',
+                MainUnit: '盒',
+                BookQuantity: '100.00',
+                AdjustStorageQuantity: '20.00',
+                InventoryQuantity: '100.00',
+                Profitloss: '',
+                ReasonableLossRate: '',
+                ProfitLossRatio: ''
+              },
+              {
+                InventoryDate: '2014-12-12',
+                InventoryNumber: '01019002060005',
+                InventoryWarehouse: '原料仓',
+                StorageCategory: '采购入库',
+                OutCategory: '销售出库',
+                Department: '销售部',
+                InventoryCode: '01023',
+                InventoryName: '手机配件',
+                SpecificationModel: '',
+                MainUnit: '盒',
+                BookQuantity: '100.00',
+                AdjustStorageQuantity: '20.00',
+                InventoryQuantity: '100.00',
+                Profitloss: '',
+                ReasonableLossRate: '',
+                ProfitLossRatio: ''
+              },
             ]
           }
           return res.result

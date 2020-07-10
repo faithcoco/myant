@@ -88,9 +88,10 @@
             {{item.content}}
           </p>
           <p v-show="item.isShow">
-             <a-card v-for="item in item.img" :key="item.src" :bordered="false" >
-            <img slot="extra"  alt="logo"   :src="item.src" /><br />
-             </a-card>
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
           </p>
         </a-timeline-item>
       </a-timeline>
@@ -144,6 +145,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -187,7 +189,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getOutManagementList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -222,7 +224,7 @@ const columns = [
     title: '仓库编码',
     dataIndex: 'WarehouseCode',
     defaultSortOrder: 'descend',
-    width: 130,
+    width: 120,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
@@ -231,7 +233,7 @@ const columns = [
     title: '仓库',
     dataIndex: 'Warehouse',
     defaultSortOrder: 'descend',
-    width: 140,
+    width: 120,
     sorter: (a, b) => a.name - b.name
   },
 
@@ -240,7 +242,7 @@ const columns = [
     title: '出库日期',
     dataIndex: 'OutDate',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -248,7 +250,7 @@ const columns = [
     title: '出库单号',
     dataIndex: 'OutNumber',
     defaultSortOrder: 'descend',
-    width: 130,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -256,7 +258,7 @@ const columns = [
     title: '出库类型编码',
     dataIndex: 'OutCategoryCode',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -264,7 +266,7 @@ const columns = [
     title: '出库类别',
     dataIndex: 'OutCategory',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -272,7 +274,7 @@ const columns = [
     title: '部门编码',
     dataIndex: 'DepartmentCode',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -280,7 +282,7 @@ const columns = [
     title: '销售部门',
     dataIndex: 'Department',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -288,7 +290,7 @@ const columns = [
     title: '业务员',
     dataIndex: 'Salesman',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -296,7 +298,7 @@ const columns = [
     title: '客户',
     dataIndex: 'Customer',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -304,7 +306,7 @@ const columns = [
     title: '存货编码',
     dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -312,7 +314,7 @@ const columns = [
     title: '存货名称',
     dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
-    width: 80,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -320,7 +322,7 @@ const columns = [
     title: '规格型号',
     dataIndex: 'SpecificationModel',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -328,7 +330,7 @@ const columns = [
     title: '主计量单位',
     dataIndex: 'MainUnit',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -336,7 +338,7 @@ const columns = [
     title: '数量',
     dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -344,7 +346,7 @@ const columns = [
     title: '单价',
     dataIndex: 'UnitPrice',
     defaultSortOrder: 'descend',
-    width: 80,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -352,7 +354,7 @@ const columns = [
     title: '金额',
     dataIndex: 'Amount',
     defaultSortOrder: 'descend',
-    width: 80,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -360,7 +362,7 @@ const columns = [
     title: '审核时间',
     dataIndex: 'ReviewTime',
     defaultSortOrder: 'descend',
-    width: 80,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -368,7 +370,7 @@ const columns = [
     title: '工厂编码',
     dataIndex: 'FactoryCode',
     defaultSortOrder: 'descend',
-    width: 80,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -376,14 +378,14 @@ const columns = [
     title: '工厂名称',
     dataIndex: 'FactoryName',
     defaultSortOrder: 'descend',
-    width: 80,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '20',
     title: '操作',
     dataIndex: 'action',
-    width: 110,
+    width: 120,
     fixed: 'right',
     scopedSlots: { customRender: 'action' }
   }
@@ -428,126 +430,8 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                WarehouseCode: '30',
-                Warehouse: 'PC原材料仓',
-                OutDate: '2014-12-01',
-                OutNumber: '0000000001',
-                OutCategoryCode: '22',
-                OutCategory: '销售出库',
-                DepartmentCode: '0302',
-                Department: '销售部',
-                Salesman: '崔可',
-                Customer: '泰山数码',
-                InventoryCode: '01019002065',
-                InventoryName: '硬盘-1000G',
-                SpecificationModel: '希捷 1000G',
-                MainUnit: 'PCS',
-                Quantity: '30.00',
-                UnitPrice: '',
-                Amount: '',
-                ReviewTime: '2014-12-02 11:12:44',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                WarehouseCode: '02',
-                Warehouse: 'PC机原材料仓库',
-                OutDate: '2014-12-01',
-                OutNumber: '0000000001',
-                OutCategoryCode: '22',
-                OutCategory: '销售出库',
-                DepartmentCode: '0302',
-                Department: '销售部',
-                Salesman: '崔可',
-                Customer: '泰山数码',
-                InventoryCode: '1004',
-                InventoryName: '服务器存储配件',
-                SpecificationModel: '',
-                MainUnit: '台',
-                Quantity: '11.00',
-                UnitPrice: '',
-                Amount: '',
-                ReviewTime: '2014-12-02 11:14:22',
-                FactoryCode: '002',
-                FactoryName: '工厂二'
-              },
-              {
-                WarehouseCode: '30',
-                Warehouse: 'PC原材料仓',
-                OutDate: '2014-12-02',
-                OutNumber: '0000000003',
-                OutCategoryCode: '22',
-                OutCategory: '销售出库',
-                DepartmentCode: '0302',
-                Department: '销售部',
-                Salesman: '崔可',
-                Customer: '黄河科技',
-                InventoryCode: '01019002065',
-                InventoryName: '硬盘-1000G',
-                SpecificationModel: '希捷 1000G',
-                MainUnit: 'PCS',
-                Quantity: '200.00',
-                UnitPrice: '',
-                Amount: '',
-                ReviewTime: '2014-12-02 11:12:44',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                WarehouseCode: '30',
-                Warehouse: 'PC原材料仓',
-                OutDate: '2014-12-02',
-                OutNumber: '0000000005',
-                OutCategoryCode: '22',
-                OutCategory: '销售出库',
-                DepartmentCode: '1001',
-                Department: '区域销售部',
-                Salesman: '师小容',
-                Customer: '美华集团',
-                InventoryCode: '01019002065',
-                InventoryName: '硬盘-1000G',
-                SpecificationModel: '希捷 1000G',
-                MainUnit: 'PCS',
-                Quantity: '30.00',
-                UnitPrice: '',
-                Amount: '',
-                ReviewTime: '2014-12-02 11:12:44',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                WarehouseCode: '30',
-                Warehouse: 'PC原材料仓',
-                OutDate: '2014-12-02',
-                OutNumber: '0000000006',
-                OutCategoryCode: '22',
-                OutCategory: '销售出库',
-                DepartmentCode: '0302',
-                Department: '销售部',
-                Salesman: '徐海',
-                Customer: '星空电子',
-                InventoryCode: '01019002065',
-                InventoryName: '硬盘-1000G',
-                SpecificationModel: '希捷 1000G',
-                MainUnit: 'PCS',
-                Quantity: '1000.00',
-                UnitPrice: '',
-                Amount: '',
-                ReviewTime: '2014-12-02 11:12:44',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              }
-            ]
-          }
+        return getOutManagementList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log('/getOutManagementList-->', JSON.stringify(res))
           return res.result
         })
       },

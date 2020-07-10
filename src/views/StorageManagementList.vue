@@ -24,6 +24,7 @@
         :data="loadData"
         :alert="false"
         :scroll="{ x: 1500 }"
+        bordered
       >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
 
@@ -82,7 +83,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -135,7 +145,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -179,7 +189,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getStorageManagementList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -192,7 +202,19 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'
   }
 ]
 const columns = [
@@ -201,7 +223,7 @@ const columns = [
     title: '记账人',
     dataIndex: 'Bookkeeper',
     defaultSortOrder: 'descend',
-    width: 150,
+    width: 120,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
@@ -209,7 +231,7 @@ const columns = [
     key: '1',
     title: '仓库编码',
     dataIndex: 'WarehouseCode',
-    width: 170,
+    width: 120,
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
@@ -227,7 +249,7 @@ const columns = [
     title: '入库日期',
     dataIndex: 'StorageDate',
     defaultSortOrder: 'descend',
-    width: 150,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -235,7 +257,7 @@ const columns = [
     title: '入库单号',
     dataIndex: 'StorageNumber',
     defaultSortOrder: 'descend',
-    width: 125,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
 
@@ -244,59 +266,59 @@ const columns = [
     title: '入库类别编码',
     dataIndex: 'DepartmentCode',
     defaultSortOrder: 'descend',
-    width: 125,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '4',
-    title: '入库类别',
-    dataIndex: 'StorageCategory',
-    defaultSortOrder: 'descend',
-    width: 125,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '部门编码',
-    dataIndex: 'DepartmentCode',
+    title: '入库类别',
+    dataIndex: 'StorageCategory',
     defaultSortOrder: 'descend',
-    width: 125,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
-    title: '部门',
-    dataIndex: 'Department',
+    title: '部门编码',
+    dataIndex: 'DepartmentCode',
     defaultSortOrder: 'descend',
-    width: 125,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '8',
-    title: '业务员',
-    dataIndex: 'Salesman',
+    title: '部门',
+    dataIndex: 'Department',
     defaultSortOrder: 'descend',
-    width: 125,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
-    title: '供应商',
-    dataIndex: 'Supplier',
+    title: '业务员',
+    dataIndex: 'Salesman',
     defaultSortOrder: 'descend',
-    width: 125,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '10',
-    title: '存货编码',
-    dataIndex: 'InventoryCode',
+    title: '供应商',
+    dataIndex: 'Supplier',
     defaultSortOrder: 'descend',
-    width: 125,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '11',
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '12',
     title: '存货名称',
     dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
@@ -304,66 +326,66 @@ const columns = [
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '12',
+    key: '13',
     title: '规格型号',
     dataIndex: 'SpecificationModel',
     defaultSortOrder: 'descend',
-    width: 125,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '13',
-    title: '主计量单位',
-    dataIndex: 'MainUnit',
-    defaultSortOrder: 'descend',
-    width: 125,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '14',
-    title: '数量',
-    dataIndex: 'Quantity',
+    title: '主计量单位',
+    dataIndex: 'MainUnit',
     defaultSortOrder: 'descend',
-    width: 125,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '15',
+    title: '数量',
+    dataIndex: 'Quantity',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '16',
     title: '本币无税单价',
     dataIndex: 'NoTaxUnitPrice',
     defaultSortOrder: 'descend',
-    width: 125,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '16',
-    title: '本币无税金额',
-    dataIndex: 'NoTaxAmount',
-    defaultSortOrder: 'descend',
-    width: 125,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '16',
-    title: '工厂编码',
-    dataIndex: 'FactoryCode',
-    defaultSortOrder: 'descend',
-    width: 125,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '16',
-    title: '工厂名称',
-    dataIndex: 'FactoryName',
-    defaultSortOrder: 'descend',
-    width: 125,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '17',
+    title: '本币无税金额',
+    dataIndex: 'NoTaxAmount',
+    defaultSortOrder: 'descend',
+    width: 140,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '18',
+    title: '工厂编码',
+    dataIndex: 'FactoryCode',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '19',
+    title: '工厂名称',
+    dataIndex: 'FactoryName',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '20',
     title: '操作',
     dataIndex: 'action',
-    width: 110,
+    width: 120,
     fixed: 'right',
     scopedSlots: { customRender: 'action' }
   }
@@ -410,126 +432,8 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                Bookkeeper: 'demo1',
-                WarehouseCode: '30',
-                Warehouse: 'PC原材料仓',
-                StorageDate: '2014-12-22',
-                StorageNumber: '0000000001',
-                StorageCategoryCode: '11',
-                StorageCategory: '采购入库',
-                DepartmentCode: '0401',
-                Department: '采购部',
-                Salesman: '顾潇',
-                Supplier: '辰环手机配件',
-                InventoryCode: '01019002067',
-                InventoryName: '线材',
-                SpecificationModel: '2Pin信号线/675mm',
-                MainUnit: 'PCS',
-                Quantity: '500.00',
-                NoTaxUnitPrice: '1.41',
-                NoTaxAmount: '705.00',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                Bookkeeper: 'demo1',
-                WarehouseCode: '30',
-                Warehouse: 'PC原材料仓',
-                StorageDate: '2014-12-22',
-                StorageNumber: '0000000001',
-                StorageCategoryCode: '11',
-                StorageCategory: '采购入库',
-                DepartmentCode: '0401',
-                Department: '采购部',
-                Salesman: '顾潇',
-                Supplier: '辰环手机配件',
-                InventoryCode: '01019002068',
-                InventoryName: '线材',
-                SpecificationModel: '船型开关线/线长500MM/2Pin',
-                MainUnit: 'PCS',
-                Quantity: '500.00',
-                NoTaxUnitPrice: '1.57',
-                NoTaxAmount: '785.00',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                Bookkeeper: 'demo1',
-                WarehouseCode: '30',
-                Warehouse: 'PC原材料仓',
-                StorageDate: '2014-12-22',
-                StorageNumber: '0000000001',
-                StorageCategoryCode: '11',
-                StorageCategory: '采购入库',
-                DepartmentCode: '0401',
-                Department: '采购部',
-                Salesman: '顾潇',
-                Supplier: '辰环手机配件',
-                InventoryCode: '01019002069',
-                InventoryName: '电源',
-                SpecificationModel: '亿泰鑫2U/550W/冗余电源/550W-E-102',
-                MainUnit: 'PCS',
-                Quantity: '500.00',
-                NoTaxUnitPrice: '1.30',
-                NoTaxAmount: '650.00',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                Bookkeeper: 'demo1',
-                WarehouseCode: '30',
-                Warehouse: 'PC原材料仓',
-                StorageDate: '2014-12-03',
-                StorageNumber: '0000000005',
-                StorageCategoryCode: '11',
-                StorageCategory: '采购入库',
-                DepartmentCode: '0401',
-                Department: '采购部',
-                Salesman: '顾潇',
-                Supplier: '辰环手机配件',
-                InventoryCode: '010204',
-                InventoryName: '大容量存储器',
-                SpecificationModel: '',
-                MainUnit: '个',
-                Quantity: '100.00',
-                NoTaxUnitPrice: '50.28',
-                NoTaxAmount: '5027.90',
-                FactoryCode: '002',
-                FactoryName: '工厂二'
-              },
-              {
-                Bookkeeper: 'demo1',
-                WarehouseCode: '30',
-                Warehouse: 'PC原材料仓',
-                StorageDate: '2014-12-03',
-                StorageNumber: '0000000006',
-                StorageCategoryCode: '11',
-                StorageCategory: '采购入库',
-                DepartmentCode: '0401',
-                Department: '采购部',
-                Salesman: '顾潇',
-                Supplier: '博大存储',
-                InventoryCode: '010204',
-                InventoryName: '大容量存储器',
-                SpecificationModel: '',
-                MainUnit: '个',
-                Quantity: '3.00',
-                NoTaxUnitPrice: '40',
-                NoTaxAmount: '120.00',
-                FactoryCode: '002',
-                FactoryName: '工厂二'
-              }
-            ]
-          }
+        return getStorageManagementList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log('/getStorageManagementList-->', JSON.stringify(res))
           return res.result
         })
       },

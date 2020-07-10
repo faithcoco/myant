@@ -76,7 +76,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -129,7 +138,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -173,7 +182,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getOpeningInventoryList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -186,7 +195,19 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'
   }
 ]
 
@@ -197,6 +218,7 @@ const columns = [
     dataIndex: 'Warehouse',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
+    width: 120,
     scopedSlots: { customRender: 'name' }
   },
   {
@@ -204,6 +226,7 @@ const columns = [
     title: '仓库编码',
     dataIndex: 'WarehouseCode',
     defaultSortOrder: 'descend',
+    width: 120,
     sorter: (a, b) => a.name - b.name
   },
 
@@ -212,6 +235,7 @@ const columns = [
     title: '存货编码',
     dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -219,6 +243,7 @@ const columns = [
     title: '存货名称',
     dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -226,6 +251,7 @@ const columns = [
     title: '规格型号',
     dataIndex: 'SpecificationModel',
     defaultSortOrder: 'descend',
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -233,6 +259,7 @@ const columns = [
     title: '主计量单位',
     dataIndex: 'MainUint',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -240,6 +267,7 @@ const columns = [
     title: '数量',
     dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -247,6 +275,7 @@ const columns = [
     title: '单价',
     dataIndex: 'UnitPrice',
     defaultSortOrder: 'descend',
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -254,59 +283,67 @@ const columns = [
     title: '金额',
     dataIndex: 'Amount',
     defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '颜色',
-    dataIndex: 'Color',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '批号',
-    dataIndex: 'BatchNumber',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '生产日期',
-    dataIndex: 'ProducteDate',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '失效日期',
-    dataIndex: 'ExpirationDate',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '货位',
-    dataIndex: 'CargoSpace',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '入库类别',
-    dataIndex: 'StorageCategory',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '部门',
-    dataIndex: 'Department',
-    defaultSortOrder: 'descend',
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '10',
+    title: '颜色',
+    dataIndex: 'Color',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '11',
+    title: '批号',
+    dataIndex: 'BatchNumber',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '12',
+    title: '生产日期',
+    dataIndex: 'ProducteDate',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '13',
+    title: '失效日期',
+    dataIndex: 'ExpirationDate',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '14',
+    title: '货位',
+    dataIndex: 'CargoSpace',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '15',
+    title: '入库类别',
+    dataIndex: 'StorageCategory',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '16',
+    title: '部门',
+    dataIndex: 'Department',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '17',
     title: '操作',
     dataIndex: 'action',
     width: 120,
@@ -353,88 +390,8 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                Warehouse: '手机主辅料仓库（有货位）',
-                WarehouseCode: '01',
-                InventoryCode: '0105D001',
-                InventoryName: '手机背光源',
-                SpecificationModel: '',
-                MainUint: '只',
-                Quantity: '4.00',
-                UnitPrice: '20.00',
-                Amount: '80.00',
-                Color: '黑色',
-                BatchNumber: '0105D00112101',
-                ProducteDate: '',
-                ExpirationDate: '',
-                CargoSpace: '其他外设',
-                StorageCategory: '采购入库',
-                Department: '仓储部'
-              },
-              {
-                Warehouse: '手机主辅料仓库（有货位）',
-                WarehouseCode: '01',
-                InventoryCode: '0105D002',
-                InventoryName: '手机背光源',
-                SpecificationModel: '替代',
-                MainUint: '只',
-                Quantity: '10.00',
-                UnitPrice: '21.00',
-                Amount: '210.00',
-                Color: '黑色',
-                BatchNumber: '0105D00112102',
-                ProducteDate: '',
-                ExpirationDate: '',
-                CargoSpace: '其他外设',
-                StorageCategory: '采购入库',
-                Department: '仓储部'
-              },
-              {
-                Warehouse: '手机主辅料仓库（有货位）',
-                WarehouseCode: '01',
-                InventoryCode: '01021001',
-                InventoryName: '蓝牙耳机',
-                SpecificationModel: '',
-                MainUint: '个',
-                Quantity: '2000.00',
-                UnitPrice: '60.00',
-                Amount: '120000.00',
-                Color: '',
-                BatchNumber: '',
-                ProducteDate: '',
-                ExpirationDate: '',
-                CargoSpace: '其他外设',
-                StorageCategory: '',
-                Department: ''
-              },
-              {
-                Warehouse: '手机主辅料仓库（有货位）',
-                WarehouseCode: '01',
-                InventoryCode: '010211',
-                InventoryName: '充电器',
-                SpecificationModel: '',
-                MainUint: '个',
-                Quantity: '2000.00',
-                UnitPrice: '10.00',
-                Amount: '20000.00',
-                Color: '',
-                BatchNumber: '',
-                ProducteDate: '',
-                ExpirationDate: '',
-                CargoSpace: '其他外设',
-                StorageCategory: '',
-                Department: ''
-              }
-            ]
-          }
+        return getOpeningInventoryList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log('/getOpeningInventoryList-->', JSON.stringify(res))
           return res.result
         })
       },

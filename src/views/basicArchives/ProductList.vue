@@ -49,7 +49,6 @@
     >
       <a-descriptions title :column="1">
         <a-descriptions-item label="审批状态">
-          <!-- /////////////////////////////////////////////////////////////// -->
           <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
         <a-descriptions-item label="货品编码">{{product.Type }}</a-descriptions-item>
@@ -139,8 +138,6 @@
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
 
-              <!-- /////////////////////// -->
-
               <a-upload
                 name="file"
                 :multiple="true"
@@ -150,8 +147,6 @@
               >
                 <a-button type="link" :size="size">添加附件</a-button>
               </a-upload>
-
-              <!-- /////////////////////// -->
             </a-form-item>
             <a-form-item>
               <a-button
@@ -184,22 +179,22 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList, getProductList } from '@/api/manage'
+import { getOrgTree, getServiceList } from '@/api/manage'
+
+
 
 const timelinelist = [
   {
     key: '0',
     title: 'curry 提交合同申请',
     time: '2020-07-01 10:00',
-    content: '',
-    info: '1111111'
+    content: ''
   },
   {
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能',
-    info: '22222222'
+    content: '了解一下功能'
   }
 ]
 
@@ -209,7 +204,7 @@ const columns = [
     title: '货品编码',
     dataIndex: 'productCode',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 150,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
@@ -251,7 +246,7 @@ const columns = [
     title: '主计量单位',
     dataIndex: 'MainUnit',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -259,7 +254,7 @@ const columns = [
     title: '电商销售单位',
     dataIndex: 'SalesUnit',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -291,7 +286,7 @@ const columns = [
     title: '默认发货仓库',
     dataIndex: 'DefaultShippingWarehouse',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -315,7 +310,7 @@ const columns = [
     title: '预发货日期',
     dataIndex: 'StorageDate',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -363,7 +358,7 @@ export default {
       chat_visible: false,
       data,
       status: '正在审批',
-      color: '', //////////////////////////////////////////////////
+      color: '',
       product,
       columns,
       timelinelist,
@@ -375,16 +370,209 @@ export default {
         authorization: 'authorization-text'
       },
       size: 'small',
-      info: '',
 
       confirmLoading: false,
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getProductList(Object.assign(parameter, this.queryParam)).then(res => {
-           console.log('/getProductList-->', JSON.stringify(res.result))
-
+        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
+          // console.log('/service-->', JSON.stringify(res.result))
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                productCode: '01019002060001',
+                productName: '硬盘-1000G',
+                SpecificationModel: '希捷 1000G/7222RPM/32M/SATA2/企业级',
+                InventoryCode: '01019002065',
+                InventoryName: '硬盘-1000G',
+                MainUnit: 'PCS',
+                SalesUnit: 'PCS',
+                DistributionUnit: 'PCS',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '0390',
+                productName: '三星手机S6贴膜',
+                SpecificationModel: '',
+                InventoryCode: '0390',
+                InventoryName: '三星手机S6贴膜',
+                MainUnit: '盒',
+                SalesUnit: '张',
+                DistributionUnit: '张',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00000102040001',
+                productName: '大容量存储器',
+                SpecificationModel: '',
+                InventoryCode: '010204',
+                InventoryName: '大容量存储器',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00000102060001',
+                productName: '普通存储器',
+                SpecificationModel: '',
+                InventoryCode: '010206',
+                InventoryName: '普通存储器',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00000102070001',
+                productName: '高速处理器',
+                SpecificationModel: '',
+                InventoryCode: '010207',
+                InventoryName: '高速处理器',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00000102080001',
+                productName: '普通处理器',
+                SpecificationModel: '',
+                InventoryCode: '010208',
+                InventoryName: '普通处理器',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00010210010001',
+                productName: '蓝牙耳机',
+                SpecificationModel: '',
+                InventoryCode: '01021001',
+                InventoryName: '蓝牙耳机',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00000102110001',
+                productName: '充电器',
+                SpecificationModel: '',
+                InventoryCode: '010211',
+                InventoryName: '充电器',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00010211010001',
+                productName: '旅充',
+                SpecificationModel: '',
+                InventoryCode: '01021101',
+                InventoryName: '旅充',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00010211020001',
+                productName: '新式旅充',
+                SpecificationModel: '',
+                InventoryCode: '01021102',
+                InventoryName: '新式旅充',
+                MainUnit: '个',
+                SalesUnit: '个',
+                DistributionUnit: '个',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              },
+              {
+                productCode: '00000102170001',
+                productName: '蓝牙',
+                SpecificationModel: '',
+                InventoryCode: '010217',
+                InventoryName: '蓝牙',
+                MainUnit: '只',
+                SalesUnit: '只',
+                DistributionUnit: '只',
+                LowestPrice: '0.00',
+                description: '',
+                DefaultShippingWarehouse: '',
+                VirtualItem: '否',
+                Image: '',
+                StorageDate: '',
+                UnitGrossWeight: '0.00'
+              }
+            ]
+          }
           return res.result
         })
       },
@@ -487,7 +675,6 @@ export default {
       if (!this.value) {
         return
       }
-
       this.submitting = true
       const time = new Date()
       setTimeout(() => {
@@ -496,8 +683,7 @@ export default {
           key: '1',
           title: 'curry 评论',
           time: moment(new Date()).format('YYYY-MM-DD HH:mm'),
-          content: this.value,
-          info: this.info
+          content: this.value
         })
       }, 1000),
         (this.chat_visible = false)
@@ -509,9 +695,6 @@ export default {
       this.value = ''
       this.chat_visible = true
     },
-
-    ///////////////////////////////////////////////
-
     cancelClick() {
       this.status = '已撤销'
       this.color = '#f00707a6'
@@ -520,9 +703,6 @@ export default {
       this.status = '已审批'
       this.color = '#108ee9'
     },
-
-    ////////////////////////////////////////////////////////////
-
     chatOk(e) {
       this.chat_visible = false
     },
@@ -537,7 +717,7 @@ export default {
     },
     fileChange(info) {
       if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList)
+             console.log(info.file, info.fileList)
       }
       if (info.file.status === 'done') {
         this.$message.success(`${info.file.name} file uploaded successfully`)

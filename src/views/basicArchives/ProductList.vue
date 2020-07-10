@@ -49,7 +49,6 @@
     >
       <a-descriptions title :column="1">
         <a-descriptions-item label="审批状态">
-          <!-- /////////////////////////////////////////////////////////////// -->
           <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
         <a-descriptions-item label="货品编码">{{product.Type }}</a-descriptions-item>
@@ -139,8 +138,6 @@
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
 
-              <!-- /////////////////////// -->
-
               <a-upload
                 name="file"
                 :multiple="true"
@@ -150,8 +147,6 @@
               >
                 <a-button type="link" :size="size">添加附件</a-button>
               </a-upload>
-
-              <!-- /////////////////////// -->
             </a-form-item>
             <a-form-item>
               <a-button
@@ -184,22 +179,22 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList, getProductList } from '@/api/manage'
+import { getOrgTree, getServiceList } from '@/api/manage'
+
+
 
 const timelinelist = [
   {
     key: '0',
     title: 'curry 提交合同申请',
     time: '2020-07-01 10:00',
-    content: '',
-    info: '1111111'
+    content: ''
   },
   {
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能',
-    info: '22222222'
+    content: '了解一下功能'
   }
 ]
 
@@ -209,7 +204,7 @@ const columns = [
     title: '货品编码',
     dataIndex: 'productCode',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 150,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
@@ -251,7 +246,7 @@ const columns = [
     title: '主计量单位',
     dataIndex: 'MainUnit',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -259,7 +254,7 @@ const columns = [
     title: '电商销售单位',
     dataIndex: 'SalesUnit',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -291,7 +286,7 @@ const columns = [
     title: '默认发货仓库',
     dataIndex: 'DefaultShippingWarehouse',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -315,7 +310,7 @@ const columns = [
     title: '预发货日期',
     dataIndex: 'StorageDate',
     defaultSortOrder: 'descend',
-    width: 120,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -363,7 +358,7 @@ export default {
       chat_visible: false,
       data,
       status: '正在审批',
-      color: '', //////////////////////////////////////////////////
+      color: '',
       product,
       columns,
       timelinelist,
@@ -375,7 +370,6 @@ export default {
         authorization: 'authorization-text'
       },
       size: 'small',
-      info: '',
 
       confirmLoading: false,
       targetKeys: oriTargetKeys,
@@ -487,7 +481,6 @@ export default {
       if (!this.value) {
         return
       }
-
       this.submitting = true
       const time = new Date()
       setTimeout(() => {
@@ -496,8 +489,7 @@ export default {
           key: '1',
           title: 'curry 评论',
           time: moment(new Date()).format('YYYY-MM-DD HH:mm'),
-          content: this.value,
-          info: this.info
+          content: this.value
         })
       }, 1000),
         (this.chat_visible = false)
@@ -509,9 +501,6 @@ export default {
       this.value = ''
       this.chat_visible = true
     },
-
-    ///////////////////////////////////////////////
-
     cancelClick() {
       this.status = '已撤销'
       this.color = '#f00707a6'
@@ -520,9 +509,6 @@ export default {
       this.status = '已审批'
       this.color = '#108ee9'
     },
-
-    ////////////////////////////////////////////////////////////
-
     chatOk(e) {
       this.chat_visible = false
     },
@@ -537,7 +523,7 @@ export default {
     },
     fileChange(info) {
       if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList)
+             console.log(info.file, info.fileList)
       }
       if (info.file.status === 'done') {
         this.$message.success(`${info.file.name} file uploaded successfully`)

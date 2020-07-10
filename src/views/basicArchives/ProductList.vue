@@ -383,7 +383,7 @@ export default {
       disabled: false,
       loadData: parameter => {
         return getProductList(Object.assign(parameter, this.queryParam)).then(res => {
-           console.log('/getProductList-->', JSON.stringify(res.result))
+           console.log('/getProductList-->', JSON.stringify(res))
 
           return res.result
         })

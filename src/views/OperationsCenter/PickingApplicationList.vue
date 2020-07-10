@@ -84,7 +84,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -137,7 +146,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -181,7 +190,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getPickingApplicationList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -194,7 +203,19 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'
   }
 ]
 
@@ -204,7 +225,7 @@ const columns = [
     title: '单据号',
     dataIndex: 'DocumentNumber',
     defaultSortOrder: 'descend',
-    width: 155,
+    width: 120,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
@@ -213,7 +234,7 @@ const columns = [
     title: '日期',
     dataIndex: 'Date',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -229,7 +250,7 @@ const columns = [
     title: '业务员',
     dataIndex: 'Salesman',
     defaultSortOrder: 'descend',
-    width: 150,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -237,7 +258,7 @@ const columns = [
     title: '出库类别',
     dataIndex: 'OutCategory',
     defaultSortOrder: 'descend',
-    width: 150,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -245,7 +266,7 @@ const columns = [
     title: '审核日期',
     dataIndex: 'ReviewDate',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -253,7 +274,7 @@ const columns = [
     title: '仓库编码',
     dataIndex: 'WarehouseCode',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
 
@@ -262,7 +283,7 @@ const columns = [
     title: '存货编码',
     dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -270,7 +291,7 @@ const columns = [
     title: '存货名称',
     dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -278,7 +299,7 @@ const columns = [
     title: '规格型号',
     dataIndex: 'SpecificationModel',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -286,7 +307,7 @@ const columns = [
     title: '计量单位',
     dataIndex: 'Unit',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -294,14 +315,14 @@ const columns = [
     title: '数量',
     dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '12',
     title: '需求日期',
     dataIndex: 'DemandDate',
-    width: 100,
+    width: 120,
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age
   },
@@ -310,7 +331,7 @@ const columns = [
     title: '工厂编码',
     dataIndex: 'FactoryCode',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -318,7 +339,7 @@ const columns = [
     title: '工厂名称',
     dataIndex: 'FactoryName',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -370,101 +391,8 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                DocumentNumber: '0000000002',
-                Date: '2014-12-03',
-                ApplicationDepartment: '',
-                Salesman: '',
-                OutCategory: '其他领用出库',
-                ReviewDate: '2014-12-03',
-                WarehouseCode: '',
-                InventoryCode: '1003',
-                InventoryName: '计算器',
-                SpecificationModel: '',
-                Unit: '台',
-                Quantity: '100.00',
-                DemandDate: '2014-12-02',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                DocumentNumber: '0000000002',
-                Date: '2014-12-03',
-                ApplicationDepartment: '',
-                Salesman: '',
-                OutCategory: '其他领用出库',
-                ReviewDate: '2014-12-03',
-                WarehouseCode: '',
-                InventoryCode: '1005',
-                InventoryName: '数码相机',
-                SpecificationModel: '',
-                Unit: '台',
-                Quantity: '10,00',
-                DemandDate: '2014-12-03',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                DocumentNumber: '0000000005',
-                Date: '2014-12-02',
-                ApplicationDepartment: '采购部',
-                Salesman: '顾潇',
-                OutCategory: '其他领用出库',
-                ReviewDate: '2014-12-02',
-                WarehouseCode: '30',
-                InventoryCode: '01019002088',
-                InventoryName: '随机资料',
-                SpecificationModel: '中性',
-                Unit: 'PCS',
-                Quantity: '5000.00',
-                DemandDate: '2014-12-20',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                DocumentNumber: '0000000006',
-                Date: '2014-12-02',
-                ApplicationDepartment: '采购部',
-                Salesman: '查玫',
-                OutCategory: '其他领用出库',
-                ReviewDate: '2014-12-03',
-                WarehouseCode: '30',
-                InventoryCode: '01019002088',
-                InventoryName: '随机资料',
-                SpecificationModel: '中性',
-                Unit: 'PCS',
-                Quantity: '13000.00',
-                DemandDate: '2014-12-16',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                DocumentNumber: '0000000007',
-                Date: '2014-12-02',
-                ApplicationDepartment: '采购部',
-                Salesman: '顾潇',
-                OutCategory: '其他领用出库',
-                ReviewDate: '2014-12-03',
-                WarehouseCode: '30',
-                InventoryCode: '01019002088',
-                InventoryName: '随机资料',
-                SpecificationModel: '中性',
-                Unit: 'PCS',
-                Quantity: '100.00',
-                DemandDate: '2014-12-02',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              }
-            ]
-          }
+        return getPickingApplicationList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log('/getPickingApplicationList-->', JSON.stringify(res))
           return res.result
         })
       },

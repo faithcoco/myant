@@ -81,7 +81,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -134,7 +143,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -178,7 +187,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getTransferList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -191,7 +200,19 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'  
   }
 ]
 
@@ -219,7 +240,7 @@ const columns = [
     title: '转出仓库',
     dataIndex: 'TransferOutWarehouse',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -235,7 +256,7 @@ const columns = [
     title: '存货编码',
     dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -243,7 +264,7 @@ const columns = [
     title: '存货名称',
     dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -259,7 +280,7 @@ const columns = [
     title: '主计量单位',
     dataIndex: 'MainUnit',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -291,7 +312,7 @@ const columns = [
     title: '转出工厂编码',
     dataIndex: 'OutFactoryCode',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -299,7 +320,7 @@ const columns = [
     title: '转出工厂名称',
     dataIndex: 'OutFactoryName',
     defaultSortOrder: 'descend',
-    width: 110,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -307,19 +328,19 @@ const columns = [
     title: '转入工厂编码',
     dataIndex: 'StoragFactoryCode',
     defaultSortOrder: 'descend',
-    width: 110,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '14',
-    title: '转入工厂名称',
-    dataIndex: 'StoragFactoryName',
-    defaultSortOrder: 'descend',
-    width: 110,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '15',
+    title: '转入工厂名称',
+    dataIndex: 'StoragFactoryName',
+    defaultSortOrder: 'descend',
+    width: 140,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '16',
     title: '操作',
     dataIndex: 'action',
     width: 120,
@@ -376,101 +397,8 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                TransferDate: '2014-12-03',
-                DocumentCode: '0000000001',
-                TransferOutWarehouse: 'PC机材料仓库',
-                TransferStorageWarehouse: 'PC原材料仓',
-                InventoryCode: '010204',
-                InventoryName: '大容量存储器',
-                SpecificationModel: '',
-                MainUnit: '个',
-                Quantity: '5.00',
-                UnitPrice: '',
-                Amount: '',
-                OutFactoryCode: '002',
-                OutFactoryName: '工厂二',
-                StoragFactoryCode: '001',
-                StoragFactoryName: '工厂一'
-              },
-              {
-                TransferDate: '2015-01-05',
-                DocumentCode: '0000000002',
-                TransferOutWarehouse: '办公用品仓',
-                TransferStorageWarehouse: '设计材料仓',
-                InventoryCode: '01019002065',
-                InventoryName: '硬盘-1000G',
-                SpecificationModel: '希捷 1000G',
-                MainUnit: 'PCS',
-                Quantity: '300.00',
-                UnitPrice: '',
-                Amount: '',
-                OutFactoryCode: '001',
-                OutFactoryName: '工厂一',
-                StoragFactoryCode: '001',
-                StoragFactoryName: '工厂一'
-              },
-              {
-                TransferDate: '2015-01-20',
-                DocumentCode: '0000000003',
-                TransferOutWarehouse: '电商总仓',
-                TransferStorageWarehouse: '电商南方仓',
-                InventoryCode: '0330',
-                InventoryName: '三星手机S6',
-                SpecificationModel: '',
-                MainUnit: '台',
-                Quantity: '30.00',
-                UnitPrice: '',
-                Amount: '',
-                OutFactoryCode: '001',
-                OutFactoryName: '工厂二',
-                StoragFactoryCode: '001',
-                StoragFactoryName: '工厂一'
-              },
-              {
-                TransferDate: '2015-01-20',
-                DocumentCode: '0000000003',
-                TransferOutWarehouse: '电商总仓',
-                TransferStorageWarehouse: '电商南方仓',
-                InventoryCode: '0390',
-                InventoryName: '三星手机S6贴膜',
-                SpecificationModel: '',
-                MainUnit: '盒',
-                Quantity: '10.00',
-                UnitPrice: '',
-                Amount: '',
-                OutFactoryCode: '001',
-                OutFactoryName: '工厂一',
-                StoragFactoryCode: '001',
-                StoragFactoryName: '工厂一'
-              },
-              {
-                TransferDate: '2015-01-20',
-                DocumentCode: '0000000004',
-                TransferOutWarehouse: '电商总仓',
-                TransferStorageWarehouse: '直营门店',
-                InventoryCode: '0330',
-                InventoryName: '三星手机S6',
-                SpecificationModel: '',
-                MainUnit: '台',
-                Quantity: '5.00',
-                UnitPrice: '',
-                Amount: '',
-                OutFactoryCode: '001',
-                OutFactoryName: '工厂一',
-                StoragFactoryCode: '001',
-                StoragFactoryName: '工厂一'
-              }
-            ]
-          }
+        return getTransferList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log('/getTransferList-->', JSON.stringify(res))
           return res.result
         })
       },

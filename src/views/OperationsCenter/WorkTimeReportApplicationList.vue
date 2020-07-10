@@ -51,24 +51,21 @@
         <a-descriptions-item label="审批状态">
           <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
-        <a-descriptions-item label="报工申请单编码">{{product.WorkTimeReportApplicationCode }}</a-descriptions-item>
+        <a-descriptions-item label="装箱单编码">{{product.PackingListCode }}</a-descriptions-item>
+        <a-descriptions-item label="装箱仓库编码">{{product.PackingWarehouseCode}}</a-descriptions-item>
         <a-descriptions-item label="部门编码">{{product.DepartmentCode}}</a-descriptions-item>
         <a-descriptions-item label="业务员编码">{{product.SalesmanCode}}</a-descriptions-item>
-        <a-descriptions-item label="预计入库日期">{{product.ExpectedInWarehouseDate}}</a-descriptions-item>
-        <a-descriptions-item label="预计入库仓库编码">{{product.ExpectedInWarehouseCode}}</a-descriptions-item>
-        <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
+        <a-descriptions-item label="装箱日期">{{product.PackingDate}}</a-descriptions-item>
+        <a-descriptions-item label="装箱状态">{{product.Status}}</a-descriptions-item>
         <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
         <a-descriptions-item label="批次编码">{{product.BatchCode}}</a-descriptions-item>
+        <a-descriptions-item label="货位编码">{{product.BatchCode}}</a-descriptions-item>
         <a-descriptions-item label="数量">{{product.Quantity}}</a-descriptions-item>
         <a-descriptions-item label="计量单位">{{product.Unit}}</a-descriptions-item>
         <a-descriptions-item label="包装数量">{{product.PackingQuantity}}</a-descriptions-item>
         <a-descriptions-item label="包装单位">{{product.PackingUnit}}</a-descriptions-item>
         <a-descriptions-item label="单价">{{product.UnitPrice}}</a-descriptions-item>
-        <a-descriptions-item label="含税单价">{{product.TaxIncludedUnitPrice}}</a-descriptions-item>
-        <a-descriptions-item label="税率">{{product.TaxRate}}</a-descriptions-item>
         <a-descriptions-item label="金额">{{product.Amount}}</a-descriptions-item>
-        <a-descriptions-item label="含税金额">{{product.TaxIncludedAmount}}</a-descriptions-item>
-        <a-descriptions-item label="税额">{{product.Tax}}</a-descriptions-item>
         <a-descriptions-item
           label="Address"
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
@@ -84,7 +81,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -137,7 +143,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -181,7 +187,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getBaleList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -194,64 +200,77 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'
   }
 ]
 
 const columns = [
   {
     key: '0',
-    title: '报工申请单编码',
-    dataIndex: 'Type',
+    title: '报工申请编码',
+    dataIndex: 'PackingCode',
     defaultSortOrder: 'descend',
-    width: 120,
     sorter: (a, b) => a.age - b.age,
+    width: 140,
     scopedSlots: { customRender: 'name' }
   },
   {
     key: '1',
+    title: '仓库编码',
+    dataIndex: 'PackingWarehouseCode',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.name - b.name
+  },
+  {
+    key: '2',
     title: '部门编码',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'DepartmentCode',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
-    key: '2',
-    title: '业务员编码',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 130,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
     key: '3',
-    title: '预计入库日期',
-    dataIndex: 'StorageProduct',
+    title: '业务员编码',
+    dataIndex: 'SalesmanCode',
     defaultSortOrder: 'descend',
-    width: 150,
+    width: 140,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '预计入库仓库编码',
-    dataIndex: 'StorageProduct',
+    title: '装箱日期',
+    dataIndex: 'PackingDate',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '存货编码',
-    dataIndex: 'StorageProduct',
+    title: '装箱状态',
+    dataIndex: 'PackingStatus',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
+
   {
     key: '6',
     title: '存货名称',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
@@ -260,93 +279,69 @@ const columns = [
   {
     key: '7',
     title: '批次编码',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'BatchCode',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '8',
-    title: '数量',
-    dataIndex: 'StorageProduct',
+    title: '货位编码',
+    dataIndex: 'LocationCode',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
-    title: '计量单位',
-    dataIndex: 'StorageProduct',
+    title: '数量',
+    dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '10',
-    title: '包装数量',
-    dataIndex: 'StorageProduct',
+    title: '计量单位',
+    dataIndex: 'Unit',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '11',
-    title: '包装单位',
-    dataIndex: 'StorageProduct',
+    title: '包装数量',
+    dataIndex: 'PackingQuantity',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '12',
-    title: '单价',
-    dataIndex: 'StorageProduct',
+    title: '包装单位',
+    dataIndex: 'PackingUnit',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '13',
-    title: '含税单价',
-    dataIndex: 'StorageProduct',
+    title: '单价',
+    dataIndex: 'UnitPrice',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '14',
-    title: '税率',
-    dataIndex: 'StorageProduct',
+    title: '金额',
+    dataIndex: 'Amount',
     defaultSortOrder: 'descend',
     width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '15',
-    title: '金额',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '16',
-    title: '含税金额',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '17',
-    title: '税额',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '18',
     title: '操作',
     dataIndex: 'action',
     width: 120,
@@ -358,24 +353,25 @@ const data = []
 for (let i = 0; i < 46; i++) {
   data.push({
     key: i,
-    WorkTimeReportApplicationCode: `000${i}`,
+    PackingListCode: `000${i + 1}`,
+    PackingWarehouseCode: `000${i}`,
     DepartmentCode: `000${i}`,
     SalesmanCode: `000${i}`,
-    ExpectedInWarehouseDate: `1月${i + 1}日`,
-    ExpectedInWarehouseCode: `A${i + 1}`,
+    PackingDate: `6月20日`,
+    Status: `1`,
     InventoryCode: `000${i}`,
-    InventoryName: `华硕飞行堡垒${i}型`,
+    InventoryName: `打印机`,
     BatchCode: `000${i}`,
     Quantity: `1000${i}`,
     Unit: `台`,
-    PackingQuantity: `${i}`,
-    PackingUnit: `盒`,
-    UnitPrice: `555${i}`,
-    TaxIncludedUnitPrice: `556${i}`,
-    TaxRate: `5%`,
-    Amount: `11000${i}`,
-    TaxIncludedAmount: `11000${i}`,
-    Tax: `500${i}`
+    PackingQuantity: `1000${i}`,
+    PackingUnit: `2000${i}`,
+    UnitPrice: `2000${i}`,
+    TaxIncludedUnitPrice: `2100${i}`,
+    TaxRate: `10%`,
+    Amount: `100000`,
+    TaxIncludedAmount: `1110000`,
+    Tax: `1000${i}`
   })
 }
 const width = 120
@@ -406,8 +402,118 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
+        return getBaleList(Object.assign(parameter, this.queryParam)).then(res => {
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                PackingCode: '20141203',
+                PackingWarehouseCode: '0000000001',
+                DepartmentCode: '1001',
+                SalesmanCode: '001',
+                PackingDate: '2014-12-03',
+                PackingStatus: '',
+                InventoryName: '大容量存储器',
+                BatchCode: '10101',
+                LocationCode: '10001',
+                Quantity: '5.00',
+                Unit: '',
+                PackingQuantity: '',
+                PackingUnit: '',
+                UnitPrice: '',
+                Amount: ''
+              },
+              {
+                PackingCode: '20141204',
+                PackingWarehouseCode: '0000000002',
+                DepartmentCode: '1002',
+                SalesmanCode: '001',
+                PackingDate: '2014-12-04',
+                PackingStatus: '',
+                InventoryName: '显示器',
+                BatchCode: '10101',
+                LocationCode: '10001',
+                Quantity: '5.00',
+                Unit: '',
+                PackingQuantity: '',
+                PackingUnit: '',
+                UnitPrice: '',
+                Amount: ''
+              },
+              {
+                PackingCode: '20141204',
+                PackingWarehouseCode: '0000000003',
+                DepartmentCode: '1003',
+                SalesmanCode: '001',
+                PackingDate: '2014-12-05',
+                PackingStatus: '',
+                InventoryName: '大容量存储器',
+                BatchCode: '10101',
+                LocationCode: '10001',
+                Quantity: '5.00',
+                Unit: '',
+                PackingQuantity: '',
+                PackingUnit: '',
+                UnitPrice: '',
+                Amount: ''
+              },
+              {
+                PackingCode: '20141205',
+                PackingWarehouseCode: '0000000004',
+                DepartmentCode: '1005',
+                SalesmanCode: '001',
+                PackingDate: '2014-12-05',
+                PackingStatus: '',
+                InventoryName: '固态硬盘',
+                BatchCode: '10101',
+                LocationCode: '10001',
+                Quantity: '5.00',
+                Unit: '',
+                PackingQuantity: '',
+                PackingUnit: '',
+                UnitPrice: '',
+                Amount: ''
+              },
+              {
+                PackingCode: '20141206',
+                PackingWarehouseCode: '0000000007',
+                DepartmentCode: '1006',
+                SalesmanCode: '001',
+                PackingDate: '2014-12-06',
+                PackingStatus: '',
+                InventoryName: '大容量存储器',
+                BatchCode: '10101',
+                LocationCode: '10001',
+                Quantity: '5.00',
+                Unit: '',
+                PackingQuantity: '',
+                PackingUnit: '',
+                UnitPrice: '',
+                Amount: ''
+              },
+              {
+                PackingCode: '20141207',
+                PackingWarehouseCode: '0000000005',
+                DepartmentCode: '1001',
+                SalesmanCode: '001',
+                PackingDate: '2014-12-03',
+                PackingStatus: '',
+                InventoryName: '固态硬盘',
+                BatchCode: '10101',
+                LocationCode: '10001',
+                Quantity: '5.00',
+                Unit: '',
+                PackingQuantity: '',
+                PackingUnit: '',
+                UnitPrice: '',
+                Amount: ''
+              }
+            ]
+          }
+          console.log('/getBaleList-->', JSON.stringify(res.result))
           return res.result
         })
       },
@@ -427,7 +533,6 @@ export default {
           datetime: moment().subtract(2, 'days')
         }
       ],
-
       submitting: false,
       value: '',
       moment
@@ -532,6 +637,7 @@ export default {
       this.value = ''
       this.chat_visible = true
     },
+
     cancelClick() {
       this.status = '已撤销'
       this.color = '#f00707a6'

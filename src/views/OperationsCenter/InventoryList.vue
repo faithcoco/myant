@@ -80,7 +80,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -133,7 +142,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -177,7 +186,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getInventoryList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -190,7 +199,19 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'
   }
 ]
 
@@ -200,7 +221,7 @@ const columns = [
     title: '盘点日期',
     dataIndex: 'InventoryDate',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
@@ -209,7 +230,7 @@ const columns = [
     title: '盘点单号',
     dataIndex: 'InventoryNumber',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.name - b.name
   },
   {
@@ -217,16 +238,15 @@ const columns = [
     title: '盘点仓库',
     dataIndex: 'InventoryWarehouse',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
-
   {
-    key: '4',
+    key: '3',
     title: '入库类别',
-    dataIndex: 'StorageCategory ',
+    dataIndex: 'StorageCategory',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -234,7 +254,7 @@ const columns = [
     title: '出库类别',
     dataIndex: 'OutCategory',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -242,7 +262,7 @@ const columns = [
     title: '部门',
     dataIndex: 'Department',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -250,7 +270,7 @@ const columns = [
     title: '存货编码',
     dataIndex: 'InventoryCode',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -258,7 +278,7 @@ const columns = [
     title: '存货名称',
     dataIndex: 'InventoryName',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -266,7 +286,7 @@ const columns = [
     title: '规格型号',
     dataIndex: 'SpecificationModel',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -274,7 +294,7 @@ const columns = [
     title: '主计量单位',
     dataIndex: 'MainUnit',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -282,7 +302,7 @@ const columns = [
     title: '账面数量',
     dataIndex: 'BookQuantity',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -290,7 +310,7 @@ const columns = [
     title: '调整入库数量',
     dataIndex: 'AdjustStorageQuantity',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -298,7 +318,7 @@ const columns = [
     title: '调整出库数量',
     dataIndex: 'AdjustOutQuantity',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -306,7 +326,7 @@ const columns = [
     title: '盘点数量',
     dataIndex: 'InventoryQuantity',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -314,7 +334,7 @@ const columns = [
     title: '盈亏数量',
     dataIndex: 'Profitloss',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -322,7 +342,7 @@ const columns = [
     title: '合理损耗率',
     dataIndex: 'ReasonableLossRate',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -330,7 +350,7 @@ const columns = [
     title: '盈亏比例%',
     dataIndex: 'ProfitLossRatio',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -391,34 +411,8 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                InventoryDate: '2014-12-09',
-                InventoryNumber: '',
-                InventoryWarehouse: '',
-                StorageCategory: '',
-                OutCategory: '',
-                Department: '',
-                InventoryCode: '',
-                InventoryName: '',
-                SpecificationModel: '',
-                MainUnit: '',
-                BookQuantity: '',
-                AdjustStorageQuantity: '',
-                InventoryQuantity: '',
-                Profitloss: '',
-                ReasonableLossRate: '',
-                ProfitLossRatio: ''
-              }
-            ]
-          }
+        return getInventoryList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log('/getInventoryList-->', JSON.stringify(res))
           return res.result
         })
       },

@@ -81,7 +81,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -134,7 +143,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -178,7 +187,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getBaleList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -191,7 +200,19 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'
   }
 ]
 
@@ -199,113 +220,128 @@ const columns = [
   {
     key: '0',
     title: '装箱单编码',
-    dataIndex: 'Type',
+    dataIndex: 'PackingCode',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
+    width: 130,
     scopedSlots: { customRender: 'name' }
   },
   {
     key: '1',
     title: '装箱仓库编码',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'PackingWarehouseCode',
     defaultSortOrder: 'descend',
+    width: 140,
     sorter: (a, b) => a.name - b.name
   },
   {
     key: '2',
     title: '部门编码',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'DepartmentCode',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
     title: '业务员编码',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'SalesmanCode',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
     title: '装箱日期',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'PackingDate',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
     title: '装箱状态',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'PackingStatus',
     defaultSortOrder: 'descend',
+    width: 130,
+    sorter: (a, b) => a.age - b.age
+  },
+
+  {
+    key: '6',
+    title: '存货名称',
+    dataIndex: 'InventoryName',
+    defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
 
   {
     key: '7',
-    title: '存货名称',
-    dataIndex: 'StorageProduct',
+    title: '批次编码',
+    dataIndex: 'BatchCode',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
-
   {
     key: '8',
-    title: '批次编码',
-    dataIndex: 'StorageProduct',
+    title: '货位编码',
+    dataIndex: 'LocationCode',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
-    title: '货位编码',
-    dataIndex: 'StorageProduct',
+    title: '数量',
+    dataIndex: 'Quantity',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '10',
-    title: '数量',
-    dataIndex: 'StorageProduct',
+    title: '计量单位',
+    dataIndex: 'Unit',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '11',
-    title: '计量单位',
-    dataIndex: 'StorageProduct',
+    title: '包装数量',
+    dataIndex: 'PackingQuantity',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '12',
-    title: '包装数量',
-    dataIndex: 'StorageProduct',
+    title: '包装单位',
+    dataIndex: 'PackingUnit',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '13',
-    title: '包装单位',
-    dataIndex: 'StorageProduct',
+    title: '单价',
+    dataIndex: 'UnitPrice',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '14',
-    title: '单价',
-    dataIndex: 'StorageProduct',
+    title: '金额',
+    dataIndex: 'Amount',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '15',
-    title: '金额',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '16',
     title: '操作',
     dataIndex: 'action',
     width: 120,
@@ -366,8 +402,118 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
+        return getBaleList(Object.assign(parameter, this.queryParam)).then(res => {
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                PackingCode: '20141203',
+                PackingWarehouseCode: '0000000001',
+                DepartmentCode: '1001',
+                SalesmanCode: '001',
+                PackingDate: '2014-12-03',
+                PackingStatus: '',
+                InventoryName: '大容量存储器',
+                BatchCode: '10101',
+                LocationCode: '10001',
+                Quantity: '5.00',
+                Unit: '',
+                PackingQuantity: '',
+                PackingUnit: '',
+                UnitPrice: '',
+                Amount: ''
+              },
+              {
+                PackingCode: '20141204',
+                PackingWarehouseCode: '0000000002',
+                DepartmentCode: '1002',
+                SalesmanCode: '001',
+                PackingDate: '2014-12-04',
+                PackingStatus: '',
+                InventoryName: '显示器',
+                BatchCode: '10101',
+                LocationCode: '10001',
+                Quantity: '5.00',
+                Unit: '',
+                PackingQuantity: '',
+                PackingUnit: '',
+                UnitPrice: '',
+                Amount: ''
+              },
+              {
+                PackingCode: '20141204',
+                PackingWarehouseCode: '0000000003',
+                DepartmentCode: '1003',
+                SalesmanCode: '001',
+                PackingDate: '2014-12-05',
+                PackingStatus: '',
+                InventoryName: '大容量存储器',
+                BatchCode: '10101',
+                LocationCode: '10001',
+                Quantity: '5.00',
+                Unit: '',
+                PackingQuantity: '',
+                PackingUnit: '',
+                UnitPrice: '',
+                Amount: ''
+              },
+              {
+                PackingCode: '20141205',
+                PackingWarehouseCode: '0000000004',
+                DepartmentCode: '1005',
+                SalesmanCode: '001',
+                PackingDate: '2014-12-05',
+                PackingStatus: '',
+                InventoryName: '固态硬盘',
+                BatchCode: '10101',
+                LocationCode: '10001',
+                Quantity: '5.00',
+                Unit: '',
+                PackingQuantity: '',
+                PackingUnit: '',
+                UnitPrice: '',
+                Amount: ''
+              },
+              {
+                PackingCode: '20141206',
+                PackingWarehouseCode: '0000000007',
+                DepartmentCode: '1006',
+                SalesmanCode: '001',
+                PackingDate: '2014-12-06',
+                PackingStatus: '',
+                InventoryName: '大容量存储器',
+                BatchCode: '10101',
+                LocationCode: '10001',
+                Quantity: '5.00',
+                Unit: '',
+                PackingQuantity: '',
+                PackingUnit: '',
+                UnitPrice: '',
+                Amount: ''
+              },
+              {
+                PackingCode: '20141207',
+                PackingWarehouseCode: '0000000005',
+                DepartmentCode: '1001',
+                SalesmanCode: '001',
+                PackingDate: '2014-12-03',
+                PackingStatus: '',
+                InventoryName: '固态硬盘',
+                BatchCode: '10101',
+                LocationCode: '10001',
+                Quantity: '5.00',
+                Unit: '',
+                PackingQuantity: '',
+                PackingUnit: '',
+                UnitPrice: '',
+                Amount: ''
+              }
+            ]
+          }
+          console.log('/getBaleList-->', JSON.stringify(res.result))
           return res.result
         })
       },

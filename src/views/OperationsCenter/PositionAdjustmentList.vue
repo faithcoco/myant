@@ -80,7 +80,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -133,7 +142,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -177,7 +186,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getPositionAdjustmentList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -190,7 +199,19 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'
   }
 ]
 
@@ -327,71 +348,8 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                Warehouse: '成品立体仓（货位+条码）',
-                InventoryDate: '2014-12-04',
-                AdjustmentNumber: '0000000003',
-                InventoryCode: 'SJ0001',
-                InventoryName: '布丁智能手机',
-                MainUnit: 'PCS',
-                BeforeItemlocation: '40号库A排1跨1层A位',
-                AfterItemlocation: '40号库F发货区货位',
-                Quantity: '1.00'
-              },
-              {
-                Warehouse: '成品立体仓（货位+条码）',
-                InventoryDate: '2014-12-04',
-                AdjustmentNumber: '0000000003',
-                InventoryCode: 'SJ0001',
-                InventoryName: '布丁智能手机',
-                MainUnit: 'PCS',
-                BeforeItemlocation: '40号库A排1跨1层A位',
-                AfterItemlocation: '40号库F发货区货位',
-                Quantity: '1.00'
-              },
-              {
-                Warehouse: '成品立体仓（货位+条码）',
-                InventoryDate: '2014-12-04',
-                AdjustmentNumber: '0000000003',
-                InventoryCode: 'SJDC01',
-                InventoryName: '手机电池',
-                MainUnit: 'PCS',
-                BeforeItemlocation: '40号库B排1跨1层A位',
-                AfterItemlocation: '40号库F发货区货位',
-                Quantity: '1.00'
-              },
-              {
-                Warehouse: '成品立体仓（货位+条码）',
-                InventoryDate: '2014-12-04',
-                AdjustmentNumber: '0000000003',
-                InventoryCode: 'SJK001',
-                InventoryName: '手机壳',
-                MainUnit: 'PCS',
-                BeforeItemlocation: '40号库B排1跨1层C位',
-                AfterItemlocation: '40号库F发货区货位',
-                Quantity: '2.00'
-              },
-              {
-                Warehouse: '成品立体仓（货位+条码）',
-                InventoryDate: '2014-12-04',
-                AdjustmentNumber: '0000000003',
-                InventoryCode: 'SJK001',
-                InventoryName: '手机壳',
-                MainUnit: 'PCS',
-                BeforeItemlocation: '40号库B排1跨1层A位',
-                AfterItemlocation: '40号库F发货区货位',
-                Quantity: '1.00'
-              }
-            ]
-          }
+        return getPositionAdjustmentList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log('/getPositionAdjustmentList-->', JSON.stringify(res))
           return res.result
         })
       },

@@ -87,7 +87,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -140,7 +149,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -184,7 +193,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getReceiptNoticeList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -197,7 +206,19 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'
   }
 ]
 
@@ -208,7 +229,7 @@ const columns = [
     dataIndex: 'DocumentNumber',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
-    width: 100,
+    width: 120,
     scopedSlots: { customRender: 'name' }
   },
   {
@@ -216,7 +237,7 @@ const columns = [
     title: '单据日期',
     dataIndex: 'DocumentDate',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.name - b.name
   },
 
@@ -225,7 +246,7 @@ const columns = [
     title: '业务类型',
     dataIndex: 'BusinessType',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -233,7 +254,7 @@ const columns = [
     title: '销售类型',
     dataIndex: 'SaleType',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -241,7 +262,7 @@ const columns = [
     title: '客户简称',
     dataIndex: 'CustomerShortName',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -249,7 +270,7 @@ const columns = [
     title: '销售部门',
     dataIndex: 'SalesDepartment',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -257,7 +278,7 @@ const columns = [
     title: '业务员',
     dataIndex: 'Salesman',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -265,7 +286,7 @@ const columns = [
     title: '仓库',
     dataIndex: 'Warehouse',
     defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -273,75 +294,75 @@ const columns = [
     title: '需要开票',
     dataIndex: 'Billing',
     defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '存货编码',
-    dataIndex: 'InventoryCode',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '存货名称',
-    dataIndex: 'InventoryName',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '规格型号',
-    dataIndex: 'SpecificationModel',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '主计量单位',
-    dataIndex: 'MainUnit',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '申请数量',
-    dataIndex: 'ApplicationQuantity',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '批复数量',
-    dataIndex: 'ApprovalsQuantity',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '执行数量',
-    dataIndex: 'ExecutionQuantity',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '报价',
-    dataIndex: 'Quote',
-    defaultSortOrder: 'descend',
-    width: 100,
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '9',
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '10',
+    title: '存货名称',
+    dataIndex: 'InventoryName',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '11',
+    title: '规格型号',
+    dataIndex: 'SpecificationModel',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '12',
+    title: '主计量单位',
+    dataIndex: 'MainUnit',
+    defaultSortOrder: 'descend',
+    width: 140,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '13',
+    title: '申请数量',
+    dataIndex: 'ApplicationQuantity',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '14',
+    title: '批复数量',
+    dataIndex: 'ApprovalsQuantity',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '15',
+    title: '执行数量',
+    dataIndex: 'ExecutionQuantity',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '16',
+    title: '报价',
+    dataIndex: 'Quote',
+    defaultSortOrder: 'descend',
+    width: 120,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '17',
     title: '操作',
     dataIndex: 'action',
     width: 120,
@@ -403,73 +424,8 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                DocumentNumber: '0000000001',
-                DocumentDate: '2014-12-21',
-                BusinessType: '普通销售',
-                SaleType: '普通销售',
-                CustomerShortName: '美华集团',
-                SalesDepartment: '区域销售部',
-                Salesman: '师小容',
-                Warehouse: '',
-                Billing: '是',
-                InventoryCode: 'W1000A002',
-                InventoryName: '三星打印机',
-                SpecificationModel: '',
-                MainUnit: '台',
-                ApplicationQuantity: '1.00',
-                ApprovalsQuantity: '1.00',
-                ExecutionQuantity: '',
-                Quote: '5000.00'
-              },
-              {
-                DocumentNumber: '0000000002',
-                DocumentDate: '2014-12-30',
-                BusinessType: '普通销售',
-                SaleType: '普通销售',
-                CustomerShortName: '北京恒业',
-                SalesDepartment: '市场部',
-                Salesman: '刘天达',
-                Warehouse: '电商总仓',
-                Billing: '是',
-                InventoryCode: '0330',
-                InventoryName: '三星手机S6',
-                SpecificationModel: '',
-                MainUnit: '台',
-                ApplicationQuantity: '2.00',
-                ApprovalsQuantity: '2.00',
-                ExecutionQuantity: '',
-                Quote: '0.00'
-              },
-              {
-                DocumentNumber: '0000000002',
-                DocumentDate: '2014-12-30',
-                BusinessType: '普通销售',
-                SaleType: '普通销售',
-                CustomerShortName: '北京恒业',
-                SalesDepartment: '市场部',
-                Salesman: '刘天达',
-                Warehouse: '电商总仓',
-                Billing: '是',
-                InventoryCode: '0341',
-                InventoryName: '三星存储卡',
-                SpecificationModel: '32G  90M/s',
-                MainUnit: '个',
-                ApplicationQuantity: '1.00',
-                ApprovalsQuantity: '1.00',
-                ExecutionQuantity: '',
-                Quote: '0.00'
-              }
-            ]
-          }
+        return getReceiptNoticeList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log('/getReceiptNoticeList-->', JSON.stringify(res))
           return res.result
         })
       },

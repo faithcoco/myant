@@ -23,7 +23,7 @@
         :columns="targetTitle"
         :data="loadData"
         :alert="false"
-        :scroll="{ x: 1400 }"
+        :scroll="{ x: 2000 }"
         bordered
       >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
@@ -74,7 +74,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -127,7 +136,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -171,7 +180,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getWarehouseList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -184,7 +193,19 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'
   }
 ]
 
@@ -192,63 +213,263 @@ const columns = [
   {
     key: '0',
     title: '仓库编码',
-    dataIndex: 'Type',
+    dataIndex: 'WarehouseCode',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
   {
     key: '1',
     title: '仓库名称',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'WarehouseName',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.name - b.name
   },
 
   {
     key: '2',
-    title: '仓库负责人',
-    dataIndex: 'StorageProduct',
+    title: '部门名称',
+    dataIndex: 'DepartmentName',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
     title: '仓库地址',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'WarehouseAddress',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '详细地址',
-    dataIndex: 'StorageProduct',
+    title: '电话',
+    dataIndex: 'Tel',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '货位管理',
-    dataIndex: 'StorageProduct',
+    title: '负责人',
+    dataIndex: 'Principal',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '批次管理',
-    dataIndex: 'StorageProduct',
+    title: '计价方式',
+    dataIndex: 'PricingMethod',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
+    title: '仓库核算组',
+    dataIndex: 'WarehouseAccountingTeam',
+    defaultSortOrder: 'descend',
+    width: 130,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '8',
+    title: '是否货位管理',
+    dataIndex: 'CargoSpaceManagement',
+    defaultSortOrder: 'descend',
+    width: 140,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '9',
+    title: '资金定额',
+    dataIndex: 'FundingQuota',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '10',
+    title: '对应条形码',
+    dataIndex: 'CorrespondingBarcode',
+    defaultSortOrder: 'descend',
+    width: 140,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '11',
+    title: '参与需求计划运算',
+    dataIndex: 'DemandPlanningcalculation',
+    defaultSortOrder: 'descend',
+    width: 180,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '12',
+    title: '是否参与ROP计算',
+    dataIndex: 'ROPCalculation',
+    defaultSortOrder: 'descend',
+    width: 180,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '13',
+    title: '仓库属性',
+    dataIndex: 'WarehouseAttributes',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '14',
+    title: '配额',
+    dataIndex: 'quota',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '15',
+    title: '资产仓',
+    dataIndex: 'AssetWarehouse',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '16',
+    title: '控制序列号',
+    dataIndex: 'ControlSerialNumber',
+    defaultSortOrder: 'descend',
+    width: 130,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '17',
+    title: '记入成本',
+    dataIndex: 'Creditcost',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '18',
+    title: '纳入可用量计算',
+    dataIndex: 'Availablequantitycalculation',
+    defaultSortOrder: 'descend',
+    width: 180,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '19',
+    title: '代管仓',
+    dataIndex: 'Escrow',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '20',
+    title: '销售可用量控制方式',
+    dataIndex: 'Salesavailabilitycontrol',
+    defaultSortOrder: 'descend',
+    width: 180,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '21',
+    title: '出口可用量控制方式',
+    dataIndex: 'Outavailabilitycontrol',
+    defaultSortOrder: 'descend',
+    width: 180,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '22',
+    title: '库存可用量控制方式',
+    dataIndex: 'Inventoryavailabilitycontrol',
+    defaultSortOrder: 'descend',
+    width: 180,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '23',
+    title: '是否门店',
+    dataIndex: 'Store',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '24',
+    title: '保税仓',
+    dataIndex: 'BondedWarehouse',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '25',
+    title: '停用日期',
+    dataIndex: 'DeactivationDate',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '26',
+    title: '拣货货位',
+    dataIndex: 'PickingLocation',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '27',
+    title: '电商仓',
+    dataIndex: 'Ecommercewarehouse',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '28',
+    title: '省/直辖市',
+    dataIndex: 'province',
+    defaultSortOrder: 'descend',
+    width: 130,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '29',
+    title: '市',
+    dataIndex: 'city',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '30',
+    title: '区县',
+    dataIndex: 'District',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '31',
+    title: '工厂名称',
+    dataIndex: 'FactoryName',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '32',
     title: '操作',
     dataIndex: 'action',
     width: 120,
@@ -296,8 +517,8 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
+        return getWarehouseList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log('/getWarehouseList-->', JSON.stringify(res))
           return res.result
         })
       },

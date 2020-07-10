@@ -7,8 +7,8 @@ import { ACCESS_TOKEN } from '@/store/mutation-types'
 
 // 创建 axios 实例
 const service = axios.create({
-   baseURL: process.env.VUE_APP_API_BASE_URL, // api base_url
-  // baseURL: 'http://localhost:3000',
+  // baseURL: process.env.VUE_APP_API_BASE_URL, // api base_url
+   baseURL: 'http://rap2.taobao.org:38080/app/mock/254479',
   timeout: 6000 // 请求超时时间
 })
 

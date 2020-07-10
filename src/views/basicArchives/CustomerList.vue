@@ -76,7 +76,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -129,7 +138,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -173,7 +182,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getCustomerList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -186,7 +195,19 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'
   }
 ]
 
@@ -197,6 +218,7 @@ const columns = [
     dataIndex: 'CustomerCode',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
+    width: 120,
     scopedSlots: { customRender: 'name' }
   },
   {
@@ -204,6 +226,7 @@ const columns = [
     title: '客户名称',
     dataIndex: 'CustomerName',
     defaultSortOrder: 'descend',
+    width: 120,
     sorter: (a, b) => a.name - b.name
   },
 
@@ -212,6 +235,7 @@ const columns = [
     title: '客户简称',
     dataIndex: 'CustomerAbbreviation',
     defaultSortOrder: 'descend',
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -219,6 +243,7 @@ const columns = [
     title: '地区名称',
     dataIndex: 'Area',
     defaultSortOrder: 'descend',
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -226,6 +251,7 @@ const columns = [
     title: '发展日期',
     dataIndex: 'DevelopmentDate',
     defaultSortOrder: 'descend',
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -233,6 +259,7 @@ const columns = [
     title: '联系人',
     dataIndex: 'ContactPerson',
     defaultSortOrder: 'descend',
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -240,6 +267,7 @@ const columns = [
     title: '电话',
     dataIndex: 'Tel',
     defaultSortOrder: 'descend',
+    width: 120,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -247,6 +275,7 @@ const columns = [
     title: '专营业务员名称',
     dataIndex: 'Salesman',
     defaultSortOrder: 'descend',
+    width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -254,6 +283,7 @@ const columns = [
     title: '分管部门名称',
     dataIndex: 'department',
     defaultSortOrder: 'descend',
+    width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -261,6 +291,7 @@ const columns = [
     title: '潜在客户编码',
     dataIndex: 'PotentialCustomerCode',
     defaultSortOrder: 'descend',
+    width: 150,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -315,76 +346,8 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                CustomerCode: '000',
-                CustomerName: '000',
-                CustomerAbbreviation: '000',
-                Area: '',
-                DevelopmentDate: '2013-01-19',
-                ContactPerson: '',
-                Tel: '',
-                Salesman: '',
-                department: '总裁会',
-                PotentialCustomerCode: ''
-              },
-              {
-                CustomerCode: '00000001',
-                CustomerName: '世纪天华集团公司',
-                CustomerAbbreviation: '世纪天华',
-                Area: '北京',
-                DevelopmentDate: '2014-12-22',
-                ContactPerson: '刘婷',
-                Tel: '',
-                Salesman: '刘天达',
-                department: '市场部',
-                PotentialCustomerCode: 'p00000001'
-              },
-              {
-                CustomerCode: '00000002',
-                CustomerName: '中国电子科技集团公司',
-                CustomerAbbreviation: '中国电子科技集团公司第五十四研究所',
-                Area: '北京',
-                DevelopmentDate: '2014-12-23',
-                ContactPerson: '刘婷',
-                Tel: '',
-                Salesman: '刘天达',
-                department: '市场部',
-                PotentialCustomerCode: 'p00000058'
-              },
-              {
-                CustomerCode: '00000003',
-                CustomerName: '现代天浩机械有限公司',
-                CustomerAbbreviation: '现代天浩机械有限公司',
-                Area: '',
-                DevelopmentDate: '2014-12-23',
-                ContactPerson: '刘婷',
-                Tel: '',
-                Salesman: '刘天达',
-                department: '市场部',
-                PotentialCustomerCode: 'p00000060'
-              },
-              {
-                CustomerCode: '00000004',
-                CustomerName: '北京佳运科贸有限公司',
-                CustomerAbbreviation: '北京佳运科贸有限公司',
-                Area: '',
-                DevelopmentDate: '2014-12-23',
-                ContactPerson: '刘婷',
-                Tel: '',
-                Salesman: '刘天达',
-                department: '市场部',
-                PotentialCustomerCode: 'p00000062'
-              }
-            ]
-          }
+        return getCustomerList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log('/getCustomerList-->', JSON.stringify(res))
           return res.result
         })
       },

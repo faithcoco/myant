@@ -81,7 +81,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -134,7 +143,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
 
@@ -179,9 +188,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
-
-
+import { getOrgTree, getServiceList, getProductList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -194,7 +201,19 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'
   }
 ]
 
@@ -377,8 +396,7 @@ export default {
       disabled: false,
       loadData: parameter => {
         return getProductList(Object.assign(parameter, this.queryParam)).then(res => {
-           console.log('/getProductList-->', JSON.stringify(res))
-
+          console.log('/getProductList-->', JSON.stringify(res.result))
           return res.result
         })
       },
@@ -523,7 +541,7 @@ export default {
     },
     fileChange(info) {
       if (info.file.status !== 'uploading') {
-             console.log(info.file, info.fileList)
+        console.log(info.file, info.fileList)
       }
       if (info.file.status === 'done') {
         this.$message.success(`${info.file.name} file uploaded successfully`)

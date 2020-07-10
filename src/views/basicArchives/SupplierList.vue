@@ -73,7 +73,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -126,7 +135,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -170,7 +179,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getSupplierList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -183,7 +192,19 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'
   }
 ]
 const columns = [
@@ -295,61 +316,9 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                SupplierCode: '01002',
-                SupplierName: '深圳辰环手机配件有限公司',
-                SupplierAbbreviation: '辰环手机配件',
-                DevelopmentDate: '2004-10-01',
-                Tel: '',
-                Salesman: '顾潇',
-                department: '采购部'
-              },
-              {
-                SupplierCode: '01003',
-                SupplierName: '苏州光明处理器厂',
-                SupplierAbbreviation: '光明处理',
-                DevelopmentDate: '2004-10-01',
-                Tel: '',
-                Salesman: '顾潇',
-                department: '采购部'
-              },
-              {
-                SupplierCode: '01004',
-                SupplierName: '广州博大存储器公司',
-                SupplierAbbreviation: '博大存储',
-                DevelopmentDate: '2004-10-01',
-                Tel: '',
-                Salesman: '顾潇',
-                department: '采购部'
-              },
-              {
-                SupplierCode: '01005',
-                SupplierName: '深圳明亮外设商贸公司',
-                SupplierAbbreviation: '明亮外设商贸',
-                DevelopmentDate: '2004-10-01',
-                Tel: '',
-                Salesman: '顾潇',
-                department: '采购部'
-              },
-              {
-                SupplierCode: '03001',
-                SupplierName: 'AMD（中国）有限公司',
-                SupplierAbbreviation: 'AMD（中国）',
-                DevelopmentDate: '2004-10-01',
-                Tel: '(010)8518-3788',
-                Salesman: '傅奇',
-                department: '采购部'
-              }
-            ]
-          }
+        getSupplierList
+        return getSupplierList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log('/service-->', JSON.stringify(res))
           return res.result
         })
       },

@@ -74,7 +74,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -127,7 +136,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -171,7 +180,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getContactList } from '@/api/manage'
 
 const timelinelist = [
   {
@@ -184,7 +193,19 @@ const timelinelist = [
     key: '1',
     title: 'curry 评论',
     time: '2020-07-02 10:00',
-    content: '了解一下功能'
+    content: '了解一下功能',
+    mentions: [{ name: '高明亮' }, { name: '张勇' }]
+  },
+  {
+    key: '1',
+    title: 'curry 评论',
+    time: '2020-07-03 10:00',
+    content: '发一张图片',
+    img: [
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' },
+      { src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }
+    ],
+    isShow: 'true'
   }
 ]
 
@@ -195,6 +216,7 @@ const columns = [
     dataIndex: 'ContactCode',
     defaultSortOrder: 'descend',
     sorter: (a, b) => a.age - b.age,
+    width: 130,
     scopedSlots: { customRender: 'name' }
   },
   {
@@ -202,6 +224,7 @@ const columns = [
     title: '联系人名称',
     dataIndex: 'ContactName',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.name - b.name
   },
 
@@ -210,6 +233,7 @@ const columns = [
     title: '所属客户',
     dataIndex: 'Customer',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -217,6 +241,7 @@ const columns = [
     title: '负责人',
     dataIndex: 'Principal',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -224,6 +249,7 @@ const columns = [
     title: '是否是主要联系人',
     dataIndex: 'PrimaryContact',
     defaultSortOrder: 'descend',
+    width: 180,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -231,6 +257,7 @@ const columns = [
     title: '称呼',
     dataIndex: 'Call',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -238,6 +265,7 @@ const columns = [
     title: '性别',
     dataIndex: 'Gender',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -245,6 +273,7 @@ const columns = [
     title: '默认联系人',
     dataIndex: 'DefaultContact',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -252,6 +281,7 @@ const columns = [
     title: '职务',
     dataIndex: 'Job',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -259,6 +289,7 @@ const columns = [
     title: '手机',
     dataIndex: 'Tel',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -266,6 +297,7 @@ const columns = [
     title: '爱好',
     dataIndex: 'Hobby',
     defaultSortOrder: 'descend',
+    width: 130,
     sorter: (a, b) => a.age - b.age
   },
   {
@@ -319,81 +351,81 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                ContactCode: '00000001',
-                ContactName: '王宏',
-                Customer: '',
-                Principal: '',
-                PrimaryContact: '否',
-                Call: '行政部经理',
-                Gender: '男',
-                DefaultContact: '否',
-                Job: '',
-                Tel: '13344567981',
-                Hobby: '234'
-              },
-              {
-                ContactCode: '00000002',
-                ContactName: '李豪',
-                Customer: '',
-                Principal: '',
-                PrimaryContact: '否',
-                Call: '',
-                Gender: '男',
-                DefaultContact: '否',
-                Job: '236',
-                Tel: '13125476890',
-                Hobby: '231'
-              },
-              {
-                ContactCode: '00000003',
-                ContactName: '陈光',
-                Customer: '',
-                Principal: '',
-                PrimaryContact: '否',
-                Call: '',
-                Gender: '男',
-                DefaultContact: '否',
-                Job: '',
-                Tel: '13344567981',
-                Hobby: '232'
-              },
-              {
-                ContactCode: '00000004',
-                ContactName: '王宏',
-                Customer: '',
-                Principal: '',
-                PrimaryContact: '否',
-                Call: '行政部经理',
-                Gender: '男',
-                DefaultContact: '否',
-                Job: '',
-                Tel: '13344567981',
-                Hobby: '232'
-              },
-              {
-                ContactCode: '00000002',
-                ContactName: '李豪',
-                Customer: '',
-                Principal: '',
-                PrimaryContact: '否',
-                Call: '',
-                Gender: '男',
-                DefaultContact: '否',
-                Job: '236',
-                Tel: '13125476890',
-                Hobby: '231'
-              }
-            ]
-          }
+        return getContactList(Object.assign(parameter, this.queryParam)).then(res => {
+          // res.result = {
+          //   pageSize: 10,
+          //   pageNo: 1,
+          //   totalCount: 3,
+          //   totalPage: 1,
+          //   data: [
+          //     {
+          //       ContactCode: '00000001',
+          //       ContactName: '王宏',
+          //       Customer: '',
+          //       Principal: '',
+          //       PrimaryContact: '否',
+          //       Call: '行政部经理',
+          //       Gender: '男',
+          //       DefaultContact: '否',
+          //       Job: '',
+          //       Tel: '13344567981',
+          //       Hobby: '234'
+          //     },
+          //     {
+          //       ContactCode: '00000002',
+          //       ContactName: '李豪',
+          //       Customer: '',
+          //       Principal: '',
+          //       PrimaryContact: '否',
+          //       Call: '',
+          //       Gender: '男',
+          //       DefaultContact: '否',
+          //       Job: '236',
+          //       Tel: '13125476890',
+          //       Hobby: '231'
+          //     },
+          //     {
+          //       ContactCode: '00000003',
+          //       ContactName: '陈光',
+          //       Customer: '',
+          //       Principal: '',
+          //       PrimaryContact: '否',
+          //       Call: '',
+          //       Gender: '男',
+          //       DefaultContact: '否',
+          //       Job: '',
+          //       Tel: '13344567981',
+          //       Hobby: '232'
+          //     },
+          //     {
+          //       ContactCode: '00000004',
+          //       ContactName: '王宏',
+          //       Customer: '',
+          //       Principal: '',
+          //       PrimaryContact: '否',
+          //       Call: '行政部经理',
+          //       Gender: '男',
+          //       DefaultContact: '否',
+          //       Job: '',
+          //       Tel: '13344567981',
+          //       Hobby: '232'
+          //     },
+          //     {
+          //       ContactCode: '00000002',
+          //       ContactName: '李豪',
+          //       Customer: '',
+          //       Principal: '',
+          //       PrimaryContact: '否',
+          //       Call: '',
+          //       Gender: '男',
+          //       DefaultContact: '否',
+          //       Job: '236',
+          //       Tel: '13125476890',
+          //       Hobby: '231'
+          //     }
+          //   ]
+          // }
+          console.log('/getContactList-->', JSON.stringify(res))
           return res.result
         })
       },

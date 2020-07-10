@@ -23,7 +23,7 @@
         :columns="targetTitle"
         :data="loadData"
         :alert="false"
-        :scroll="{ x: 1400 }"
+        :scroll="{ x: 2000 }"
         bordered
       >
         <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
@@ -127,7 +127,7 @@
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
+                <a-mentions-option value="张勇">张勇</a-mentions-option>
                 <a-mentions-option value="吴杨">吴杨</a-mentions-option>
               </a-mentions>
               <a-upload
@@ -192,63 +192,263 @@ const columns = [
   {
     key: '0',
     title: '仓库编码',
-    dataIndex: 'Type',
+    dataIndex: 'WarehouseCode',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.age - b.age,
     scopedSlots: { customRender: 'name' }
   },
   {
     key: '1',
     title: '仓库名称',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'WarehouseName',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.name - b.name
   },
 
   {
     key: '2',
-    title: '仓库负责人',
-    dataIndex: 'StorageProduct',
+    title: '部门名称',
+    dataIndex: 'DepartmentName',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '3',
     title: '仓库地址',
-    dataIndex: 'StorageProduct',
+    dataIndex: 'WarehouseAddress',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '4',
-    title: '详细地址',
-    dataIndex: 'StorageProduct',
+    title: '电话',
+    dataIndex: 'Tel',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '5',
-    title: '货位管理',
-    dataIndex: 'StorageProduct',
+    title: '负责人',
+    dataIndex: 'Principal',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '6',
-    title: '批次管理',
-    dataIndex: 'StorageProduct',
+    title: '计价方式',
+    dataIndex: 'PricingMethod',
     defaultSortOrder: 'descend',
-    width: 60,
+    width: 110,
     sorter: (a, b) => a.age - b.age
   },
   {
     key: '7',
+    title: '仓库核算组',
+    dataIndex: 'WarehouseAccountingTeam',
+    defaultSortOrder: 'descend',
+    width: 130,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '8',
+    title: '是否货位管理',
+    dataIndex: 'CargoSpaceManagement',
+    defaultSortOrder: 'descend',
+    width: 140,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '9',
+    title: '资金定额',
+    dataIndex: 'FundingQuota',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '10',
+    title: '对应条形码',
+    dataIndex: 'CorrespondingBarcode',
+    defaultSortOrder: 'descend',
+    width: 140,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '11',
+    title: '参与需求计划运算',
+    dataIndex: 'DemandPlanningcalculation',
+    defaultSortOrder: 'descend',
+    width: 180,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '12',
+    title: '是否参与ROP计算',
+    dataIndex: 'ROPCalculation',
+    defaultSortOrder: 'descend',
+    width: 180,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '13',
+    title: '仓库属性',
+    dataIndex: 'WarehouseAttributes',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '14',
+    title: '配额',
+    dataIndex: 'quota',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '15',
+    title: '资产仓',
+    dataIndex: 'AssetWarehouse',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '16',
+    title: '控制序列号',
+    dataIndex: 'ControlSerialNumber',
+    defaultSortOrder: 'descend',
+    width: 130,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '17',
+    title: '记入成本',
+    dataIndex: 'Creditcost',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '18',
+    title: '纳入可用量计算',
+    dataIndex: 'Availablequantitycalculation',
+    defaultSortOrder: 'descend',
+    width: 180,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '19',
+    title: '代管仓',
+    dataIndex: 'Escrow',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '20',
+    title: '销售可用量控制方式',
+    dataIndex: 'Salesavailabilitycontrol',
+    defaultSortOrder: 'descend',
+    width: 180,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '21',
+    title: '出口可用量控制方式',
+    dataIndex: 'Outavailabilitycontrol',
+    defaultSortOrder: 'descend',
+    width:180,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '22',
+    title: '库存可用量控制方式',
+    dataIndex: 'Inventoryavailabilitycontrol',
+    defaultSortOrder: 'descend',
+    width: 180,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '23',
+    title: '是否门店',
+    dataIndex: 'Store',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '24',
+    title: '保税仓',
+    dataIndex: 'BondedWarehouse',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '25',
+    title: '停用日期',
+    dataIndex: 'DeactivationDate',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '26',
+    title: '拣货货位',
+    dataIndex: 'PickingLocation',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '27',
+    title: '电商仓',
+    dataIndex: 'Ecommercewarehouse',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '28',
+    title: '省/直辖市',
+    dataIndex: 'province',
+    defaultSortOrder: 'descend',
+    width: 130,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '29',
+    title: '市',
+    dataIndex: 'city',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '30',
+    title: '区县',
+    dataIndex: 'District',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '31',
+    title: '工厂名称',
+    dataIndex: 'FactoryName',
+    defaultSortOrder: 'descend',
+    width: 110,
+    sorter: (a, b) => a.age - b.age
+  },
+  {
+    key: '32',
     title: '操作',
     dataIndex: 'action',
     width: 120,
@@ -298,6 +498,185 @@ export default {
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
           console.log('/service-->', JSON.stringify(res.result))
+          res.result = {
+            pageSize: 10,
+            pageNo: 1,
+            totalCount: 3,
+            totalPage: 1,
+            data: [
+              {
+                WarehouseCode: '01',
+                WarehouseName: '手机主辅料仓库',
+                DepartmentName: '',
+                SpecificationModel: '',
+                WarehouseAddress: '',
+                Tel: '',
+                Principal: '',
+                PricingMethod: '移动平均法',
+                WarehouseAccountingTeam: '',
+                CargoSpaceManagement: '是',
+                FundingQuota: '',
+                CorrespondingBarcode: '01',
+                DemandPlanningcalculation: '是',
+                ROPCalculation: '是',
+                WarehouseAttributes: '普通仓',
+                quota:'',
+                AssetWarehouse: '否',
+                ControlSerialNumber: '是',
+                Creditcost: '是',
+                Availablequantitycalculation: '是',
+                Escrow: '否',
+                Salesavailabilitycontrol: '按系统选项控制',
+                Outavailabilitycontrol: '按系统选项控制',
+                Inventoryavailabilitycontrol: '不作控制但零出库时提示',
+                Store: '否',
+                BondedWarehouse: '否',
+                DeactivationDate: '',
+                PickingLocation: '',
+                Ecommercewarehouse: '否',
+                province: '',
+                city: '',
+                District: '',
+                FactoryName: '工厂一',
+              },              {
+                WarehouseCode: '01001',
+                WarehouseName: '固定资产仓库',
+                DepartmentName: '',
+                SpecificationModel: '',
+                WarehouseAddress: '',
+                Tel: '',
+                Principal: '',
+                PricingMethod: '全月平均法',
+                WarehouseAccountingTeam: '',
+                CargoSpaceManagement: '否',
+                FundingQuota: '',
+                CorrespondingBarcode: '01001',
+                DemandPlanningcalculation: '否',
+                ROPCalculation: '是',
+                WarehouseAttributes: '普通仓',
+                quota:'',
+                AssetWarehouse: '否',
+                ControlSerialNumber: '否',
+                Creditcost: '否',
+                Availablequantitycalculation: '是',
+                Escrow: '否',
+                Salesavailabilitycontrol: '按系统选项控制',
+                Outavailabilitycontrol: '按系统选项控制',
+                Inventoryavailabilitycontrol: '按系统选项控制',
+                Store: '否',
+                BondedWarehouse: '否',
+                DeactivationDate: '',
+                PickingLocation: '',
+                Ecommercewarehouse: '否',
+                province: '',
+                city: '',
+                District: '',
+                FactoryName: '工厂一',
+              },              {
+                WarehouseCode: '02',
+                WarehouseName: 'PC机材料仓库',
+                DepartmentName: '',
+                SpecificationModel: '',
+                WarehouseAddress: '',
+                Tel: '',
+                Principal: '',
+                PricingMethod: '移动平均法',
+                WarehouseAccountingTeam: '1',
+                CargoSpaceManagement: '否',
+                FundingQuota: '',
+                CorrespondingBarcode: '02',
+                DemandPlanningcalculation: '是',
+                ROPCalculation: '否',
+                WarehouseAttributes: '普通仓',
+                quota:'',
+                AssetWarehouse: '否',
+                ControlSerialNumber: '否',
+                Creditcost: '是',
+                Availablequantitycalculation: '是',
+                Escrow: '否',
+                Salesavailabilitycontrol: '按系统选项控制',
+                Outavailabilitycontrol: '按系统选项控制',
+                Inventoryavailabilitycontrol: '不作控制但零出库时提示',
+                Store: '否',
+                BondedWarehouse: '否',
+                DeactivationDate: '',
+                PickingLocation: '',
+                Ecommercewarehouse: '否',
+                province: '',
+                city: '',
+                District: '',
+                FactoryName: '工厂二',
+              },              {
+                WarehouseCode: '03',
+                WarehouseName: '半成品库',
+                DepartmentName: '',
+                SpecificationModel: '',
+                WarehouseAddress: '',
+                Tel: '',
+                Principal: '',
+                PricingMethod: '移动平均法',
+                WarehouseAccountingTeam: '',
+                CargoSpaceManagement: '否',
+                FundingQuota: '',
+                CorrespondingBarcode: '03',
+                DemandPlanningcalculation: '是',
+                ROPCalculation: '否',
+                WarehouseAttributes: '普通仓',
+                quota:'',
+                AssetWarehouse: '否',
+                ControlSerialNumber: '是',
+                Creditcost: '是',
+                Availablequantitycalculation: '是',
+                Escrow: '否',
+                Salesavailabilitycontrol: '按系统选项控制',
+                Outavailabilitycontrol: '按系统选项控制',
+                Inventoryavailabilitycontrol: '按系统选项控制',
+                Store: '否',
+                BondedWarehouse: '否',
+                DeactivationDate: '',
+                PickingLocation: '',
+                Ecommercewarehouse: '否',
+                province: '',
+                city: '',
+                District: '',
+                FactoryName: '工厂一',
+              },              {
+                WarehouseCode: '04',
+                WarehouseName: '成品库',
+                DepartmentName: '',
+                SpecificationModel: '',
+                WarehouseAddress: '',
+                Tel: '',
+                Principal: '',
+                PricingMethod: '移动平均法',
+                WarehouseAccountingTeam: '',
+                CargoSpaceManagement: '否',
+                FundingQuota: '',
+                CorrespondingBarcode: '04',
+                DemandPlanningcalculation: '是',
+                ROPCalculation: '否',
+                WarehouseAttributes: '普通仓',
+                quota:'',
+                AssetWarehouse: '否',
+                ControlSerialNumber: '是',
+                Creditcost: '是',
+                Availablequantitycalculation: '是',
+                Escrow: '否',
+                Salesavailabilitycontrol: '按系统选项控制',
+                Outavailabilitycontrol: '按系统选项控制',
+                Inventoryavailabilitycontrol: '按系统选项控制',
+                Store: '否',
+                BondedWarehouse: '否',
+                DeactivationDate: '',
+                PickingLocation: '',
+                Ecommercewarehouse: '否',
+                province: '',
+                city: '',
+                District: '',
+                FactoryName: '工厂一',
+              },
+            ]
+          }
           return res.result
         })
       },

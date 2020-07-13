@@ -7,7 +7,10 @@ const api = {
   permission: '/permission',
   permissionNoPager: '/permission/no-pager',
   orgTree: '/org/tree',
-  productList:'/productList'
+  productList:'/productList',
+  productListColumns:'/productList/columns',
+  personnelList:'/personnel-list',
+  approval:'/approval'
 }
 
 export default api
@@ -43,6 +46,31 @@ export function getProductList (parameter) {
     params: parameter
   })
 }
+export function getApproval (parameter) {
+  console.log('/getApproval req-->', JSON.stringify(parameter))
+  return axios({
+    url: api.approval,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getProductListColumns (parameter) {
+  console.log('/getProductListColumns req-->', JSON.stringify(parameter))
+  return axios({
+    url: api.productListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getPersonnelList (parameter) {
+  console.log('/getPersonnelList req-->', JSON.stringify(parameter))
+  return axios({
+    url: api.personnelList,
+    method: 'get',
+    params: parameter
+  })
+}
+
 
 export function getPermissions (parameter) {
   return axios({

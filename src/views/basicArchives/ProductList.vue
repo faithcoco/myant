@@ -26,7 +26,7 @@
         :scroll="{ x: 1500 }"
         bordered
       >
-        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
+        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
 
         <span slot="action" slot-scope="text, record">
           <template v-if="$auth('table.update')">
@@ -71,7 +71,7 @@
         >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
       </a-descriptions>
       <a-divider>审批详情</a-divider>
-      <a-timeline>
+           <a-timeline>
         <a-timeline-item v-for="item in timelinelist" :key="item.key">
           <p>
             <a-row>
@@ -81,7 +81,15 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+             <a-card v-for="item in item.img" :key="item.src" :bordered="false" >
+            <img slot="extra"  alt="logo"   :src="item.src" /><br />
+             </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -133,9 +141,11 @@
           <div slot="content">
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
-                <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
-                <a-mentions-option value="吴杨">吴杨</a-mentions-option>
+                <a-mentions-option
+                  v-for="item in personnelList"
+                  :key="item.name"
+                  :value="item.name"
+                >{{item.name}}</a-mentions-option>
               </a-mentions>
 
               <a-upload
@@ -179,172 +189,14 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getProductList, getProductListColumns, getPersonnelList, getApproval } from '@/api/manage'
 
-
-
-const timelinelist = [
-  {
-    key: '0',
-    title: 'curry 提交合同申请',
-    time: '2020-07-01 10:00',
-    content: ''
-  },
-  {
-    key: '1',
-    title: 'curry 评论',
-    time: '2020-07-02 10:00',
-    content: '了解一下功能'
-  }
-]
-
-const columns = [
-  {
-    key: '0',
-    title: '货品编码',
-    dataIndex: 'productCode',
-    defaultSortOrder: 'descend',
-    width: 150,
-    sorter: (a, b) => a.age - b.age,
-    scopedSlots: { customRender: 'name' }
-  },
-  {
-    key: '1',
-    title: '货品名称',
-    dataIndex: 'productName',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.name - b.name
-  },
-
-  {
-    key: '2',
-    title: '规格型号',
-    dataIndex: 'SpecificationModel',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '3',
-    title: '存货编码',
-    dataIndex: 'InventoryCode',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '4',
-    title: '存货名称',
-    dataIndex: 'InventoryName',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '5',
-    title: '主计量单位',
-    dataIndex: 'MainUnit',
-    defaultSortOrder: 'descend',
-    width: 140,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '6',
-    title: '电商销售单位',
-    dataIndex: 'SalesUnit',
-    defaultSortOrder: 'descend',
-    width: 140,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '7',
-    title: '分销单位',
-    dataIndex: 'DistributionUnit',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '最低售价',
-    dataIndex: 'LowestPrice',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '商品描述',
-    dataIndex: 'description',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '10',
-    title: '默认发货仓库',
-    dataIndex: 'DefaultShippingWarehouse',
-    defaultSortOrder: 'descend',
-    width: 150,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '11',
-    title: '是否虚拟物品',
-    dataIndex: 'VirtualItem',
-    defaultSortOrder: 'descend',
-    width: 160,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '12',
-    title: '图片',
-    dataIndex: 'Image',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '13',
-    title: '预发货日期',
-    dataIndex: 'StorageDate',
-    defaultSortOrder: 'descend',
-    width: 140,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '14',
-    title: '单位毛重',
-    dataIndex: 'UnitGrossWeight',
-    defaultSortOrder: 'descend',
-    width: 120,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '15',
-    title: '操作',
-    dataIndex: 'action',
-    width: 120,
-    fixed: 'right',
-    scopedSlots: { customRender: 'action' }
-  }
-]
-const data = []
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    code: `000${i}`,
-    name: `电热毛巾架${i}`,
-    type: `K-0000T-${i}`,
-    unit: '箱',
-    StorageProduct: `000${i}`,
-    purchase_unit_price: `000${i}`
-  })
-}
+const timelinelist = []
+const columns = []
+const personnelList = []
 const width = 120
 const product = {}
-const targetTitle = columns
+const targetTitle = []
 export default {
   components: {
     STable,
@@ -354,9 +206,9 @@ export default {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
+      personnelList,
       visible: false,
       chat_visible: false,
-      data,
       status: '正在审批',
       color: '',
       product,
@@ -377,31 +229,25 @@ export default {
       disabled: false,
       loadData: parameter => {
         return getProductList(Object.assign(parameter, this.queryParam)).then(res => {
-           console.log('/getProductList-->', JSON.stringify(res))
-
           return res.result
         })
       },
-      comments: [
-        {
-          actions: ['回复'],
-          author: 'TOM',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: ' 你好 请问有什么可以帮助你',
-          datetime: moment().subtract(1, 'days')
-        },
-        {
-          actions: ['回复'],
-          author: 'Jerry',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: '很高兴见到你',
-          datetime: moment().subtract(2, 'days')
-        }
-      ],
+
       submitting: false,
       value: '',
       moment
     }
+  },
+  created() {
+    
+    getProductListColumns().then(res => {
+      this.columns = res.result
+      this.targetTitle = this.columns
+    })
+    getPersonnelList().then(res => {
+      this.personnelList = res.result
+      console.log(this.personnelList)
+    })
   },
   computed: {
     rowSelection() {
@@ -423,9 +269,10 @@ export default {
     },
     onSearch(value) {
       console.log('value', value)
+
       const data = [...this.data]
       //this.data = data.filter(item => item.code == value)
-      this.data = this.data.filter(function(data) {
+      this.targetList = this.data.filter(function(data) {
         return Object.keys(data).some(function(key) {
           return (
             String(data[key])
@@ -435,8 +282,11 @@ export default {
         })
       })
     },
-    handleSearch(record) {
-      console.log(record), (this.visible = true), (this.product = record)
+    handleDetail(record) {
+      console.log(record), (this.visible = true), (this.product = record),
+        getApproval().then(res => {
+       this.timelinelist=res.result
+    })
     },
     handleSetting(record) {
       console.log(record), (this.modal_visible = true)
@@ -521,9 +371,10 @@ export default {
     onChange(value) {
       console.log('Change:', value)
     },
+
     fileChange(info) {
       if (info.file.status !== 'uploading') {
-             console.log(info.file, info.fileList)
+        console.log(info.file, info.fileList)
       }
       if (info.file.status === 'done') {
         this.$message.success(`${info.file.name} file uploaded successfully`)

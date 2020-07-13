@@ -43,7 +43,7 @@ export function getUserList(parameter) {
 export function getApproval (parameter) {
     console.log('/getApproval req-->', JSON.stringify(parameter))
     return axios({
-      url: api.productList,
+      url: api.approval,
       method: 'get',
       params: parameter
     })

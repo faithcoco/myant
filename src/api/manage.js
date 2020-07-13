@@ -24,7 +24,7 @@ const api = {
   WorkTimeReportApplicationList: '/WorkTimeReportApplicationList',
   PickingApplicationList: '/PickingApplicationList',
   WarehouseList: '/WarehouseList',
-  OpeningInventoryList: '/OpeningInventoryList'，
+  OpeningInventoryList: '/OpeningInventoryList',
    productListColumns:'/productList/columns',
     personnelList:'/personnel-list',
     approval:'/approval'

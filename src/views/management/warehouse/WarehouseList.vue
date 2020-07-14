@@ -26,7 +26,7 @@
         :scroll="{ x: 1400 }"
         bordered
       >
-        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
+        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
 
         <span slot="action" slot-scope="text, record">
           <template v-if="$auth('table.update')">
@@ -48,20 +48,41 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
+        <a-descriptions-item label="仓库编码">{{product.WarehouseCode}}</a-descriptions-item>
+        <a-descriptions-item label="仓库名称">{{product.WarehouseName }}</a-descriptions-item>
+        <a-descriptions-item label="部门名称">{{product.DepartmentName}}</a-descriptions-item>
+        <a-descriptions-item label="仓库地址">{{product.WarehouseAddress}}</a-descriptions-item>
+        <a-descriptions-item label="电话">{{product.Tel}}</a-descriptions-item>
+        <a-descriptions-item label="负责人">{{product.Principal}}</a-descriptions-item>
+        <a-descriptions-item label="计价方式">{{product.PricingMethod}}</a-descriptions-item>
+        <a-descriptions-item label="仓库核算组">{{product.WarehouseAccountingTeam}}</a-descriptions-item>
+        <a-descriptions-item label="是否货位管理">{{product.CargoSpaceManagement}}</a-descriptions-item>
+        <a-descriptions-item label="资金定额">{{product.FundingQuota}}</a-descriptions-item>
+        <a-descriptions-item label="对应条形码">{{product.CorrespondingBarcode}}</a-descriptions-item>
+        <a-descriptions-item label="参与需求计划运算">{{product.DemandPlanningcalculation}}</a-descriptions-item>
+        <a-descriptions-item label="是否参与ROP计算">{{product.ROPCalculation}}</a-descriptions-item>
+        <a-descriptions-item label="仓库属性">{{product.WarehouseAttributes}}</a-descriptions-item>
+        <a-descriptions-item label="配额">{{product.quota}}</a-descriptions-item>
+        <a-descriptions-item label="资产仓">{{product.AssetWarehouse}}</a-descriptions-item>
+        <a-descriptions-item label="控制序列号">{{product.ControlSerialNumber}}</a-descriptions-item>
+        <a-descriptions-item label="记入成本">{{product.Creditcost}}</a-descriptions-item>
+        <a-descriptions-item label="纳入可用量计算">{{product.Availablequantitycalculation}}</a-descriptions-item>
+        <a-descriptions-item label="代管仓">{{product.Escrow}}</a-descriptions-item>
+        <a-descriptions-item label="销售可用量控制方式">{{product.Salesavailabilitycontrol}}</a-descriptions-item>
+        <a-descriptions-item label="出口可用量控制方式">{{product.Outavailabilitycontrol}}</a-descriptions-item>
+        <a-descriptions-item label="库存可用量控制方式">{{product.Inventoryavailabilitycontrol}}</a-descriptions-item>
+        <a-descriptions-item label="是否门店">{{product.Store}}</a-descriptions-item>
+        <a-descriptions-item label="保税仓">{{product.BondedWarehouse}}</a-descriptions-item>
+        <a-descriptions-item label="停用日期">{{product.DeactivationDate}}</a-descriptions-item>
+        <a-descriptions-item label="拣货货位">{{product.PickingLocation}}</a-descriptions-item>
+        <a-descriptions-item label="电商仓">{{product.Ecommercewarehouse}}</a-descriptions-item>
+        <a-descriptions-item label="省/直辖市">{{product.province}}</a-descriptions-item>
+        <a-descriptions-item label="市">{{product.city}}</a-descriptions-item>
+        <a-descriptions-item label="区县">{{product.District}}</a-descriptions-item>
+        <a-descriptions-item label="工厂名称">{{product.FactoryName}}</a-descriptions-item>
         <a-descriptions-item label="审批状态">
           <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
-        <a-descriptions-item label="仓库编码">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="仓库名称">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="仓库负责人">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="仓库地址">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="详细地址">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="仓库负责人">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="货位管理">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="批次管理">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item
-          label="Address"
-        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
       </a-descriptions>
       <a-divider>审批详情</a-divider>
       <a-timeline>
@@ -74,7 +95,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -126,9 +156,11 @@
           <div slot="content">
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
-                <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
-                <a-mentions-option value="吴杨">吴杨</a-mentions-option>
+                <a-mentions-option
+                  v-for="item in personnelList"
+                  :key="item.name"
+                  :value="item.name"
+                >{{item.name}}</a-mentions-option>
               </a-mentions>
               <a-upload
                 name="file"
@@ -171,106 +203,14 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getWarehouseList, getApproval, getPersonnelList,getWarehouseListColumns } from '@/api/manage'
 
-const timelinelist = [
-  {
-    key: '0',
-    title: 'curry 提交合同申请',
-    time: '2020-07-01 10:00',
-    content: ''
-  },
-  {
-    key: '1',
-    title: 'curry 评论',
-    time: '2020-07-02 10:00',
-    content: '了解一下功能'
-  }
-]
-
-const columns = [
-  {
-    key: '0',
-    title: '仓库编码',
-    dataIndex: 'Type',
-    defaultSortOrder: 'descend',
-    width: 60,
-    sorter: (a, b) => a.age - b.age,
-    scopedSlots: { customRender: 'name' }
-  },
-  {
-    key: '1',
-    title: '仓库名称',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 60,
-    sorter: (a, b) => a.name - b.name
-  },
-
-  {
-    key: '2',
-    title: '仓库负责人',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 60,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '3',
-    title: '仓库地址',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 60,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '4',
-    title: '详细地址',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 60,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '5',
-    title: '货位管理',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 60,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '6',
-    title: '批次管理',
-    dataIndex: 'StorageProduct',
-    defaultSortOrder: 'descend',
-    width: 60,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '7',
-    title: '操作',
-    dataIndex: 'action',
-    width: 120,
-    fixed: 'right',
-    scopedSlots: { customRender: 'action' }
-  }
-]
-const data = []
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    code: `000${i}`,
-    name: `电热毛巾架${i}`,
-    type: `K-0000T-${i}`,
-    unit: 46 - i,
-    sales_unit_price: 5,
-    purchase_unit_price: 3
-  })
-}
+const timelinelist = []
+const columns = []
+const personnelList = []
 const width = 120
 const product = {}
-const targetTitle = columns
+const targetTitle = []
 export default {
   components: {
     STable,
@@ -280,48 +220,41 @@ export default {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
+      personnelList,
       visible: false,
       chat_visible: false,
-      data,
       status: '正在审批',
       color: '',
       product,
       columns,
       timelinelist,
       targetTitle,
-      selectedRowKeys: [], // Check here to configure the default column
+      selectedRowKeys: [],
       modal_visible: false,
       confirmLoading: false,
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
+        return getWarehouseList(Object.assign(parameter, this.queryParam)).then(res => {
           return res.result
         })
       },
-      comments: [
-        {
-          actions: ['回复'],
-          author: 'TOM',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: ' 你好 请问有什么可以帮助你',
-          datetime: moment().subtract(1, 'days')
-        },
-        {
-          actions: ['回复'],
-          author: 'Jerry',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: '很高兴见到你',
-          datetime: moment().subtract(2, 'days')
-        }
-      ],
 
       submitting: false,
       value: '',
       moment
     }
+  },
+  created() {
+    getWarehouseListColumns().then(res => {
+      this.columns = res.result
+      this.targetTitle = this.columns
+    })
+    getPersonnelList().then(res => {
+      this.personnelList = res.result
+      console.log(this.personnelList)
+    })
   },
   computed: {
     rowSelection() {
@@ -355,8 +288,13 @@ export default {
         })
       })
     },
-    handleSearch(record) {
-      console.log(record), (this.visible = true), (this.product = record)
+    handleDetail(record) {
+      console.log(record),
+        (this.visible = true),
+        (this.product = record),
+        getApproval().then(res => {
+          this.timelinelist = res.result
+        })
     },
     handleSetting(record) {
       console.log(record), (this.modal_visible = true)

@@ -26,7 +26,7 @@
         :scroll="{ x: 1500 }"
         bordered
       >
-        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
+        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
 
         <span slot="action" slot-scope="text, record">
           <template v-if="$auth('table.update')">
@@ -48,20 +48,20 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
+        <a-descriptions-item label="联系人编码">{{product.ContactCode}}</a-descriptions-item>
+        <a-descriptions-item label="联系人名称">{{product.ContactName }}</a-descriptions-item>
+        <a-descriptions-item label="所属客户">{{product.Customer}}</a-descriptions-item>
+        <a-descriptions-item label="负责人">{{product.Principal}}</a-descriptions-item>
+        <a-descriptions-item label="是否是主要联系人">{{product.PrimaryContact}}</a-descriptions-item>
+        <a-descriptions-item label="称呼">{{product.Call}}</a-descriptions-item>
+        <a-descriptions-item label="性别">{{product.Gender}}</a-descriptions-item>
+        <a-descriptions-item label="默认联系人">{{product.DefaultContact}}</a-descriptions-item>
+        <a-descriptions-item label="职务">{{product.Job}}</a-descriptions-item>
+        <a-descriptions-item label="手机">{{product.Tel}}</a-descriptions-item>
+        <a-descriptions-item label="爱好">{{product.Hobby}}</a-descriptions-item>
         <a-descriptions-item label="审批状态">
           <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
-        <a-descriptions-item label="联系人编码">{{code}}</a-descriptions-item>
-        <a-descriptions-item label="联系人名称">{{name }}</a-descriptions-item>
-        <a-descriptions-item label="客户或供应商">{{type}}</a-descriptions-item>
-        <a-descriptions-item label="关联公司">{{Company}}</a-descriptions-item>
-        <a-descriptions-item label="联系电话">{{Tel}}</a-descriptions-item>
-        <a-descriptions-item label="职务">{{Job}}</a-descriptions-item>
-        <a-descriptions-item label="部门">{{Department}}</a-descriptions-item>
-        <a-descriptions-item label="地址">{{Address}}</a-descriptions-item>
-        <a-descriptions-item
-          label="Address"
-        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
       </a-descriptions>
       <a-divider>审批详情</a-divider>
       <a-timeline>
@@ -74,7 +74,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -126,9 +135,11 @@
           <div slot="content">
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
-                <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
-                <a-mentions-option value="吴杨">吴杨</a-mentions-option>
+                <a-mentions-option
+                  v-for="item in personnelList"
+                  :key="item.name"
+                  :value="item.name"
+                >{{item.name}}</a-mentions-option>
               </a-mentions>
               <a-upload
                 name="file"
@@ -137,7 +148,7 @@
                 :headers="headers"
                 @change="fileChange"
               >
-                <a-button type="link" :size="size">添加附件</a-button>
+                <a-button type="link">添加附件</a-button>
               </a-upload>
             </a-form-item>
             <a-form-item>
@@ -171,129 +182,14 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getContactList, getPersonnelList, getApproval, getContactListColumns } from '@/api/manage'
 
-const timelinelist = [
-  {
-    key: '0',
-    title: 'curry 提交合同申请',
-    time: '2020-07-01 10:00',
-    content: ''
-  },
-  {
-    key: '1',
-    title: 'curry 评论',
-    time: '2020-07-02 10:00',
-    content: '了解一下功能'
-  }
-]
-
-const columns = [
-  {
-    key: '0',
-    title: '联系人编码',
-    dataIndex: 'ContactCode',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age,
-    scopedSlots: { customRender: 'name' }
-  },
-  {
-    key: '1',
-    title: '联系人名称',
-    dataIndex: 'ContactName',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.name - b.name
-  },
-
-  {
-    key: '2',
-    title: '所属客户',
-    dataIndex: 'Customer',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '3',
-    title: '负责人',
-    dataIndex: 'Principal',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '4',
-    title: '是否是主要联系人',
-    dataIndex: 'PrimaryContact',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '5',
-    title: '称呼',
-    dataIndex: 'Call',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '6',
-    title: '性别',
-    dataIndex: 'Gender',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '7',
-    title: '默认联系人',
-    dataIndex: 'DefaultContact',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '职务',
-    dataIndex: 'Job',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '手机',
-    dataIndex: 'Tel',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '10',
-    title: '爱好',
-    dataIndex: 'Hobby',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '11',
-    title: '操作',
-    dataIndex: 'action',
-    width: 120,
-    fixed: 'right',
-    scopedSlots: { customRender: 'action' }
-  }
-]
-const data = []
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    code: `000${i}`,
-    name: `张三`,
-    type: `华为`,
-    Company: '固圣科技',
-    Tel: '13339984321',
-    Job: '经理',
-    Department: '销售部',
-    Address: '上海高新科技园区'
-  })
-}
+const timelinelist = []
+const columns = []
+const personnelList = []
 const width = 120
 const product = {}
-const targetTitle = columns
+const targetTitle = []
 export default {
   components: {
     STable,
@@ -303,9 +199,10 @@ export default {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
+      personnelList,
       visible: false,
       chat_visible: false,
-      data,
+
       status: '正在审批',
       color: '',
       product,
@@ -319,104 +216,24 @@ export default {
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                ContactCode: '00000001',
-                ContactName: '王宏',
-                Customer: '',
-                Principal: '',
-                PrimaryContact: '否',
-                Call: '行政部经理',
-                Gender: '男',
-                DefaultContact: '否',
-                Job: '',
-                Tel: '13344567981',
-                Hobby: '234'
-              },
-              {
-                ContactCode: '00000002',
-                ContactName: '李豪',
-                Customer: '',
-                Principal: '',
-                PrimaryContact: '否',
-                Call: '',
-                Gender: '男',
-                DefaultContact: '否',
-                Job: '236',
-                Tel: '13125476890',
-                Hobby: '231'
-              },
-              {
-                ContactCode: '00000003',
-                ContactName: '陈光',
-                Customer: '',
-                Principal: '',
-                PrimaryContact: '否',
-                Call: '',
-                Gender: '男',
-                DefaultContact: '否',
-                Job: '',
-                Tel: '13344567981',
-                Hobby: '232'
-              },
-              {
-                ContactCode: '00000004',
-                ContactName: '王宏',
-                Customer: '',
-                Principal: '',
-                PrimaryContact: '否',
-                Call: '行政部经理',
-                Gender: '男',
-                DefaultContact: '否',
-                Job: '',
-                Tel: '13344567981',
-                Hobby: '232'
-              },
-              {
-                ContactCode: '00000002',
-                ContactName: '李豪',
-                Customer: '',
-                Principal: '',
-                PrimaryContact: '否',
-                Call: '',
-                Gender: '男',
-                DefaultContact: '否',
-                Job: '236',
-                Tel: '13125476890',
-                Hobby: '231'
-              }
-            ]
-          }
+        return getContactList(Object.assign(parameter, this.queryParam)).then(res => {
           return res.result
         })
       },
-      comments: [
-        {
-          actions: ['回复'],
-          author: 'TOM',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: ' 你好 请问有什么可以帮助你',
-          datetime: moment().subtract(1, 'days')
-        },
-        {
-          actions: ['回复'],
-          author: 'Jerry',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: '很高兴见到你',
-          datetime: moment().subtract(2, 'days')
-        }
-      ],
       submitting: false,
       value: '',
       moment
     }
+  },
+  created() {
+    getContactListColumns().then(res => {
+      this.columns = res.result
+      this.targetTitle = this.columns
+    })
+    getPersonnelList().then(res => {
+      this.personnelList = res.result
+      console.log(this.personnelList)
+    })
   },
   computed: {
     rowSelection() {
@@ -440,7 +257,7 @@ export default {
       console.log('value', value)
       const data = [...this.data]
       //this.data = data.filter(item => item.code == value)
-      this.data = this.data.filter(function(data) {
+      this.targetList = this.data.filter(function(data) {
         return Object.keys(data).some(function(key) {
           return (
             String(data[key])
@@ -450,8 +267,13 @@ export default {
         })
       })
     },
-    handleSearch(record) {
-      console.log(record), (this.visible = true), (this.product = record)
+    handleDetail(record) {
+      console.log(record),
+        (this.visible = true),
+        (this.product = record),
+        getApproval().then(res => {
+          this.timelinelist = res.result
+        })
     },
     handleSetting(record) {
       console.log(record), (this.modal_visible = true)

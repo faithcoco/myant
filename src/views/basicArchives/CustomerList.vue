@@ -26,7 +26,7 @@
         :scroll="{ x: 1500 }"
         bordered
       >
-        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
+        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
 
         <span slot="action" slot-scope="text, record">
           <template v-if="$auth('table.update')">
@@ -48,22 +48,19 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
+        <a-descriptions-item label="客户编码">{{product.CustomerCode}}</a-descriptions-item>
+        <a-descriptions-item label="客户名称">{{product.CustomerName }}</a-descriptions-item>
+        <a-descriptions-item label="客户简称">{{product.CustomerAbbreviation}}</a-descriptions-item>
+        <a-descriptions-item label="区域名称">{{product.Area}}</a-descriptions-item>
+        <a-descriptions-item label="发展日期">{{product.DevelopmentDate}}</a-descriptions-item>
+        <a-descriptions-item label="联系人">{{product.ContactPerson}}</a-descriptions-item>
+        <a-descriptions-item label="电话">{{product.Tel}}</a-descriptions-item>
+        <a-descriptions-item label="专营业务员名称">{{product.Salesman}}</a-descriptions-item>
+        <a-descriptions-item label="分管部门名称">{{product.department}}</a-descriptions-item>
+        <a-descriptions-item label="潜在客户编码">{{product.PotentialCustomerCode}}</a-descriptions-item>
         <a-descriptions-item label="审批状态">
           <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
-        <a-descriptions-item label="客户编码">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="客户名称">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="客户类型">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="负责人">{{product.principal}}</a-descriptions-item>
-        <a-descriptions-item label="联系人编码">{{product.principal}}</a-descriptions-item>
-        <a-descriptions-item label="备注">{{product.principal}}</a-descriptions-item>
-        <a-descriptions-item label="发票抬头">{{product.Invoice}}</a-descriptions-item>
-        <a-descriptions-item label="纳税人识别号">{{product.TaxpayerIdentificationNumber}}</a-descriptions-item>
-        <a-descriptions-item label="开户银行">{{product.BankAccount}}</a-descriptions-item>
-        <a-descriptions-item label="银行账号">{{product.BankAccount}}</a-descriptions-item>
-        <a-descriptions-item
-          label="Address"
-        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
       </a-descriptions>
       <a-divider>审批详情</a-divider>
       <a-timeline>
@@ -76,7 +73,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -128,9 +134,11 @@
           <div slot="content">
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
-                <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
-                <a-mentions-option value="吴杨">吴杨</a-mentions-option>
+                <a-mentions-option
+                  v-for="item in personnelList"
+                  :key="item.name"
+                  :value="item.name"
+                >{{item.name}}</a-mentions-option>
               </a-mentions>
               <a-upload
                 name="file"
@@ -139,7 +147,7 @@
                 :headers="headers"
                 @change="fileChange"
               >
-                <a-button type="link" :size="size">添加附件</a-button>
+                <a-button type="link">添加附件</a-button>
               </a-upload>
             </a-form-item>
             <a-form-item>
@@ -173,123 +181,15 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getCustomerList, getApproval, getPersonnelListm, getCustomerListColumns, getPersonnelList } from '@/api/manage'
 
-const timelinelist = [
-  {
-    key: '0',
-    title: 'curry 提交合同申请',
-    time: '2020-07-01 10:00',
-    content: ''
-  },
-  {
-    key: '1',
-    title: 'curry 评论',
-    time: '2020-07-02 10:00',
-    content: '了解一下功能'
-  }
-]
-
-const columns = [
-  {
-    key: '0',
-    title: '客户编码',
-    dataIndex: 'CustomerCode',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age,
-    scopedSlots: { customRender: 'name' }
-  },
-  {
-    key: '1',
-    title: '客户名称',
-    dataIndex: 'CustomerName',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.name - b.name
-  },
-
-  {
-    key: '2',
-    title: '客户简称',
-    dataIndex: 'CustomerAbbreviation',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '3',
-    title: '地区名称',
-    dataIndex: 'Area',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '4',
-    title: '发展日期',
-    dataIndex: 'DevelopmentDate',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '5',
-    title: '联系人',
-    dataIndex: 'ContactPerson',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '6',
-    title: '电话',
-    dataIndex: 'Tel',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '7',
-    title: '专营业务员名称',
-    dataIndex: 'Salesman',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '分管部门名称',
-    dataIndex: 'department',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '潜在客户编码',
-    dataIndex: 'PotentialCustomerCode',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '10',
-    title: '操作',
-    dataIndex: 'action',
-    width: 120,
-    fixed: 'right',
-    scopedSlots: { customRender: 'action' }
-  }
-]
+const timelinelist = []
+const columns = []
+const personnelList = []
 const data = []
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    code: `000${i}`,
-    name: `电热毛巾架${i}`,
-    type: `国营`,
-    Industry: '加工业',
-    address: '上海交通大学',
-    principal: 'lisi',
-    Invoice: '固圣科技公司',
-    TaxpayerIdentificationNumber: 10000 + i,
-    BankAccount: '中国银行'
-  })
-}
 const width = 120
 const product = {}
-const targetTitle = columns
+const targetTitle = []
 export default {
   components: {
     STable,
@@ -299,6 +199,7 @@ export default {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
+      personnelList,
       visible: false,
       chat_visible: false,
       data,
@@ -308,106 +209,32 @@ export default {
       columns,
       timelinelist,
       targetTitle,
-      selectedRowKeys: [], // Check here to configure the default column
+      selectedRowKeys: [],
       modal_visible: false,
       confirmLoading: false,
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                CustomerCode: '000',
-                CustomerName: '000',
-                CustomerAbbreviation: '000',
-                Area: '',
-                DevelopmentDate: '2013-01-19',
-                ContactPerson: '',
-                Tel: '',
-                Salesman: '',
-                department: '总裁会',
-                PotentialCustomerCode: ''
-              },
-              {
-                CustomerCode: '00000001',
-                CustomerName: '世纪天华集团公司',
-                CustomerAbbreviation: '世纪天华',
-                Area: '北京',
-                DevelopmentDate: '2014-12-22',
-                ContactPerson: '刘婷',
-                Tel: '',
-                Salesman: '刘天达',
-                department: '市场部',
-                PotentialCustomerCode: 'p00000001'
-              },
-              {
-                CustomerCode: '00000002',
-                CustomerName: '中国电子科技集团公司',
-                CustomerAbbreviation: '中国电子科技集团公司第五十四研究所',
-                Area: '北京',
-                DevelopmentDate: '2014-12-23',
-                ContactPerson: '刘婷',
-                Tel: '',
-                Salesman: '刘天达',
-                department: '市场部',
-                PotentialCustomerCode: 'p00000058'
-              },
-              {
-                CustomerCode: '00000003',
-                CustomerName: '现代天浩机械有限公司',
-                CustomerAbbreviation: '现代天浩机械有限公司',
-                Area: '',
-                DevelopmentDate: '2014-12-23',
-                ContactPerson: '刘婷',
-                Tel: '',
-                Salesman: '刘天达',
-                department: '市场部',
-                PotentialCustomerCode: 'p00000060'
-              },
-              {
-                CustomerCode: '00000004',
-                CustomerName: '北京佳运科贸有限公司',
-                CustomerAbbreviation: '北京佳运科贸有限公司',
-                Area: '',
-                DevelopmentDate: '2014-12-23',
-                ContactPerson: '刘婷',
-                Tel: '',
-                Salesman: '刘天达',
-                department: '市场部',
-                PotentialCustomerCode: 'p00000062'
-              }
-            ]
-          }
+        return getCustomerList(Object.assign(parameter, this.queryParam)).then(res => {
+          // console.log('/service-->', JSON.stringify(res.result))
           return res.result
         })
       },
-      comments: [
-        {
-          actions: ['回复'],
-          author: 'TOM',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: ' 你好 请问有什么可以帮助你',
-          datetime: moment().subtract(1, 'days')
-        },
-        {
-          actions: ['回复'],
-          author: 'Jerry',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: '很高兴见到你',
-          datetime: moment().subtract(2, 'days')
-        }
-      ],
       submitting: false,
       value: '',
       moment
     }
+  },
+  created() {
+    getCustomerListColumns().then(res => {
+      this.columns = res.result
+      this.targetTitle = this.columns
+    })
+    getPersonnelList().then(res => {
+      this.personnelList = res.result
+      console.log(this.personnelList)
+    })
   },
   computed: {
     rowSelection() {
@@ -431,7 +258,7 @@ export default {
       console.log('value', value)
       const data = [...this.data]
       //this.data = data.filter(item => item.code == value)
-      this.data = this.data.filter(function(data) {
+      this.targetList = this.data.filter(function(data) {
         return Object.keys(data).some(function(key) {
           return (
             String(data[key])
@@ -441,8 +268,13 @@ export default {
         })
       })
     },
-    handleSearch(record) {
-      console.log(record), (this.visible = true), (this.product = record)
+    handleDetail(record) {
+      console.log(record),
+        (this.visible = true),
+        (this.product = record),
+        getApproval().then(res => {
+          this.timelinelist = res.result
+        })
     },
     handleSetting(record) {
       console.log(record), (this.modal_visible = true)

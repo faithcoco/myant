@@ -48,30 +48,27 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
+        <a-descriptions-item label="货品编码">{{product.productCode }}</a-descriptions-item>
+        <a-descriptions-item label="货品名称">{{product.productName}}</a-descriptions-item>
+        <a-descriptions-item label="规格型号">{{product.SpecificationModel}}</a-descriptions-item>
+        <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
+        <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
+        <a-descriptions-item label="主计量单位">{{product.MainUnit}}</a-descriptions-item>
+        <a-descriptions-item label="电商销售单位">{{product.SalesUnit}}</a-descriptions-item>
+        <a-descriptions-item label="分销单位">{{product.SalesUnit}}</a-descriptions-item>
+        <a-descriptions-item label="最低售价">{{product.LowestPrice}}</a-descriptions-item>
+        <a-descriptions-item label="商品描述">{{product.description}}</a-descriptions-item>
+        <a-descriptions-item label="默认发货仓库">{{product.DefaultShippingWarehouse}}</a-descriptions-item>
+        <a-descriptions-item label="是否虚拟物品">{{product.VirtualItem}}</a-descriptions-item>
+        <a-descriptions-item label="图片">{{product.Image}}</a-descriptions-item>
+        <a-descriptions-item label="预发货日期">{{product.StorageDate}}</a-descriptions-item>
+        <a-descriptions-item label="单位毛重">{{product.UnitGrossWeight}}</a-descriptions-item>
         <a-descriptions-item label="审批状态">
           <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
-        <a-descriptions-item label="货品编码">{{product.Type }}</a-descriptions-item>
-        <a-descriptions-item label="货品名称">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="规格型号">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="存货编码">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="存货名称">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="主计量单位">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="电商销售单位">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="分销单位">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="最低售价">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="商品描述">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="默认发货仓库">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="是否虚拟物品">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="图片">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="预发货日期">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="单位毛重">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item
-          label="Address"
-        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
       </a-descriptions>
       <a-divider>审批详情</a-divider>
-           <a-timeline>
+      <a-timeline>
         <a-timeline-item v-for="item in timelinelist" :key="item.key">
           <p>
             <a-row>
@@ -86,9 +83,10 @@
             {{item.content}}
           </p>
           <p v-show="item.isShow">
-             <a-card v-for="item in item.img" :key="item.src" :bordered="false" >
-            <img slot="extra"  alt="logo"   :src="item.src" /><br />
-             </a-card>
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
           </p>
         </a-timeline-item>
       </a-timeline>
@@ -147,16 +145,6 @@
                   :value="item.name"
                 >{{item.name}}</a-mentions-option>
               </a-mentions>
-
-              <a-upload
-                name="file"
-                :multiple="true"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                :headers="headers"
-                @change="fileChange"
-              >
-                <a-button type="link" :size="size">添加附件</a-button>
-              </a-upload>
             </a-form-item>
             <a-form-item>
               <a-button
@@ -189,7 +177,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList, getProductList, getProductListColumns, getPersonnelList, getApproval } from '@/api/manage'
+import { getProductList, getProductListColumns, getPersonnelList, getApproval } from '@/api/manage'
 
 const timelinelist = []
 const columns = []
@@ -239,7 +227,6 @@ export default {
     }
   },
   created() {
-    
     getProductListColumns().then(res => {
       this.columns = res.result
       this.targetTitle = this.columns
@@ -283,10 +270,12 @@ export default {
       })
     },
     handleDetail(record) {
-      console.log(record), (this.visible = true), (this.product = record),
+      console.log(record),
+        (this.visible = true),
+        (this.product = record),
         getApproval().then(res => {
-       this.timelinelist=res.result
-    })
+          this.timelinelist = res.result
+        })
     },
     handleSetting(record) {
       console.log(record), (this.modal_visible = true)

@@ -26,7 +26,7 @@
         :scroll="{ x: 1500 }"
         bordered
       >
-        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
+        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
 
         <span slot="action" slot-scope="text, record">
           <template v-if="$auth('table.update')">
@@ -48,19 +48,16 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
+        <a-descriptions-item label="供应商编码">{{product.SupplierCode}}</a-descriptions-item>
+        <a-descriptions-item label="供应商名称">{{product.SupplierName }}</a-descriptions-item>
+        <a-descriptions-item label="供应商简称">{{product.SupplierAbbreviation}}</a-descriptions-item>
+        <a-descriptions-item label="发展日期">{{product.DevelopmentDate}}</a-descriptions-item>
+        <a-descriptions-item label="电话">{{product.Tel}}</a-descriptions-item>
+        <a-descriptions-item label="专营业务员名称">{{product.Salesman}}</a-descriptions-item>
+        <a-descriptions-item label="分管部门名称">{{product.department}}</a-descriptions-item>
         <a-descriptions-item label="审批状态">
           <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
-        <a-descriptions-item label="供应商编码">{{product.Type}}</a-descriptions-item>
-        <a-descriptions-item label="供应商名称">{{product.StorageProduct }}</a-descriptions-item>
-        <a-descriptions-item label="供应商类型">{{product.StorageProduct}}</a-descriptions-item>
-        <a-descriptions-item label="负责人">{{product.StorageProduct}}</a-descriptions-item>
-        <a-descriptions-item label="联系人编码">{{product.StorageProduct}}</a-descriptions-item>
-        <a-descriptions-item label="备注">{{product.StorageProduct}}</a-descriptions-item>
-        <a-descriptions-item label="纳税人识别号">{{product.StorageProduct}}</a-descriptions-item>
-        <a-descriptions-item
-          label="Address"
-        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
       </a-descriptions>
       <a-divider>审批详情</a-divider>
       <a-timeline>
@@ -73,7 +70,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -125,9 +131,11 @@
           <div slot="content">
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
-                <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
-                <a-mentions-option value="吴杨">吴杨</a-mentions-option>
+                <a-mentions-option
+                  v-for="item in personnelList"
+                  :key="item.name"
+                  :value="item.name"
+                >{{item.name}}</a-mentions-option>
               </a-mentions>
               <a-upload
                 name="file"
@@ -136,7 +144,7 @@
                 :headers="headers"
                 @change="fileChange"
               >
-                <a-button type="link" :size="size">添加附件</a-button>
+                <a-button type="link">添加附件</a-button>
               </a-upload>
             </a-form-item>
             <a-form-item>
@@ -170,103 +178,11 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getSupplierList, getPersonnelList, getApproval, getSupplierListColumns } from '@/api/manage'
 
-const timelinelist = [
-  {
-    key: '0',
-    title: 'curry 提交合同申请',
-    time: '2020-07-01 10:00',
-    content: ''
-  },
-  {
-    key: '1',
-    title: 'curry 评论',
-    time: '2020-07-02 10:00',
-    content: '了解一下功能'
-  }
-]
-const columns = [
-  {
-    key: '0',
-    title: '供应商编码',
-    dataIndex: 'SupplierCode',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.name - b.name,
-    scopedSlots: { customRender: 'name' }
-  },
-
-  {
-    key: '1',
-    title: '供应商名称',
-    dataIndex: 'SupplierName',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '2',
-    title: '供应商简称',
-    dataIndex: 'SupplierAbbreviation',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '3',
-    title: '发展日期',
-    dataIndex: 'DevelopmentDate',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '4',
-    title: '电话',
-    dataIndex: 'Tel',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '5',
-    title: '专营业务员名称',
-    dataIndex: 'Salesman',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '6',
-    title: '分管部门名称',
-    dataIndex: 'department',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '7',
-    title: '操作',
-    dataIndex: 'StorageProduct',
-    width: 120,
-    fixed: 'right',
-    scopedSlots: { customRender: 'action' }
-  }
-]
-const data = []
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    code: `000${i}`,
-    name: `电热毛巾架${i}`,
-    type: `国营`,
-    principal: '王五',
-    TaxpayerIdentificationNumber: `000${i}`,
-    ContactPerson: '王五',
-    tel: '13333333333'
-  })
-}
+const timelinelist = []
+const columns = []
+const personnelList = []
 const width = 120
 const product = {}
 const targetTitle = columns
@@ -281,98 +197,37 @@ export default {
     return {
       visible: false,
       chat_visible: false,
-      data,
       status: '正在审批',
       color: '',
       product,
       columns,
       timelinelist,
       targetTitle,
-      selectedRowKeys: [], // Check here to configure the default column
+      selectedRowKeys: [],
       modal_visible: false,
       confirmLoading: false,
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                SupplierCode: '01002',
-                SupplierName: '深圳辰环手机配件有限公司',
-                SupplierAbbreviation: '辰环手机配件',
-                DevelopmentDate: '2004-10-01',
-                Tel: '',
-                Salesman: '顾潇',
-                department: '采购部'
-              },
-              {
-                SupplierCode: '01003',
-                SupplierName: '苏州光明处理器厂',
-                SupplierAbbreviation: '光明处理',
-                DevelopmentDate: '2004-10-01',
-                Tel: '',
-                Salesman: '顾潇',
-                department: '采购部'
-              },
-              {
-                SupplierCode: '01004',
-                SupplierName: '广州博大存储器公司',
-                SupplierAbbreviation: '博大存储',
-                DevelopmentDate: '2004-10-01',
-                Tel: '',
-                Salesman: '顾潇',
-                department: '采购部'
-              },
-              {
-                SupplierCode: '01005',
-                SupplierName: '深圳明亮外设商贸公司',
-                SupplierAbbreviation: '明亮外设商贸',
-                DevelopmentDate: '2004-10-01',
-                Tel: '',
-                Salesman: '顾潇',
-                department: '采购部'
-              },
-              {
-                SupplierCode: '03001',
-                SupplierName: 'AMD（中国）有限公司',
-                SupplierAbbreviation: 'AMD（中国）',
-                DevelopmentDate: '2004-10-01',
-                Tel: '(010)8518-3788',
-                Salesman: '傅奇',
-                department: '采购部'
-              }
-            ]
-          }
+        return getSupplierList(Object.assign(parameter, this.queryParam)).then(res => {
           return res.result
         })
       },
-      comments: [
-        {
-          actions: ['回复'],
-          author: 'TOM',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: ' 你好 请问有什么可以帮助你',
-          datetime: moment().subtract(1, 'days')
-        },
-        {
-          actions: ['回复'],
-          author: 'Jerry',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: '很高兴见到你',
-          datetime: moment().subtract(2, 'days')
-        }
-      ],
       submitting: false,
       value: '',
       moment
     }
+  },
+  created() {
+    getPersonnelList().then(res => {
+      this.personnelList = res.result
+      console.log(this.personnelList)
+    })
+    getSupplierListColumns().then(res => {
+      this.columns = res.result
+      this.targetTitle = this.columns
+    })
   },
   computed: {
     rowSelection() {
@@ -396,7 +251,7 @@ export default {
       console.log('value', value)
       const data = [...this.data]
       //this.data = data.filter(item => item.code == value)
-      this.data = this.data.filter(function(data) {
+      this.targetList = this.data.filter(function(data) {
         return Object.keys(data).some(function(key) {
           return (
             String(data[key])
@@ -406,8 +261,13 @@ export default {
         })
       })
     },
-    handleSearch(record) {
-      console.log(record), (this.visible = true), (this.product = record)
+    handleDetail(record) {
+      console.log(record),
+        (this.visible = true),
+        (this.product = record),
+        getApproval().then(res => {
+          this.timelinelist = res.result
+        })
     },
     handleSetting(record) {
       console.log(record), (this.modal_visible = true)

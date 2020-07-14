@@ -26,7 +26,7 @@
         :scroll="{ x: 1500 }"
         bordered
       >
-        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
+        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
 
         <span slot="action" slot-scope="text, record">
           <template v-if="$auth('table.update')">
@@ -48,22 +48,25 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
+        <a-descriptions-item label="仓库">{{product.Warehouse }}</a-descriptions-item>
+        <a-descriptions-item label="仓库编码">{{product.WarehouseCode}}</a-descriptions-item>
+        <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
+        <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
+        <a-descriptions-item label="规格型号">{{product.SpecificationModel}}</a-descriptions-item>
+        <a-descriptions-item label="主计量单位">{{product.MainUint}}</a-descriptions-item>
+        <a-descriptions-item label="数量">{{product.Quantity}}</a-descriptions-item>
+        <a-descriptions-item label="单价">{{product.UnitPrice}}</a-descriptions-item>
+        <a-descriptions-item label="金额">{{product.Amount}}</a-descriptions-item>
+        <a-descriptions-item label="颜色">{{product.Color}}</a-descriptions-item>
+        <a-descriptions-item label="批号">{{product.BatchNumber}}</a-descriptions-item>
+        <a-descriptions-item label="生产日期">{{product.ProducteDate}}</a-descriptions-item>
+        <a-descriptions-item label="失效日期">{{product.ExpirationDate}}</a-descriptions-item>
+        <a-descriptions-item label="货位">{{product.CargoSpace}}</a-descriptions-item>
+        <a-descriptions-item label="入库类别">{{product.StorageCategory}}</a-descriptions-item>
+        <a-descriptions-item label="部门">{{product.Department}}</a-descriptions-item>
         <a-descriptions-item label="审批状态">
           <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
-        <a-descriptions-item label="存货编码">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="仓库编码">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="货位编码">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="批次编码">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="数量">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="计量单位">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="包装数量">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="包装单位">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="单价">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="金额">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item
-          label="Address"
-        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
       </a-descriptions>
       <a-divider>审批详情</a-divider>
       <a-timeline>
@@ -76,7 +79,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -128,9 +140,11 @@
           <div slot="content">
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
-                <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
-                <a-mentions-option value="吴杨">吴杨</a-mentions-option>
+                <a-mentions-option
+                  v-for="item in personnelList"
+                  :key="item.name"
+                  :value="item.name"
+                >{{item.name}}</a-mentions-option>
               </a-mentions>
               <a-upload
                 name="file"
@@ -139,7 +153,7 @@
                 :headers="headers"
                 @change="fileChange"
               >
-                <a-button type="link" :size="size">添加附件</a-button>
+                <a-button type="link">添加附件</a-button>
               </a-upload>
             </a-form-item>
             <a-form-item>
@@ -173,161 +187,13 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOpeningInventoryList, getApproval, getPersonnelList, getOpeningInventoryListColumns } from '@/api/manage'
 
-const timelinelist = [
-  {
-    key: '0',
-    title: 'curry 提交合同申请',
-    time: '2020-07-01 10:00',
-    content: ''
-  },
-  {
-    key: '1',
-    title: 'curry 评论',
-    time: '2020-07-02 10:00',
-    content: '了解一下功能'
-  }
-]
-
-const columns = [
-  {
-    key: '0',
-    title: '仓库',
-    dataIndex: 'Warehouse',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age,
-    scopedSlots: { customRender: 'name' }
-  },
-  {
-    key: '1',
-    title: '仓库编码',
-    dataIndex: 'WarehouseCode',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.name - b.name
-  },
-
-  {
-    key: '2',
-    title: '存货编码',
-    dataIndex: 'InventoryCode',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '3',
-    title: '存货名称',
-    dataIndex: 'InventoryName',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '4',
-    title: '规格型号',
-    dataIndex: 'SpecificationModel',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '5',
-    title: '主计量单位',
-    dataIndex: 'MainUint',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '6',
-    title: '数量',
-    dataIndex: 'Quantity',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '7',
-    title: '单价',
-    dataIndex: 'UnitPrice',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '金额',
-    dataIndex: 'Amount',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '颜色',
-    dataIndex: 'Color',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '批号',
-    dataIndex: 'BatchNumber',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '生产日期',
-    dataIndex: 'ProducteDate',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '失效日期',
-    dataIndex: 'ExpirationDate',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '货位',
-    dataIndex: 'CargoSpace',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '入库类别',
-    dataIndex: 'StorageCategory',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '部门',
-    dataIndex: 'Department',
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '10',
-    title: '操作',
-    dataIndex: 'action',
-    width: 120,
-    fixed: 'right',
-    scopedSlots: { customRender: 'action' }
-  }
-]
-const data = []
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    code: `000${i}`,
-    name: `电热毛巾架${i}`,
-    type: `K-0000T-${i}`,
-    unit: 46 - i,
-    sales_unit_price: 5,
-    purchase_unit_price: 3
-  })
-}
+const timelinelist = []
+const columns = []
+const personnelList = []
 const product = {}
-const targetTitle = columns
+const targetTitle = []
 export default {
   components: {
     STable,
@@ -337,127 +203,40 @@ export default {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
+      personnelList,
       visible: false,
       chat_visible: false,
-      data,
       status: '正在审批',
       color: '',
       product,
       columns,
       timelinelist,
       targetTitle,
-      selectedRowKeys: [], // Check here to configure the default column
+      selectedRowKeys: [],
       modal_visible: false,
       confirmLoading: false,
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                Warehouse: '手机主辅料仓库（有货位）',
-                WarehouseCode: '01',
-                InventoryCode: '0105D001',
-                InventoryName: '手机背光源',
-                SpecificationModel: '',
-                MainUint: '只',
-                Quantity: '4.00',
-                UnitPrice: '20.00',
-                Amount: '80.00',
-                Color: '黑色',
-                BatchNumber: '0105D00112101',
-                ProducteDate: '',
-                ExpirationDate: '',
-                CargoSpace: '其他外设',
-                StorageCategory: '采购入库',
-                Department: '仓储部'
-              },
-              {
-                Warehouse: '手机主辅料仓库（有货位）',
-                WarehouseCode: '01',
-                InventoryCode: '0105D002',
-                InventoryName: '手机背光源',
-                SpecificationModel: '替代',
-                MainUint: '只',
-                Quantity: '10.00',
-                UnitPrice: '21.00',
-                Amount: '210.00',
-                Color: '黑色',
-                BatchNumber: '0105D00112102',
-                ProducteDate: '',
-                ExpirationDate: '',
-                CargoSpace: '其他外设',
-                StorageCategory: '采购入库',
-                Department: '仓储部'
-              },
-              {
-                Warehouse: '手机主辅料仓库（有货位）',
-                WarehouseCode: '01',
-                InventoryCode: '01021001',
-                InventoryName: '蓝牙耳机',
-                SpecificationModel: '',
-                MainUint: '个',
-                Quantity: '2000.00',
-                UnitPrice: '60.00',
-                Amount: '120000.00',
-                Color: '',
-                BatchNumber: '',
-                ProducteDate: '',
-                ExpirationDate: '',
-                CargoSpace: '其他外设',
-                StorageCategory: '',
-                Department: ''
-              },
-              {
-                Warehouse: '手机主辅料仓库（有货位）',
-                WarehouseCode: '01',
-                InventoryCode: '010211',
-                InventoryName: '充电器',
-                SpecificationModel: '',
-                MainUint: '个',
-                Quantity: '2000.00',
-                UnitPrice: '10.00',
-                Amount: '20000.00',
-                Color: '',
-                BatchNumber: '',
-                ProducteDate: '',
-                ExpirationDate: '',
-                CargoSpace: '其他外设',
-                StorageCategory: '',
-                Department: ''
-              }
-            ]
-          }
+        return getOpeningInventoryList(Object.assign(parameter, this.queryParam)).then(res => {
           return res.result
         })
       },
-      comments: [
-        {
-          actions: ['回复'],
-          author: 'TOM',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: ' 你好 请问有什么可以帮助你',
-          datetime: moment().subtract(1, 'days')
-        },
-        {
-          actions: ['回复'],
-          author: 'Jerry',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: '很高兴见到你',
-          datetime: moment().subtract(2, 'days')
-        }
-      ],
       submitting: false,
       value: '',
       moment
     }
+  },
+  created() {
+    getOpeningInventoryListColumns().then(res => {
+      this.columns = res.result
+      this.targetTitle = this.columns
+    })
+    getPersonnelList().then(res => {
+      this.personnelList = res.result
+      console.log(this.personnelList)
+    })
   },
   computed: {
     rowSelection() {
@@ -481,7 +260,7 @@ export default {
       console.log('value', value)
       const data = [...this.data]
       //this.data = data.filter(item => item.code == value)
-      this.data = this.data.filter(function(data) {
+      this.targetList = this.data.filter(function(data) {
         return Object.keys(data).some(function(key) {
           return (
             String(data[key])
@@ -491,8 +270,13 @@ export default {
         })
       })
     },
-    handleSearch(record) {
-      console.log(record), (this.visible = true), (this.product = record)
+    handleDetail(record) {
+      console.log(record),
+        (this.visible = true),
+        (this.product = record),
+        getApproval().then(res => {
+          this.timelinelist = res.result
+        })
     },
     handleSetting(record) {
       console.log(record), (this.modal_visible = true)

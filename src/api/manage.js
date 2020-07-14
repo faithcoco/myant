@@ -25,10 +25,26 @@ const api = {
   PickingApplicationList: '/PickingApplicationList',
   WarehouseList: '/WarehouseList',
   OpeningInventoryList: '/OpeningInventoryList',
-   productListColumns:'/productList/columns',
-    personnelList:'/personnel-list',
-    approval:'/approval'
-  
+  productListColumns: '/productList/columns',
+  SupplierListColumns: '/SupplierList/columns',
+  CustomerListColumns: '/CustomerList/columns',
+  ContactListColumns: '/ContactList/columns',
+  StorageManagementListColumns: '/StorageManagementList/columns',
+  OutManagementListColumns: '/OutManagementListColumns/columns',
+  TransferListColumns: '/TransferListColumns/columns',
+  InventoryListColumns: '/InventoryListColumns/columns',
+  PositionAdjustmentListColumns: '/PositionAdjustmentListColumns/columns',
+  ShippingNoticeListColumns: '/ShippingNoticeListColumns/columns',
+  ReceiptNoticeListColumns: '/ReceiptNoticeListColumns/columns',
+  ReturnNoticeClientListColumns: '/ReturnNoticeClientListColumns/columns',
+  ReturnNoticeSupplierListColumns: '/ReturnNoticeSupplierListColumns/columns',
+  BaleListColumns: '/BaleListColumns/columns',
+  WorkTimeReportApplicationListColumns: '/WorkTimeReportApplicationListColumns/columns',
+  PickingApplicationListColumns: '/PickingApplicationListColumns/columns',
+  WarehouseListColumns: '/WarehouseListColumns/columns',
+  OpeningInventoryListColumns: '/OpeningInventoryListColumns/columns',
+  personnelList: '/personnel-list',
+  approval: '/approval'
 }
 
 export default api
@@ -40,30 +56,167 @@ export function getUserList(parameter) {
     params: parameter
   })
 }
-export function getApproval (parameter) {
-    console.log('/getApproval req-->', JSON.stringify(parameter))
-    return axios({
-      url: api.approval,
-      method: 'get',
-      params: parameter
-    })
-  }
-  export function getProductListColumns (parameter) {
-    console.log('/getProductListColumns req-->', JSON.stringify(parameter))
-    return axios({
-      url: api.productListColumns,
-      method: 'get',
-      params: parameter
-    })
-  }
-  export function getPersonnelList (parameter) {
-    console.log('/getPersonnelList req-->', JSON.stringify(parameter))
-    return axios({
-      url: api.personnelList,
-      method: 'get',
-      params: parameter
-    })
-  }
+export function getApproval(parameter) {
+  console.log('/getApproval req-->', JSON.stringify(parameter))
+  return axios({
+    url: api.approval,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getProductListColumns(parameter) {
+  console.log('/getProductListColumns req-->', JSON.stringify(parameter))
+  return axios({
+    url: api.productListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getSupplierListColumns(parameter) {
+  console.log('/getSupplierListColumns req-->', JSON.stringify(parameter))
+  return axios({
+    url: api.SupplierListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getCustomerListColumns(parameter) {
+  console.log('/getCustomerListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.CustomerListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getContactListColumns(parameter) {
+  console.log('/getContactListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.ContactListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getStorageManagementListColumns(parameter) {
+  console.log('/getStorageManagementListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.StorageManagementListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getOutManagementListColumns(parameter) {
+  console.log('/getOutManagementListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.OutManagementListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getTransferListColumns(parameter) {
+  console.log('/geTransferListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.TransferListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getInventoryListColumns(parameter) {
+  console.log('/getInventoryListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.InventoryListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getPositionAdjustmentListColumns(parameter) {
+  console.log('/getPositionAdjustmentListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.PositionAdjustmentListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getShippingNoticeListColumns(parameter) {
+  console.log('/getShippingNoticeListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.ShippingNoticeListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getReceiptNoticeListColumns(parameter) {
+  console.log('/getReceiptNoticeListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.ReceiptNoticeListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getReturnNoticeClientListColumns(parameter) {
+  console.log('/getReturnNoticeClientListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.ReturnNoticeClientListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getReturnNoticeSupplierListColumns(parameter) {
+  console.log('/getReturnNoticeSupplierListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.ReturnNoticeSupplierListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getBaleListColumns(parameter) {
+  console.log('/getBaleListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.BaleListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getWorkTimeReportApplicationListColumns(parameter) {
+  console.log('/getWorkTimeReportApplicationListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.WorkTimeReportApplicationListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getPickingApplicationListColumns(parameter) {
+  console.log('/getPickingApplicationListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.PickingApplicationListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getWarehouseListColumns(parameter) {
+  console.log('/getWarehouseListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.WarehouseListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getOpeningInventoryListColumns(parameter) {
+  console.log('/getOpeningInventoryListColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.OpeningInventoryListColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+
+export function getPersonnelList(parameter) {
+  console.log('/getPersonnelList req-->', JSON.stringify(parameter))
+  return axios({
+    url: api.personnelList,
+    method: 'get',
+    params: parameter
+  })
+}
 export function getRoleList(parameter) {
   return axios({
     url: api.role,

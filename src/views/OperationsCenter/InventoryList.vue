@@ -26,7 +26,7 @@
         :scroll="{ x: 1500 }"
         bordered
       >
-        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
+        <a slot="name" slot-scope="text, record" @click=" handleDetail(record)">{{ text }}</a>
 
         <span slot="action" slot-scope="text, record">
           <template v-if="$auth('table.update')">
@@ -48,26 +48,25 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
+        <a-descriptions-item label="盘点日期">{{product.InventoryDate }}</a-descriptions-item>
+        <a-descriptions-item label="盘点单号">{{product.InventoryNumber}}</a-descriptions-item>
+        <a-descriptions-item label="盘点仓库">{{product.InventoryWarehouse}}</a-descriptions-item>
+        <a-descriptions-item label="入库类别">{{product.StorageCategory}}</a-descriptions-item>
+        <a-descriptions-item label="出库类别">{{product.OutCategory}}</a-descriptions-item>
+        <a-descriptions-item label="部门">{{product.Department}}</a-descriptions-item>
+        <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
+        <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
+        <a-descriptions-item label="规格型号">{{product.SpecificationModel}}</a-descriptions-item>
+        <a-descriptions-item label="主计量单位">{{product.MainUnit}}</a-descriptions-item>
+        <a-descriptions-item label="账面数量">{{product.BookQuantity}}</a-descriptions-item>
+        <a-descriptions-item label="调整入库数量">{{product.AdjustOutQuantity}}</a-descriptions-item>
+        <a-descriptions-item label="盘点数量">{{product.InventoryQuantity}}</a-descriptions-item>
+        <a-descriptions-item label="盈亏数量">{{product.Profitloss}}</a-descriptions-item>
+        <a-descriptions-item label="合理损耗率">{{product.ReasonableLossRate}}</a-descriptions-item>
+        <a-descriptions-item label="盈亏比例%">{{product.ProfitLossRatio}}</a-descriptions-item>
         <a-descriptions-item label="审批状态">
           <a-tag :color="color">{{status}}</a-tag>
         </a-descriptions-item>
-        <a-descriptions-item label="盘点单编码">{{product.InventoryListCode }}</a-descriptions-item>
-        <a-descriptions-item label="盘点仓库编码">{{product.InventoryWarehouseCode}}</a-descriptions-item>
-        <a-descriptions-item label="部门编码">{{product.DepartmentCode}}</a-descriptions-item>
-        <a-descriptions-item label="盘点日期">{{product.InventoryDate}}</a-descriptions-item>
-        <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
-        <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
-        <a-descriptions-item label="货位编码">{{product.LocationCode}}</a-descriptions-item>
-        <a-descriptions-item label="批次编码">{{product.BatchCode}}</a-descriptions-item>
-        <a-descriptions-item label="数量">{{product.Quantity}}</a-descriptions-item>
-        <a-descriptions-item label="计量单位">{{product.Unit}}</a-descriptions-item>
-        <a-descriptions-item label="包装数量">{{product.PackingQuantity}}</a-descriptions-item>
-        <a-descriptions-item label="包装单位">{{product.PackingUnit}}</a-descriptions-item>
-        <a-descriptions-item label="单价">{{product.UnitPrice}}</a-descriptions-item>
-        <a-descriptions-item label="金额">{{product.Amount}}</a-descriptions-item>
-        <a-descriptions-item
-          label="Address"
-        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
       </a-descriptions>
       <a-divider>审批详情</a-divider>
       <a-timeline>
@@ -80,7 +79,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -132,9 +140,11 @@
           <div slot="content">
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
-                <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
-                <a-mentions-option value="吴杨">吴杨</a-mentions-option>
+                <a-mentions-option
+                  v-for="item in personnelList"
+                  :key="item.name"
+                  :value="item.name"
+                >{{item.name}}</a-mentions-option>
               </a-mentions>
               <a-upload
                 name="file"
@@ -177,195 +187,14 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getPersonnelList, getApproval, getInventoryList, getInventoryListColumns } from '@/api/manage'
 
-const timelinelist = [
-  {
-    key: '0',
-    title: 'curry 提交合同申请',
-    time: '2020-07-01 10:00',
-    content: ''
-  },
-  {
-    key: '1',
-    title: 'curry 评论',
-    time: '2020-07-02 10:00',
-    content: '了解一下功能'
-  }
-]
-
-const columns = [
-  {
-    key: '0',
-    title: '盘点日期',
-    dataIndex: 'InventoryDate',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age,
-    scopedSlots: { customRender: 'name' }
-  },
-  {
-    key: '1',
-    title: '盘点单号',
-    dataIndex: 'InventoryNumber',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.name - b.name
-  },
-  {
-    key: '2',
-    title: '盘点仓库',
-    dataIndex: 'InventoryWarehouse',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-
-  {
-    key: '4',
-    title: '入库类别',
-    dataIndex: 'StorageCategory ',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '5',
-    title: '出库类别',
-    dataIndex: 'OutCategory',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '部门',
-    dataIndex: 'Department',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '10',
-    title: '存货编码',
-    dataIndex: 'InventoryCode',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '11',
-    title: '存货名称',
-    dataIndex: 'InventoryName',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '12',
-    title: '规格型号',
-    dataIndex: 'SpecificationModel',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '13',
-    title: '主计量单位',
-    dataIndex: 'MainUnit',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '14',
-    title: '账面数量',
-    dataIndex: 'BookQuantity',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '15',
-    title: '调整入库数量',
-    dataIndex: 'AdjustStorageQuantity',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '16',
-    title: '调整出库数量',
-    dataIndex: 'AdjustOutQuantity',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '17',
-    title: '盘点数量',
-    dataIndex: 'InventoryQuantity',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '18',
-    title: '盈亏数量',
-    dataIndex: 'Profitloss',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '19',
-    title: '合理损耗率',
-    dataIndex: 'ReasonableLossRate',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '20',
-    title: '盈亏比例%',
-    dataIndex: 'ProfitLossRatio',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '21',
-    title: '操作',
-    dataIndex: 'action',
-    width: '150px',
-    width: 120,
-    fixed: 'right',
-    scopedSlots: { customRender: 'action' }
-  }
-]
-const data = []
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    InventoryListCode: `000${i}`,
-    InventoryWarehouseCode: `000${i}`,
-    DepartmentCode: `000${i}`,
-    InventoryDate: `000${i}`,
-    InventoryCode: `000${i}`,
-    InventoryName: `000${i}`,
-    LocationCode: `000${i}`,
-    BatchCode: `000${i}`,
-    Quantity: `000${i}`,
-    Unit: `000${i}`,
-    PackingQuantity: `000${i}`,
-    PackingUnit: `000${i}`,
-    UnitPrice: `000${i}`,
-    Amount: `000${i}`
-  })
-}
+const timelinelist = []
+const columns = []
+const personnelList = []
 const width = 120
 const product = {}
-const targetTitle = columns
+const targetTitle = []
 export default {
   components: {
     STable,
@@ -377,71 +206,38 @@ export default {
     return {
       visible: false,
       chat_visible: false,
-      data,
       status: '正在审批',
       color: '',
       product,
       columns,
       timelinelist,
       targetTitle,
-      selectedRowKeys: [], // Check here to configure the default column
+      selectedRowKeys: [],
       modal_visible: false,
       confirmLoading: false,
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                InventoryDate: '2014-12-09',
-                InventoryNumber: '',
-                InventoryWarehouse: '',
-                StorageCategory: '',
-                OutCategory: '',
-                Department: '',
-                InventoryCode: '',
-                InventoryName: '',
-                SpecificationModel: '',
-                MainUnit: '',
-                BookQuantity: '',
-                AdjustStorageQuantity: '',
-                InventoryQuantity: '',
-                Profitloss: '',
-                ReasonableLossRate: '',
-                ProfitLossRatio: ''
-              }
-            ]
-          }
+        return getInventoryList(Object.assign(parameter, this.queryParam)).then(res => {
           return res.result
         })
       },
-      comments: [
-        {
-          actions: ['回复'],
-          author: 'TOM',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: ' 你好 请问有什么可以帮助你',
-          datetime: moment().subtract(1, 'days')
-        },
-        {
-          actions: ['回复'],
-          author: 'Jerry',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: '很高兴见到你',
-          datetime: moment().subtract(2, 'days')
-        }
-      ],
+
       submitting: false,
       value: '',
       moment
     }
+  },
+  created() {
+    getInventoryListColumns().then(res => {
+      this.columns = res.result
+      this.targetTitle = this.columns
+    })
+    getPersonnelList().then(res => {
+      this.personnelList = res.result
+      console.log(this.personnelList)
+    })
   },
   computed: {
     rowSelection() {
@@ -475,8 +271,13 @@ export default {
         })
       })
     },
-    handleSearch(record) {
-      console.log(record), (this.visible = true), (this.product = record)
+    handleDetail(record) {
+      console.log(record),
+        (this.visible = true),
+        (this.product = record),
+        getApproval().then(res => {
+          this.timelinelist = res.result
+        })
     },
     handleSetting(record) {
       console.log(record), (this.modal_visible = true)

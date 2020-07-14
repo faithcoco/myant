@@ -26,7 +26,7 @@
         :scroll="{ x: 1500 }"
         bordered
       >
-        <a slot="name" slot-scope="text, record" @click="handleSearch(record)">{{ text }}</a>
+        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
 
         <span slot="action" slot-scope="text, record">
           <template v-if="$auth('table.update')">
@@ -48,30 +48,24 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
+        <a-descriptions-item label="单据号">{{product.DocumentNumber }}</a-descriptions-item>
+        <a-descriptions-item label="日期">{{product.Date}}</a-descriptions-item>
+        <a-descriptions-item label="申请部门">{{product.ApplicationDepartment}}</a-descriptions-item>
+        <a-descriptions-item label="业务员">{{product.Salesman}}</a-descriptions-item>
+        <a-descriptions-item label="出库类别">{{product.OutCategory}}</a-descriptions-item>
+        <a-descriptions-item label="审核日期">{{product.ReviewDate}}</a-descriptions-item>
+        <a-descriptions-item label="仓库编码">{{product.WarehouseCode}}</a-descriptions-item>
+        <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
+        <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
+        <a-descriptions-item label="规格型号">{{product.SpecificationModel}}</a-descriptions-item>
+        <a-descriptions-item label="计量单位">{{product.Unit}}</a-descriptions-item>
+        <a-descriptions-item label="数量">{{product.Quantity}}</a-descriptions-item>
+        <a-descriptions-item label="需求日期">{{product.DemandDate}}</a-descriptions-item>
+        <a-descriptions-item label="工厂编码">{{product.FactoryCode}}</a-descriptions-item>
+        <a-descriptions-item label="工厂名称">{{product.FactoryName}}</a-descriptions-item>
         <a-descriptions-item label="审批状态">
           <a-tag :color="color">{{status}}</a-tag>
-        </a-descriptions-item>F
-        <a-descriptions-item label="领料申请单编码">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="部门编码">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="业务员编码">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="预计出库日期">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="预计出库仓库编码">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="存货编码">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="存货名称">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="批次编码">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="数量">{{product.Quantity}}</a-descriptions-item>
-        <a-descriptions-item label="计量单位">{{product.Unit}}</a-descriptions-item>
-        <a-descriptions-item label="包装数量">{{product.PackingQuantity}}</a-descriptions-item>
-        <a-descriptions-item label="包装单位">{{product.PackingUnit}}</a-descriptions-item>
-        <a-descriptions-item label="单价">{{product.UnitPrice}}</a-descriptions-item>
-        <a-descriptions-item label="含税单价">{{product.TaxIncludedUnitPrice}}</a-descriptions-item>
-        <a-descriptions-item label="税率">{{product.TaxRate}}</a-descriptions-item>
-        <a-descriptions-item label="金额">{{product.Amount}}</a-descriptions-item>
-        <a-descriptions-item label="含税金额">{{product.TaxIncludedAmount}}</a-descriptions-item>
-        <a-descriptions-item label="税额">{{product.Tax}}</a-descriptions-item>
-        <a-descriptions-item
-          label="Address"
-        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
+        </a-descriptions-item>
       </a-descriptions>
       <a-divider>审批详情</a-divider>
       <a-timeline>
@@ -84,7 +78,16 @@
               <a-col :span="12">{{item.time}}</a-col>
             </a-row>
           </p>
-          <p>{{item.content}}</p>
+          <p>
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
+            {{item.content}}
+          </p>
+          <p v-show="item.isShow">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" />
+              <br />
+            </a-card>
+          </p>
         </a-timeline-item>
       </a-timeline>
       <a-row>
@@ -136,9 +139,11 @@
           <div slot="content">
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
-                <a-mentions-option value="高明亮">高明亮</a-mentions-option>
-                <a-mentions-option value="黄平">黄平</a-mentions-option>
-                <a-mentions-option value="吴杨">吴杨</a-mentions-option>
+                <a-mentions-option
+                  v-for="item in personnelList"
+                  :key="item.name"
+                  :value="item.name"
+                >{{item.name}}</a-mentions-option>
               </a-mentions>
               <a-upload
                 name="file"
@@ -147,7 +152,7 @@
                 :headers="headers"
                 @change="fileChange"
               >
-                <a-button type="link" :size="size">添加附件</a-button>
+                <a-button type="link">添加附件</a-button>
               </a-upload>
             </a-form-item>
             <a-form-item>
@@ -181,170 +186,19 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import {
+  getPersonnelList,
+  getApproval,
+  getPickingApplicationList,
+  getPickingApplicationListColumns
+} from '@/api/manage'
 
-const timelinelist = [
-  {
-    key: '0',
-    title: 'curry 提交合同申请',
-    time: '2020-07-01 10:00',
-    content: ''
-  },
-  {
-    key: '1',
-    title: 'curry 评论',
-    time: '2020-07-02 10:00',
-    content: '了解一下功能'
-  }
-]
-
-const columns = [
-  {
-    key: '0',
-    title: '单据号',
-    dataIndex: 'DocumentNumber',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: (a, b) => a.age - b.age,
-    scopedSlots: { customRender: 'name' }
-  },
-  {
-    key: '1',
-    title: '日期',
-    dataIndex: 'Date',
-    defaultSortOrder: 'descend',
-    width: 110,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '2',
-    title: '申请部门',
-    dataIndex: 'ApplicationDepartment',
-    DefaultSortOrder: 'descend',
-    width: 130,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '3',
-    title: '业务员',
-    dataIndex: 'Salesman',
-    defaultSortOrder: 'descend',
-    width: 150,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '4',
-    title: '出库类别',
-    dataIndex: 'OutCategory',
-    defaultSortOrder: 'descend',
-    width: 150,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '5',
-    title: '审核日期',
-    dataIndex: 'ReviewDate',
-    defaultSortOrder: 'descend',
-    width: 110,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '6',
-    title: '仓库编码',
-    dataIndex: 'WarehouseCode',
-    defaultSortOrder: 'descend',
-    width: 110,
-    sorter: (a, b) => a.age - b.age
-  },
-
-  {
-    key: '7',
-    title: '存货编码',
-    dataIndex: 'InventoryCode',
-    defaultSortOrder: 'descend',
-    width: 110,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '8',
-    title: '存货名称',
-    dataIndex: 'InventoryName',
-    defaultSortOrder: 'descend',
-    width: 110,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '9',
-    title: '规格型号',
-    dataIndex: 'SpecificationModel',
-    defaultSortOrder: 'descend',
-    width: 110,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '10',
-    title: '计量单位',
-    dataIndex: 'Unit',
-    defaultSortOrder: 'descend',
-    width: 110,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '11',
-    title: '数量',
-    dataIndex: 'Quantity',
-    defaultSortOrder: 'descend',
-    width: 110,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '12',
-    title: '需求日期',
-    dataIndex: 'DemandDate',
-    width: 100,
-    defaultSortOrder: 'descend',
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '13',
-    title: '工厂编码',
-    dataIndex: 'FactoryCode',
-    defaultSortOrder: 'descend',
-    width: 110,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '14',
-    title: '工厂名称',
-    dataIndex: 'FactoryName',
-    defaultSortOrder: 'descend',
-    width: 100,
-    sorter: (a, b) => a.age - b.age
-  },
-  {
-    key: '18',
-    title: '操作',
-    dataIndex: 'action',
-    width: 120,
-    fixed: 'right',
-    scopedSlots: { customRender: 'action' }
-  }
-]
-const data = []
-for (let i = 0; i < 46; i++) {
-  data.push({
-    key: i,
-    code: `000${i}`,
-    name: `电热毛巾架${i}`,
-    type: `K-0000T-${i}`,
-    unit: 46 - i,
-    sales_unit_price: 5,
-    purchase_unit_price: 3
-  })
-}
+const timelinelist = []
+const columns = []
+const personnelList = []
 const width = 120
 const product = {}
-const targetTitle = columns
+const targetTitle = []
 export default {
   components: {
     STable,
@@ -354,140 +208,40 @@ export default {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
+      personnelList,
       visible: false,
       chat_visible: false,
-      data,
       status: '正在审批',
       color: '',
       product,
       columns,
       timelinelist,
       targetTitle,
-      selectedRowKeys: [], // Check here to configure the default column
+      selectedRowKeys: [],
       modal_visible: false,
       confirmLoading: false,
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
       disabled: false,
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
-          console.log('/service-->', JSON.stringify(res.result))
-          res.result = {
-            pageSize: 10,
-            pageNo: 1,
-            totalCount: 3,
-            totalPage: 1,
-            data: [
-              {
-                DocumentNumber: '0000000002',
-                Date: '2014-12-03',
-                ApplicationDepartment: '',
-                Salesman: '',
-                OutCategory: '其他领用出库',
-                ReviewDate: '2014-12-03',
-                WarehouseCode: '',
-                InventoryCode: '1003',
-                InventoryName: '计算器',
-                SpecificationModel: '',
-                Unit: '台',
-                Quantity: '100.00',
-                DemandDate: '2014-12-02',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                DocumentNumber: '0000000002',
-                Date: '2014-12-03',
-                ApplicationDepartment: '',
-                Salesman: '',
-                OutCategory: '其他领用出库',
-                ReviewDate: '2014-12-03',
-                WarehouseCode: '',
-                InventoryCode: '1005',
-                InventoryName: '数码相机',
-                SpecificationModel: '',
-                Unit: '台',
-                Quantity: '10,00',
-                DemandDate: '2014-12-03',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                DocumentNumber: '0000000005',
-                Date: '2014-12-02',
-                ApplicationDepartment: '采购部',
-                Salesman: '顾潇',
-                OutCategory: '其他领用出库',
-                ReviewDate: '2014-12-02',
-                WarehouseCode: '30',
-                InventoryCode: '01019002088',
-                InventoryName: '随机资料',
-                SpecificationModel: '中性',
-                Unit: 'PCS',
-                Quantity: '5000.00',
-                DemandDate: '2014-12-20',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                DocumentNumber: '0000000006',
-                Date: '2014-12-02',
-                ApplicationDepartment: '采购部',
-                Salesman: '查玫',
-                OutCategory: '其他领用出库',
-                ReviewDate: '2014-12-03',
-                WarehouseCode: '30',
-                InventoryCode: '01019002088',
-                InventoryName: '随机资料',
-                SpecificationModel: '中性',
-                Unit: 'PCS',
-                Quantity: '13000.00',
-                DemandDate: '2014-12-16',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              },
-              {
-                DocumentNumber: '0000000007',
-                Date: '2014-12-02',
-                ApplicationDepartment: '采购部',
-                Salesman: '顾潇',
-                OutCategory: '其他领用出库',
-                ReviewDate: '2014-12-03',
-                WarehouseCode: '30',
-                InventoryCode: '01019002088',
-                InventoryName: '随机资料',
-                SpecificationModel: '中性',
-                Unit: 'PCS',
-                Quantity: '100.00',
-                DemandDate: '2014-12-02',
-                FactoryCode: '001',
-                FactoryName: '工厂一'
-              }
-            ]
-          }
+        return getPickingApplicationList(Object.assign(parameter, this.queryParam)).then(res => {
           return res.result
         })
       },
-      comments: [
-        {
-          actions: ['回复'],
-          author: 'TOM',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: ' 你好 请问有什么可以帮助你',
-          datetime: moment().subtract(1, 'days')
-        },
-        {
-          actions: ['回复'],
-          author: 'Jerry',
-          avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-          content: '很高兴见到你',
-          datetime: moment().subtract(2, 'days')
-        }
-      ],
       submitting: false,
       value: '',
       moment
     }
+  },
+  created() {
+    getPickingApplicationListColumns().then(res => {
+      this.columns = res.result
+      this.targetTitle = this.columns
+    })
+    getPersonnelList().then(res => {
+      this.personnelList = res.result
+      console.log(this.personnelList)
+    })
   },
   computed: {
     rowSelection() {
@@ -511,7 +265,7 @@ export default {
       console.log('value', value)
       const data = [...this.data]
       //this.data = data.filter(item => item.code == value)
-      this.data = this.data.filter(function(data) {
+      this.targetList = this.data.filter(function(data) {
         return Object.keys(data).some(function(key) {
           return (
             String(data[key])
@@ -521,8 +275,13 @@ export default {
         })
       })
     },
-    handleSearch(record) {
-      console.log(record), (this.visible = true), (this.product = record)
+    handleDetail(record) {
+      console.log(record),
+        (this.visible = true),
+        (this.product = record),
+        getApproval().then(res => {
+          this.timelinelist = res.result
+        })
     },
     handleSetting(record) {
       console.log(record), (this.modal_visible = true)

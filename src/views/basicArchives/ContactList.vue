@@ -141,15 +141,6 @@
                   :value="item.name"
                 >{{item.name}}</a-mentions-option>
               </a-mentions>
-              <a-upload
-                name="file"
-                :multiple="true"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-                :headers="headers"
-                @change="fileChange"
-              >
-                <a-button type="link">添加附件</a-button>
-              </a-upload>
             </a-form-item>
             <a-form-item>
               <a-button

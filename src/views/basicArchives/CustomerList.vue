@@ -172,7 +172,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getCustomerList, getApproval, getPersonnelListm, getCustomerListColumns, getPersonnelList } from '@/api/manage'
+import { getCustomerList, getApproval, getPersonnelList, getCustomerListColumns } from '@/api/manage'
 
 const timelinelist = []
 const columns = []

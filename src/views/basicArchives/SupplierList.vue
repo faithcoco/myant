@@ -176,7 +176,7 @@ const columns = []
 const personnelList = []
 const width = 120
 const product = {}
-const targetTitle = columns
+const targetTitle = []
 export default {
   components: {
     STable,
@@ -186,6 +186,7 @@ export default {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
+      personnelList,
       visible: false,
       chat_visible: false,
       status: '正在审批',

@@ -1,20 +1,16 @@
 <template>
-
   <a-card>
-      <a-row>
-        <a-col :span="19">
-        
-        </a-col>
-        <a-col :span="5">
-          <span
-            class="table-page-search-submitButtons"
-            :style="{ float: 'right', overflow: 'hidden' } || {} "
-          >
-            <a-button style="margin-left: 5px" type="primary" @click="handleSetting()">新增</a-button>
-
-          </span>
-        </a-col>
-      </a-row>
+    <a-row>
+      <a-col :span="19"></a-col>
+      <a-col :span="5">
+        <span
+          class="table-page-search-submitButtons"
+          :style="{ float: 'right', overflow: 'hidden' } || {} "
+        >
+          <a-button style="margin-left: 5px" type="primary" @click="handleSetting()">新增</a-button>
+        </span>
+      </a-col>
+    </a-row>
     <br />
     <a-table :columns="columns" :data-source="data" :defaultExpandAllRows="true">
       <span slot="action" slot-scope="text, record">
@@ -35,38 +31,11 @@
   </a-card>
 </template>
 <script>
-const columns = [
-  { title: '类别名称', dataIndex: 'name', key: 'name' },
-  { title: '类别编号', dataIndex: 'age', key: 'age' },
-  { title: '启用', dataIndex: '', key: 'address', scopedSlots: { customRender: 'use' } },
-  { title: '操作', dataIndex: '', key: 'x', scopedSlots: { customRender: 'action' } }
-]
+import { getclassificationGoodsColumns, getclassificationGoodsList } from '@/api/manage'
+const columns = []
 
+const data = []
 
-
-const data = [
-  {
-    key: 1,
-    name: '原材料',
-    age: 60,
-    address: 'New York No. 1 Lake Park',
-    children: [
-      {
-        key: 11,
-        name: '钢材',
-        age: 42,
-        address: 'New York No. 2 Lake Park'
-      }
-           
-    ]
-  },
-  {
-    key: 2,
-    name: '成品',
-    age: 32,
-    address: 'Sidney No. 1 Lake Park'
-  }
-]
 export default {
   data() {
     return {
@@ -74,9 +43,17 @@ export default {
       columns
     }
   },
+  created() {
+    getclassificationGoodsColumns().then(res => {
+      this.columns = res.columns
+    })
+    getclassificationGoodsList().then(res => {
+      this.data = res.result
+    })
+  },
   methods: {
     onChange(e) {
-        console.log(`checked = ${e.target.checked}`);
+      console.log(`checked = ${e.target.checked}`)
     },
     handleAdd(record) {
       console.log(record)

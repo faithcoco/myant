@@ -3,7 +3,7 @@
     <a-row :gutter="8">
       <a-col :span="5">
         <s-tree
-          :dataSource="orgTree"
+          :dataSource="MessageSettinTree"
           :openKeys.sync="openKeys"
           :search="true"
           @click="handleClick"
@@ -12,13 +12,11 @@
         ></s-tree>
       </a-col>
       <a-col :span="19">
-           <a-table :columns="columns" :data-source="data" bordered>
-      <template slot="checked" >
-         <a-checkbox @change="onChange">
-  </a-checkbox>
-      </template>
-    
-    </a-table>
+        <a-table :columns="columns" :data-source="data" bordered>
+          <template slot="checked">
+            <a-checkbox @change="onChange"></a-checkbox>
+          </template>
+        </a-table>
       </a-col>
     </a-row>
 
@@ -30,7 +28,7 @@
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import OrgModal from '../other/modules/OrgModal'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getMessageSettinTree, getMessageSettinList } from '@/api/manage'
 import Vue from 'vue'
 import { Layout } from 'ant-design-vue'
 import { Descriptions } from 'ant-design-vue'
@@ -46,30 +44,30 @@ const renderContent = (value, row, index) => {
   return obj
 }
 
-const data = [
-  {
-    key: '1',
-    name: '系统将新建合同消息推送给',
-    address: '消息会实时推送'
-  },
-  {
-    key: '2',
-    name: 'John Brown',
-    tel: '0571-22098333',
-    phone: 18889898888,
-    age: 42,
-    address: '消息会实时推送'
-  },
-  {
-    key: '3',
-    name: 'John Brown',
-    age: 32,
-    tel: '0575-22098909',
-    phone: 18900010002,
-    address: '消息会实时推送'
-  }
-  
-]
+const data = []
+// const data = [
+//   {
+//     key: '1',
+//     name: '系统将新建合同消息推送给',
+//     address: '消息会实时推送'
+//   },
+//   {
+//     key: '2',
+//     name: 'John Brown',
+//     tel: '0571-22098333',
+//     phone: 18889898888,
+//     age: 42,
+//     address: '消息会实时推送'
+//   },
+//   {
+//     key: '3',
+//     name: 'John Brown',
+//     age: 32,
+//     tel: '0575-22098909',
+//     phone: 18900010002,
+//     address: '消息会实时推送'
+//   }
+// ]
 export default {
   name: 'TreeList',
   components: {
@@ -78,12 +76,67 @@ export default {
     OrgModal
   },
   data() {
-     const columns = [
+    const columns = [
       {
-         colSpan: 1,
+        colSpan: 1,
         title: '推送内容',
         dataIndex: 'name',
- 
+
+        customRender: (value, row, index) => {
+          const obj = {
+            children: value,
+            attrs: {}
+          }
+          if (index === 0) {
+            obj.attrs.rowSpan = 3
+          }
+
+          if (index === 1) {
+            obj.attrs.rowSpan = 0
+          }
+
+          if (index === 2) {
+            obj.attrs.colSpan = 0
+          }
+          return obj
+        }
+      },
+      {
+        title: '推送人员或角色',
+        dataIndex: 'age',
+        customRender: (text, row, index) => {
+          if (index == 0) {
+            return <p>合同推送人</p>
+          }
+          if (index == 1) {
+            return (
+              <p>
+                人员： <a-input style="width: 400px" />
+              </p>
+            )
+          }
+          if (index == 2) {
+            return (
+              <p>
+                角色： <a-input style="width: 400px" />
+              </p>
+            )
+          }
+          return {
+            children: <a href="javascript:;">{text}</a>
+          }
+        }
+      },
+      {
+        title: '是否推送',
+        colSpan: 1,
+        dataIndex: 'tel',
+        scopedSlots: { customRender: 'checked' }
+      },
+      {
+        title: '推送时间',
+        dataIndex: 'address',
+        customRender: renderContent,
         customRender: (value, row, index) => {
           const obj = {
             children: value,
@@ -96,54 +149,7 @@ export default {
           if (index === 1) {
             obj.attrs.rowSpan = 0
           }
-          
-          if (index === 2) {
-            obj.attrs.colSpan = 0
-          }
-          return obj
-        }
-      },
-      {
-        title: '推送人员或角色',
-        dataIndex: 'age',
-        customRender: (text, row, index) => {
-          if (index == 0) {
-            return <p>合同推送人</p>;
-          }
-          if (index==1){
-            return <p>人员： <a-input style="width: 400px"  /></p>
-          }if (index==2){
-            return <p>角色： <a-input style="width: 400px"  /></p>
-          }
-          return {
-            children: <a href="javascript:;">{text}</a>,
-           
-          };
-        },
-      },
-      {
-        title: '是否推送',
-        colSpan: 1,
-        dataIndex: 'tel',
-         scopedSlots: { customRender: 'checked' },
-      },
-      {
-        title: '推送时间',
-        dataIndex: 'address',
-        customRender: renderContent,
-                customRender: (value, row, index) => {
-          const obj = {
-            children: value,
-            attrs: {}
-          }
-          if (index === 0) {
-            obj.attrs.rowSpan = 3
-          }
-          // These two are merged into above cell
-          if (index === 1) {
-            obj.attrs.rowSpan = 0
-          }
-          
+
           if (index === 2) {
             obj.attrs.colSpan = 0
           }
@@ -156,109 +162,19 @@ export default {
       // 查询参数
       queryParam: {},
       // 表头
-      orgTree: [],
+      MessageSettinTree: [],
       selectedRowKeys: [],
       selectedRows: [],
-       data,
+      data,
       columns
     }
   },
   created() {
-    getOrgTree().then(res => {
-      this.orgTree = [
-        {
-          title: '表单设置',
-          key: 'key-01',
-          children: [
-            { title: '普通合同', key: '0-0-0' },
-            { title: '周期合同', key: '0-0-1' },
-            {
-              title: '框架合同',
-              key: '0-0-2',
-              icon: 'apartment',
-              children: [
-                {
-                  title: '销售部',
-                  key: '0-0-2-2',
-                  icon: 'apartment',
-                  children: [
-                    { title: '司宏宇组', key: '0-0-2-0' },
-                    { title: '胡燕菲组', key: '0-0-2-1' }
-                  ]
-                }
-              ]
-            },
-            { title: '发票表单', key: '0-0-3' },
-            { title: '客户表单', key: '0-0-4' },
-            { title: '回款管理', key: '0-0-5' }
-          ]
-        },
-        {
-          title: '应付表单',
-          key: 'key-02',
-          children: [
-            { title: '普通合同', key: '0-0-0' },
-            { title: '周期合同', key: '0-0-1' },
-            {
-              title: '框架合同',
-              key: '0-0-2',
-              icon: 'apartment',
-              children: [
-                {
-                  title: '销售部',
-                  key: '0-0-2-2',
-                  icon: 'apartment',
-                  children: [
-                    { title: '司宏宇组', key: '0-0-2-0' },
-                    { title: '胡燕菲组', key: '0-0-2-1' }
-                  ]
-                }
-              ]
-            },
-            { title: '发票表单', key: '0-0-3' },
-            { title: '客户表单', key: '0-0-4' },
-            { title: '回款管理', key: '0-0-5' }
-          ]
-        },
-        {
-          title: '核算中心',
-          key: 'key-03',
-          children: [
-            { title: '普通合同', key: '0-0-0' },
-            { title: '周期合同', key: '0-0-1' },
-            {
-              title: '框架合同',
-              key: '0-0-2',
-              icon: 'apartment',
-              children: [
-                {
-                  title: '销售部',
-                  key: '0-0-2-2',
-                  icon: 'apartment',
-                  children: [
-                    { title: '司宏宇组', key: '0-0-2-0' },
-                    { title: '胡燕菲组', key: '0-0-2-1' }
-                  ]
-                }
-              ]
-            },
-            { title: '发票表单', key: '0-0-3' },
-            { title: '客户表单', key: '0-0-4' },
-            { title: '回款管理', key: '0-0-5' }
-          ]
-        },
-        {
-          title: '设置',
-          key: 'key-04',
-          children: [
-            { title: '普通合同', key: '0-0-0' },
-            { title: '周期合同', key: '0-0-1' },
-            { title: '发票表单', key: '0-0-3' },
-            { title: '客户表单', key: '0-0-4' },
-            { title: '回款管理', key: '0-0-5' }
-          ]
-        }
-      ]
+    getMessageSettinTree().then(res => {
+      this.MessageSettinTree = res.result
+    })
+    getMessageSettinList().then(res => {
+      this.data = res.data
     })
   },
   methods: {

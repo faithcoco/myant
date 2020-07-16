@@ -55,7 +55,9 @@
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import OrgModal from '../other/modules/OrgModal'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getOrgTree, getServiceList, getPersonnelSettingColumns } from '@/api/manage'
+
+const columns = []
 
 export default {
   name: 'TreeList',
@@ -71,27 +73,7 @@ export default {
       // 查询参数
       queryParam: {},
       // 表头
-      columns: [
-        {
-          title: '姓名',
-          dataIndex: 'name'
-        },
-        {
-          title: '当前角色',
-          dataIndex: 'role',
-          needTotal: true
-        },
-        {
-          title: '联系电话',
-          dataIndex: 'tellphone'
-        },
-        {
-          title: '操作',
-          dataIndex: 'action',
-          width: '150px',
-          scopedSlots: { customRender: 'action' }
-        }
-      ],
+      columns,
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
@@ -104,53 +86,58 @@ export default {
     }
   },
   created() {
+    getPersonnelSettingColumns().then(res => {
+      console.log('res.result---------->', res.columns)
+      this.columns = res.columns
+    })
     getOrgTree().then(res => {
-      this.orgTree = [
-        {
-          title: '上海砺学信息科技有限公司',
-          key: 'key-01',
-          icon: 'apartment',
-          children: [
-            { title: '渠道业务', key: '0-0-0', icon: 'apartment' },
-            {
-              title: '销售总部',
-              key: '0-0-1',
-              icon: 'apartment',
-              children: [
-                {
-                  title: '销售部',
-                  key: '0-0-1-2',
-                  icon: 'apartment',
-                  children: [
-                    { title: '司宏宇组', key: '0-0-2-0', slots: { icon: 'apartment' } },
-                    { title: '胡燕菲组', key: '0-0-2-1', slots: { icon: 'apartment' } }
-                  ]
-                }
-              ]
-            },
-            {
-              title: '交付中心',
-              key: '0-0-2',
-              icon: 'apartment'
-            },
-            {
-              title: '管理部门',
-              key: '0-0-3',
-              icon: 'apartment'
-            },
-            {
-              title: '管理',
-              key: '0-0-4',
-              icon: 'apartment'
-            },
-            {
-              title: '智能制造',
-              key: '0-0-5',
-              icon: 'apartment'
-            }
-          ]
-        }
-      ]
+      this.orgTree = res.result
+      // this.orgTree = [
+      //   {
+      //     title: '上海砺学信息科技有限公司',
+      //     key: 'key-01',
+      //     icon: 'apartment',
+      //     children: [
+      //       { title: '渠道业务', key: '0-0-0', icon: 'apartment' },
+      //       {
+      //         title: '销售总部',
+      //         key: '0-0-1',
+      //         icon: 'apartment',
+      //         children: [
+      //           {
+      //             title: '销售部',
+      //             key: '0-0-1-2',
+      //             icon: 'apartment',
+      //             children: [
+      //               { title: '司宏宇组', key: '0-0-2-0', slots: { icon: 'apartment' } },
+      //               { title: '胡燕菲组', key: '0-0-2-1', slots: { icon: 'apartment' } }
+      //             ]
+      //           }
+      //         ]
+      //       },
+      //       {
+      //         title: '交付中心',
+      //         key: '0-0-2',
+      //         icon: 'apartment'
+      //       },
+      //       {
+      //         title: '管理部门',
+      //         key: '0-0-3',
+      //         icon: 'apartment'
+      //       },
+      //       {
+      //         title: '管理',
+      //         key: '0-0-4',
+      //         icon: 'apartment'
+      //       },
+      //       {
+      //         title: '智能制造',
+      //         key: '0-0-5',
+      //         icon: 'apartment'
+      //       }
+      //     ]
+      //   }
+      // ]
     })
   },
   methods: {

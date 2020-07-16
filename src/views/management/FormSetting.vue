@@ -3,7 +3,7 @@
     <a-row :gutter="8">
       <a-col :span="5">
         <s-tree
-          :dataSource="orgTree"
+          :dataSource="FormSettingTree"
           :openKeys.sync="openKeys"
           :search="true"
           @click="handleClick"
@@ -12,14 +12,22 @@
         ></s-tree>
       </a-col>
       <a-col :span="19">
-        <s-table ref="table" size="default" :columns="columns" :data="loadData" :alert="false">
+        <s-table
+          ref="table"
+          size="default"
+          :columns="columns"
+          :data="loadData"
+          :scroll="{ x: 100 }"
+          :alert="false"
+          bordered
+        >
           <span slot="use" style="margin: 0">
             <a-checkbox @change="onChange" />
           </span>
           <span slot="must" style="margin: 0">
             <a-checkbox @change="onChange" />
           </span>
-            <span slot="sort" style="margin: 0">
+          <span slot="sort" style="margin: 0">
             <a-icon type="unordered-list" />
           </span>
           <span slot="action" slot-scope="text, record">
@@ -41,7 +49,9 @@
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import OrgModal from '../other/modules/OrgModal'
-import { getOrgTree, getServiceList } from '@/api/manage'
+import { getFormSettingTree, getServiceList, getFormSettingColumns } from '@/api/manage'
+
+const columns = []
 
 export default {
   name: 'TreeList',
@@ -57,145 +67,25 @@ export default {
       // 查询参数
       queryParam: {},
       // 表头
-      columns: [
-        {
-          title: '字段名称',
-          dataIndex: 'field_name'
-        },
-        {
-          title: '字段类型',
-          dataIndex: 'field_type',
-          needTotal: true
-        },
-        {
-          title: '启用',
-
-          width: '150px',
-          scopedSlots: { customRender: 'use' }
-        },
-        {
-          title: '必填',
-          width: '150px',
-          scopedSlots: { customRender: 'must' }
-        },
-        {
-          title: '操作',
-          width: '150px',
-          scopedSlots: { customRender: 'action' }
-        },
-        {
-          title: '排序',
-          width: '150px',
-          scopedSlots: { customRender: 'sort' }
-        }
-      ],
+      columns,
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
         return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
           return res.result
         })
       },
-      orgTree: [],
+      FormSettingTree: [],
       selectedRowKeys: [],
       selectedRows: []
     }
   },
   created() {
-    getOrgTree().then(res => {
-      this.orgTree = [
-        {
-          title: '表单设置',
-          key: 'key-01',
-          children: [
-            { title: '普通合同', key: '0-0-0' },
-            { title: '周期合同', key: '0-0-1' },
-            {
-              title: '框架合同',
-              key: '0-0-2',
-              icon: 'apartment',
-              children: [
-                {
-                  title: '销售部',
-                  key: '0-0-2-2',
-                  icon: 'apartment',
-                  children: [
-                    { title: '司宏宇组', key: '0-0-2-0' },
-                    { title: '胡燕菲组', key: '0-0-2-1' }
-                  ]
-                }
-              ]
-            },
-            { title: '发票表单', key: '0-0-3' },
-            { title: '客户表单', key: '0-0-4' },
-            { title: '回款管理', key: '0-0-5' }
-          ]
-        },
-        {
-          title: '应付表单',
-          key: 'key-02',
-          children: [
-            { title: '普通合同', key: '0-0-0' },
-            { title: '周期合同', key: '0-0-1' },
-            {
-              title: '框架合同',
-              key: '0-0-2',
-              icon: 'apartment',
-              children: [
-                {
-                  title: '销售部',
-                  key: '0-0-2-2',
-                  icon: 'apartment',
-                  children: [
-                    { title: '司宏宇组', key: '0-0-2-0' },
-                    { title: '胡燕菲组', key: '0-0-2-1' }
-                  ]
-                }
-              ]
-            },
-            { title: '发票表单', key: '0-0-3' },
-            { title: '客户表单', key: '0-0-4' },
-            { title: '回款管理', key: '0-0-5' }
-          ]
-        },
-        {
-          title: '核算中心',
-          key: 'key-03',
-          children: [
-            { title: '普通合同', key: '0-0-0' },
-            { title: '周期合同', key: '0-0-1' },
-            {
-              title: '框架合同',
-              key: '0-0-2',
-              icon: 'apartment',
-              children: [
-                {
-                  title: '销售部',
-                  key: '0-0-2-2',
-                  icon: 'apartment',
-                  children: [
-                    { title: '司宏宇组', key: '0-0-2-0' },
-                    { title: '胡燕菲组', key: '0-0-2-1' }
-                  ]
-                }
-              ]
-            },
-            { title: '发票表单', key: '0-0-3' },
-            { title: '客户表单', key: '0-0-4' },
-            { title: '回款管理', key: '0-0-5' }
-          ]
-        },
-        {
-          title: '设置',
-          key: 'key-04',
-          children: [
-            { title: '普通合同', key: '0-0-0' },
-            { title: '周期合同', key: '0-0-1' },
-            { title: '发票表单', key: '0-0-3' },
-            { title: '客户表单', key: '0-0-4' },
-            { title: '回款管理', key: '0-0-5' }
-          ]
-        }
-      ]
+    getFormSettingColumns().then(res => {
+      console.log('res.result---------->', res.columns)
+      this.columns = res.columns
+    })
+    getFormSettingTree().then(res => {
+      this.FormSettingTree = res.tree
     })
   },
   methods: {

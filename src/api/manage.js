@@ -7,6 +7,12 @@ const api = {
   permission: '/permission',
   permissionNoPager: '/permission/no-pager',
   orgTree: '/org/tree',
+  FormSettingTree: '/FormSetting/tree',
+  approvalSettin: '/approval-settin/tree',
+  MessageSettin: '/MessageSettin/tree',
+  approval: '/approval',
+  Sector: '/Sector',
+
   productList: '/productList',
   SupplierList: '/SupplierList',
   CustomerList: '/CustomerList',
@@ -25,6 +31,10 @@ const api = {
   PickingApplicationList: '/PickingApplicationList',
   WarehouseList: '/WarehouseList',
   OpeningInventoryList: '/OpeningInventoryList',
+  personnelList: '/personnel-list',
+  MessageSettinList: '/MessageSettinList',
+  classificationGoodsList: '/classification_goods',
+
   productListColumns: '/productList/columns',
   SupplierListColumns: '/SupplierList/columns',
   CustomerListColumns: '/CustomerList/columns',
@@ -43,8 +53,11 @@ const api = {
   PickingApplicationListColumns: '/PickingApplicationListColumns/columns',
   WarehouseListColumns: '/WarehouseListColumns/columns',
   OpeningInventoryListColumns: '/OpeningInventoryListColumns/columns',
-  personnelList: '/personnel-list',
-  approval: '/approval'
+  PersonnelSettingColumns: '/PersonnelSetting/columns',
+  FormSettingColumns: '/FormSetting/columns',
+  CodeSettingColumns: '/CodeSetting/columns',
+  classificationGoodsColumns: '/classification_goods/columns',
+  approvalSettinColumns: '/approval-settin/columns',
 }
 
 export default api
@@ -60,6 +73,14 @@ export function getApproval(parameter) {
   console.log('/getApproval req-->', JSON.stringify(parameter))
   return axios({
     url: api.approval,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getSector(parameter) {
+  console.log('/getSector req-->', JSON.stringify(parameter))
+  return axios({
+    url: api.Sector,
     method: 'get',
     params: parameter
   })
@@ -208,11 +229,67 @@ export function getOpeningInventoryListColumns(parameter) {
     params: parameter
   })
 }
+export function getPersonnelSettingColumns(parameter) {
+  console.log('/getPersonnelSettingColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.PersonnelSettingColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getFormSettingColumns(parameter) {
+  console.log('/getFormSettingColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.FormSettingColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getCodeSettingColumns(parameter) {
+  console.log('/getCodeSettingColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.CodeSettingColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getclassificationGoodsColumns(parameter) {
+  console.log('/getclassificationGoodsColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.classificationGoodsColumns,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getapprovalSettinColumns(parameter) {
+  console.log('/getapprovalSettinColumns-->', JSON.stringify(parameter))
+  return axios({
+    url: api.approvalSettinColumns,
+    method: 'get',
+    params: parameter
+  })
+}
 
 export function getPersonnelList(parameter) {
   console.log('/getPersonnelList req-->', JSON.stringify(parameter))
   return axios({
     url: api.personnelList,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getMessageSettinList(parameter) {
+  console.log('/getMessageSettinList req-->', JSON.stringify(parameter))
+  return axios({
+    url: api.MessageSettinList,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getclassificationGoodsList(parameter) {
+  console.log('/getclassificationGoodsList req-->', JSON.stringify(parameter))
+  return axios({
+    url: api.classificationGoodsList,
     method: 'get',
     params: parameter
   })
@@ -388,6 +465,27 @@ export function getPermissions(parameter) {
 export function getOrgTree(parameter) {
   return axios({
     url: api.orgTree,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getFormSettingTree(parameter) {
+  return axios({
+    url: api.FormSettingTree,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getapprovalSettinTree(parameter) {
+  return axios({
+    url: api.approvalSettin,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getMessageSettinTree(parameter) {
+  return axios({
+    url: api.MessageSettin,
     method: 'get',
     params: parameter
   })

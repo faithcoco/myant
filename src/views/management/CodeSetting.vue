@@ -16,9 +16,7 @@
         </span>
         <span slot="date" slot-scope="text, record" @click="handleDate(record)">
           <a-dropdown>
-            <a class="ant-dropdown-link" @click="e => e.preventDefault()">
-              {{text}}
-            </a>
+            <a class="ant-dropdown-link" @click="e => e.preventDefault()">{{text}}</a>
             <a-menu slot="overlay" @click="onClick">
               <a-menu-item key="1">年</a-menu-item>
               <a-menu-item key="2">年/月</a-menu-item>
@@ -79,56 +77,9 @@ import { Descriptions } from 'ant-design-vue'
 import { Transfer } from 'ant-design-vue'
 Vue.use(Descriptions)
 Vue.use(Transfer)
+import { getCodeSettingColumns } from '@/api/manage'
 
-const columns = [
-  { title: '启用', dataIndex: '', key: 'address', scopedSlots: { customRender: 'use' } },
-  {
-    key: '0',
-    title: '功能模块',
-    dataIndex: 'name',
-
-    scopedSlots: { customRender: 'name' }
-  },
-  {
-    key: '1',
-    title: '字符名称',
-    dataIndex: 'code'
-  },
-
-  {
-    key: '2',
-    title: '前缀编号',
-    dataIndex: 'prefix',
-
-    scopedSlots: { customRender: 'prefix' }
-  },
-  {
-    key: '3',
-    title: '日期',
-    dataIndex: 'date',
-
-    scopedSlots: { customRender: 'date' }
-  },
-  {
-    key: '4',
-    title: '后缀位数',
-    dataIndex: 'sales_unit_price',
-    scopedSlots: { customRender: 'suffix' }
-  },
-  {
-    key: '5',
-    title: '初始值',
-    dataIndex: 'purchase_unit_price',
-    scopedSlots: { customRender: 'initial' }
-  },
-  {
-    key: '6',
-    title: '示例',
-    dataIndex: 'example',
-    width: '150px',
-    scopedSlots: { customRender: 'example' }
-  }
-]
+const columns = []
 const data = []
 for (let i = 0; i < 46; i++) {
   data.push({
@@ -154,14 +105,18 @@ export default {
       product,
       columns,
       targetTitle,
-      selectedRowKeys: [], // Check here to configure the default column
+      selectedRowKeys: [], 
       modal_visible: false,
       confirmLoading: false,
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
-      disabled: false,
-      
+      disabled: false
     }
+  },
+  created() {
+    getCodeSettingColumns().then(res => {
+      this.targetTitle = res.columns
+    })
   },
   computed: {
     rowSelection() {
@@ -175,9 +130,8 @@ export default {
     }
   },
   methods: {
-    onClick({key}) {
-    
-    console.log(`Click on item ${key}`);
+    onClick({ key }) {
+      console.log(`Click on item ${key}`)
     },
     afterVisibleChange(val) {
       console.log('visible', val)

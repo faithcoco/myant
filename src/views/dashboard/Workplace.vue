@@ -1,16 +1,19 @@
 <template>
   <page-view :avatar="avatar" :title="false">
     <div slot="headerContent">
-      <div class="title">{{ timeFix }}，{{ user.name }}<span class="welcome-text">，{{ welcome }}</span></div>
+      <div class="title">
+        {{ timeFix }}，{{ user.name }}
+        <span class="welcome-text">，{{ welcome }}</span>
+      </div>
       <div>前端工程师 | 蚂蚁金服 - 某某某事业群 - VUE平台</div>
     </div>
     <div slot="extra">
       <a-row class="more-info">
         <a-col :span="8">
-          <head-info title="项目" content="56" :center="false" :bordered="false"/>
+          <head-info title="项目" content="56" :center="false" :bordered="false" />
         </a-col>
         <a-col :span="8">
-          <head-info title="团队排名" content="8/24" :center="false" :bordered="false"/>
+          <head-info title="团队排名" content="8/24" :center="false" :bordered="false" />
         </a-col>
         <a-col :span="8">
           <head-info title="项目数" content="2,223" :center="false" />
@@ -27,26 +30,87 @@
             style="margin-bottom: 24px;"
             :bordered="false"
             title="进行中的项目"
-            :body-style="{ padding: 0 }">
+            :body-style="{ padding: 0 }"
+          >
             <a slot="extra">全部项目</a>
             <div>
-              <a-card-grid class="project-card-grid" :key="i" v-for="(item, i) in projects">
-                <a-card :bordered="false" :body-style="{ padding: 0 }">
-                  <a-card-meta>
-                    <div slot="title" class="card-title">
-                      <a-avatar size="small" :src="item.cover"/>
-                      <a>{{ item.title }}</a>
+              <a-row :gutter="24" :style="{ marginTop: '24px' }">
+                <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
+                  <chart-card :loading="loading" title="总销售额" total="￥126,560">
+                    <a-tooltip title="指标说明" slot="action">
+                      <a-icon type="info-circle-o" />
+                    </a-tooltip>
+                    <div>
+                      <trend flag="up" style="margin-right: 16px;">
+                        <span slot="term">周同比</span>
+                        12%
+                      </trend>
+                      <trend flag="down">
+                        <span slot="term">日同比</span>
+                        11%
+                      </trend>
                     </div>
-                    <div slot="description" class="card-description">
-                      {{ item.description }}
+                    <template slot="footer">
+                      日均销售额
+                      <span>￥ 234.56</span>
+                    </template>
+                  </chart-card>
+                </a-col>
+                <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
+                  <chart-card :loading="loading" title="访问量" :total="8846 | NumberFormat">
+                    <a-tooltip title="指标说明" slot="action">
+                      <a-icon type="info-circle-o" />
+                    </a-tooltip>
+                    <div>
+                      <mini-area />
                     </div>
-                  </a-card-meta>
-                  <div class="project-item">
-                    <a href="/#/">科学搬砖组</a>
-                    <span class="datetime">9小时前</span>
-                  </div>
-                </a-card>
-              </a-card-grid>
+                    <template slot="footer">
+                      日访问量
+                      <span>{{ '1234' | NumberFormat }}</span>
+                    </template>
+                  </chart-card>
+                </a-col>
+                <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
+                  <chart-card :loading="loading" title="支付笔数" :total="6560 | NumberFormat">
+                    <a-tooltip title="指标说明" slot="action">
+                      <a-icon type="info-circle-o" />
+                    </a-tooltip>
+                    <div>
+                      <mini-bar />
+                    </div>
+                    <template slot="footer">
+                      转化率
+                      <span>60%</span>
+                    </template>
+                  </chart-card>
+                </a-col>
+                <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
+                  <chart-card :loading="loading" title="运营活动效果" total="78%">
+                    <a-tooltip title="指标说明" slot="action">
+                      <a-icon type="info-circle-o" />
+                    </a-tooltip>
+                    <div>
+                      <mini-progress
+                        color="rgb(19, 194, 194)"
+                        :target="80"
+                        :percentage="78"
+                        height="8px"
+                      />
+                    </div>
+                    <template slot="footer">
+                      <trend flag="down" style="margin-right: 16px;">
+                        <span slot="term">同周比</span>
+                        12%
+                      </trend>
+                      <trend flag="up">
+                        <span slot="term">日环比</span>
+                        80%
+                      </trend>
+                    </template>
+                  </chart-card>
+                </a-col>
+              </a-row>
+              
             </div>
           </a-card>
 
@@ -57,7 +121,8 @@
                   <a-avatar slot="avatar" :src="item.user.avatar" />
                   <div slot="title">
                     <span>{{ item.user.nickname }}</span>&nbsp;
-                    在&nbsp;<a href="#">{{ item.project.name }}</a>&nbsp;
+                    在&nbsp;
+                    <a href="#">{{ item.project.name }}</a>&nbsp;
                     <span>{{ item.project.action }}</span>&nbsp;
                     <a href="#">{{ item.project.event }}</a>
                   </div>
@@ -67,14 +132,13 @@
             </a-list>
           </a-card>
         </a-col>
-        <a-col
-          style="padding: 0 12px"
-          :xl="8"
-          :lg="24"
-          :md="24"
-          :sm="24"
-          :xs="24">
-          <a-card title="快速开始 / 便捷导航" style="margin-bottom: 24px" :bordered="false" :body-style="{padding: 0}">
+        <a-col style="padding: 0 12px" :xl="8" :lg="24" :md="24" :sm="24" :xs="24">
+          <a-card
+            title="快速开始 / 便捷导航"
+            style="margin-bottom: 24px"
+            :bordered="false"
+            :body-style="{padding: 0}"
+          >
             <div class="item-group">
               <a>操作一</a>
               <a>操作二</a>
@@ -85,7 +149,13 @@
               <a-button size="small" type="primary" ghost icon="plus">添加</a-button>
             </div>
           </a-card>
-          <a-card title="XX 指数" style="margin-bottom: 24px" :loading="radarLoading" :bordered="false" :body-style="{ padding: 0 }">
+          <a-card
+            title="XX 指数"
+            style="margin-bottom: 24px"
+            :loading="radarLoading"
+            :bordered="false"
+            :body-style="{ padding: 0 }"
+          >
             <div style="min-height: 400px;">
               <!-- :scale="scale" :axis1Opts="axis1Opts" :axis2Opts="axis2Opts"  -->
               <radar :data="radarData" />
@@ -115,7 +185,7 @@ import { mapState } from 'vuex'
 
 import { PageView } from '@/layouts'
 import HeadInfo from '@/components/tools/HeadInfo'
-import { Radar } from '@/components'
+import { Radar,ChartCard, MiniArea, MiniBar, MiniProgress, RankList, Bar, Trend, NumberInfo, MiniSmoothArea } from '@/components'
 
 import { getRoleList, getServiceList } from '@/api/manage'
 
@@ -126,10 +196,19 @@ export default {
   components: {
     PageView,
     HeadInfo,
-    Radar
+    Radar, ChartCard,
+    MiniArea,
+    MiniBar,
+    MiniProgress,
+    RankList,
+    Bar,
+    Trend,
+    NumberInfo,
+    MiniSmoothArea
   },
-  data () {
+  data() {
     return {
+        loading: true,
       timeFix: timeFix(),
       avatar: '',
       user: {},
@@ -163,11 +242,13 @@ export default {
           }
         }
       },
-      scale: [{
-        dataKey: 'score',
-        min: 0,
-        max: 80
-      }],
+      scale: [
+        {
+          dataKey: 'score',
+          min: 0,
+          max: 80
+        }
+      ],
       axisData: [
         { item: '引用', a: 70, b: 30, c: 40 },
         { item: '口碑', a: 60, b: 70, c: 40 },
@@ -181,14 +262,14 @@ export default {
   },
   computed: {
     ...mapState({
-      nickname: (state) => state.user.nickname,
-      welcome: (state) => state.user.welcome
+      nickname: state => state.user.nickname,
+      welcome: state => state.user.welcome
     }),
-    userInfo () {
+    userInfo() {
       return this.$store.getters.userInfo
     }
   },
-  created () {
+  created() {
     this.user = this.userInfo
     this.avatar = this.userInfo.avatar
 
@@ -200,167 +281,159 @@ export default {
       // console.log('workplace -> call getServiceList()', res)
     })
   },
-  mounted () {
+  mounted() {
     this.getProjects()
     this.getActivity()
     this.getTeams()
     this.initRadar()
   },
   methods: {
-    getProjects () {
-      this.$http.get('/list/search/projects')
-        .then(res => {
-          console.log('/list/search/projects res-->', JSON.stringify(res))
-          this.projects = res.result && res.result.data
-          this.loading = false
-        })
+    getProjects() {
+      this.$http.get('/list/search/projects').then(res => {
+        console.log('/list/search/projects res-->', JSON.stringify(res))
+        this.projects = res.result && res.result.data
+        this.loading = false
+      })
     },
-    getActivity () {
-      this.$http.get('/workplace/activity')
-        .then(res => {
-          console.log('/workplace/activity res-->', JSON.stringify(res))
-          this.activities = res.result
-        })
+    getActivity() {
+      this.$http.get('/workplace/activity').then(res => {
+        console.log('/workplace/activity res-->', JSON.stringify(res))
+        this.activities = res.result
+      })
     },
-    getTeams () {
-      this.$http.get('/workplace/teams')
-        .then(res => {
-          console.log('/workplace/teams res-->', JSON.stringify(res))
-          this.teams = res.result
-        })
+    getTeams() {
+      this.$http.get('/workplace/teams').then(res => {
+        console.log('/workplace/teams res-->', JSON.stringify(res))
+        this.teams = res.result
+      })
     },
-    initRadar () {
+    initRadar() {
       this.radarLoading = true
 
-      this.$http.get('/workplace/radar')
-        .then(res => {
-          console.log('/workplace/radar res-->', JSON.stringify(res))
-          const dv = new DataSet.View().source(res.result)
-          dv.transform({
-            type: 'fold',
-            fields: ['个人', '团队', '部门'],
-            key: 'user',
-            value: 'score'
-          })
-
-          this.radarData = dv.rows
-          this.radarLoading = false
+      this.$http.get('/workplace/radar').then(res => {
+        console.log('/workplace/radar res-->', JSON.stringify(res))
+        const dv = new DataSet.View().source(res.result)
+        dv.transform({
+          type: 'fold',
+          fields: ['个人', '团队', '部门'],
+          key: 'user',
+          value: 'score'
         })
+
+        this.radarData = dv.rows
+        this.radarLoading = false
+      })
     }
   }
 }
 </script>
 
 <style lang="less" scoped>
-  .project-list {
-
-    .card-title {
-      font-size: 0;
-
-      a {
-        color: rgba(0, 0, 0, 0.85);
-        margin-left: 12px;
-        line-height: 24px;
-        height: 24px;
-        display: inline-block;
-        vertical-align: top;
-        font-size: 14px;
-
-        &:hover {
-          color: #1890ff;
-        }
-      }
-    }
-    .card-description {
-      color: rgba(0, 0, 0, 0.45);
-      height: 44px;
-      line-height: 22px;
-      overflow: hidden;
-    }
-    .project-item {
-      display: flex;
-      margin-top: 8px;
-      overflow: hidden;
-      font-size: 12px;
-      height: 20px;
-      line-height: 20px;
-      a {
-        color: rgba(0, 0, 0, 0.45);
-        display: inline-block;
-        flex: 1 1 0;
-
-        &:hover {
-          color: #1890ff;
-        }
-      }
-      .datetime {
-        color: rgba(0, 0, 0, 0.25);
-        flex: 0 0 auto;
-        float: right;
-      }
-    }
-    .ant-card-meta-description {
-      color: rgba(0, 0, 0, 0.45);
-      height: 44px;
-      line-height: 22px;
-      overflow: hidden;
-    }
-  }
-
-  .item-group {
-    padding: 20px 0 8px 24px;
+.project-list {
+  .card-title {
     font-size: 0;
-    a {
-      color: rgba(0, 0, 0, 0.65);
-      display: inline-block;
-      font-size: 14px;
-      margin-bottom: 13px;
-      width: 25%;
-    }
-  }
 
-  .members {
     a {
-      display: block;
-      margin: 12px 0;
+      color: rgba(0, 0, 0, 0.85);
+      margin-left: 12px;
       line-height: 24px;
       height: 24px;
-      .member {
-        font-size: 14px;
-        color: rgba(0, 0, 0, .65);
-        line-height: 24px;
-        max-width: 100px;
-        vertical-align: top;
-        margin-left: 12px;
-        transition: all 0.3s;
-        display: inline-block;
-      }
+      display: inline-block;
+      vertical-align: top;
+      font-size: 14px;
+
       &:hover {
-        span {
-          color: #1890ff;
-        }
+        color: #1890ff;
       }
     }
   }
+  .card-description {
+    color: rgba(0, 0, 0, 0.45);
+    height: 44px;
+    line-height: 22px;
+    overflow: hidden;
+  }
+  .project-item {
+    display: flex;
+    margin-top: 8px;
+    overflow: hidden;
+    font-size: 12px;
+    height: 20px;
+    line-height: 20px;
+    a {
+      color: rgba(0, 0, 0, 0.45);
+      display: inline-block;
+      flex: 1 1 0;
 
-  .mobile {
-
-    .project-list {
-
-      .project-card-grid {
-        width: 100%;
+      &:hover {
+        color: #1890ff;
       }
     }
-
-    .more-info {
-      border: 0;
-      padding-top: 16px;
-      margin: 16px 0 16px;
+    .datetime {
+      color: rgba(0, 0, 0, 0.25);
+      flex: 0 0 auto;
+      float: right;
     }
+  }
+  .ant-card-meta-description {
+    color: rgba(0, 0, 0, 0.45);
+    height: 44px;
+    line-height: 22px;
+    overflow: hidden;
+  }
+}
 
-    .headerContent .title .welcome-text {
-      display: none;
+.item-group {
+  padding: 20px 0 8px 24px;
+  font-size: 0;
+  a {
+    color: rgba(0, 0, 0, 0.65);
+    display: inline-block;
+    font-size: 14px;
+    margin-bottom: 13px;
+    width: 25%;
+  }
+}
+
+.members {
+  a {
+    display: block;
+    margin: 12px 0;
+    line-height: 24px;
+    height: 24px;
+    .member {
+      font-size: 14px;
+      color: rgba(0, 0, 0, 0.65);
+      line-height: 24px;
+      max-width: 100px;
+      vertical-align: top;
+      margin-left: 12px;
+      transition: all 0.3s;
+      display: inline-block;
+    }
+    &:hover {
+      span {
+        color: #1890ff;
+      }
+    }
+  }
+}
+
+.mobile {
+  .project-list {
+    .project-card-grid {
+      width: 100%;
     }
   }
 
+  .more-info {
+    border: 0;
+    padding-top: 16px;
+    margin: 16px 0 16px;
+  }
+
+  .headerContent .title .welcome-text {
+    display: none;
+  }
+}
 </style>

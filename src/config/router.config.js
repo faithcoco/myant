@@ -556,13 +556,7 @@ export const asyncRouterMap = [
           }
         ]
       },
-      {
-        path: '/message',
-        name: 'message',
-        component: RouteView,
-        meta: { title: '消息中心', icon: 'user', permission: ['dashboard'] },
-        component: () => import(/* webpackChunkName: "fail" */ '@/views/MessageCenter.vue'),
-      },
+
       {
         path: '/account',
         component: RouteView,
@@ -570,6 +564,32 @@ export const asyncRouterMap = [
         name: 'account',
         meta: { title: '个人页', icon: 'user', keepAlive: true, permission: [ 'user' ] },
         children: [
+          {
+            path: '/message',
+            name: 'message',
+            component: RouteView,
+            meta: { title: '消息中心', permission: ['dashboard'] },
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/MessageCenter.vue'),
+          },
+          {
+            path: '/dashboard/analysis',
+            name: 'Analysis',
+            component: () => import('@/views/dashboard/Analysis'),
+            meta: {title: '分析页', permission: ['dashboard']}
+          },
+          {
+            path: '/dashboard/monitor',
+            name: 'Monitor',
+            hidden: true,
+            component: () => import('@/views/dashboard/Monitor'),
+            meta: {title: '监控页', permission: ['dashboard']}
+          },
+          {
+            path: '/dashboard/workplace',
+            name: 'Workplace',
+            component: () => import('@/views/dashboard/Workplace'),
+            meta: {title: '工作台', permission: ['dashboard']}
+          },
           {
             path: '/account/center',
             name: 'center',

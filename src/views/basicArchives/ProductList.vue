@@ -203,6 +203,7 @@ export default {
       columns,
       timelinelist,
       targetTitle,
+      queryParam: {},
       selectedRowKeys: [], // Check here to configure the default column
       modal_visible: false,
 
@@ -212,11 +213,12 @@ export default {
       size: 'small',
 
       confirmLoading: false,
-      targetKeys: oriTargetKeys,
-      selectedKeys: ['0'],
+      targetKeys: [],
+      selectedKeys: [],
       disabled: false,
       loadData: parameter => {
         return getProductList(Object.assign(parameter, this.queryParam)).then(res => {
+          console.log(res)
           return res.result
         })
       },
@@ -229,7 +231,14 @@ export default {
   created() {
     getProductListColumns().then(res => {
       this.columns = res.result
-      this.targetTitle = this.columns
+
+      this.targetTitle = []
+      for (const key in this.columns) {
+        if (this.columns[key].isShow == true) {
+          this.targetKeys.push(this.columns[key].key)
+          this.targetTitle.push(this.columns[key])
+        }
+      }
     })
     getPersonnelList().then(res => {
       this.personnelList = res.result
@@ -255,19 +264,11 @@ export default {
       this.visible = false
     },
     onSearch(value) {
-      console.log('value', value)
-
-      const data = [...this.data]
-      //this.data = data.filter(item => item.code == value)
-      this.targetList = this.data.filter(function(data) {
-        return Object.keys(data).some(function(key) {
-          return (
-            String(data[key])
-              .toLowerCase()
-              .indexOf(value) > -1
-          )
-        })
-      })
+      console.log(value)
+      this.queryParam = {
+        key: value
+      }
+      this.$refs.table.refresh(true)
     },
     handleDetail(record) {
       console.log(record),
@@ -297,10 +298,12 @@ export default {
       this.modal_visible = false
       this.confirmLoading = false
       const columns = [...this.columns]
+
       this.targetTitle = []
       for (let i = 0; i < this.targetKeys.length; i++) {
         for (let j = 0; j < columns.length; j++) {
           if (columns[j].key == this.targetKeys[i]) {
+            columns[j].isShow = true
             this.targetTitle.push(columns[j])
           }
         }
@@ -310,7 +313,19 @@ export default {
       this.modal_visible = false
     },
     handleChange(nextTargetKeys, direction, moveKeys) {
-      this.targetKeys = nextTargetKeys
+      for (const key in moveKeys) {
+        if (direction == 'right') {
+          this.targetKeys.push(moveKeys[key])
+        } else {
+          for (const item in this.targetKeys) {
+            console.log(this.targetKeys[item])
+            if (this.targetKeys[item]==moveKeys[key]) {  
+              this.targetKeys.splice(item,1)
+            }
+          }
+         // 
+        }
+      }
     },
     handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
       this.selectedKeys = [...sourceSelectedKeys, ...targetSelectedKeys]

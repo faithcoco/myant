@@ -52,7 +52,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="客户地址编码" >
+      <a-form-model-item label="客户地址编码">
         <a-input
           v-model="form.CustomerAddressCode"
           placeholder="请输入客户地址编码"
@@ -64,7 +64,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="联系人编码" >
+      <a-form-model-item label="联系人编码">
         <a-input
           v-model="form.ContactCode"
           placeholder="请输入联系人编码"
@@ -131,7 +131,7 @@
         ></a-table>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type @click="resetForm">保存并继续</a-button>
+        <a-button type @click="resetForm">重置表单</a-button>
         <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
@@ -384,9 +384,7 @@ export default {
         Tax: '' //税额
       },
       rules: {
-        ShippingNoticeCode: [
-          { required: true, message: '请输入发货通知单编码', trigger: 'blur' },
-        ],
+        ShippingNoticeCode: [{ required: true, message: '请输入发货通知单编码', trigger: 'blur' }],
         CustomerCode: [{ required: true, message: '请输入客户编码', trigger: 'change' }]
       }
     }
@@ -427,7 +425,8 @@ export default {
           postShippingNoticeAdd(this.form).then(res => {
             console.log('res', res)
           })
-          alert('submit!')
+          alert('保存成功，点击确认回到档案界面!')
+          this.$router.push({ name: 'ShippingNoticeList' })
         } else {
           console.log('error submit!!')
           return false

@@ -1,6 +1,25 @@
 import { axios } from '@/utils/request'
 
 const api = {
+  ProductAdd: '/ProductAdd',
+  SupplierAdd: '/SupplierAdd',
+  CustomerAdd: '/CustomerAdd',
+  ContactAdd: '/ContactAdd',
+  StorageManagementAdd: '/StorageManagementAdd',
+  OutManagementAdd: '/OutManagementAdd',
+  TransferAdd: '/TransferAdd',
+  InventoryAdd: '/InventoryAdd',
+  PositionAdjustmentAdd: '/PositionAdjustmentAdd',
+  ShippingNoticeAdd: '/ShippingNoticeAdd',
+  ReceiptNoticeAdd: '/ReceiptNoticeAdd',
+  ReturnNoticeClientAdd: '/ReturnNoticeClientAdd',
+  ReturnNoticeSupplierAdd: '/ReturnNoticeSupplierAdd',
+  BaleAdd: '/BaleAdd',
+  WorkTimeReportApplicationAdd: '/WorkTimeReportApplicationAdd',
+  PickingApplicationAdd: '/PickingApplicationAdd',
+  WarehouseAdd: '/WarehouseAdd',
+  OpeningInventoryAdd: '/OpeningInventoryAdd',
+
   user: '/user',
   role: '/role',
   service: '/service',
@@ -57,11 +76,155 @@ const api = {
   FormSettingColumns: '/FormSetting/columns',
   CodeSettingColumns: '/CodeSetting/columns',
   classificationGoodsColumns: '/classification_goods/columns',
-  approvalSettinColumns: '/approval-settin/columns',
+  approvalSettinColumns: '/approval-settin/columns'
 }
 
 export default api
 
+export function postProductAdd(parameter) {
+  console.log('/postProductAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.ProductAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postSupplierAdd(parameter) {
+  console.log('/postSupplierAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.SupplierAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postCustomerAdd(parameter) {
+  console.log('/postCustomerAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.CustomerAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postContactAdd(parameter) {
+  console.log('/postContactAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.ContactAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postStorageManagementAdd(parameter) {
+  console.log('/postStorageManagementAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.StorageManagementAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postOutManagementAdd(parameter) {
+  console.log('/postOutManagementAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.OutManagementAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postTransferAdd(parameter) {
+  console.log('/postTransferAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.TransferAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postInventoryAdd(parameter) {
+  console.log('/postInventoryAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.InventoryAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postPositionAdjustmentAdd(parameter) {
+  console.log('/postPositionAdjustmentAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.PositionAdjustmentAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postShippingNoticeAdd(parameter) {
+  console.log('/postShippingNoticeAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.ShippingNoticeAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postReceiptNoticeAdd(parameter) {
+  console.log('/postReceiptNoticeAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.ReceiptNoticeAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postReturnNoticeClientAdd(parameter) {
+  console.log('/postReturnNoticeClientAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.ReturnNoticeClientAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postReturnNoticeSupplierAdd(parameter) {
+  console.log('/postReturnNoticeSupplierAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.ReturnNoticeSupplierAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postBaleAdd(parameter) {
+  console.log('/postBaleAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.BaleAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postWorkTimeReportApplicationAdd(parameter) {
+  console.log('/postWorkTimeReportApplicationAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.WorkTimeReportApplicationAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postPickingApplicationAdd(parameter) {
+  console.log('/postPickingApplicationAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.PickingApplicationAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postWarehouseAdd(parameter) {
+  console.log('/postWarehouseAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.WarehouseAdd,
+    method: 'post',
+    data: parameter
+  })
+}
+export function postOpeningInventoryAdd(parameter) {
+  console.log('/postOpeningInventoryAdd-->', JSON.stringify(parameter))
+  return axios({
+    url: api.OpeningInventoryAdd,
+    method: 'post',
+    data: parameter
+  })
+}
 export function getUserList(parameter) {
   return axios({
     url: api.user,

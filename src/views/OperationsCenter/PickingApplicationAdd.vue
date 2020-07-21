@@ -105,6 +105,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postPickingApplicationAdd } from '@/api/manage'
 
 const columns = [
   {
@@ -122,73 +123,48 @@ const columns = [
   },
   {
     title: '预计出库仓库编码',
-    dataIndex: 'DepartmentCode',
-    key: 'DepartmentCode'
+    dataIndex: 'ExpectedOutWarehouseCode',
+    key: 'ExpectedOutWarehouseCode'
   },
   {
     title: '存货编码',
+    dataIndex: 'InventoryCode',
+    key: 'InventoryCode'
+  },
+  {
+    title: '存货名称',
+    dataIndex: 'InventoryName',
+    key: 'InventoryName'
+  },
+  {
+    title: '批次编码',
     dataIndex: 'BatchCode',
     key: 'BatchCode'
   },
   {
-    title: '存货名称',
-    dataIndex: 'CustomerAddressCode',
-    key: 'CustomerAddressCode'
-  },
-  {
-    title: '批次编码',
-    dataIndex: 'DepartmentCode',
-    key: 'DepartmentCode'
-  },
-  {
     title: '数量',
-    dataIndex: 'SalesmanCode',
-    key: 'SalesmanCode'
-  },
-  {
-    title: '计量单位',
-    dataIndex: 'ShippingWarehouseCode',
-    key: 'ShippingWarehouseCode'
+    dataIndex: 'Quantity',
+    key: 'Quantity'
   },
   {
     title: '包装数量',
-    dataIndex: 'InventoryCode',
-    key: '1'
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
-    dataIndex: 'InventoryCode',
-    key: '2'
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'InventoryCode',
-    key: '3'
-  },
-  {
-    title: '含税单价',
-    dataIndex: 'InventoryCode',
-    key: '4'
-  },
-  {
-    title: '税率',
-    dataIndex: 'InventoryCode',
-    key: '5'
+    dataIndex: 'UnitPrice',
+    key: 'UnitPrice'
   },
   {
     title: '金额',
-    dataIndex: 'InventoryCode',
-    key: '6'
-  },
-  {
-    title: '含税金额',
-    dataIndex: 'InventoryCode',
-    key: '7'
-  },
-  {
-    title: '税额',
-    dataIndex: 'InventoryCode',
-    key: '8'
+    dataIndex: 'Amount',
+    key: 'Amount'
   }
 ]
 const selectcolumns = [
@@ -200,73 +176,48 @@ const selectcolumns = [
   },
   {
     title: '预计出库仓库编码',
-    dataIndex: 'DepartmentCode',
-    key: 'DepartmentCode'
+    dataIndex: 'ExpectedOutWarehouseCode',
+    key: 'ExpectedOutWarehouseCode'
   },
   {
     title: '存货编码',
+    dataIndex: 'InventoryCode',
+    key: 'InventoryCode'
+  },
+  {
+    title: '存货名称',
+    dataIndex: 'InventoryName',
+    key: 'InventoryName'
+  },
+  {
+    title: '批次编码',
     dataIndex: 'BatchCode',
     key: 'BatchCode'
   },
   {
-    title: '存货名称',
-    dataIndex: 'CustomerAddressCode',
-    key: 'CustomerAddressCode'
-  },
-  {
-    title: '批次编码',
-    dataIndex: 'DepartmentCode',
-    key: 'DepartmentCode'
-  },
-  {
     title: '数量',
-    dataIndex: 'SalesmanCode',
-    key: 'SalesmanCode'
-  },
-  {
-    title: '计量单位',
-    dataIndex: 'ShippingWarehouseCode',
-    key: 'ShippingWarehouseCode'
+    dataIndex: 'Quantity',
+    key: 'Quantity'
   },
   {
     title: '包装数量',
-    dataIndex: 'InventoryCode',
-    key: '1'
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
-    dataIndex: 'InventoryCode',
-    key: '2'
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'InventoryCode',
-    key: '3'
-  },
-  {
-    title: '含税单价',
-    dataIndex: 'InventoryCode',
-    key: '4'
-  },
-  {
-    title: '税率',
-    dataIndex: 'InventoryCode',
-    key: '5'
+    dataIndex: 'UnitPrice',
+    key: 'UnitPrice'
   },
   {
     title: '金额',
-    dataIndex: 'InventoryCode',
-    key: '6'
-  },
-  {
-    title: '含税金额',
-    dataIndex: 'InventoryCode',
-    key: '7'
-  },
-  {
-    title: '税额',
-    dataIndex: 'InventoryCode',
-    key: '8'
+    dataIndex: 'Amount',
+    key: 'Amount'
   }
 ]
 
@@ -338,10 +289,7 @@ export default {
         Amount: '' //金额
       },
       rules: {
-        PickingApplicationCode: [
-          { required: true, message: '请输入产品编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
-        ],
+        PickingApplicationCode: [{ required: true, message: '请输入产品编码', trigger: 'blur' }],
         region: [{ required: true, message: '', trigger: 'change' }],
         date1: [{ required: true, message: '', trigger: 'change' }],
         type: [
@@ -389,6 +337,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postPickingApplicationAdd(this.form).then(res => {
+            console.log('res----->', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')

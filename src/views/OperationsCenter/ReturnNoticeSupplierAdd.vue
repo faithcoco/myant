@@ -129,6 +129,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postReturnNoticeSupplierAdd } from '@/api/manage'
 
 const columns = [
   {
@@ -373,10 +374,7 @@ export default {
         Tax: '' //税额
       },
       rules: {
-        ReturnNotificationCode: [
-          { required: true, message: '请输入产品编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '请输入产品编码', trigger: 'blur' }
-        ],
+        ReturnNotificationCode: [{ required: true, message: '请输入产品编码', trigger: 'blur' }],
         region: [{ required: true, message: '', trigger: 'change' }]
       }
     }
@@ -413,6 +411,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postReturnNoticeSupplierAdd(this.form).then(res => {
+            console.log('res---->', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')

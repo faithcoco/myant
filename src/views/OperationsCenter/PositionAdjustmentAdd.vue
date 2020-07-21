@@ -7,7 +7,7 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item label="货位调整单编码" required prop="coding">
+      <a-form-model-item label="货位调整单编码" required prop="CargoSpaceAdjustmentCode">
         <a-input
           v-model="form.CargoSpaceAdjustmentCode"
           placeholder="请输入货位调整单编码"
@@ -40,7 +40,7 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item ref="name" label="源货位编码" prop="name">
+      <a-form-model-item ref="name" label="源货位编码" prop="SourceLocationCode">
         <a-input
           v-model="form.SourceLocationCode"
           placeholder="请输入源货位编码"
@@ -51,7 +51,6 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-
       </a-form-model-item>
       <a-form-model-item label="目标货位编码" prop="code">
         <a-input
@@ -64,7 +63,6 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码">
         <a-input
@@ -77,7 +75,6 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-
       </a-form-model-item>
       <a-form-model-item ref="name" label="业务员编码">
         <a-input
@@ -90,7 +87,6 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-
       </a-form-model-item>
       <a-form-model-item ref="name" label="调整日期">
         <a-date-picker
@@ -133,6 +129,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postPositionAdjustmentAdd } from '@/api/manage'
 
 const columns = [
   {
@@ -180,23 +177,23 @@ const columns = [
   },
   {
     title: '包装数量',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'UnitQrice',
+    key: 'UnitQrice'
   },
   {
     title: '金额',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'Amount',
+    key: 'Amount'
   }
 ]
 const selectcolumns = [
@@ -238,23 +235,23 @@ const selectcolumns = [
   },
   {
     title: '包装数量',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'UnitQrice',
+    key: 'UnitQrice'
   },
   {
     title: '金额',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'Amount',
+    key: 'Amount'
   }
 ]
 
@@ -330,11 +327,8 @@ export default {
         Amount: '' //金额
       },
       rules: {
-        name: [
-          { required: true, message: '请输入产品编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
-        ],
-        region: [{ required: true, message: '', trigger: 'change' }],
+        SourceLocationCode: [{ required: true, message: '请输入源货位编码', trigger: 'blur' }],
+        CargoSpaceAdjustmentCode: [{ required: true, message: '请输入货位调整单编码', trigger: 'change' }],
         date1: [{ required: true, message: '', trigger: 'change' }],
         type: [
           {
@@ -381,6 +375,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postPositionAdjustmentAdd(this.form).then(res => {
+            console.log('res---->', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')

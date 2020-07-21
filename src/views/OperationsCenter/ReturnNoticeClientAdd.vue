@@ -141,6 +141,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postReturnNoticeClientAdd } from '@/api/manage'
 
 const columns = [
   {
@@ -187,43 +188,43 @@ const columns = [
   },
   {
     title: '包装数量',
-    dataIndex: 'InventoryCode',
-    key: '1'
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
-    dataIndex: 'InventoryCode',
-    key: '2'
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'InventoryCode',
-    key: '3'
+    dataIndex: 'UnitPrice',
+    key: 'UnitPrice'
   },
   {
     title: '含税单价',
-    dataIndex: 'InventoryCode',
-    key: '4'
+    dataIndex: 'TaxIncludedUnitPrice',
+    key: 'TaxIncludedUnitPrice'
   },
   {
     title: '税率',
-    dataIndex: 'InventoryCode',
-    key: '5'
+    dataIndex: 'TaxRate',
+    key: 'TaxRate'
   },
   {
     title: '金额',
-    dataIndex: 'InventoryCode',
-    key: '6'
+    dataIndex: 'Amount',
+    key: 'Amount'
   },
   {
     title: '含税金额',
-    dataIndex: 'InventoryCode',
-    key: '7'
+    dataIndex: 'TaxIncludedAmount',
+    key: 'TaxIncludedAmount'
   },
   {
     title: '税额',
-    dataIndex: 'InventoryCode',
-    key: '8'
+    dataIndex: 'Tax',
+    key: 'Tax'
   }
 ]
 const selectcolumns = [
@@ -264,43 +265,43 @@ const selectcolumns = [
   },
   {
     title: '包装数量',
-    dataIndex: 'InventoryCode',
-    key: '1'
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
-    dataIndex: 'InventoryCode',
-    key: '2'
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'InventoryCode',
-    key: '3'
+    dataIndex: 'UnitPrice',
+    key: 'UnitPrice'
   },
   {
     title: '含税单价',
-    dataIndex: 'InventoryCode',
-    key: '4'
+    dataIndex: 'TaxIncludedUnitPrice',
+    key: 'TaxIncludedUnitPrice'
   },
   {
     title: '税率',
-    dataIndex: 'InventoryCode',
-    key: '5'
+    dataIndex: 'TaxRate',
+    key: 'TaxRate'
   },
   {
     title: '金额',
-    dataIndex: 'InventoryCode',
-    key: '6'
+    dataIndex: 'Amount',
+    key: 'Amount'
   },
   {
     title: '含税金额',
-    dataIndex: 'InventoryCode',
-    key: '7'
+    dataIndex: 'TaxIncludedAmount',
+    key: 'TaxIncludedAmount'
   },
   {
     title: '税额',
-    dataIndex: 'InventoryCode',
-    key: '8'
+    dataIndex: 'Tax',
+    key: 'Tax'
   }
 ]
 
@@ -384,10 +385,7 @@ export default {
         Tax: '' //税额
       },
       rules: {
-        ShippingNoticeCode: [
-          { required: true, message: '请输入发货通知单编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '请输入发货通知单编码', trigger: 'blur' }
-        ],
+        ShippingNoticeCode: [{ required: true, message: '请输入发货通知单编码', trigger: 'blur' }],
         CustomerCode: [{ required: true, message: '请输入客户编码', trigger: 'change' }],
         date1: [{ required: true, message: '', trigger: 'change' }],
         type: [
@@ -435,6 +433,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postReturnNoticeClientAdd(this.form).then(res => {
+            console.log('res------->', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')

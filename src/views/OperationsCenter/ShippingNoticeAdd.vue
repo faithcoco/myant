@@ -52,7 +52,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="客户地址编码" prop="code">
+      <a-form-model-item label="客户地址编码" >
         <a-input
           v-model="form.CustomerAddressCode"
           placeholder="请输入客户地址编码"
@@ -64,9 +64,9 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="联系人编码" prop="code">
+      <a-form-model-item label="联系人编码" >
         <a-input
-          v-model="form.CustomerAddressCode"
+          v-model="form.ContactCode"
           placeholder="请输入联系人编码"
           @blur="
           () => {
@@ -141,6 +141,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postShippingNoticeAdd } from '@/api/manage'
 
 const columns = [
   {
@@ -363,6 +364,7 @@ export default {
         ShippingNoticeCode: '', //发货通知单编码
         CustomerCode: '', //客户编码
         CustomerAddressCode: '', //客户地址编码
+        ContactCode: '', //联系人编码
         DepartmentCode: '', //部门编码
         SalesmanCode: '', //业务员编码
         ExpectedOutWarehouseDate: '', //日期
@@ -384,7 +386,6 @@ export default {
       rules: {
         ShippingNoticeCode: [
           { required: true, message: '请输入发货通知单编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '请输入发货通知单编码', trigger: 'blur' }
         ],
         CustomerCode: [{ required: true, message: '请输入客户编码', trigger: 'change' }]
       }
@@ -423,6 +424,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postShippingNoticeAdd(this.form).then(res => {
+            console.log('res', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')

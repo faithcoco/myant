@@ -40,9 +40,9 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item ref="name" label="装箱仓库编码" prop="name">
+      <a-form-model-item ref="name" label="装箱仓库编码">
         <a-input
-          v-model="form.name"
+          v-model="form.PackingWarehouseCode"
           placeholder="请输入装箱仓库编码"
           @blur="
           () => {
@@ -54,7 +54,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码">
         <a-input
-          v-model="form.name"
+          v-model="form.DepartmentCode"
           placeholder="请输入部门编码"
           @blur="
           () => {
@@ -66,7 +66,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="业务员编码">
         <a-input
-          v-model="form.name"
+          v-model="form.SalesmanCode"
           placeholder="请输入业务员编码"
           @blur="
           () => {
@@ -124,6 +124,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postBaleAdd } from '@/api/manage'
 
 const columns = [
   {
@@ -161,33 +162,33 @@ const columns = [
   },
   {
     title: '数量',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'LocationCode',
+    key: 'LocationCode'
   },
   {
     title: '计量单位',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'Unit',
+    key: 'Unit'
   },
   {
     title: '包装数量',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'UnitQrice',
+    key: 'UnitQrice'
   },
   {
     title: '金额',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'Amount',
+    key: 'Amount'
   }
 ]
 const selectcolumns = [
@@ -219,33 +220,33 @@ const selectcolumns = [
   },
   {
     title: '数量',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'LocationCode',
+    key: 'LocationCode'
   },
   {
     title: '计量单位',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'Unit',
+    key: 'Unit'
   },
   {
     title: '包装数量',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'UnitQrice',
+    key: 'UnitQrice'
   },
   {
     title: '金额',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'Amount',
+    key: 'Amount'
   }
 ]
 
@@ -302,7 +303,7 @@ export default {
         DepartmentCode: '', //部门编码
         SalesmanCode: '', //业务员编码
         PackingDate: '', //日期
-        Status: '1', //装箱状态
+        Status: '', //装箱状态
         InventoryCode: '', //存货编码
         InventoryName: '', //存货名称
         BatchCode: '', //批次编码
@@ -318,10 +319,7 @@ export default {
         Tax: '' //税额
       },
       rules: {
-        PackingListCode: [
-          { required: true, message: '请输入装箱单编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
-        ],
+        PackingListCode: [{ required: true, message: '请输入装箱单编码', trigger: 'blur' }],
         region: [{ required: true, message: '', trigger: 'change' }],
         date1: [{ required: true, message: '', trigger: 'change' }],
         type: [
@@ -369,6 +367,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postBaleAdd(this.form).then(res => {
+            console.log('res---->', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')

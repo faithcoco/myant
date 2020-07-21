@@ -50,7 +50,6 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-
       </a-form-model-item>
       <a-form-model-item label="联系人编码" prop="ContactCode ">
         <a-input
@@ -63,7 +62,6 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码">
         <a-input
@@ -76,7 +74,6 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-
       </a-form-model-item>
       <a-form-model-item ref="name" label="业务员编码">
         <a-input
@@ -89,7 +86,6 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-
       </a-form-model-item>
       <a-form-model-item ref="name" label="预计入库日期">
         <a-date-picker
@@ -132,6 +128,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postReceiptNoticeAdd } from '@/api/manage'
 
 const columns = [
   {
@@ -373,10 +370,7 @@ export default {
         Tax: '' //税额
       },
       rules: {
-        ReceiptNotificationCode: [
-          { required: true, message: '请输入收货通知单编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '请输入收货通知单编码', trigger: 'blur' }
-        ],
+        ReceiptNotificationCode: [{ required: true, message: '请输入收货通知单编码', trigger: 'blur' }],
         SupplierCode: [{ required: true, message: '请输入供应商编码', trigger: 'change' }]
       }
     }
@@ -413,6 +407,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postReceiptNoticeAdd(this.form).then(res => {
+            console.log('res------->', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')

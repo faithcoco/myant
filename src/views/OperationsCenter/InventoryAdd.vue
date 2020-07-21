@@ -107,7 +107,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
-
+import { postInventoryAdd } from '@/api/manage'
 const columns = [
   {
     title: '选择',
@@ -149,28 +149,28 @@ const columns = [
   },
   {
     title: '计量单位',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'Unit',
+    key: 'Unit'
   },
   {
     title: '包装数量',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'UnitQrice',
+    key: 'UnitQrice'
   },
   {
     title: '金额',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'Amount',
+    key: 'Amount'
   }
 ]
 const selectcolumns = [
@@ -207,28 +207,28 @@ const selectcolumns = [
   },
   {
     title: '计量单位',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'Unit',
+    key: 'Unit'
   },
   {
     title: '包装数量',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'UnitQrice',
+    key: 'UnitQrice'
   },
   {
     title: '金额',
-    dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    dataIndex: 'Amount',
+    key: 'Amount'
   }
 ]
 
@@ -306,7 +306,7 @@ export default {
       rules: {
         InventoryListCode: [
           { required: true, message: '请输入盘点单编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
+
         ],
         InventoryWarehouseCode: [{ required: true, message: '请输入盘点仓库编码', trigger: 'change' }],
         date1: [{ required: true, message: '', trigger: 'change' }]
@@ -346,6 +346,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postInventoryAdd(this.form).then(res => {
+            console.log('res------->', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')

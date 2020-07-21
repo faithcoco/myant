@@ -120,6 +120,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postTransferAdd } from '@/api/manage'
 
 const columns = [
   {
@@ -312,10 +313,7 @@ export default {
         Amount: '' //金额
       },
       rules: {
-        TransferCode: [
-          { required: true, message: '请输入调拨单编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
-        ],
+        TransferCode: [{ required: true, message: '请输入调拨单编码', trigger: 'blur' }],
         region: [{ required: true, message: '', trigger: 'change' }],
         date1: [{ required: true, message: '', trigger: 'change' }],
         type: [
@@ -363,6 +361,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postTransferAdd(this.form).then(res => {
+            console.log('res--------->', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')

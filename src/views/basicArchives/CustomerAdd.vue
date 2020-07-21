@@ -45,14 +45,7 @@
         ></a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="客户类型">
-        <a-input
-          v-model="form.CustomerType"
-          placeholder="请输入客户类型"
-          @blur="
-          () => {
-            
-          }"
-        />
+        <a-input v-model="form.CustomerType" placeholder="请输入客户类型" />
       </a-form-model-item>
 
       <a-form-model-item label="负责人" prop="principal">
@@ -105,7 +98,7 @@
       </a-form-model-item>
 
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type @click="resetForm">保存并继续</a-button>
+        <a-button type @click="resetForm">重置表单</a-button>
         <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
@@ -118,8 +111,6 @@ Vue.use(formModel, Button)
 import { postCustomerAdd } from '@/api/manage'
 
 const columns = [
-  /////////////
-
   {
     title: '选择',
     dataIndex: 'checked',
@@ -280,7 +271,8 @@ export default {
           postCustomerAdd(this.form).then(res => {
             console.log('res------->', res)
           })
-          alert('submit!')
+          alert('保存成功，点击确认回到档案界面!')
+          this.$router.push({ name: 'CustomerList' })
         } else {
           console.log('error submit!!')
           return false

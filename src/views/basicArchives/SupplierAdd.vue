@@ -89,7 +89,7 @@
         </a-upload>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type @click="resetForm">保存并继续</a-button>
+        <a-button type @click="resetForm">重置表单</a-button>
         <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
@@ -217,10 +217,7 @@ export default {
         Tel: ''
       },
       rules: {
-        supplierName: [
-          { required: true, message: '请输入供应商名称', trigger: 'blur' },
-          { min: 3, max: 5, message: '', trigger: 'blur' }
-        ],
+        supplierName: [{ required: true, message: '请输入供应商名称', trigger: 'blur' }],
         region: [{ required: true, message: '请选择负责人', trigger: 'change' }],
         SupplierCode: [{ required: true, message: '请输入供应商编码', trigger: 'change' }]
       }
@@ -259,7 +256,8 @@ export default {
           postSupplierAdd(this.form).then(res => {
             console.log('res------->', res)
           })
-          alert('submit!')
+          alert('保存成功，点击确认回到档案界面!')
+          this.$router.push({ name: 'SupplierList' })
         } else {
           console.log('error submit!!')
           return false

@@ -2,14 +2,15 @@
   <div>
     <a-card>
       <a-row>
-        <a-col :span="19">
+        <a-col :span="15">
           <a-input-search @search="onSearch" placeholder="请输入搜索内容" />
         </a-col>
-        <a-col :span="5">
+        <a-col :span="9">
           <span
             class="table-page-search-submitButtons"
             :style="{ float: 'right', overflow: 'hidden' } || {} "
           >
+            <a-button style="margin-left: 5px" type="primary" @click="add()">新增</a-button>
             <a-button style="margin-left: 5px" type="primary" @click="handleSetting()">设置</a-button>
             <a-button style="margin-left: 5px" @click="() => queryParam = {}">导入</a-button>
             <a-button style="margin-left: 5px" @click="() => queryParam = {}">导出</a-button>
@@ -265,6 +266,9 @@ export default {
         getApproval().then(res => {
           this.timelinelist = res.result
         })
+    },
+    add() {
+      this.$router.push({ name: 'ContactAdd' })
     },
     handleSetting(record) {
       console.log(record), (this.modal_visible = true)

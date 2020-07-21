@@ -7,9 +7,9 @@
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-model-item ref="name" label="仓库编码" prop="WarehouseId">
+      <a-form-model-item ref="name" label="仓库编码" prop="WarehouseCode">
         <a-input
-          v-model="form.name"
+          v-model="form.WarehouseCode"
           placeholder="请输入仓库编码"
           @blur="
           () => {
@@ -19,8 +19,8 @@
           <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="仓库名称" prop="date1">
-        <a-input v-model="form.date1" placeholder="请输入仓库名称"></a-input>
+      <a-form-model-item label="仓库名称" prop="WarehouseName">
+        <a-input v-model="form.WarehouseName" placeholder="请输入仓库名称"></a-input>
       </a-form-model-item>
 
       <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
@@ -29,7 +29,7 @@
           style="width: 400px;margin-bottom:20px"
           @search="onSearch"
         />
-        <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
+        <a-table :columns="columns"  :data-source="data" :pagination="false" bordered>
           <span slot="checked" style="margin: 0" slot-scope="text,record">
             <a-checkbox v-model="record.checked" @change="onChange(record)" />
           </span>
@@ -37,16 +37,22 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item label="仓库负责人" prop="code">
-        <a-input v-model="form.code" placeholder="请选择仓库负责人">
+      <a-form-model-item label="仓库负责人" prop="WarehouseManager">
+        <a-input v-model="form.WarehouseManager" placeholder="请选择仓库负责人">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
+        <a-table
+          :columns="selectcolumns"
+          :scroll="{ x: 750 }"
+          :data-source="numberRow"
+          :pagination="false"
+          bordered
+        ></a-table>
       </a-form-model-item>
 
       <a-form-model-item ref="name" label="仓库地址">
         <a-input
-          v-model="form.address"
+          v-model="form.WarehouseAddress"
           placeholder="请选择省、区、市"
           @blur="
           () => {
@@ -57,7 +63,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="仓库地址">
         <a-input
-          v-model="form.detailed"
+          v-model="form.WarehouseDetailedAddress"
           type="textarea"
           placeholder="请输入仓库详细地址"
           @blur="
@@ -70,7 +76,7 @@
 
       <a-form-model-item ref="principal" label="货位管理" prop="principal">
         <a-input
-          v-model="form.principal"
+          v-model="form.CargoSpaceManagement"
           placeholder="请输入货位管理"
           @blur="
           () => {
@@ -84,7 +90,7 @@
       </a-form-model-item>
       <a-form-model-item label="批次管理">
         <a-input
-          v-model="form.phone"
+          v-model="form.BatchManagement"
           placeholder="请输入批次管理"
           @blur="
           () => {
@@ -117,6 +123,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postWarehouseAdd } from '@/api/manage'
 
 const columns = [
   {
@@ -128,101 +135,110 @@ const columns = [
   },
   {
     title: '仓库编码',
-    dataIndex: 'name',
-    key: 'name',
-    scopedSlots: { customRender: 'name' }
+    dataIndex: 'WarehouseCode',
+    key: 'WarehouseCode',
+    scopedSlots: { customRender: 'WarehouseCode' }
   },
   {
     title: '仓库名称',
-    dataIndex: 'age',
-    key: 'age'
+    dataIndex: 'WarehouseName',
+    key: 'WarehouseName'
   },
   {
     title: '仓库负责人',
-    dataIndex: 'address',
-    key: 'address 1'
+    dataIndex: 'WarehouseManager',
+    key: 'WarehouseManager'
   },
   {
     title: '仓库地址',
-    dataIndex: 'address',
-    key: 'address 2'
+    dataIndex: 'WarehouseAddress',
+    key: 'WarehouseAddress'
   },
   {
     title: '详细地址',
-    dataIndex: 'address',
-    key: 'address 3'
+    dataIndex: 'WarehouseDetailedAddress',
+    key: 'WarehouseDetailedAddress'
   },
   {
     title: '货位管理',
-    dataIndex: 'address',
-    key: 'address 4'
+    dataIndex: 'CargoSpaceManagement',
+    key: 'CargoSpaceManagement'
   },
   {
     title: '批次管理',
-    dataIndex: 'address',
-    key: 'address 4'
+    dataIndex: 'BatchManagement',
+    key: 'BatchManagement'
   }
 ]
 const selectcolumns = [
   {
     title: '仓库编码',
-    dataIndex: 'name',
-    key: 'name',
-    scopedSlots: { customRender: 'name' }
+    dataIndex: 'WarehouseCode',
+    key: 'WarehouseCode',
+    scopedSlots: { customRender: 'WarehouseCode' }
   },
   {
     title: '仓库名称',
-    dataIndex: 'age',
-    key: 'age'
+    dataIndex: 'WarehouseName',
+    key: 'WarehouseName'
   },
   {
     title: '仓库负责人',
-    dataIndex: 'address',
-    key: 'address 1'
+    dataIndex: 'WarehouseManager',
+    key: 'WarehouseManager'
   },
   {
     title: '仓库地址',
-    dataIndex: 'address',
-    key: 'address 2'
+    dataIndex: 'WarehouseAddress',
+    key: 'WarehouseAddress'
   },
   {
     title: '详细地址',
-    dataIndex: 'address',
-    key: 'address 3'
+    dataIndex: 'WarehouseDetailedAddress',
+    key: 'WarehouseDetailedAddress'
   },
   {
     title: '货位管理',
-    dataIndex: 'address',
-    key: 'address 4'
+    dataIndex: 'CargoSpaceManagement',
+    key: 'CargoSpaceManagement'
   },
   {
     title: '批次管理',
-    dataIndex: 'address',
-    key: 'address 4'
+    dataIndex: 'BatchManagement',
+    key: 'BatchManagement'
   }
 ]
 
 const data = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York ',
-    tags: ['nice', 'developer']
+    WarehouseCode: '10000001',
+    WarehouseName: '电商仓',
+    WarehouseManager: '玛丽',
+    WarehouseAddress: '上海闵行区',
+    WarehouseDetailedAddress: '宝龙城113弄',
+    CargoSpaceManagement: '',
+    BatchManagement: ''
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London ',
-    tags: ['loser']
+    WarehouseCode: '10000002',
+    WarehouseName: '电商仓',
+    WarehouseManager: '罗拉',
+    WarehouseAddress: '上海闵行区',
+    WarehouseDetailedAddress: '宝龙城113弄',
+    CargoSpaceManagement: '',
+    BatchManagement: ''
   },
   {
     key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney ',
-    tags: ['cool', 'teacher']
+    WarehouseCode: '10000003',
+    WarehouseName: '电商仓',
+    WarehouseManager: '迈克',
+    WarehouseAddress: '上海闵行区',
+    WarehouseDetailedAddress: '宝龙城113弄',
+    CargoSpaceManagement: '',
+    BatchManagement: ''
   }
 ]
 const numberRow = []
@@ -244,42 +260,16 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        name: '',
-        principal: '', //负责人
-        WarehouseId: '', //仓库编号
-        region: undefined,
-        date1: '',
-        delivery: false,
-        type: [],
-        resource: '',
-        address: '', //地址
-        phone: '', //电话
-        desc: '',
-        code: '',
-        price: ''
+        WarehouseCode: '', //仓库编码
+        WarehouseName: '', //仓库名称
+        WarehouseManager: '', //仓库负责人
+        WarehouseAddress: '', //仓库地址
+        WarehouseDetailedAddress: '', //仓库详细地址
+        CargoSpaceManagement: '', //货位管理
+        BatchManagement: '' //批次管理
       },
       rules: {
-        name: [
-          { required: true, message: '请输入产品编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
-        ],
-        principal: [
-          { required: true, message: '请选择负责人', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
-        ],
-        WarehouseId: [{ required: true, message: '请输入仓库编号', trigger: 'blur' }],
-        region: [{ required: true, message: '', trigger: 'change' }],
-        date1: [{ required: true, message: '请输入仓库名称', trigger: 'blur' }],
-        type: [
-          {
-            type: 'array',
-            required: true,
-            message: 'Please select at least one activity type',
-            trigger: 'change'
-          }
-        ],
-        resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
+        WarehouseCode: [{ required: true, message: '请输入产品编码', trigger: 'blur' }]
       }
     }
   },
@@ -315,6 +305,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postWarehouseAdd(this.form).then(res => {
+            console.log(res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')
@@ -338,7 +331,7 @@ export default {
       this.selectedRowKeys = selectedRowKeys
     },
     elect() {
-      this.form.name = 'PT2020062200001'
+      this.form.WarehouseCode = 'PT2020062200001'
     },
     showModal() {
       this.visible = true

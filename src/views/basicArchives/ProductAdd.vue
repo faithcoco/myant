@@ -6,9 +6,8 @@
       :rules="rules"
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
-   
     >
-      <a-form-model-item label="货品编码" required prop="code" >
+      <a-form-model-item label="货品编码" required prop="code">
         <a-input
           v-model="form.code"
           placeholder="请输入货品编码"
@@ -20,19 +19,6 @@
           <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
         </a-input>
       </a-form-model-item>
-
-      <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
-        <a-input-search placeholder="请输入搜索内容" @search="onSearch" />
-        <br />
-        <br />
-        <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
-          <span slot="checked" style="margin: 0" slot-scope="text,record">
-            <a-checkbox v-model="record.checked" @change="onChange(record)" />
-          </span>
-          <a slot="name" slot-scope="text">{{ text }}</a>
-        </a-table>
-      </a-modal>
-
       <a-form-model-item ref="ProductName" label="货品名称" prop="ProductName">
         <a-input
           v-model="form.ProductName"
@@ -41,10 +27,7 @@
           () => {
             
           }"
-        >
-         
-        </a-input>
-      
+        ></a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="规格型号">
         <a-input
@@ -74,7 +57,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="包装单位">
         <a-input
-          v-model="form.MeasurementUnit"
+          v-model="form.PackingUnit"
           placeholder="请输入包装单位"
           @blur="
           () => {
@@ -86,7 +69,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="换算关系">
         <a-input
-          v-model="form.MeasurementUnit"
+          v-model="form.ConversionRelationship"
           placeholder="请输入换算关系"
           @blur="
           () => {
@@ -147,7 +130,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="安全库存">
         <a-input
-          v-model="form.SalePrice"
+          v-model="form.SafetyStock"
           placeholder="请输入安全库存"
           @blur="
           () => {
@@ -158,7 +141,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="起订量">
         <a-input
-          v-model="form.SalePrice"
+          v-model="form.MOQ"
           placeholder="请输入起订量"
           @blur="
           () => {
@@ -169,7 +152,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="采购批量">
         <a-input
-          v-model="form.SalePrice"
+          v-model="form.PurchaseLot"
           placeholder="请输入采购批量"
           @blur="
           () => {
@@ -180,7 +163,7 @@
       </a-form-model-item>
       <a-form-model-item ref="name" label="自定义追加项">
         <a-input
-          v-model="form.SalePrice"
+          v-model="form.name"
           placeholder="请输入自定义追加项"
           @blur="
           () => {
@@ -189,7 +172,7 @@
         "
         />
         <a-input
-          v-model="form.SalePrice"
+          v-model="form.content"
           placeholder="请输入自定义追加项"
           @blur="
           () => {
@@ -209,6 +192,17 @@
           <a-button type="link" :size="size">添加附件</a-button>
         </a-upload>
       </a-form-model-item>
+      <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
+        <a-input-search placeholder="请输入搜索内容" @search="onSearch" />
+        <br />
+        <br />
+        <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
+          <span slot="checked" style="margin: 0" slot-scope="text,record">
+            <a-checkbox v-model="record.checked" @change="onChange(record)" />
+          </span>
+          <a slot="name" slot-scope="text">{{ text }}</a>
+        </a-table>
+      </a-modal>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
         <a-button type @click="resetForm">保存并继续</a-button>
         <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
@@ -220,6 +214,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postProductAdd } from '@/api/manage'
 
 const columns = [
   {
@@ -315,7 +310,7 @@ export default {
       visible: false,
       data,
       columns,
-      selectedRowKeys: [], // Check here to configure the default column
+      selectedRowKeys: [],
       headers: {
         authorization: 'authorization-text'
       },
@@ -324,15 +319,19 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        ProductName: '',
         code: '',
-        Barcode: '',
+        ProductName: '',
         SpecificationModel: '',
+        Barcode: '',
+        PackingUnit: '',
         MeasurementUnit: '',
-        ProductCategories: '',
-        SalePrice: '',
-        PurchasePrice: '',
-        desc: ''
+        ConversionRelationship: '',
+        desc: '',
+        SafetyStock: '',
+        MOQ: '',
+        PurchaseLot: '',
+        name: '',
+        content: ''
       },
       rules: {
         ProductName: [
@@ -371,8 +370,11 @@ export default {
     },
     onSubmit() {
       this.$refs.ruleForm.validate(valid => {
-        console.log('name--->', this.form)
+        // console.log('name--->', this.form)
         if (valid) {
+          postProductAdd(this.form).then(res => {
+            console.log('res------->', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')
@@ -415,6 +417,9 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
+    },
+    onSearch(value) {
+      console.log(value)
     }
   }
 }

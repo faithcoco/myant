@@ -42,14 +42,11 @@
           () => {
             
           }"
-        >
-        
-        </a-input>
-       
+        ></a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="客户类型">
         <a-input
-          v-model="form.CustomerName"
+          v-model="form.CustomerType"
           placeholder="请输入客户类型"
           @blur="
           () => {
@@ -93,7 +90,7 @@
         <a-input v-model="form.BankAccount" placeholder="请输入开户银行" />
       </a-form-model-item>
       <a-form-model-item label="银行账号">
-        <a-input v-model="form.BankAccount" placeholder="请输入银行账号" />
+        <a-input v-model="form.AccountNumber" placeholder="请输入银行账号" />
       </a-form-model-item>
       <a-form-model-item label="附件">
         <a-upload
@@ -118,6 +115,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postCustomerAdd } from '@/api/manage'
 
 const columns = [
   /////////////
@@ -156,7 +154,6 @@ const columns = [
   }
 ]
 const selectcolumns = [
-  ////////
   {
     title: '供应商名称',
     dataIndex: 'CustomerName',
@@ -206,7 +203,7 @@ const data = [
   }
 ]
 
-const numberRow = [] /////////
+const numberRow = []
 
 export default {
   data() {
@@ -214,7 +211,6 @@ export default {
       numberRow,
       selectedRow: [],
       selectcolumns,
-      ////////////////////////
       visible: false,
       selectedRowKeys: [],
       data,
@@ -228,6 +224,7 @@ export default {
       other: '',
       form: {
         CustomerName: '', //客户名称
+        CustomerType: '', //客户类型
         CustomerCode: '',
         CustomerNature: '',
         Invoice: '',
@@ -236,7 +233,8 @@ export default {
         Address: '', //地址
         DetailAddress: '',
         TaxpayerIdentificationNumber: '', //纳税人识别号
-        BankAccount: ''
+        BankAccount: '',
+        AccountNumber: ''
       },
       rules: {
         CustomerName: [
@@ -279,6 +277,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postCustomerAdd(this.form).then(res => {
+            console.log('res------->', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')

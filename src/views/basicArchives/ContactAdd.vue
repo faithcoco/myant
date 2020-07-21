@@ -42,10 +42,7 @@
           () => {
             
           }"
-        >
-         
-        </a-input>
-       
+        ></a-input>
       </a-form-model-item>
       <a-form-model-item label="客户或供应商" prop="Supplier">
         <a-select
@@ -129,6 +126,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postContactAdd } from '@/api/manage'
 
 const columns = [
   {
@@ -235,7 +233,7 @@ export default {
       form: {
         ContactCode: '',
         ContactName: '',
-        Supplier: '', //客户或者供应商
+        Supplier: '', 
         Company: '',
         Tel: '',
         Job: '',
@@ -243,9 +241,7 @@ export default {
         Address: ''
       },
       rules: {
-        ContactCode: [
-          { required: true, message: '请输入产品编码', trigger: 'blur' },
-        ]
+        ContactCode: [{ required: true, message: '请输入产品编码', trigger: 'change' }]
       }
     }
   },
@@ -281,6 +277,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postContactAdd(this.form).then(res => {
+            console.log('res------->', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')

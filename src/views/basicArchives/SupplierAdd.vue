@@ -27,10 +27,7 @@
           () => {
             $refs.name.onFieldBlur();
           }"
-        >
-       
-        </a-input>
-       
+        ></a-input>
       </a-form-model-item>
 
       <a-modal v-model="visible" title="选择编号" width="1000px" @ok="handleOk">
@@ -102,6 +99,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postSupplierAdd } from '@/api/manage'
 
 const columns = [
   {
@@ -198,7 +196,7 @@ export default {
       visible: false,
       data,
       columns,
-      selectedRowKeys: [], // Check here to configure the default column
+      selectedRowKeys: [],
       headers: {
         authorization: 'authorization-text'
       },
@@ -258,6 +256,9 @@ export default {
     onSubmit() {
       this.$refs.ruleForm.validate(valid => {
         if (valid) {
+          postSupplierAdd(this.form).then(res => {
+            console.log('res------->', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')

@@ -24,6 +24,7 @@
         :data="loadData"
         :alert="false"
         :scroll="{ x: 1500 }"
+        bordered
       >
         <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
 
@@ -52,7 +53,7 @@
         <a-descriptions-item label="仓库">{{product.Warehouse}}</a-descriptions-item>
         <a-descriptions-item label="入库日期">{{product.StorageDate}}</a-descriptions-item>
         <a-descriptions-item label="入库单号">{{product.StorageNumber}}</a-descriptions-item>
-        <a-descriptions-item label="入库类别编码">{{product.DepartmentCode}}</a-descriptions-item>
+        <a-descriptions-item label="入库类别编码">{{product.StorageTypeCode}}</a-descriptions-item>
         <a-descriptions-item label="入库类别">{{product.StorageCategory}}</a-descriptions-item>
         <a-descriptions-item label="部门编码">{{product.DepartmentCode}}</a-descriptions-item>
         <a-descriptions-item label="部门">{{product.Department}}</a-descriptions-item>

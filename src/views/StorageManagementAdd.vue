@@ -87,8 +87,6 @@
         <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
       </a-form-model-item>
 
-     
-
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
         <a-button type @click="resetForm">保存并继续</a-button>
         <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
@@ -101,6 +99,8 @@ import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
 
+import { postStorageManagementAdd } from '@/api/manage'
+
 const columns = [
   {
     title: '选择',
@@ -111,16 +111,16 @@ const columns = [
   },
   {
     title: '入库单编码',
-    dataIndex: 'Type',
-    key: 'Type',
-    scopedSlots: { customRender: 'Type' },
+    dataIndex: 'StorageCode',
+    key: 'StorageCode',
+    scopedSlots: { customRender: 'StorageCode' },
     width: 100
   },
   {
     title: '存货编码',
-    dataIndex: 'Type',
-    key: 'Type',
-    scopedSlots: { customRender: 'Type' },
+    dataIndex: 'InventoryCode',
+    key: 'InventoryCode',
+    scopedSlots: { customRender: 'InventoryCode' },
     width: 100
   },
   {
@@ -137,54 +137,60 @@ const columns = [
   },
   {
     title: '批次编码',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
-    width: 100
-  },{
-    title: '数量',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
-    width: 100
-  },{
-    title: '计量单位',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
-    width: 100
-  },{
-    title: '包装数量',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
-    width: 100
-  },{
-    title: '包装单位',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
-    width: 100
-  },{
-    title: '单价',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
-    width: 100
-  },{
-    title: '金额',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
+    dataIndex: 'BatchCode',
+    key: 'BatchCode',
     width: 100
   },
+  {
+    title: '数量',
+    dataIndex: 'Quantity',
+    key: 'Quantity',
+    width: 100
+  },
+  {
+    title: '计量单位',
+    dataIndex: 'Unit',
+    key: 'Unit',
+    width: 100
+  },
+  {
+    title: '包装数量',
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity',
+    width: 100
+  },
+  {
+    title: '包装单位',
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit',
+    width: 100
+  },
+  {
+    title: '单价',
+    dataIndex: 'UnitPrice',
+    key: 'UnitPrice',
+    width: 100
+  },
+  {
+    title: '金额',
+    dataIndex: 'Amount',
+    key: 'Amount',
+    width: 100
+  }
 ]
 const selectcolumns = [
- {
+  {
     title: '入库单编码',
-    dataIndex: 'Type',
-    key: 'Type',
-    scopedSlots: { customRender: 'Type' },
+    dataIndex: 'StorageCode',
+    key: 'StorageCode',
+    scopedSlots: { customRender: 'StorageCode' },
     width: 100
   },
   {
     title: '存货编码',
-    dataIndex: 'Type',
-    key: 'Type',
-    scopedSlots: { customRender: 'Type' },
+    dataIndex: 'InventoryCode',
+    key: 'InventoryCode',
+    scopedSlots: { customRender: 'InventoryCode' },
     width: 100
   },
   {
@@ -201,40 +207,46 @@ const selectcolumns = [
   },
   {
     title: '批次编码',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
-    width: 100
-  },{
-    title: '数量',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
-    width: 100
-  },{
-    title: '计量单位',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
-    width: 100
-  },{
-    title: '包装数量',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
-    width: 100
-  },{
-    title: '包装单位',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
-    width: 100
-  },{
-    title: '单价',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
-    width: 100
-  },{
-    title: '金额',
-    dataIndex: 'StorageProduct',
-    key: 'StorageProduct',
+    dataIndex: 'BatchCode',
+    key: 'BatchCode',
     width: 100
   },
+  {
+    title: '数量',
+    dataIndex: 'Quantity',
+    key: 'Quantity',
+    width: 100
+  },
+  {
+    title: '计量单位',
+    dataIndex: 'Unit',
+    key: 'Unit',
+    width: 100
+  },
+  {
+    title: '包装数量',
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity',
+    width: 100
+  },
+  {
+    title: '包装单位',
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit',
+    width: 100
+  },
+  {
+    title: '单价',
+    dataIndex: 'UnitPrice',
+    key: 'UnitPrice',
+    width: 100
+  },
+  {
+    title: '金额',
+    dataIndex: 'Amount',
+    key: 'Amount',
+    width: 100
+  }
 ]
 
 const data = [
@@ -343,6 +355,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postStorageManagementAdd(this.form).then(res => {
+            console.log('res------->', res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')

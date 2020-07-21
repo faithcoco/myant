@@ -29,7 +29,7 @@
           style="width: 400px;margin-bottom:20px"
           @search="onSearch"
         />
-        <a-table :columns="columns"  :data-source="data" :pagination="false" bordered>
+        <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
           <span slot="checked" style="margin: 0" slot-scope="text,record">
             <a-checkbox v-model="record.checked" @change="onChange(record)" />
           </span>
@@ -113,7 +113,7 @@
         </a-upload>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type @click="resetForm">保存并继续</a-button>
+        <a-button type @click="resetForm">重置表单</a-button>
         <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
       </a-form-model-item>
     </a-form-model>
@@ -308,7 +308,8 @@ export default {
           postWarehouseAdd(this.form).then(res => {
             console.log(res)
           })
-          alert('submit!')
+          alert('保存成功，点击确认回到档案界面!')
+          this.$router.push({ name: 'WarehouseList' })
         } else {
           console.log('error submit!!')
           return false

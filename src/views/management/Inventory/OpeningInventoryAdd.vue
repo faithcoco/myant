@@ -9,7 +9,7 @@
     >
       <a-form-model-item label="存货编码" required prop="InventoryCode">
         <a-input
-          v-model="form.name"
+          v-model="form.InventoryCode"
           placeholder="请输入产品编码"
           @blur="
           () => {
@@ -26,7 +26,13 @@
           style="width: 400px;margin-bottom:20px"
           @search="onSearch"
         />
-        <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
+        <a-table
+          :columns="columns"
+          :data-source="data"
+          :scroll="{ x: 1200 }"
+          :pagination="false"
+          bordered
+        >
           <span slot="checked" style="margin: 0" slot-scope="text,record">
             <a-checkbox v-model="record.checked" @change="onChange(record)" />
           </span>
@@ -36,7 +42,7 @@
 
       <a-form-model-item ref="name" label="仓库编码">
         <a-input
-          v-model="form.cangku"
+          v-model="form.WarehouseCode"
           placeholder="请输入产品编码"
           @blur="
           () => {
@@ -45,11 +51,17 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
+        <a-table
+          :columns="selectcolumns"
+          :data-source="numberRow"
+          :scroll="{ x: 1000 }"
+          :pagination="false"
+          bordered
+        ></a-table>
       </a-form-model-item>
       <a-form-model-item label="货位编码">
         <a-input
-          v-model="form.name"
+          v-model="form.LocationCode"
           placeholder="请输入产品编码"
           @blur="
           () => {
@@ -61,7 +73,7 @@
       </a-form-model-item>
       <a-form-model-item label="批次编码">
         <a-input
-          v-model="form.name"
+          v-model="form.BatchManagement"
           placeholder="请输入产品编码"
           @blur="
           () => {
@@ -149,6 +161,7 @@
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
+import { postOpeningInventoryAdd } from '@/api/manage'
 
 const columns = [
   {
@@ -160,126 +173,126 @@ const columns = [
   },
   {
     title: '存货编码',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'InventoryCode',
+    key: 'InventoryCode',
     width: 80,
-    scopedSlots: { customRender: 'name' }
+    scopedSlots: { customRender: 'InventoryCode' }
   },
   {
     title: '仓库编码',
-    dataIndex: 'age',
-    key: 'age',
+    dataIndex: 'WarehouseCode',
+    key: 'WarehouseCode',
     width: 80
   },
   {
     title: '货位编码',
-    dataIndex: 'address',
-    key: 'address 1',
+    dataIndex: 'LocationCode',
+    key: 'LocationCode',
     width: 80
   },
   {
     title: '批次编码',
-    dataIndex: 'address',
-    key: 'address 2',
+    dataIndex: 'BatchCode',
+    key: 'BatchCode',
     width: 80
   },
   {
     title: '数量',
-    dataIndex: 'address',
-    key: 'address 3',
+    dataIndex: 'Quantity',
+    key: 'Quantity',
     width: 80
   },
   {
     title: '计量单位',
-    dataIndex: 'address',
-    key: 'address 4',
+    dataIndex: 'Unit',
+    key: 'Unit',
     width: 80
   },
   {
     title: '包装数量',
-    dataIndex: 'address',
-    key: 'address 4',
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity',
     width: 80
   },
   {
     title: '包装单位',
-    dataIndex: 'address',
-    key: 'address 4',
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit',
     width: 80
   },
   {
     title: '单价',
-    dataIndex: 'address',
-    key: 'address 4',
+    dataIndex: 'UnitPrice',
+    key: 'UnitPrice',
     width: 80
   },
   {
     title: '金额',
-    dataIndex: 'address',
-    key: 'address 4',
+    dataIndex: 'Amount',
+    key: 'Amount',
     width: 80
   }
 ]
 const selectcolumns = [
   {
     title: '存货编码',
-    dataIndex: 'name',
-    key: 'name',
+    dataIndex: 'InventoryCode',
+    key: 'InventoryCode',
     width: 80,
-    scopedSlots: { customRender: 'name' }
+    scopedSlots: { customRender: 'InventoryCode' }
   },
   {
     title: '仓库编码',
-    dataIndex: 'age',
-    key: 'age',
+    dataIndex: 'WarehouseCode',
+    key: 'WarehouseCode',
     width: 80
   },
   {
     title: '货位编码',
-    dataIndex: 'address',
-    key: 'address 1',
+    dataIndex: 'LocationCode',
+    key: 'LocationCode',
     width: 80
   },
   {
     title: '批次编码',
-    dataIndex: 'address',
-    key: 'address 2',
+    dataIndex: 'BatchCode',
+    key: 'BatchCode',
     width: 80
   },
   {
     title: '数量',
-    dataIndex: 'address',
-    key: 'address 3',
-    ellipsis: true
+    dataIndex: 'Quantity',
+    key: 'Quantity',
+    width: 80
   },
   {
     title: '计量单位',
-    dataIndex: 'address',
-    key: 'address 4',
+    dataIndex: 'Unit',
+    key: 'Unit',
     width: 80
   },
   {
     title: '包装数量',
-    dataIndex: 'address',
-    key: 'address 4',
-    ellipsis: true
+    dataIndex: 'PackingQuantity',
+    key: 'PackingQuantity',
+    width: 80
   },
   {
     title: '包装单位',
-    dataIndex: 'address',
-    key: 'address 4',
+    dataIndex: 'PackingUnit',
+    key: 'PackingUnit',
     width: 80
   },
   {
     title: '单价',
-    dataIndex: 'address',
-    key: 'address 4',
+    dataIndex: 'UnitPrice',
+    key: 'UnitPrice',
     width: 80
   },
   {
     title: '金额',
-    dataIndex: 'address',
-    key: 'address 4',
+    dataIndex: 'Amount',
+    key: 'Amount',
     width: 80
   }
 ]
@@ -287,24 +300,55 @@ const selectcolumns = [
 const data = [
   {
     key: '1',
-    name: 'John Brown',
-    age: 32,
-    address: 'New York ',
-    tags: ['nice', 'developer']
+    InventoryCode: '1010111',
+    WarehouseCode: '0111011',
+    LocationCode: '01010110',
+    BatchCode: '0001',
+    Quantity: '1000.00',
+    Unit: '台',
+    PackingQuantity: '1000.00',
+    PackingUnit: '箱',
+    UnitPrice: '3999.00',
+    Amount: '3999000.00'
   },
   {
     key: '2',
-    name: 'Jim Green',
-    age: 42,
-    address: 'London',
-    tags: ['loser']
+    InventoryCode: '1010111',
+    WarehouseCode: '0111011',
+    LocationCode: '01010110',
+    BatchCode: '0001',
+    Quantity: '1000.00',
+    Unit: '台',
+    PackingQuantity: '1000.00',
+    PackingUnit: '箱',
+    UnitPrice: '3999.00',
+    Amount: '3999000.00'
   },
   {
     key: '3',
-    name: 'Joe Black',
-    age: 32,
-    address: 'Sidney',
-    tags: ['cool', 'teacher']
+    InventoryCode: '1010111',
+    WarehouseCode: '0111011',
+    LocationCode: '01010110',
+    BatchCode: '0001',
+    Quantity: '1000.00',
+    Unit: '台',
+    PackingQuantity: '1000.00',
+    PackingUnit: '箱',
+    UnitPrice: '3999.00',
+    Amount: '3999000.00'
+  },
+  {
+    key: '4',
+    InventoryCode: '1010111',
+    WarehouseCode: '0111011',
+    LocationCode: '01010110',
+    BatchCode: '0001',
+    Quantity: '1000.00',
+    Unit: '台',
+    PackingQuantity: '1000.00',
+    PackingUnit: '箱',
+    UnitPrice: '3999.00',
+    Amount: '3999000.00'
   }
 ]
 const numberRow = []
@@ -326,14 +370,8 @@ export default {
       wrapperCol: { span: 14 },
       other: '',
       form: {
-        name: '',
-        PickingApplicationCode: '', //领料申请单编码
-        DepartmentCode: '', //部门编码
-        SalesmanCode: '',
-        ExpectedOutWarehouseDate: '', //日期
-        ExpectedOutWarehouseCode: '',
         InventoryCode: '', //存货编码
-        InventoryName: '', //存货名称
+        WarehouseCode: '', //仓库编码
         LocationCode: '', //货位编码
         BatchCode: '', //批次编码
         Quantity: '', //数量
@@ -344,22 +382,7 @@ export default {
         Amount: '' //金额
       },
       rules: {
-        name: [
-          { required: true, message: '请输入产品编码', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
-        ],
-        region: [{ required: true, message: '', trigger: 'change' }],
-        date1: [{ required: true, message: '', trigger: 'change' }],
-        type: [
-          {
-            type: 'array',
-            required: true,
-            message: 'Please select at least one activity type',
-            trigger: 'change'
-          }
-        ],
-        resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
+        InventoryCode: [{ required: true, message: '请输入存货编码', trigger: 'blur' }]
       }
     }
   },
@@ -395,6 +418,9 @@ export default {
       this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
+          postOpeningInventoryAdd(this.form).then(res => {
+            console.log(res)
+          })
           alert('submit!')
         } else {
           console.log('error submit!!')
@@ -419,7 +445,7 @@ export default {
     },
 
     elect() {
-      this.form.name = 'PT2020062200001'
+      this.form.InventoryCode = 'PT2020062200001'
     },
     showModal() {
       this.visible = true

@@ -45,91 +45,103 @@ export const asyncRouterMap = [
           },
 
           {
-            path: 'supplier_file',
-            name: 'SupplierFile',
-            component: RouteView,
-            redirect: '/basic_archives/SupplierAdd',
-            meta: { title: '供应商档案', icon: 'user', permission: ['dashboard'] },
-            children: [
-              {
-                path: 'SupplierAdd',
-                name: 'SupplierAdd',
-                component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/SupplierAdd.vue'),
-                meta: { title: '供应商新增', permission: ['dashboard'] }
-              },
-              {
-                path: 'SupplierList',
-                name: 'SupplierList',
-                component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/SupplierList.vue'),
-                meta: { title: '供应商产品清单', permission: ['dashboard'] }
-              }
-            ]
+            path: 'SupplierList',
+            name: 'SupplierList',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/SupplierList.vue'),
+            // path: 'supplier_file',
+            // name: 'SupplierFile',
+            // component: RouteView,
+            // redirect: '/basic_archives/SupplierAdd',
+            meta: { title: '供应商档案', icon: 'user', permission: ['dashboard'] }
+            // children: [
+            //   {
+            //     path: 'SupplierAdd',
+            //     name: 'SupplierAdd',
+            //     component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/SupplierAdd.vue'),
+            //     meta: { title: '供应商新增', permission: ['dashboard'] }
+            //   },
+            //   {
+            //     path: 'SupplierList',
+            //     name: 'SupplierList',
+            //     component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/SupplierList.vue'),
+            //     meta: { title: '供应商产品清单', permission: ['dashboard'] }
+            //   }
+            // ]
           },
 
           {
-            path: 'customer_file',
-            name: 'CustomerFile',
-            component: RouteView,
-            redirect: '/basic_archives/CustomerAdd',
-            meta: { title: '客户档案', icon: 'user', permission: ['dashboard'] },
-            children: [
-              {
-                path: 'CustomerAdd',
-                name: 'CustomerAdd',
-                component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/CustomerAdd.vue'),
-                meta: { title: '客户新增', permission: ['dashboard'] }
-              },
-              {
-                path: 'CustomerList',
-                name: 'CustomerList',
-                component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/CustomerList.vue'),
-                meta: { title: '客户产品清单', permission: ['dashboard'] }
-              }
-            ]
+            path: 'CustomerList',
+            name: 'CustomerList',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/CustomerList.vue'),
+            // path: 'customer_file',
+            // name: 'CustomerFile',
+            // component: RouteView,
+            // redirect: '/basic_archives/CustomerAdd',
+            meta: { title: '客户档案', icon: 'user', permission: ['dashboard'] }
+            // children: [
+            //   {
+            //     path: 'CustomerAdd',
+            //     name: 'CustomerAdd',
+            //     component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/CustomerAdd.vue'),
+            //     meta: { title: '客户新增', permission: ['dashboard'] }
+            //   },
+            //   {
+            //     path: 'CustomerList',
+            //     name: 'CustomerList',
+            //     component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/CustomerList.vue'),
+            //     meta: { title: '客户产品清单', permission: ['dashboard'] }
+            //   }
+            // ]
           },
           {
-            path: 'contact_file',
-            name: 'ContactFile',
-            component: RouteView,
-            redirect: '/basic_archives/ContactAdd',
-            meta: { title: '联系人档案', icon: 'user', permission: ['dashboard'] },
-            children: [
-              {
-                path: 'ContactAdd',
-                name: 'ContactAdd',
-                component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ContactAdd.vue'),
-                meta: { title: '联系人新增', permission: ['dashboard'] }
-              },
-              {
-                path: 'ContactList',
-                name: 'ContactList',
-                component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ContactList.vue'),
-                meta: { title: '联系人清单', permission: ['dashboard'] }
-              }
-            ]
+            path: 'ContactList',
+            name: 'ContactList',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ContactList.vue'),
+            // path: 'contact_file',
+            // name: 'ContactFile',
+            // component: RouteView,
+            // redirect: '/basic_archives/ContactAdd',
+            meta: { title: '联系人档案', icon: 'user', permission: ['dashboard'] }
+            // children: [
+            //   {
+            //     path: 'ContactAdd',
+            //     name: 'ContactAdd',
+            //     component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ContactAdd.vue'),
+            //     meta: { title: '联系人新增', permission: ['dashboard'] }
+            //   },
+            //   {
+            //     path: 'ContactList',
+            //     name: 'ContactList',
+            //     component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ContactList.vue'),
+            //     meta: { title: '联系人清单', permission: ['dashboard'] }
+            //   }
+            // ]
           }
         ]
       },
       {
-        path: '/StorageManagement',
-        name: 'StorageManagement',
-        component: RouteView,
-        redirect: '/StorageManagementAdd',
-        meta: { title: '入库管理', icon: 'user', permission: ['dashboard'] },
-        children: [
-          {
-            path: 'StorageManagementAdd',
-            name: 'StorageManagementAdd',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/StorageManagementAdd.vue'),
-            meta: { title: '入库新增', permission: ['dashboard'] }
-          },
-          {
-            path: 'StorageManagementList',
-            name: 'StorageManagementList',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/StorageManagementList.vue'),
-            meta: { title: '入库产品清单', permission: ['dashboard'] }
-          }
-        ]
+        path: 'StorageManagementList',
+        name: 'StorageManagementList',
+        component: () => import(/* webpackChunkName: "fail" */ '@/views/StorageManagementList.vue'),
+        // path: '/StorageManagement',
+        // name: 'StorageManagement',
+        // component: RouteView,
+        // redirect: '/StorageManagementAdd',
+        meta: { title: '入库管理', icon: 'user', permission: ['dashboard'] }
+        // children: [
+        //   {
+        //     path: 'StorageManagementAdd',
+        //     name: 'StorageManagementAdd',
+        //     component: () => import(/* webpackChunkName: "fail" */ '@/views/StorageManagementAdd.vue'),
+        //     meta: { title: '入库新增', permission: ['dashboard'] }
+        //   },
+        //   {
+        //     path: 'StorageManagementList',
+        //     name: 'StorageManagementList',
+        //     component: () => import(/* webpackChunkName: "fail" */ '@/views/StorageManagementList.vue'),
+        //     meta: { title: '入库产品清单', permission: ['dashboard'] }
+        //   }
+        // ]
       },
       {
         path: '/OutManagement',
@@ -640,10 +652,34 @@ export const asyncRouterMap = [
     ]
   },
   {
-    path: 'ProductAdd',
+    path: '/ProductAdd',
     name: 'ProductAdd',
     component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
     meta: { title: '商品档案新增', permission: ['dashboard'] }
+  },
+  {
+    path: '/SupplierAdd',
+    name: 'SupplierAdd',
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/SupplierAdd.vue'),
+    meta: { title: '供应商新增', permission: ['dashboard'] }
+  },
+  {
+    path: '/CustomerAdd',
+    name: 'CustomerAdd',
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/CustomerAdd.vue'),
+    meta: { title: '客户新增', permission: ['dashboard'] }
+  },
+  {
+    path: '/ContactAdd',
+    name: 'ContactAdd',
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ContactAdd.vue'),
+    meta: { title: '联系人新增', permission: ['dashboard'] }
+  },
+  {
+    path: '/StorageManagementAdd',
+    name: 'StorageManagementAdd',
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/StorageManagementAdd.vue'),
+    meta: { title: '入库新增', permission: ['dashboard'] }
   },
   {
     path: '/account',

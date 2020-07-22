@@ -8,35 +8,34 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: { title: '首页' },
-    redirect: '/basic_archives/goods_file/product-list',
+    redirect: '/basic_archives/product-list',
     children: [
       {
         path: '/basic_archives',
         name: 'basic_archives',
         component: RouteView,
-        redirect: '/basic_archives/goods_file/product-list',
+        redirect: '/basic_archives/product-list',
         meta: { title: '基础档案', icon: 'user', permission: ['dashboard'] },
         children: [
           {
-            path: 'goods_file',
-            name: 'GoodsFile',
-            component: RouteView,
-            redirect: '/basic_archives/product-list',
-            meta: { title: '商品档案', icon: 'user', permission: ['dashboard'] },
-            children: [
-              {
-                path: 'ProductAdd',
-                name: 'ProductAdd',
-                component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
-                meta: { title: '商品档案新增', permission: ['dashboard'] }
-              },
-              {
-                path: 'product-list',
-                name: 'ProductList',
-                component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductList.vue'),
-                meta: { title: '商品档案清单', permission: ['dashboard'] }
-              }
-            ]
+            path: 'product-list',
+            name: 'ProductList',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductList.vue'),
+            meta: { title: '商品档案', icon: 'user', permission: ['dashboard'] }
+            // children: [
+            //   // {
+            //   //   path: 'ProductAdd',
+            //   //   name: 'ProductAdd',
+            //   //   component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
+            //   //   meta: { title: '商品档案新增', permission: ['dashboard'] }
+            //   // },
+            //   {
+            //     path: 'product-list',
+            //     name: 'ProductList',
+            //     component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductList.vue'),
+            //     meta: { title: '商品档案清单', permission: ['dashboard'] }
+            //   }
+            // ]
           },
           {
             path: 'classification_goods',
@@ -562,45 +561,45 @@ export const asyncRouterMap = [
         component: RouteView,
         redirect: '/account/center',
         name: 'account',
-        meta: { title: '个人页', icon: 'user', keepAlive: true, permission: [ 'user' ] },
+        meta: { title: '个人页', icon: 'user', keepAlive: true, permission: ['user'] },
         children: [
           {
             path: '/message',
             name: 'message',
             component: RouteView,
             meta: { title: '消息中心', permission: ['dashboard'] },
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/MessageCenter.vue'),
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/MessageCenter.vue')
           },
           {
             path: '/dashboard/analysis',
             name: 'Analysis',
             component: () => import('@/views/dashboard/Analysis'),
-            meta: {title: '分析页', permission: ['dashboard']}
+            meta: { title: '分析页', permission: ['dashboard'] }
           },
           {
             path: '/dashboard/monitor',
             name: 'Monitor',
             hidden: true,
             component: () => import('@/views/dashboard/Monitor'),
-            meta: {title: '监控页', permission: ['dashboard']}
+            meta: { title: '监控页', permission: ['dashboard'] }
           },
           {
             path: '/dashboard/workplace',
             name: 'Workplace',
             component: () => import('@/views/dashboard/Workplace'),
-            meta: {title: '工作台', permission: ['dashboard']}
+            meta: { title: '工作台', permission: ['dashboard'] }
           },
           {
             path: '/account/center',
             name: 'center',
             component: () => import('@/views/account/center/Index'),
-            meta: { title: '个人中心', keepAlive: true, permission: [ 'user' ] }
+            meta: { title: '个人中心', keepAlive: true, permission: ['user'] }
           },
           {
             path: '/account/settings',
             name: 'settings',
             component: () => import('@/views/account/settings/Index'),
-            meta: { title: '个人设置', hideHeader: true, permission: [ 'user' ] },
+            meta: { title: '个人设置', hideHeader: true, permission: ['user'] },
             redirect: '/account/settings/base',
             hideChildrenInMenu: true,
             children: [
@@ -608,37 +607,43 @@ export const asyncRouterMap = [
                 path: '/account/settings/base',
                 name: 'BaseSettings',
                 component: () => import('@/views/account/settings/BaseSetting'),
-                meta: { title: '基本设置', hidden: true, permission: [ 'user' ] }
+                meta: { title: '基本设置', hidden: true, permission: ['user'] }
               },
               {
                 path: '/account/settings/security',
                 name: 'SecuritySettings',
                 component: () => import('@/views/account/settings/Security'),
-                meta: { title: '安全设置', hidden: true, keepAlive: true, permission: [ 'user' ] }
+                meta: { title: '安全设置', hidden: true, keepAlive: true, permission: ['user'] }
               },
               {
                 path: '/account/settings/custom',
                 name: 'CustomSettings',
                 component: () => import('@/views/account/settings/Custom'),
-                meta: { title: '个性化设置', hidden: true, keepAlive: true, permission: [ 'user' ] }
+                meta: { title: '个性化设置', hidden: true, keepAlive: true, permission: ['user'] }
               },
               {
                 path: '/account/settings/binding',
                 name: 'BindingSettings',
                 component: () => import('@/views/account/settings/Binding'),
-                meta: { title: '账户绑定', hidden: true, keepAlive: true, permission: [ 'user' ] }
+                meta: { title: '账户绑定', hidden: true, keepAlive: true, permission: ['user'] }
               },
               {
                 path: '/account/settings/notification',
                 name: 'NotificationSettings',
                 component: () => import('@/views/account/settings/Notification'),
-                meta: { title: '新消息通知', hidden: true, keepAlive: true, permission: [ 'user' ] }
+                meta: { title: '新消息通知', hidden: true, keepAlive: true, permission: ['user'] }
               }
             ]
           }
         ]
       }
     ]
+  },
+  {
+    path: 'ProductAdd',
+    name: 'ProductAdd',
+    component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
+    meta: { title: '商品档案新增', permission: ['dashboard'] }
   },
   {
     path: '/account',

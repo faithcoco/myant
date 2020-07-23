@@ -27,10 +27,12 @@
         :scroll="{ x: 1500 }"
         bordered
       >
-        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
+        <!-- <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a> -->
 
         <span slot="action" slot-scope="text, record">
           <template v-if="$auth('table.update')">
+            <a @click="handleDetail(record)">审批</a>
+            <a-divider type="vertical" />
             <a @click="handleEdit(record)">编辑</a>
             <a-divider type="vertical" />
             <a @click="handleEdit(record)">删除</a>

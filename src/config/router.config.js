@@ -8,7 +8,7 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: { title: '首页' },
-    redirect: '/basic_archives/product-list',
+    redirect: '/message',
     children: [
       {
         path: '/basic_archives',
@@ -855,6 +855,7 @@ export const asyncRouterMap = [
       }
     ]
   },
+  
   {
     path: '*',
     redirect: '/404',

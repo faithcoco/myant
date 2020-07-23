@@ -24,13 +24,15 @@
         :columns="targetTitle"
         :data="loadData"
         :alert="false"
-        :scroll="{ x: 1500 }"
+        :scroll="{ x: 1500   }"
         bordered
       >
-        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
+        <!-- <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a> -->
 
         <span slot="action" slot-scope="text, record">
           <template v-if="$auth('table.update')">
+            <a @click="handleDetail(record)">审批</a>
+            <a-divider type="vertical" />
             <a @click="handleEdit(record)">编辑</a>
             <a-divider type="vertical" />
             <a @click="handleEdit(record)">删除</a>
@@ -183,7 +185,6 @@ import { getProductList, getProductListColumns, getPersonnelList, getApproval } 
 const timelinelist = []
 const columns = []
 const personnelList = []
-const width = 120
 const product = {}
 const targetTitle = []
 export default {
@@ -234,6 +235,7 @@ export default {
       this.columns = res.result
 
       this.targetTitle = []
+
       for (const key in this.columns) {
         if (this.columns[key].isShow == true) {
           this.targetKeys.push(this.columns[key].key)
@@ -243,7 +245,6 @@ export default {
     })
     getPersonnelList().then(res => {
       this.personnelList = res.result
-      console.log(this.personnelList)
     })
   },
   computed: {
@@ -317,12 +318,13 @@ export default {
       this.modal_visible = false
     },
     handleChange(nextTargetKeys, direction, moveKeys) {
+      console.log(nextTargetKeys)
       for (const key in moveKeys) {
         if (direction == 'right') {
           this.targetKeys.push(moveKeys[key])
         } else {
           for (const item in this.targetKeys) {
-            console.log(this.targetKeys[item])
+            // console.log(this.targetKeys[item])
             if (this.targetKeys[item] == moveKeys[key]) {
               this.targetKeys.splice(item, 1)
             }

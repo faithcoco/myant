@@ -62,7 +62,7 @@
       <a-form-model-item label="部门编码" prop="DepartmentCode">
         <a-input v-model="form.DepartmentCode" placeholder="请选择部门编码"></a-input>
       </a-form-model-item>
-      <a-form-model-item ref="date" label="入库日期" prop="date">
+      <a-form-model-item ref="date" label="入库日期" prop="StorageDate">
         <a-date-picker
           v-model="form.StorageDate"
           show-time
@@ -71,7 +71,7 @@
           style="width: 100%;"
         />
       </a-form-model-item>
-      <a-form-model-item ref="Principal" label="商品清单：">
+      <a-form-model-item ref="Principal" label="商品清单" prop="Principal">
         <a-input
           v-model="form.Principal"
           placeholder="请选择存货编码"
@@ -107,76 +107,76 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 100,
-    scopedSlots: { customRender: 'checked' }
+    scopedSlots: { customRender: 'checked' },
   },
   {
     title: '入库单编码',
     dataIndex: 'StorageCode',
     key: 'StorageCode',
     scopedSlots: { customRender: 'StorageCode' },
-    width: 100
+    width: 100,
   },
   {
     title: '存货编码',
     dataIndex: 'InventoryCode',
     key: 'InventoryCode',
     scopedSlots: { customRender: 'InventoryCode' },
-    width: 100
+    width: 100,
   },
   {
     title: '存货名称',
     dataIndex: 'Num',
     key: 'Num',
-    width: 100
+    width: 100,
   },
   {
     title: '货位编码',
     dataIndex: 'Warehouse',
     key: 'Warehouse',
-    width: 100
+    width: 100,
   },
   {
     title: '批次编码',
     dataIndex: 'BatchCode',
     key: 'BatchCode',
-    width: 100
+    width: 100,
   },
   {
     title: '数量',
     dataIndex: 'Quantity',
     key: 'Quantity',
-    width: 100
+    width: 100,
   },
   {
     title: '计量单位',
     dataIndex: 'Unit',
     key: 'Unit',
-    width: 100
+    width: 100,
   },
   {
     title: '包装数量',
     dataIndex: 'PackingQuantity',
     key: 'PackingQuantity',
-    width: 100
+    width: 100,
   },
   {
     title: '包装单位',
     dataIndex: 'PackingUnit',
     key: 'PackingUnit',
-    width: 100
+    width: 100,
   },
   {
     title: '单价',
     dataIndex: 'UnitPrice',
     key: 'UnitPrice',
-    width: 100
+    width: 100,
   },
   {
     title: '金额',
     dataIndex: 'Amount',
     key: 'Amount',
-    width: 100
-  }
+    width: 100,
+  },
 ]
 const selectcolumns = [
   {
@@ -184,69 +184,69 @@ const selectcolumns = [
     dataIndex: 'StorageCode',
     key: 'StorageCode',
     scopedSlots: { customRender: 'StorageCode' },
-    width: 100
+    width: 100,
   },
   {
     title: '存货编码',
     dataIndex: 'InventoryCode',
     key: 'InventoryCode',
     scopedSlots: { customRender: 'InventoryCode' },
-    width: 100
+    width: 100,
   },
   {
     title: '存货名称',
     dataIndex: 'Num',
     key: 'Num',
-    width: 100
+    width: 100,
   },
   {
     title: '货位编码',
     dataIndex: 'Warehouse',
     key: 'Warehouse',
-    width: 100
+    width: 100,
   },
   {
     title: '批次编码',
     dataIndex: 'BatchCode',
     key: 'BatchCode',
-    width: 100
+    width: 100,
   },
   {
     title: '数量',
     dataIndex: 'Quantity',
     key: 'Quantity',
-    width: 100
+    width: 100,
   },
   {
     title: '计量单位',
     dataIndex: 'Unit',
     key: 'Unit',
-    width: 100
+    width: 100,
   },
   {
     title: '包装数量',
     dataIndex: 'PackingQuantity',
     key: 'PackingQuantity',
-    width: 100
+    width: 100,
   },
   {
     title: '包装单位',
     dataIndex: 'PackingUnit',
     key: 'PackingUnit',
-    width: 100
+    width: 100,
   },
   {
     title: '单价',
     dataIndex: 'UnitPrice',
     key: 'UnitPrice',
-    width: 100
+    width: 100,
   },
   {
     title: '金额',
     dataIndex: 'Amount',
     key: 'Amount',
-    width: 100
-  }
+    width: 100,
+  },
 ]
 
 const data = [
@@ -255,22 +255,22 @@ const data = [
     Type: 'A11111',
     Num: 322311,
     Warehouse: 'A1',
-    StorageProduct: 'S11111'
+    StorageProduct: 'S11111',
   },
   {
     key: '2',
     Type: 'A222222',
     Num: 421231,
     Warehouse: 'A1',
-    StorageProduct: 'S222222'
+    StorageProduct: 'S222222',
   },
   {
     key: '3',
     Type: 'A33333',
     Num: 3221312,
     Warehouse: 'A1',
-    StorageProduct: 'S333333'
-  }
+    StorageProduct: 'S333333',
+  },
 ]
 const numberRow = []
 export default {
@@ -284,7 +284,7 @@ export default {
       data,
       columns,
       headers: {
-        authorization: 'authorization-text'
+        authorization: 'authorization-text',
       },
       size: 'small',
       labelCol: { span: 4 },
@@ -305,7 +305,7 @@ export default {
         supplierCode: '',
         ClientCode: '',
         DepartmentCode: '',
-        price: ''
+        price: '',
       },
       rules: {
         type: [{ required: true, message: '请选择入库类型编码', trigger: 'blur' }],
@@ -318,8 +318,8 @@ export default {
 
         StorageDate: [{ required: true, message: '请选择入库日期', trigger: 'change' }],
         order: [{ required: true, message: '请选择需要关联的单据', trigger: 'blur' }],
-        StorageProduct: [{ required: true, message: '请输入入库产品', trigger: 'blur' }]
-      }
+        StorageProduct: [{ required: true, message: '请输入入库产品', trigger: 'blur' }],
+      },
     }
   },
   computed: {
@@ -329,9 +329,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
 
   methods: {
@@ -352,16 +352,17 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate((valid) => {
         console.log('name--->', this.form)
         if (valid) {
-          postStorageManagementAdd(this.form).then(res => {
+          postStorageManagementAdd(this.form).then((res) => {
             console.log('res------->', res)
           })
           alert('保存成功，点击确认回到档案界面!')
           this.$router.push({ name: 'StorageManagementList' })
         } else {
           console.log('error submit!!')
+          alert('亲，您的填写内容不符合要求，请重新填写！！！')
           return false
         }
       })
@@ -400,7 +401,7 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
-    }
-  }
+    },
+  },
 }
 </script>

@@ -44,7 +44,7 @@
           }"
         ></a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="客户类型">
+      <a-form-model-item ref="name" label="客户类型" prop="CustomerType">
         <a-input v-model="form.CustomerType" placeholder="请输入客户类型" />
       </a-form-model-item>
 
@@ -54,10 +54,10 @@
       <a-form-model-item label="联系人编码" prop="CustomerNature">
         <a-input v-model="form.CustomerNature" placeholder="请输入联系人编码" />
       </a-form-model-item>
-      <a-form-model-item label="备注">
+      <a-form-model-item label="备注" prop="desc">
         <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="发票抬头">
+      <a-form-model-item ref="name" label="发票抬头" prop='Invoice'>
         <a-input
           v-model="form.Invoice"
           placeholder="请输入发票抬头"
@@ -68,7 +68,7 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="纳税人识别号">
+      <a-form-model-item ref="name" label="纳税人识别号" prop='TaxpayerIdentificationNumber' >
         <a-input
           v-model="form.TaxpayerIdentificationNumber"
           placeholder="请输入纳税人识别号"
@@ -79,10 +79,10 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item label="开户银行">
+      <a-form-model-item label="开户银行" prop='BankAccount'>
         <a-input v-model="form.BankAccount" placeholder="请输入开户银行" />
       </a-form-model-item>
-      <a-form-model-item label="银行账号">
+      <a-form-model-item label="银行账号" prop='AccountNumber'>
         <a-input v-model="form.AccountNumber" placeholder="请输入银行账号" />
       </a-form-model-item>
       <a-form-model-item label="附件">
@@ -116,59 +116,59 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 80,
-    scopedSlots: { customRender: 'checked' }
+    scopedSlots: { customRender: 'checked' },
   },
 
   {
     title: '客户名称',
     dataIndex: 'CustomerName',
     key: 'CustomerName',
-    width: 80
+    width: 80,
   },
   {
     title: '客户编码',
     dataIndex: 'CustomerCode',
     key: 'CustomerCode',
-    width: 80
+    width: 80,
   },
   {
     title: '客户性质',
     dataIndex: 'CustomerNature',
     key: 'CustomerNature',
-    width: 80
+    width: 80,
   },
   {
     title: '所属行业',
     dataIndex: 'Industry',
     key: 'Industry',
-    width: 80
-  }
+    width: 80,
+  },
 ]
 const selectcolumns = [
   {
     title: '供应商名称',
     dataIndex: 'CustomerName',
     key: 'CustomerName',
-    width: 80
+    width: 80,
   },
   {
     title: '供应商编号',
     dataIndex: 'CustomerCode',
     key: 'CustomerCode',
-    width: 80
+    width: 80,
   },
   {
     title: '供应商类型',
     dataIndex: 'CustomerNature',
     key: 'CustomerNature',
-    width: 80
+    width: 80,
   },
   {
     title: '负责人',
     dataIndex: 'Industry',
     key: 'Industry',
-    width: 80
-  }
+    width: 80,
+  },
 ]
 const data = [
   {
@@ -176,22 +176,22 @@ const data = [
     CustomerName: 'John Brown',
     CustomerCode: 32,
     CustomerNature: '国有',
-    Industry: '高新技术'
+    Industry: '高新技术',
   },
   {
     key: '2',
     CustomerName: 'Jim Green',
     CustomerCode: 42,
     CustomerNature: '私营',
-    Industry: '劳动密集型'
+    Industry: '劳动密集型',
   },
   {
     key: '3',
     CustomerName: 'Joe Black',
     CustomerCode: 32,
     CustomerNature: '私营',
-    Industry: '加工'
-  }
+    Industry: '加工',
+  },
 ]
 
 const numberRow = []
@@ -207,7 +207,7 @@ export default {
       data,
       columns,
       headers: {
-        authorization: 'authorization-text'
+        authorization: 'authorization-text',
       },
       size: 'small',
       labelCol: { span: 4 },
@@ -225,15 +225,15 @@ export default {
         DetailAddress: '',
         TaxpayerIdentificationNumber: '', //纳税人识别号
         BankAccount: '',
-        AccountNumber: ''
+        AccountNumber: '',
       },
       rules: {
         CustomerName: [
           { required: true, message: '请输入客户名称', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
+          { min: 1, max: 3, message: '', trigger: 'blur' },
         ],
-        principal: [{ required: true, message: '请输入负责人', trigger: 'blur' }]
-      }
+        principal: [{ required: true, message: '请输入负责人', trigger: 'blur' }],
+      },
     }
   },
   computed: {
@@ -242,9 +242,9 @@ export default {
       return {
         selectedRowKeys,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
 
   methods: {
@@ -265,16 +265,17 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate((valid) => {
         console.log('name--->', this.form)
         if (valid) {
-          postCustomerAdd(this.form).then(res => {
+          postCustomerAdd(this.form).then((res) => {
             console.log('res------->', res)
           })
           alert('保存成功，点击确认回到档案界面!')
           this.$router.push({ name: 'CustomerList' })
         } else {
           console.log('error submit!!')
+          alert('亲，您的填写内容不符合要求，请重新填写！！！')
           return false
         }
       })
@@ -311,7 +312,7 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
-    }
-  }
+    },
+  },
 }
 </script>

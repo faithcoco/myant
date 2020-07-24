@@ -29,7 +29,7 @@
           }"
         ></a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="规格型号">
+      <a-form-model-item ref="name" label="规格型号" prop="SpecificationModel">
         <a-input
           v-model="form.SpecificationModel"
           placeholder="请输入规格型号"
@@ -43,7 +43,7 @@
       <a-form-model-item label="货品条码" prop="Barcode">
         <a-input v-model="form.Barcode" placeholder="请输入货品条码" />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="计量单位">
+      <a-form-model-item ref="name" label="计量单位" prop="MeasurementUnit">
         <a-input
           v-model="form.MeasurementUnit"
           placeholder="请输入计量单位"
@@ -55,7 +55,7 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="包装单位">
+      <a-form-model-item ref="name" label="包装单位" prop="PackingUnit">
         <a-input
           v-model="form.PackingUnit"
           placeholder="请输入包装单位"
@@ -67,7 +67,7 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="换算关系">
+      <a-form-model-item ref="name" label="换算关系" prop="ConversionRelationship">
         <a-input
           v-model="form.ConversionRelationship"
           placeholder="请输入换算关系"
@@ -95,7 +95,7 @@
           <a-select-option value="3">汽车零部件</a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item label="货品说明">
+      <a-form-model-item label="货品说明" prop="desc">
         <a-input v-model="form.desc" type="textarea" placeholder="30字以内货品说明" />
       </a-form-model-item>
       <a-form-model-item ref="name" label="批次管理">
@@ -128,7 +128,7 @@
           <a-select-option value="2">不严格控制批次出库</a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="安全库存">
+      <a-form-model-item ref="name" label="安全库存" prop="SafetyStock">
         <a-input
           v-model="form.SafetyStock"
           placeholder="请输入安全库存"
@@ -139,7 +139,7 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="起订量">
+      <a-form-model-item ref="name" label="起订量" prop="MOQ">
         <a-input
           v-model="form.MOQ"
           placeholder="请输入起订量"
@@ -150,7 +150,7 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="采购批量">
+      <a-form-model-item ref="name" label="采购批量" prop="PurchaseLot">
         <a-input
           v-model="form.PurchaseLot"
           placeholder="请输入采购批量"
@@ -161,7 +161,7 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="自定义追加项">
+      <a-form-model-item ref="name" label="自定义追加项" prop="name">
         <a-input
           v-model="form.name"
           placeholder="请输入自定义追加项"
@@ -222,33 +222,33 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 80,
-    scopedSlots: { customRender: 'checked' }
+    scopedSlots: { customRender: 'checked' },
   },
   {
     title: '编码',
     dataIndex: 'code',
     key: '1',
     width: 80,
-    scopedSlots: { customRender: 'code' }
+    scopedSlots: { customRender: 'code' },
   },
   {
     title: '产品名称',
     dataIndex: 'ProductName',
     key: '2',
-    width: 100
+    width: 100,
   },
   {
     title: '产品条码',
     dataIndex: 'Barcode',
     key: '3',
-    width: 100
+    width: 100,
   },
   {
     title: '规格型号',
     dataIndex: 'SpecificationModel',
     key: '4',
-    width: 100
-  }
+    width: 100,
+  },
 ]
 const selectcolumns = [
   {
@@ -256,26 +256,26 @@ const selectcolumns = [
     dataIndex: 'code',
     key: '1',
     width: 80,
-    scopedSlots: { customRender: 'code' }
+    scopedSlots: { customRender: 'code' },
   },
   {
     title: '产品名称',
     dataIndex: 'ProductName',
     key: '2',
-    width: 100
+    width: 100,
   },
   {
     title: '产品条码',
     dataIndex: 'Barcode',
     key: '3',
-    width: 100
+    width: 100,
   },
   {
     title: '规格型号',
     dataIndex: 'SpecificationModel',
     key: '4',
-    width: 100
-  }
+    width: 100,
+  },
 ]
 const data = [
   {
@@ -283,22 +283,22 @@ const data = [
     code: 'Y1001',
     ProductName: '自动炒菜机',
     Barcode: '101010101010',
-    SpecificationModel: 'Y001'
+    SpecificationModel: 'Y001',
   },
   {
     key: '2',
     code: 'Y1002',
     ProductName: '自动炒菜机',
     Barcode: '101010101010',
-    SpecificationModel: 'Y001'
+    SpecificationModel: 'Y001',
   },
   {
     key: '3',
     code: 'Y1003',
     ProductName: '自动炒菜机',
     Barcode: '101010101010',
-    SpecificationModel: 'Y001'
-  }
+    SpecificationModel: 'Y001',
+  },
 ]
 const numberRow = []
 export default {
@@ -312,7 +312,7 @@ export default {
       columns,
       selectedRowKeys: [],
       headers: {
-        authorization: 'authorization-text'
+        authorization: 'authorization-text',
       },
       size: 'small',
       labelCol: { span: 4 },
@@ -331,16 +331,13 @@ export default {
         MOQ: '',
         PurchaseLot: '',
         name: '',
-        content: ''
+        content: '',
       },
       rules: {
-        ProductName: [
-          { required: true, message: '请输入货品名称', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' }
-        ],
+        ProductName: [{ required: true, message: '请输入货品名称', trigger: 'blur' }],
         code: [{ required: true, message: '请输入产品编码', trigger: 'change' }],
-        Barcode: [{ required: true, message: '请输入产品条码', trigger: 'change' }]
-      }
+        Barcode: [{ required: true, message: '请输入产品条码', trigger: 'change' }],
+      },
     }
   },
   computed: {
@@ -350,9 +347,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
   methods: {
     handleChange(info) {
@@ -369,16 +366,17 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate((valid) => {
         // console.log('name--->', this.form)
         if (valid) {
-          postProductAdd(this.form).then(res => {
+          postProductAdd(this.form).then((res) => {
             console.log('res------->', res)
           })
           alert('保存成功，点击确认回到档案界面！')
           this.$router.push({ name: 'ProductList' })
         } else {
           console.log('error submit!!')
+          alert('亲，您的填写内容不符合要求，请重新填写！！！')
           return false
         }
       })
@@ -421,7 +419,7 @@ export default {
     },
     onSearch(value) {
       console.log(value)
-    }
-  }
+    },
+  },
 }
 </script>

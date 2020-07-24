@@ -45,13 +45,13 @@
         </a-table>
       </a-modal>
 
-      <a-form-model-item label="供应商类型">
+      <a-form-model-item label="供应商类型" prop="SupplierType">
         <a-input v-model="form.SupplierType" placeholder="请输入供应商类型"></a-input>
       </a-form-model-item>
       <a-form-model-item label="负责人" prop="region">
         <a-input v-model="form.region" placeholder="请选择负责人"></a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="联系人编码">
+      <a-form-model-item ref="name" label="联系人编码" prop="ContactPerson">
         <a-input
           v-model="form.ContactPerson"
           placeholder="请输入联系人编码"
@@ -62,10 +62,10 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item label="备注">
+      <a-form-model-item label="备注" prop='desc'>
         <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="纳税人识别号">
+      <a-form-model-item ref="name" label="纳税人识别号" prop="TaxpayerIdentificationNumber">
         <a-input
           v-model="form.TaxpayerIdentificationNumber"
           placeholder="请输入纳税人识别号"
@@ -107,33 +107,33 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 80,
-    scopedSlots: { customRender: 'checked' }
+    scopedSlots: { customRender: 'checked' },
   },
   {
     title: '供应商名称',
     dataIndex: 'supplierName',
     key: 'supplierName',
     width: 80,
-    scopedSlots: { customRender: 'supplierName' }
+    scopedSlots: { customRender: 'supplierName' },
   },
   {
     title: '供应商编号',
     dataIndex: 'SupplierCode',
     key: 'SupplierCode',
-    width: 80
+    width: 80,
   },
   {
     title: '供应商类型',
     dataIndex: 'SupplierType',
     key: 'SupplierType',
-    width: 80
+    width: 80,
   },
   {
     title: '负责人',
     dataIndex: 'ContactPerson',
     key: 'ContactPerson',
-    width: 80
-  }
+    width: 80,
+  },
 ]
 const selectcolumns = [
   {
@@ -141,26 +141,26 @@ const selectcolumns = [
     dataIndex: 'supplierName',
     key: 'supplierName',
     width: 80,
-    scopedSlots: { customRender: 'supplierName' }
+    scopedSlots: { customRender: 'supplierName' },
   },
   {
     title: '供应商编号',
     dataIndex: 'SupplierCode',
     key: 'SupplierCode',
-    width: 80
+    width: 80,
   },
   {
     title: '供应商类型',
     dataIndex: 'SupplierType',
     key: 'SupplierType',
-    width: 80
+    width: 80,
   },
   {
     title: '负责人',
     dataIndex: 'ContactPerson',
     key: 'ContactPerson',
-    width: 80
-  }
+    width: 80,
+  },
 ]
 const data = [
   {
@@ -168,22 +168,22 @@ const data = [
     supplierName: 'John Brown',
     SupplierCode: 32,
     SupplierType: '服装',
-    ContactPerson: '老王'
+    ContactPerson: '老王',
   },
   {
     key: '2',
     supplierName: 'Jim Green',
     SupplierCode: 42,
     SupplierType: '电子',
-    ContactPerson: '李四'
+    ContactPerson: '李四',
   },
   {
     key: '3',
     supplierName: 'Joe Black',
     SupplierCode: 32,
     SupplierType: '餐饮',
-    ContactPerson: '张三'
-  }
+    ContactPerson: '张三',
+  },
 ]
 const numberRow = []
 export default {
@@ -198,7 +198,7 @@ export default {
       columns,
       selectedRowKeys: [],
       headers: {
-        authorization: 'authorization-text'
+        authorization: 'authorization-text',
       },
       size: 'small',
       labelCol: { span: 4 },
@@ -214,13 +214,13 @@ export default {
         desc: '',
         TaxpayerIdentificationNumber: '', //纳税人识别号
         ContactPerson: '', //联系人
-        Tel: ''
+        Tel: '',
       },
       rules: {
         supplierName: [{ required: true, message: '请输入供应商名称', trigger: 'blur' }],
         region: [{ required: true, message: '请选择负责人', trigger: 'change' }],
-        SupplierCode: [{ required: true, message: '请输入供应商编码', trigger: 'change' }]
-      }
+        SupplierCode: [{ required: true, message: '请输入供应商编码', trigger: 'change' }],
+      },
     }
   },
   computed: {
@@ -229,9 +229,9 @@ export default {
       return {
         selectedRowKeys,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
   methods: {
     onSearch(value) {
@@ -251,15 +251,16 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate((valid) => {
         if (valid) {
-          postSupplierAdd(this.form).then(res => {
+          postSupplierAdd(this.form).then((res) => {
             console.log('res------->', res)
           })
           alert('保存成功，点击确认回到档案界面!')
           this.$router.push({ name: 'SupplierList' })
         } else {
           console.log('error submit!!')
+          alert('亲，您的填写内容不符合要求，请重新填写！！！')
           return false
         }
       })
@@ -298,7 +299,7 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
-    }
-  }
+    },
+  },
 }
 </script>

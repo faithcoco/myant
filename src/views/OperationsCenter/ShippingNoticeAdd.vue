@@ -52,7 +52,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="客户地址编码">
+      <a-form-model-item label="客户地址编码" prop="CustomerAddressCode">
         <a-input
           v-model="form.CustomerAddressCode"
           placeholder="请输入客户地址编码"
@@ -64,7 +64,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="联系人编码">
+      <a-form-model-item label="联系人编码" prop="ContactCode">
         <a-input
           v-model="form.ContactCode"
           placeholder="请输入联系人编码"
@@ -76,7 +76,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="部门编码">
+      <a-form-model-item ref="name" label="部门编码" prop="DepartmentCode">
         <a-input
           v-model="form.DepartmentCode"
           placeholder="请输入部门编码"
@@ -88,7 +88,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="业务员编码">
+      <a-form-model-item ref="name" label="业务员编码" prop="SalesmanCode">
         <a-input
           v-model="form.SalesmanCode"
           placeholder="请输入业务员编码"
@@ -100,7 +100,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="预计出库日期">
+      <a-form-model-item ref="name" label="预计出库日期" prop="ExpectedOutWarehouseDate">
         <a-date-picker
           v-model="form.ExpectedOutWarehouseDate"
           show-time
@@ -109,7 +109,7 @@
           style="width: 100%;"
         />
       </a-form-model-item>
-      <a-form-model-item ref="Principal" label="商品清单：">
+      <a-form-model-item ref="Principal" label="商品清单" prop="Principal">
         <a-input
           v-model="form.Principal"
           placeholder="请选择存货编码"
@@ -149,162 +149,162 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 80,
-    scopedSlots: { customRender: 'checked' }
+    scopedSlots: { customRender: 'checked' },
   },
   {
     title: '发货通知单编码',
     dataIndex: 'ShippingNoticeCode',
     key: 'ShippingNoticeCode',
-    scopedSlots: { customRender: 'ShippingNoticeCode' }
+    scopedSlots: { customRender: 'ShippingNoticeCode' },
   },
   {
     title: '发货仓库编码',
     dataIndex: 'CustomerCode',
-    key: 'CustomerCode'
+    key: 'CustomerCode',
   },
   {
     title: '存货编码',
     dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    key: 'BatchCode',
   },
   {
     title: '存货名称',
     dataIndex: 'CustomerAddressCode',
-    key: 'CustomerAddressCode'
+    key: 'CustomerAddressCode',
   },
   {
     title: '批次编码',
     dataIndex: 'DepartmentCode',
-    key: 'DepartmentCode'
+    key: 'DepartmentCode',
   },
   {
     title: '数量',
     dataIndex: 'SalesmanCode',
-    key: 'SalesmanCode'
+    key: 'SalesmanCode',
   },
   {
     title: '计量单位',
     dataIndex: 'ShippingWarehouseCode',
-    key: 'ShippingWarehouseCode'
+    key: 'ShippingWarehouseCode',
   },
   {
     title: '包装数量',
     dataIndex: 'InventoryCode',
-    key: '1'
+    key: '1',
   },
   {
     title: '包装单位',
     dataIndex: 'InventoryCode',
-    key: '2'
+    key: '2',
   },
   {
     title: '单价',
     dataIndex: 'InventoryCode',
-    key: '3'
+    key: '3',
   },
   {
     title: '含税单价',
     dataIndex: 'InventoryCode',
-    key: '4'
+    key: '4',
   },
   {
     title: '税率',
     dataIndex: 'InventoryCode',
-    key: '5'
+    key: '5',
   },
   {
     title: '金额',
     dataIndex: 'InventoryCode',
-    key: '6'
+    key: '6',
   },
   {
     title: '含税金额',
     dataIndex: 'InventoryCode',
-    key: '7'
+    key: '7',
   },
   {
     title: '税额',
     dataIndex: 'InventoryCode',
-    key: '8'
-  }
+    key: '8',
+  },
 ]
 const selectcolumns = [
   {
     title: '发货通知单编码',
     dataIndex: 'ShippingNoticeCode',
     key: 'ShippingNoticeCode',
-    scopedSlots: { customRender: 'ShippingNoticeCode' }
+    scopedSlots: { customRender: 'ShippingNoticeCode' },
   },
   {
     title: '发货仓库编码',
     dataIndex: 'CustomerCode',
-    key: 'CustomerCode'
+    key: 'CustomerCode',
   },
   {
     title: '存货编码',
     dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    key: 'BatchCode',
   },
   {
     title: '存货名称',
     dataIndex: 'CustomerAddressCode',
-    key: 'CustomerAddressCode'
+    key: 'CustomerAddressCode',
   },
   {
     title: '批次编码',
     dataIndex: 'DepartmentCode',
-    key: 'DepartmentCode'
+    key: 'DepartmentCode',
   },
   {
     title: '数量',
     dataIndex: 'SalesmanCode',
-    key: 'SalesmanCode'
+    key: 'SalesmanCode',
   },
   {
     title: '计量单位',
     dataIndex: 'ShippingWarehouseCode',
-    key: 'ShippingWarehouseCode'
+    key: 'ShippingWarehouseCode',
   },
   {
     title: '包装数量',
     dataIndex: 'InventoryCode',
-    key: '1'
+    key: '1',
   },
   {
     title: '包装单位',
     dataIndex: 'InventoryCode',
-    key: '2'
+    key: '2',
   },
   {
     title: '单价',
     dataIndex: 'InventoryCode',
-    key: '3'
+    key: '3',
   },
   {
     title: '含税单价',
     dataIndex: 'InventoryCode',
-    key: '4'
+    key: '4',
   },
   {
     title: '税率',
     dataIndex: 'InventoryCode',
-    key: '5'
+    key: '5',
   },
   {
     title: '金额',
     dataIndex: 'InventoryCode',
-    key: '6'
+    key: '6',
   },
   {
     title: '含税金额',
     dataIndex: 'InventoryCode',
-    key: '7'
+    key: '7',
   },
   {
     title: '税额',
     dataIndex: 'InventoryCode',
-    key: '8'
-  }
+    key: '8',
+  },
 ]
 
 const data = [
@@ -317,7 +317,7 @@ const data = [
     SalesmanCode: 'a121345',
     ShippingWarehouseCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345'
+    BatchCode: 'a121345',
   },
   {
     key: '2',
@@ -328,7 +328,7 @@ const data = [
     SalesmanCode: 'a121345',
     ShippingWarehouseCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345'
+    BatchCode: 'a121345',
   },
   {
     key: '3',
@@ -339,8 +339,8 @@ const data = [
     SalesmanCode: 'a121345',
     ShippingWarehouseCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345'
-  }
+    BatchCode: 'a121345',
+  },
 ]
 const numberRow = []
 export default {
@@ -354,7 +354,7 @@ export default {
       data,
       columns,
       headers: {
-        authorization: 'authorization-text'
+        authorization: 'authorization-text',
       },
       size: 'small',
       labelCol: { span: 4 },
@@ -381,12 +381,12 @@ export default {
         TaxRate: '', //税率
         Amount: '', //金额
         TaxIncludedAmount: '', //含税金额
-        Tax: '' //税额
+        Tax: '', //税额
       },
       rules: {
         ShippingNoticeCode: [{ required: true, message: '请输入发货通知单编码', trigger: 'blur' }],
-        CustomerCode: [{ required: true, message: '请输入客户编码', trigger: 'change' }]
-      }
+        CustomerCode: [{ required: true, message: '请输入客户编码', trigger: 'change' }],
+      },
     }
   },
   computed: {
@@ -396,9 +396,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
 
   methods: {
@@ -419,16 +419,17 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate((valid) => {
         console.log('name--->', this.form)
         if (valid) {
-          postShippingNoticeAdd(this.form).then(res => {
+          postShippingNoticeAdd(this.form).then((res) => {
             console.log('res', res)
           })
           alert('保存成功，点击确认回到档案界面!')
           this.$router.push({ name: 'ShippingNoticeList' })
         } else {
           console.log('error submit!!')
+          alert('亲，您的填写内容不符合要求，请重新填写！！！')
           return false
         }
       })
@@ -468,7 +469,7 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
-    }
-  }
+    },
+  },
 }
 </script>

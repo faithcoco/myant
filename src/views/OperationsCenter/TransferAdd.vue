@@ -64,7 +64,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="部门编码">
+      <a-form-model-item ref="name" label="部门编码" prop="DepartmentCode">
         <a-input
           v-model="form.DepartmentCode"
           placeholder="请输入部门编码"
@@ -77,7 +77,7 @@
         </a-input>
       </a-form-model-item>
 
-      <a-form-model-item ref="name" label="调拨日期">
+      <a-form-model-item ref="name" label="调拨日期" prop="TransferDate">
         <a-date-picker
           v-model="form.TransferDate"
           show-time
@@ -87,7 +87,7 @@
         />
       </a-form-model-item>
 
-      <a-form-model-item ref="Principal" label="商品清单：">
+      <a-form-model-item ref="Principal" label="商品清单：" prop="Principal">
         <a-input
           v-model="form.Principal"
           placeholder="请选择存货编码"
@@ -128,121 +128,121 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 80,
-    scopedSlots: { customRender: 'checked' }
+    scopedSlots: { customRender: 'checked' },
   },
   {
     title: '调拨单编码',
     dataIndex: 'TransferCode',
-    key: 'TransferCode'
+    key: 'TransferCode',
   },
   {
     title: '存货编码',
     dataIndex: 'SourceWarehouseCode',
-    key: 'SourceWarehouseCode'
+    key: 'SourceWarehouseCode',
   },
   {
     title: '存货名称',
     dataIndex: 'TargetWarehouseCode',
-    key: 'TargetWarehouseCode'
+    key: 'TargetWarehouseCode',
   },
   {
     title: '货位编码',
     dataIndex: 'DepartmentCode',
-    key: 'DepartmentCode'
+    key: 'DepartmentCode',
   },
   {
     title: '批次编码',
     dataIndex: 'InventoryCode',
-    key: 'InventoryCode'
+    key: 'InventoryCode',
   },
   {
     title: '数量',
     dataIndex: 'LocationCode',
-    key: 'LocationCode'
+    key: 'LocationCode',
   },
   {
     title: '计量单位',
     dataIndex: 'BatchCode',
-    key: '1'
+    key: '1',
   },
   {
     title: '包装数量',
     dataIndex: 'BatchCode',
-    key: '2'
+    key: '2',
   },
   {
     title: '包装单位',
     dataIndex: 'BatchCode',
-    key: '3'
+    key: '3',
   },
   {
     title: '单价',
     dataIndex: 'BatchCode',
-    key: '4'
+    key: '4',
   },
   {
     title: '金额',
     dataIndex: 'BatchCode',
-    key: '5'
-  }
+    key: '5',
+  },
 ]
 const selectcolumns = [
   {
     title: '调拨单编码',
     dataIndex: 'TransferCode',
     key: 'TransferCode',
-    scopedSlots: { customRender: 'TransferCode' }
+    scopedSlots: { customRender: 'TransferCode' },
   },
   {
     title: '存货编码',
     dataIndex: 'SourceWarehouseCode',
-    key: 'SourceWarehouseCode'
+    key: 'SourceWarehouseCode',
   },
   {
     title: '存货名称',
     dataIndex: 'TargetWarehouseCode',
-    key: 'TargetWarehouseCode'
+    key: 'TargetWarehouseCode',
   },
   {
     title: '货位编码',
     dataIndex: 'DepartmentCode',
-    key: 'DepartmentCode'
+    key: 'DepartmentCode',
   },
   {
     title: '批次编码',
     dataIndex: 'InventoryCode',
-    key: 'InventoryCode'
+    key: 'InventoryCode',
   },
   {
     title: '数量',
     dataIndex: 'LocationCode',
-    key: 'LocationCode'
+    key: 'LocationCode',
   },
   {
     title: '计量单位',
     dataIndex: 'BatchCode',
-    key: '1'
+    key: '1',
   },
   {
     title: '包装数量',
     dataIndex: 'BatchCode',
-    key: '2'
+    key: '2',
   },
   {
     title: '包装单位',
     dataIndex: 'BatchCode',
-    key: '3'
+    key: '3',
   },
   {
     title: '单价',
     dataIndex: 'BatchCode',
-    key: '4'
+    key: '4',
   },
   {
     title: '金额',
     dataIndex: 'BatchCode',
-    key: '5'
-  }
+    key: '5',
+  },
 ]
 
 const data = [
@@ -254,7 +254,7 @@ const data = [
     DepartmentCode: 'a121345',
     InventoryCode: 'a121345',
     LocationCode: 'a121345',
-    BatchCode: 'a121345'
+    BatchCode: 'a121345',
   },
   {
     key: '2',
@@ -264,7 +264,7 @@ const data = [
     DepartmentCode: 'a121345',
     InventoryCode: 'a121345',
     LocationCode: 'a121345',
-    BatchCode: 'a121345'
+    BatchCode: 'a121345',
   },
   {
     key: '3',
@@ -274,8 +274,8 @@ const data = [
     DepartmentCode: 'a121345',
     InventoryCode: 'a121345',
     LocationCode: 'a121345',
-    BatchCode: 'a121345'
-  }
+    BatchCode: 'a121345',
+  },
 ]
 const numberRow = []
 export default {
@@ -289,7 +289,7 @@ export default {
       data,
       columns,
       headers: {
-        authorization: 'authorization-text'
+        authorization: 'authorization-text',
       },
       size: 'small',
       labelCol: { span: 4 },
@@ -310,7 +310,7 @@ export default {
         PackingQuantity: '', //包装数量
         PackingUnit: '', //包装单位
         UnitPrice: '', //单价
-        Amount: '' //金额
+        Amount: '', //金额
       },
       rules: {
         TransferCode: [{ required: true, message: '请输入调拨单编码', trigger: 'blur' }],
@@ -321,12 +321,12 @@ export default {
             type: 'array',
             required: true,
             message: 'Please select at least one activity type',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
-      }
+        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }],
+      },
     }
   },
   computed: {
@@ -336,9 +336,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
   methods: {
     onSearch(value) {
@@ -358,16 +358,17 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate((valid) => {
         console.log('name--->', this.form)
         if (valid) {
-          postTransferAdd(this.form).then(res => {
+          postTransferAdd(this.form).then((res) => {
             console.log('res--------->', res)
           })
           alert('保存成功，点击确认回到档案界面!')
           this.$router.push({ name: 'TransferList' })
         } else {
           console.log('error submit!!')
+          alert('亲，您的填写内容不符合要求，请重新填写！！！')
           return false
         }
       })
@@ -407,7 +408,7 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
-    }
-  }
+    },
+  },
 }
 </script>

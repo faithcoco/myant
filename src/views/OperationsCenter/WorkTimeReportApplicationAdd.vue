@@ -39,7 +39,7 @@
           <a slot="name" slot-scope="text">{{ text }}</a>
         </a-table>
       </a-modal>
-      <a-form-model-item ref="name" label="部门编码">
+      <a-form-model-item ref="name" label="部门编码" prop="DepartmentCode">
         <a-input
           v-model="form.DepartmentCode"
           placeholder="请输入部门编码"
@@ -51,7 +51,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="业务员编码">
+      <a-form-model-item ref="name" label="业务员编码" prop="SalesmanCode">
         <a-input
           v-model="form.SalesmanCode"
           placeholder="请输入业务员编码"
@@ -63,7 +63,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="预计入库日期">
+      <a-form-model-item ref="name" label="预计入库日期" prop="ExpectedInWarehouseDate">
         <a-date-picker
           v-model="form.ExpectedInWarehouseDate"
           show-time
@@ -72,7 +72,7 @@
           style="width: 100%;"
         />
       </a-form-model-item>
-      <a-form-model-item ref="Principal" label="商品清单">
+      <a-form-model-item ref="Principal" label="商品清单" prop="Principal">
         <a-input
           v-model="form.Principal"
           placeholder="请选择存货编码"
@@ -112,84 +112,84 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 80,
-    scopedSlots: { customRender: 'checked' }
+    scopedSlots: { customRender: 'checked' },
   },
   {
     title: '报工申请单编码',
     dataIndex: 'WorkTimeReportApplicationCode',
     key: 'WorkTimeReportApplicationCode',
-    scopedSlots: { customRender: 'WorkTimeReportApplicationCode' }
+    scopedSlots: { customRender: 'WorkTimeReportApplicationCode' },
   },
   {
     title: '预计入库仓库编码',
     dataIndex: 'ExpectedInWarehouseCode',
-    key: 'ExpectedInWarehouseCode'
+    key: 'ExpectedInWarehouseCode',
   },
   {
     title: '存货编码',
     dataIndex: 'InventoryCode',
-    key: 'InventoryCode'
+    key: 'InventoryCode',
   },
   {
     title: '存货名称',
     dataIndex: 'InventoryName',
-    key: 'InventoryName'
+    key: 'InventoryName',
   },
   {
     title: '批次编码',
     dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    key: 'BatchCode',
   },
   {
     title: '数量',
     dataIndex: 'Quantity',
-    key: 'Quantity'
+    key: 'Quantity',
   },
   {
     title: '单位',
     dataIndex: 'Unit',
-    key: 'Unit'
+    key: 'Unit',
   },
   {
     title: '包装数量',
     dataIndex: 'PackingQuantity',
-    key: 'PackingQuantity'
+    key: 'PackingQuantity',
   },
   {
     title: '包装单位',
     dataIndex: 'PackingUnit',
-    key: 'PackingUnit'
+    key: 'PackingUnit',
   },
   {
     title: '单价',
     dataIndex: 'UnitPrice',
-    key: 'UnitPrice'
+    key: 'UnitPrice',
   },
   {
     title: '含税单价',
     dataIndex: 'TaxIncludedUnitPrice',
-    key: 'TaxIncludedUnitPrice'
+    key: 'TaxIncludedUnitPrice',
   },
   {
     title: '税率',
     dataIndex: 'TaxRate',
-    key: 'TaxRate'
+    key: 'TaxRate',
   },
   {
     title: '金额',
     dataIndex: 'Amount',
-    key: 'Amount'
+    key: 'Amount',
   },
   {
     title: '含税金额',
     dataIndex: 'TaxIncludedAmount',
-    key: 'TaxIncludedAmount'
+    key: 'TaxIncludedAmount',
   },
   {
     title: '税额',
     dataIndex: 'Tax',
-    key: 'Tax'
-  }
+    key: 'Tax',
+  },
 ]
 const selectcolumns = [
   {
@@ -197,84 +197,84 @@ const selectcolumns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 80,
-    scopedSlots: { customRender: 'checked' }
+    scopedSlots: { customRender: 'checked' },
   },
   {
     title: '报工申请单编码',
     dataIndex: 'WorkTimeReportApplicationCode',
     key: 'WorkTimeReportApplicationCode',
-    scopedSlots: { customRender: 'WorkTimeReportApplicationCode' }
+    scopedSlots: { customRender: 'WorkTimeReportApplicationCode' },
   },
   {
     title: '预计入库仓库编码',
     dataIndex: 'ExpectedInWarehouseCode',
-    key: 'ExpectedInWarehouseCode'
+    key: 'ExpectedInWarehouseCode',
   },
   {
     title: '存货编码',
     dataIndex: 'InventoryCode',
-    key: 'InventoryCode'
+    key: 'InventoryCode',
   },
   {
     title: '存货名称',
     dataIndex: 'InventoryName',
-    key: 'InventoryName'
+    key: 'InventoryName',
   },
   {
     title: '批次编码',
     dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    key: 'BatchCode',
   },
   {
     title: '数量',
     dataIndex: 'Quantity',
-    key: 'Quantity'
+    key: 'Quantity',
   },
   {
     title: '单位',
     dataIndex: 'Unit',
-    key: 'Unit'
+    key: 'Unit',
   },
   {
     title: '包装数量',
     dataIndex: 'PackingQuantity',
-    key: 'PackingQuantity'
+    key: 'PackingQuantity',
   },
   {
     title: '包装单位',
     dataIndex: 'PackingUnit',
-    key: 'PackingUnit'
+    key: 'PackingUnit',
   },
   {
     title: '单价',
     dataIndex: 'UnitPrice',
-    key: 'UnitPrice'
+    key: 'UnitPrice',
   },
   {
     title: '含税单价',
     dataIndex: 'TaxIncludedUnitPrice',
-    key: 'TaxIncludedUnitPrice'
+    key: 'TaxIncludedUnitPrice',
   },
   {
     title: '税率',
     dataIndex: 'TaxRate',
-    key: 'TaxRate'
+    key: 'TaxRate',
   },
   {
     title: '金额',
     dataIndex: 'Amount',
-    key: 'Amount'
+    key: 'Amount',
   },
   {
     title: '含税金额',
     dataIndex: 'TaxIncludedAmount',
-    key: 'TaxIncludedAmount'
+    key: 'TaxIncludedAmount',
   },
   {
     title: '税额',
     dataIndex: 'Tax',
-    key: 'Tax'
-  }
+    key: 'Tax',
+  },
 ]
 
 const data = [
@@ -285,7 +285,7 @@ const data = [
     SalesmanCode: 'a121345',
     ExpectedInWarehouseCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345'
+    BatchCode: 'a121345',
   },
   {
     key: '2',
@@ -294,7 +294,7 @@ const data = [
     SalesmanCode: 'a121345',
     ExpectedInWarehouseCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345'
+    BatchCode: 'a121345',
   },
   {
     key: '3',
@@ -303,8 +303,8 @@ const data = [
     SalesmanCode: 'a121345',
     ExpectedInWarehouseCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345'
-  }
+    BatchCode: 'a121345',
+  },
 ]
 const numberRow = []
 export default {
@@ -318,7 +318,7 @@ export default {
       data,
       columns,
       headers: {
-        authorization: 'authorization-text'
+        authorization: 'authorization-text',
       },
       size: 'small',
       labelCol: { span: 4 },
@@ -342,7 +342,7 @@ export default {
         TaxRate: '', //税率
         Amount: '', //金额
         TaxIncludedAmount: '', //含税金额
-        Tax: '' //税额
+        Tax: '', //税额
       },
       rules: {
         WorkTimeReportApplicationCode: [{ required: true, message: '请输入报工申请单编码', trigger: 'blur' }],
@@ -353,12 +353,12 @@ export default {
             type: 'array',
             required: true,
             message: 'Please select at least one activity type',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
-      }
+        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }],
+      },
     }
   },
   computed: {
@@ -368,9 +368,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
 
   methods: {
@@ -391,16 +391,17 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate((valid) => {
         console.log('name--->', this.form)
         if (valid) {
-          postWorkTimeReportApplicationAdd(this.form).then(res => {
+          postWorkTimeReportApplicationAdd(this.form).then((res) => {
             console.log('res------->', res)
           })
           alert('保存成功，点击确认回到档案界面!')
           this.$router.push({ name: 'WorkTimeReportApplicationList' })
         } else {
           console.log('error submit!!')
+          alert('亲，您的填写内容不符合要求，请重新填写！！！')
           return false
         }
       })
@@ -439,7 +440,7 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
-    }
-  }
+    },
+  },
 }
 </script>

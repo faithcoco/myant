@@ -52,7 +52,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="客户地址编码" prop="name">
+      <a-form-model-item ref="name" label="客户地址编码" prop="CustomerAddressCode">
         <a-input
           v-model="form.CustomerAddressCode"
           placeholder="请输入客户地址编码"
@@ -64,7 +64,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="联系人编码" prop="code">
+      <a-form-model-item label="联系人编码" prop="ContactCode">
         <a-input
           v-model="form.ContactCode"
           placeholder="请输入联系人编码"
@@ -76,7 +76,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="部门编码">
+      <a-form-model-item ref="name" label="部门编码" prop="DepartmentCode">
         <a-input
           v-model="form.DepartmentCode"
           placeholder="请输入部门编码"
@@ -88,7 +88,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="业务员编码">
+      <a-form-model-item ref="name" label="业务员编码" prop="SalesmanCode">
         <a-input
           v-model="form.SalesmanCode"
           placeholder="请输入业务员编码"
@@ -100,7 +100,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="预计退库日期">
+      <a-form-model-item ref="name" label="预计退库日期" prop="ExpectedReturnDate">
         <a-date-picker
           v-model="form.ExpectedReturnDate"
           show-time
@@ -109,7 +109,7 @@
           style="width: 100%;"
         />
       </a-form-model-item>
-      <a-form-model-item ref="Principal" label="商品清单：">
+      <a-form-model-item ref="Principal" label="商品清单" prop="Principal">
         <a-input
           v-model="form.Principal"
           placeholder="请选择存货编码"
@@ -149,160 +149,160 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 80,
-    scopedSlots: { customRender: 'checked' }
+    scopedSlots: { customRender: 'checked' },
   },
   {
     title: '发货通知单编码',
     dataIndex: 'CustomerCode',
-    key: 'CustomerCode'
+    key: 'CustomerCode',
   },
   {
     title: '发货仓库编码',
     dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    key: 'BatchCode',
   },
   {
     title: '存货编码',
     dataIndex: 'CustomerAddressCode',
-    key: 'CustomerAddressCode'
+    key: 'CustomerAddressCode',
   },
   {
     title: '存货名称',
     dataIndex: 'CustomerAddressCode',
-    key: '1'
+    key: '1',
   },
   {
     title: '批次编码',
     dataIndex: 'DepartmentCode',
-    key: 'DepartmentCode'
+    key: 'DepartmentCode',
   },
   {
     title: '数量',
     dataIndex: 'SalesmanCode',
-    key: 'SalesmanCode'
+    key: 'SalesmanCode',
   },
   {
     title: '计量单位',
     dataIndex: 'ShippingWarehouseCode',
-    key: 'ShippingWarehouseCode'
+    key: 'ShippingWarehouseCode',
   },
   {
     title: '包装数量',
     dataIndex: 'PackingQuantity',
-    key: 'PackingQuantity'
+    key: 'PackingQuantity',
   },
   {
     title: '包装单位',
     dataIndex: 'PackingUnit',
-    key: 'PackingUnit'
+    key: 'PackingUnit',
   },
   {
     title: '单价',
     dataIndex: 'UnitPrice',
-    key: 'UnitPrice'
+    key: 'UnitPrice',
   },
   {
     title: '含税单价',
     dataIndex: 'TaxIncludedUnitPrice',
-    key: 'TaxIncludedUnitPrice'
+    key: 'TaxIncludedUnitPrice',
   },
   {
     title: '税率',
     dataIndex: 'TaxRate',
-    key: 'TaxRate'
+    key: 'TaxRate',
   },
   {
     title: '金额',
     dataIndex: 'Amount',
-    key: 'Amount'
+    key: 'Amount',
   },
   {
     title: '含税金额',
     dataIndex: 'TaxIncludedAmount',
-    key: 'TaxIncludedAmount'
+    key: 'TaxIncludedAmount',
   },
   {
     title: '税额',
     dataIndex: 'Tax',
-    key: 'Tax'
-  }
+    key: 'Tax',
+  },
 ]
 const selectcolumns = [
   {
     title: '发货通知单编码',
     dataIndex: 'CustomerCode',
-    key: 'CustomerCode'
+    key: 'CustomerCode',
   },
   {
     title: '发货仓库编码',
     dataIndex: 'BatchCode',
-    key: 'BatchCode'
+    key: 'BatchCode',
   },
   {
     title: '存货编码',
     dataIndex: 'CustomerAddressCode',
-    key: 'CustomerAddressCode'
+    key: 'CustomerAddressCode',
   },
   {
     title: '存货名称',
     dataIndex: 'CustomerAddressCode',
-    key: '1'
+    key: '1',
   },
   {
     title: '批次编码',
     dataIndex: 'DepartmentCode',
-    key: 'DepartmentCode'
+    key: 'DepartmentCode',
   },
   {
     title: '数量',
     dataIndex: 'SalesmanCode',
-    key: 'SalesmanCode'
+    key: 'SalesmanCode',
   },
   {
     title: '计量单位',
     dataIndex: 'ShippingWarehouseCode',
-    key: 'ShippingWarehouseCode'
+    key: 'ShippingWarehouseCode',
   },
   {
     title: '包装数量',
     dataIndex: 'PackingQuantity',
-    key: 'PackingQuantity'
+    key: 'PackingQuantity',
   },
   {
     title: '包装单位',
     dataIndex: 'PackingUnit',
-    key: 'PackingUnit'
+    key: 'PackingUnit',
   },
   {
     title: '单价',
     dataIndex: 'UnitPrice',
-    key: 'UnitPrice'
+    key: 'UnitPrice',
   },
   {
     title: '含税单价',
     dataIndex: 'TaxIncludedUnitPrice',
-    key: 'TaxIncludedUnitPrice'
+    key: 'TaxIncludedUnitPrice',
   },
   {
     title: '税率',
     dataIndex: 'TaxRate',
-    key: 'TaxRate'
+    key: 'TaxRate',
   },
   {
     title: '金额',
     dataIndex: 'Amount',
-    key: 'Amount'
+    key: 'Amount',
   },
   {
     title: '含税金额',
     dataIndex: 'TaxIncludedAmount',
-    key: 'TaxIncludedAmount'
+    key: 'TaxIncludedAmount',
   },
   {
     title: '税额',
     dataIndex: 'Tax',
-    key: 'Tax'
-  }
+    key: 'Tax',
+  },
 ]
 
 const data = [
@@ -316,7 +316,7 @@ const data = [
     SalesmanCode: 'a121345',
     ShippingWarehouseCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345'
+    BatchCode: 'a121345',
   },
   {
     key: '2',
@@ -328,7 +328,7 @@ const data = [
     SalesmanCode: 'a121345',
     ShippingWarehouseCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345'
+    BatchCode: 'a121345',
   },
   {
     key: '3',
@@ -340,8 +340,8 @@ const data = [
     SalesmanCode: 'a121345',
     ShippingWarehouseCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345'
-  }
+    BatchCode: 'a121345',
+  },
 ]
 const numberRow = []
 export default {
@@ -355,7 +355,7 @@ export default {
       data,
       columns,
       headers: {
-        authorization: 'authorization-text'
+        authorization: 'authorization-text',
       },
       size: 'small',
       labelCol: { span: 4 },
@@ -382,7 +382,7 @@ export default {
         TaxRate: '', //税率
         Amount: '', //金额
         TaxIncludedAmount: '', //含税金额
-        Tax: '' //税额
+        Tax: '', //税额
       },
       rules: {
         ShippingNoticeCode: [{ required: true, message: '请输入发货通知单编码', trigger: 'blur' }],
@@ -393,12 +393,12 @@ export default {
             type: 'array',
             required: true,
             message: 'Please select at least one activity type',
-            trigger: 'change'
-          }
+            trigger: 'change',
+          },
         ],
         resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
-      }
+        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }],
+      },
     }
   },
   computed: {
@@ -408,9 +408,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
   methods: {
     onSearch(value) {
@@ -430,16 +430,17 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate((valid) => {
         console.log('name--->', this.form)
         if (valid) {
-          postReturnNoticeClientAdd(this.form).then(res => {
+          postReturnNoticeClientAdd(this.form).then((res) => {
             console.log('res------->', res)
           })
           alert('保存成功，点击确认回到档案界面!')
           this.$router.push({ name: 'ReturnNoticeClientList' })
         } else {
           console.log('error submit!!')
+          alert('亲，您的填写内容不符合要求，请重新填写！！！')
           return false
         }
       })
@@ -479,7 +480,7 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
-    }
-  }
+    },
+  },
 }
 </script>

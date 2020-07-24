@@ -50,7 +50,7 @@
         ></a-table>
       </a-form-model-item>
 
-      <a-form-model-item ref="name" label="仓库地址">
+      <a-form-model-item ref="name" label="仓库地址" prop="WarehouseAddress">
         <a-input
           v-model="form.WarehouseAddress"
           placeholder="请选择省、区、市"
@@ -61,7 +61,7 @@
         "
         />
       </a-form-model-item>
-      <a-form-model-item ref="name" label="仓库地址">
+      <a-form-model-item ref="name" label="仓库地址" prop="WarehouseDetailedAddress">
         <a-input
           v-model="form.WarehouseDetailedAddress"
           type="textarea"
@@ -74,7 +74,7 @@
         />
       </a-form-model-item>
 
-      <a-form-model-item ref="principal" label="货位管理" prop="principal">
+      <a-form-model-item ref="principal" label="货位管理" prop="CargoSpaceManagement">
         <a-input
           v-model="form.CargoSpaceManagement"
           placeholder="请输入货位管理"
@@ -88,7 +88,7 @@
           <a-button slot="suffix" type="link">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-form-model-item label="批次管理">
+      <a-form-model-item label="批次管理" prop="BatchManagement">
         <a-input
           v-model="form.BatchManagement"
           placeholder="请输入批次管理"
@@ -131,82 +131,82 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 80,
-    scopedSlots: { customRender: 'checked' }
+    scopedSlots: { customRender: 'checked' },
   },
   {
     title: '仓库编码',
     dataIndex: 'WarehouseCode',
     key: 'WarehouseCode',
-    scopedSlots: { customRender: 'WarehouseCode' }
+    scopedSlots: { customRender: 'WarehouseCode' },
   },
   {
     title: '仓库名称',
     dataIndex: 'WarehouseName',
-    key: 'WarehouseName'
+    key: 'WarehouseName',
   },
   {
     title: '仓库负责人',
     dataIndex: 'WarehouseManager',
-    key: 'WarehouseManager'
+    key: 'WarehouseManager',
   },
   {
     title: '仓库地址',
     dataIndex: 'WarehouseAddress',
-    key: 'WarehouseAddress'
+    key: 'WarehouseAddress',
   },
   {
     title: '详细地址',
     dataIndex: 'WarehouseDetailedAddress',
-    key: 'WarehouseDetailedAddress'
+    key: 'WarehouseDetailedAddress',
   },
   {
     title: '货位管理',
     dataIndex: 'CargoSpaceManagement',
-    key: 'CargoSpaceManagement'
+    key: 'CargoSpaceManagement',
   },
   {
     title: '批次管理',
     dataIndex: 'BatchManagement',
-    key: 'BatchManagement'
-  }
+    key: 'BatchManagement',
+  },
 ]
 const selectcolumns = [
   {
     title: '仓库编码',
     dataIndex: 'WarehouseCode',
     key: 'WarehouseCode',
-    scopedSlots: { customRender: 'WarehouseCode' }
+    scopedSlots: { customRender: 'WarehouseCode' },
   },
   {
     title: '仓库名称',
     dataIndex: 'WarehouseName',
-    key: 'WarehouseName'
+    key: 'WarehouseName',
   },
   {
     title: '仓库负责人',
     dataIndex: 'WarehouseManager',
-    key: 'WarehouseManager'
+    key: 'WarehouseManager',
   },
   {
     title: '仓库地址',
     dataIndex: 'WarehouseAddress',
-    key: 'WarehouseAddress'
+    key: 'WarehouseAddress',
   },
   {
     title: '详细地址',
     dataIndex: 'WarehouseDetailedAddress',
-    key: 'WarehouseDetailedAddress'
+    key: 'WarehouseDetailedAddress',
   },
   {
     title: '货位管理',
     dataIndex: 'CargoSpaceManagement',
-    key: 'CargoSpaceManagement'
+    key: 'CargoSpaceManagement',
   },
   {
     title: '批次管理',
     dataIndex: 'BatchManagement',
-    key: 'BatchManagement'
-  }
+    key: 'BatchManagement',
+  },
 ]
 
 const data = [
@@ -218,7 +218,7 @@ const data = [
     WarehouseAddress: '上海闵行区',
     WarehouseDetailedAddress: '宝龙城113弄',
     CargoSpaceManagement: '',
-    BatchManagement: ''
+    BatchManagement: '',
   },
   {
     key: '2',
@@ -228,7 +228,7 @@ const data = [
     WarehouseAddress: '上海闵行区',
     WarehouseDetailedAddress: '宝龙城113弄',
     CargoSpaceManagement: '',
-    BatchManagement: ''
+    BatchManagement: '',
   },
   {
     key: '3',
@@ -238,8 +238,8 @@ const data = [
     WarehouseAddress: '上海闵行区',
     WarehouseDetailedAddress: '宝龙城113弄',
     CargoSpaceManagement: '',
-    BatchManagement: ''
-  }
+    BatchManagement: '',
+  },
 ]
 const numberRow = []
 export default {
@@ -253,7 +253,7 @@ export default {
       data,
       columns,
       headers: {
-        authorization: 'authorization-text'
+        authorization: 'authorization-text',
       },
       size: 'small',
       labelCol: { span: 4 },
@@ -266,11 +266,11 @@ export default {
         WarehouseAddress: '', //仓库地址
         WarehouseDetailedAddress: '', //仓库详细地址
         CargoSpaceManagement: '', //货位管理
-        BatchManagement: '' //批次管理
+        BatchManagement: '', //批次管理
       },
       rules: {
-        WarehouseCode: [{ required: true, message: '请输入产品编码', trigger: 'blur' }]
-      }
+        WarehouseCode: [{ required: true, message: '请输入产品编码', trigger: 'blur' }],
+      },
     }
   },
   computed: {
@@ -280,9 +280,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
   methods: {
     onSearch(value) {
@@ -302,16 +302,17 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate(valid => {
+      this.$refs.ruleForm.validate((valid) => {
         console.log('name--->', this.form)
         if (valid) {
-          postWarehouseAdd(this.form).then(res => {
+          postWarehouseAdd(this.form).then((res) => {
             console.log(res)
           })
           alert('保存成功，点击确认回到档案界面!')
           this.$router.push({ name: 'WarehouseList' })
         } else {
           console.log('error submit!!')
+          alert('亲，您的填写内容不符合要求，请重新填写！！！')
           return false
         }
       })
@@ -350,7 +351,7 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
-    }
-  }
+    },
+  },
 }
 </script>

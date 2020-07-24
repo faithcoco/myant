@@ -7,7 +7,7 @@
           class="table-page-search-submitButtons"
           :style="{ float: 'right', overflow: 'hidden' } || {} "
         >
-          <a-button style="margin-left: 5px" type="primary" @click="handleSetting()">新增</a-button>
+          <a-button style="margin-left: 5px" type="primary" @click="handleAdd">新增</a-button>
         </span>
       </a-col>
     </a-row>
@@ -15,7 +15,7 @@
     <a-table :columns="columns" :data-source="data" :defaultExpandAllRows="true">
       <span slot="action" slot-scope="text, record">
         <template>
-          <a @click="handleAdd(record)">添加子类</a>
+          <a @click="handleAddItem(record)">添加子类</a>
           <a-divider type="vertical" />
           <a @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical" />
@@ -28,6 +28,10 @@
         <a-checkbox @change="onChange" />
       </span>
     </a-table>
+    <a-modal v-model="visible" title="新增类别" @ok="handleOk">
+      <p>请输入类别名称：</p>
+          <a-input ref="userNameInput" v-model="userName" placeholder=""/>
+    </a-modal>
   </a-card>
 </template>
 <script>
@@ -40,22 +44,25 @@ export default {
   data() {
     return {
       data,
-      columns
+      columns,
+      visible:false
     }
   },
   created() {
     getclassificationGoodsColumns().then(res => {
       this.columns = res.columns
+      console.log('columns-->', JSON.stringify(res.columns))
     })
     getclassificationGoodsList().then(res => {
       this.data = res.result
+        console.log('columns-->', JSON.stringify(res.result))
     })
   },
   methods: {
     onChange(e) {
       console.log(`checked = ${e.target.checked}`)
     },
-    handleAdd(record) {
+    handleAddItem(record) {
       console.log(record)
     },
     handleEdit(record) {
@@ -63,6 +70,13 @@ export default {
     },
     handleSub(record) {
       console.log(record)
+    },
+    handleAdd() {
+      this.visible = true
+    },
+    handleOk(e) {
+      console.log(e)
+      this.visible = false
     },
     onDelete(key) {
       const data = [...this.data]

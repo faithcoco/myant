@@ -2,10 +2,21 @@
   <div>
     <a-card>
       <a-row>
-        <a-col :span="15">
-          <a-input-search @search="onSearch" placeholder="请输入搜索内容" />
+        <a-col :span="16">
+          <a-select default-value="全部" style="width:220px" @change="selectChange(value)">
+            <a-select-option
+              v-for="SList in selectList"
+              :key="SList.value"
+              :value="SList.value"
+            >{{SList.value}}</a-select-option>
+          </a-select>
+          <a-input-search
+            @search="onSearch"
+            style="width:220px;margin-left:20px"
+            placeholder="请输入搜索内容"
+          />
         </a-col>
-        <a-col :span="9">
+        <a-col :span="8">
           <span
             class="table-page-search-submitButtons"
             :style="{ float: 'right', overflow: 'hidden' } || {} "
@@ -27,16 +38,17 @@
         :scroll="{ x: 1500 }"
         bordered
       >
-        <!-- <a slot="name" slot-scope="text, record" @click=" handleDetail(record)">{{ text }}</a> -->
-
-        <span slot="action" slot-scope="text, record">
-          <template v-if="$auth('table.update')">
-            <a @click="handleDetail(record)">审批</a>
-            <a-divider type="vertical" />
-            <a @click="handleEdit(record)">编辑</a>
-            <a-divider type="vertical" />
-            <a @click="handleEdit(record)">删除</a>
-          </template>
+        <a slot="name" slot-scope="text, record" @click=" handleDetail(record)">{{ text }}</a>
+        <span slot="customTitle">
+          <a-icon type="menu-fold" :style="{ fontSize: '18px'}" @click="WidthChange()" />
+          {{Operation}}
+        </span>
+        <span slot="action" v-show="Operat_visible" slot-scope="text, record">
+          <a @click="handleDetail(record)">审批</a>
+          <a-divider type="vertical" />
+          <a @click="handleEdit(record)">编辑</a>
+          <a-divider type="vertical" />
+          <a @click="handleEdit(record)">删除</a>
         </span>
         6t
       </s-table>
@@ -183,24 +195,263 @@ import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import { getPersonnelList, getApproval, getInventoryList, getInventoryListColumns } from '@/api/manage'
 
+const selectList = [
+  { value: '全部' },
+  { value: '盘点日期' },
+  { value: '盘点单号' },
+  { value: '盘点仓库' },
+  { value: '入库类别' },
+  { value: '出库类别' },
+  { value: '部门' },
+  { value: '存货编码' },
+  { value: '存货名称' },
+  { value: '规格型号' },
+  { value: '主计量单位' },
+  { value: '账面数量' },
+  { value: '调整入库数量' },
+  { value: '盘点数量' },
+  { value: '盈亏数量' },
+  { value: '合理损耗率' },
+  { value: '盈亏比例' },
+]
 const timelinelist = []
-const columns = []
+const columns = [
+  {
+    key: '0',
+    title: '盘点日期',
+    dataIndex: 'InventoryDate',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: true,
+    scopedSlots: {
+      customRender: 'name',
+    },
+    fixed: '',
+  },
+  {
+    key: '1',
+    title: '盘点单号',
+    dataIndex: 'InventoryNumber',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '2',
+    title: '盘点仓库',
+    dataIndex: 'InventoryWarehouse',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '4',
+    title: '入库类别',
+    dataIndex: 'StorageCategory ',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '5',
+    title: '出库类别',
+    dataIndex: 'OutCategory',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '9',
+    title: '部门',
+    dataIndex: 'Department',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: null,
+    },
+    fixed: null,
+  },
+  {
+    key: '10',
+    title: '存货编码',
+    dataIndex: 'InventoryCode',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '11',
+    title: '存货名称',
+    dataIndex: 'InventoryName',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '12',
+    title: '规格型号',
+    dataIndex: 'SpecificationModel',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '13',
+    title: '主计量单位',
+    dataIndex: 'MainUnit',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '14',
+    title: '账面数量',
+    dataIndex: 'BookQuantity',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '15',
+    title: '调整入库数量',
+    dataIndex: 'AdjustStorageQuantity',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '16',
+    title: '调整出库数量',
+    dataIndex: 'AdjustOutQuantity',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '17',
+    title: '盘点数量',
+    dataIndex: 'InventoryQuantity',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '18',
+    title: '盈亏数量',
+    dataIndex: 'Profitloss',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '19',
+    title: '合理损耗率',
+    dataIndex: 'ReasonableLossRate',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '20',
+    title: '盈亏比例%',
+    dataIndex: 'ProfitLossRatio',
+    defaultSortOrder: 'descend',
+    width: 160,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '21',
+    slots: { title: 'customTitle' },
+    dataIndex: 'action',
+    defaultSortOrder: '',
+    width: 200,
+    sorter: null,
+    scopedSlots: {
+      customRender: 'action',
+    },
+    fixed: 'right',
+  },
+]
 const personnelList = []
 const width = 120
 const product = {}
-const targetTitle = []
+const targetTitle = columns
+const Operat_visible = ''
 export default {
   components: {
     STable,
-    STree
+    STree,
   },
   data() {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
       personnelList,
+      selectList,
       visible: false,
       chat_visible: false,
+      Operat_visible: true,
       status: '正在审批',
       color: '',
       product,
@@ -213,23 +464,23 @@ export default {
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
       disabled: false,
-      loadData: parameter => {
-        return getInventoryList(Object.assign(parameter, this.queryParam)).then(res => {
+      loadData: (parameter) => {
+        return getInventoryList(Object.assign(parameter, this.queryParam)).then((res) => {
           return res.result
         })
       },
 
       submitting: false,
       value: '',
-      moment
+      moment,
     }
   },
   created() {
-    getInventoryListColumns().then(res => {
-      this.columns = res.result
-      this.targetTitle = this.columns
-    })
-    getPersonnelList().then(res => {
+    // getInventoryListColumns().then((res) => {
+    //   this.columns = res.result
+    //   this.targetTitle = this.columns
+    // })
+    getPersonnelList().then((res) => {
       this.personnelList = res.result
       console.log(this.personnelList)
     })
@@ -241,9 +492,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
   methods: {
     afterVisibleChange(val) {
@@ -256,13 +507,9 @@ export default {
       console.log('value', value)
       const data = [...this.data]
       //this.data = data.filter(item => item.code == value)
-      this.data = this.data.filter(function(data) {
-        return Object.keys(data).some(function(key) {
-          return (
-            String(data[key])
-              .toLowerCase()
-              .indexOf(value) > -1
-          )
+      this.data = this.data.filter(function (data) {
+        return Object.keys(data).some(function (key) {
+          return String(data[key]).toLowerCase().indexOf(value) > -1
         })
       })
     },
@@ -270,9 +517,22 @@ export default {
       console.log(record),
         (this.visible = true),
         (this.product = record),
-        getApproval().then(res => {
+        getApproval().then((res) => {
           this.timelinelist = res.result
         })
+    },
+    WidthChange() {
+      for (const key in this.columns) {
+        if (this.columns[key].dataIndex == 'action') {
+          if (this.Operat_visible) {
+            this.Operat_visible = false
+            this.columns[key].width = 160
+          } else {
+            this.Operat_visible = true
+            this.columns[key].width = 200
+          }
+        }
+      }
     },
     add() {
       this.$router.push({ name: 'InventoryAdd' })
@@ -288,7 +548,7 @@ export default {
     },
     onDelete(key) {
       const data = [...this.data]
-      this.data = data.filter(item => item.key !== key)
+      this.data = data.filter((item) => item.key !== key)
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
@@ -329,7 +589,7 @@ export default {
           key: '1',
           title: 'curry 评论',
           time: moment(new Date()).format('YYYY-MM-DD HH:mm'),
-          content: this.value
+          content: this.value,
         })
       }, 1000)
       this.chat_visible = false
@@ -364,8 +624,8 @@ export default {
     },
     onChange(value) {
       console.log('Change:', value)
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang='less' scoped>

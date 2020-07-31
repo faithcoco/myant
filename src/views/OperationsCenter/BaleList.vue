@@ -2,10 +2,21 @@
   <div>
     <a-card>
       <a-row>
-        <a-col :span="15">
-          <a-input-search @search="onSearch" placeholder="请输入搜索内容" />
+        <a-col :span="16">
+          <a-select default-value="全部" style="width:220px" @change="selectChange(value)">
+            <a-select-option
+              v-for="SList in selectList"
+              :key="SList.value"
+              :value="SList.value"
+            >{{SList.value}}</a-select-option>
+          </a-select>
+          <a-input-search
+            @search="onSearch"
+            style="width:220px;margin-left:20px"
+            placeholder="请输入搜索内容"
+          />
         </a-col>
-        <a-col :span="9">
+        <a-col :span="8">
           <span
             class="table-page-search-submitButtons"
             :style="{ float: 'right', overflow: 'hidden' } || {} "
@@ -27,16 +38,17 @@
         :scroll="{ x: 1500 }"
         bordered
       >
-        <!-- <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a> -->
-
-        <span slot="action" slot-scope="text, record">
-          <template v-if="$auth('table.update')">
-            <a @click="handleDetail(record)">审批</a>
-            <a-divider type="vertical" />
-            <a @click="handleEdit(record)">编辑</a>
-            <a-divider type="vertical" />
-            <a @click="handleEdit(record)">删除</a>
-          </template>
+        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
+        <span slot="customTitle">
+          <a-icon type="menu-fold" :style="{ fontSize: '18px'}" @click="WidthChange()" />
+          {{Operation}}
+        </span>
+        <span slot="action" v-show="Operat_visible" slot-scope="text, record">
+          <a @click="handleDetail(record)">审批</a>
+          <a-divider type="vertical" />
+          <a @click="handleEdit(record)">编辑</a>
+          <a-divider type="vertical" />
+          <a @click="handleEdit(record)">删除</a>
         </span>
         6t
       </s-table>
@@ -182,24 +194,238 @@ import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import { getBaleList, getApproval, getPersonnelList, getBaleListColumns } from '@/api/manage'
 
+const selectList = [
+  { value: '全部' },
+  { value: '装箱单编码' },
+  { value: '装箱仓库编码' },
+  { value: '部门编码' },
+  { value: '业务员编码' },
+  { value: '装箱日期' },
+  { value: '装箱状态' },
+  { value: '存货名称' },
+  { value: '批次编码' },
+  { value: '货位编码' },
+  { value: '数量' },
+  { value: '计量单位' },
+  { value: '包装数量' },
+  { value: '包装单位' },
+  { value: '单价' },
+  { value: '金额' },
+]
 const timelinelist = []
-const columns = []
+const columns = [
+  {
+    key: '0',
+    title: '装箱单编码',
+    dataIndex: 'PackingCode',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: true,
+    scopedSlots: {
+      customRender: 'name',
+    },
+    fixed: '',
+  },
+  {
+    key: '1',
+    title: '装箱仓库编码',
+    dataIndex: 'PackingWarehouseCode',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '2',
+    title: '部门编码',
+    dataIndex: 'DepartmentCode',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '3',
+    title: '业务员编码',
+    dataIndex: 'SalesmanCode',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '4',
+    title: '装箱日期',
+    dataIndex: 'PackingDate',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '5',
+    title: '装箱状态',
+    dataIndex: 'PackingStatus',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '7',
+    title: '存货名称',
+    dataIndex: 'InventoryName',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '8',
+    title: '批次编码',
+    dataIndex: 'BatchCode',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '9',
+    title: '货位编码',
+    dataIndex: 'LocationCode',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '10',
+    title: '数量',
+    dataIndex: 'Quantity',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '11',
+    title: '计量单位',
+    dataIndex: 'Unit',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '12',
+    title: '包装数量',
+    dataIndex: 'PackingQuantity',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '13',
+    title: '包装单位',
+    dataIndex: 'UnitPrice',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '14',
+    title: '单价',
+    dataIndex: 'Unit',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '15',
+    title: '金额',
+    dataIndex: 'Amount',
+    defaultSortOrder: 'descend',
+    width: 155,
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+    fixed: '',
+  },
+  {
+    key: '16',
+    slots: { title: 'customTitle' },
+    dataIndex: 'action',
+    defaultSortOrder: '',
+    width: 200,
+    sorter: '',
+    scopedSlots: {
+      customRender: 'action',
+    },
+    fixed: 'right',
+  },
+]
 const personnelList = []
 const width = 120
 const product = {}
-const targetTitle = []
+const targetTitle = columns
+const Operat_visible = ''
 export default {
   components: {
     STable,
-    STree
+    STree,
   },
   data() {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
       personnelList,
+      selectList,
       visible: false,
       chat_visible: false,
+      Operat_visible: true,
       status: '正在审批',
       color: '',
       product,
@@ -212,22 +438,22 @@ export default {
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
       disabled: false,
-      loadData: parameter => {
-        return getBaleList(Object.assign(parameter, this.queryParam)).then(res => {
+      loadData: (parameter) => {
+        return getBaleList(Object.assign(parameter, this.queryParam)).then((res) => {
           return res.result
         })
       },
       submitting: false,
       value: '',
-      moment
+      moment,
     }
   },
   created() {
-    getBaleListColumns().then(res => {
-      this.columns = res.result
-      this.targetTitle = this.columns
-    })
-    getPersonnelList().then(res => {
+    // getBaleListColumns().then((res) => {
+    //   this.columns = res.result
+    //   this.targetTitle = this.columns
+    // })
+    getPersonnelList().then((res) => {
       this.personnelList = res.result
       console.log(this.personnelList)
     })
@@ -239,9 +465,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
   methods: {
     afterVisibleChange(val) {
@@ -254,13 +480,9 @@ export default {
       console.log('value', value)
       const data = [...this.data]
       //this.data = data.filter(item => item.code == value)
-      this.targetList = this.data.filter(function(data) {
-        return Object.keys(data).some(function(key) {
-          return (
-            String(data[key])
-              .toLowerCase()
-              .indexOf(value) > -1
-          )
+      this.targetList = this.data.filter(function (data) {
+        return Object.keys(data).some(function (key) {
+          return String(data[key]).toLowerCase().indexOf(value) > -1
         })
       })
     },
@@ -268,9 +490,22 @@ export default {
       console.log(record),
         (this.visible = true),
         (this.product = record),
-        getApproval().then(res => {
+        getApproval().then((res) => {
           this.timelinelist = res.result
         })
+    },
+    WidthChange() {
+      for (const key in this.columns) {
+        if (this.columns[key].dataIndex == 'action') {
+          if (this.Operat_visible) {
+            this.Operat_visible = false
+            this.columns[key].width = 160
+          } else {
+            this.Operat_visible = true
+            this.columns[key].width = 200
+          }
+        }
+      }
     },
     add() {
       this.$router.push({ name: 'BaleAdd' })
@@ -286,7 +521,7 @@ export default {
     },
     onDelete(key) {
       const data = [...this.data]
-      this.data = data.filter(item => item.key !== key)
+      this.data = data.filter((item) => item.key !== key)
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
@@ -327,7 +562,7 @@ export default {
           key: '1',
           title: 'curry 评论',
           time: moment(new Date()).format('YYYY-MM-DD HH:mm'),
-          content: this.value
+          content: this.value,
         })
       }, 1000)
       this.chat_visible = false
@@ -363,8 +598,8 @@ export default {
     },
     onChange(value) {
       console.log('Change:', value)
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang='less' scoped>

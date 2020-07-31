@@ -131,8 +131,9 @@
         ></a-table>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type @click="resetForm">重置表单</a-button>
+        <a-button type="primary" @click="resetForm">重置表单</a-button>
         <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
+        <a-button type style="margin-left: 10px;" @click="Back">返回</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>
@@ -154,77 +155,92 @@ const columns = [
   {
     title: '发货通知单编码',
     dataIndex: 'ShippingNoticeCode',
+    width: 155,
     key: 'ShippingNoticeCode',
     scopedSlots: { customRender: 'ShippingNoticeCode' },
   },
   {
     title: '发货仓库编码',
     dataIndex: 'CustomerCode',
+    width: 155,
     key: 'CustomerCode',
   },
   {
     title: '存货编码',
     dataIndex: 'BatchCode',
+    width: 155,
     key: 'BatchCode',
   },
   {
     title: '存货名称',
     dataIndex: 'CustomerAddressCode',
+    width: 155,
     key: 'CustomerAddressCode',
   },
   {
     title: '批次编码',
     dataIndex: 'DepartmentCode',
+    width: 155,
     key: 'DepartmentCode',
   },
   {
     title: '数量',
     dataIndex: 'SalesmanCode',
+    width: 155,
     key: 'SalesmanCode',
   },
   {
     title: '计量单位',
     dataIndex: 'ShippingWarehouseCode',
+    width: 155,
     key: 'ShippingWarehouseCode',
   },
   {
     title: '包装数量',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '1',
   },
   {
     title: '包装单位',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '2',
   },
   {
     title: '单价',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '3',
   },
   {
     title: '含税单价',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '4',
   },
   {
     title: '税率',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '5',
   },
   {
     title: '金额',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '6',
   },
   {
     title: '含税金额',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '7',
   },
   {
     title: '税额',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '8',
   },
 ]
@@ -232,77 +248,92 @@ const selectcolumns = [
   {
     title: '发货通知单编码',
     dataIndex: 'ShippingNoticeCode',
+    width: 155,
     key: 'ShippingNoticeCode',
     scopedSlots: { customRender: 'ShippingNoticeCode' },
   },
   {
     title: '发货仓库编码',
     dataIndex: 'CustomerCode',
+    width: 155,
     key: 'CustomerCode',
   },
   {
     title: '存货编码',
     dataIndex: 'BatchCode',
+    width: 155,
     key: 'BatchCode',
   },
   {
     title: '存货名称',
     dataIndex: 'CustomerAddressCode',
+    width: 155,
     key: 'CustomerAddressCode',
   },
   {
     title: '批次编码',
     dataIndex: 'DepartmentCode',
+    width: 155,
     key: 'DepartmentCode',
   },
   {
     title: '数量',
     dataIndex: 'SalesmanCode',
+    width: 155,
     key: 'SalesmanCode',
   },
   {
     title: '计量单位',
     dataIndex: 'ShippingWarehouseCode',
+    width: 155,
     key: 'ShippingWarehouseCode',
   },
   {
     title: '包装数量',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '1',
   },
   {
     title: '包装单位',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '2',
   },
   {
     title: '单价',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '3',
   },
   {
     title: '含税单价',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '4',
   },
   {
     title: '税率',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '5',
   },
   {
     title: '金额',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '6',
   },
   {
     title: '含税金额',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '7',
   },
   {
     title: '税额',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: '8',
   },
 ]
@@ -357,8 +388,8 @@ export default {
         authorization: 'authorization-text',
       },
       size: 'small',
-      labelCol: { span: 4 },
-      wrapperCol: { span: 14 },
+      labelCol: { span: 2 },
+      wrapperCol: { span: 22 },
       other: '',
       form: {
         ShippingNoticeCode: '', //发货通知单编码
@@ -433,6 +464,9 @@ export default {
           return false
         }
       })
+    },
+    Back() {
+      this.$router.push({ name: 'ShippingNoticeList' })
     },
     resetForm() {
       this.$refs.ruleForm.resetFields()

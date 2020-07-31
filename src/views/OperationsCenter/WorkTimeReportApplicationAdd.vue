@@ -94,8 +94,9 @@
         ></a-table>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type @click="resetForm">重置表单</a-button>
+        <a-button type="primary" @click="resetForm">重置表单</a-button>
         <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
+        <a-button type style="margin-left: 10px;" @click="Back">返回</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>
@@ -117,162 +118,185 @@ const columns = [
   {
     title: '报工申请单编码',
     dataIndex: 'WorkTimeReportApplicationCode',
+    width: 155,
     key: 'WorkTimeReportApplicationCode',
     scopedSlots: { customRender: 'WorkTimeReportApplicationCode' },
   },
   {
     title: '预计入库仓库编码',
     dataIndex: 'ExpectedInWarehouseCode',
+    width: 155,
     key: 'ExpectedInWarehouseCode',
   },
   {
     title: '存货编码',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: 'InventoryCode',
   },
   {
     title: '存货名称',
     dataIndex: 'InventoryName',
+    width: 155,
     key: 'InventoryName',
   },
   {
     title: '批次编码',
     dataIndex: 'BatchCode',
+    width: 155,
     key: 'BatchCode',
   },
   {
     title: '数量',
     dataIndex: 'Quantity',
+    width: 155,
     key: 'Quantity',
   },
   {
     title: '单位',
     dataIndex: 'Unit',
+    width: 155,
     key: 'Unit',
   },
   {
     title: '包装数量',
     dataIndex: 'PackingQuantity',
+    width: 155,
     key: 'PackingQuantity',
   },
   {
     title: '包装单位',
     dataIndex: 'PackingUnit',
+    width: 155,
     key: 'PackingUnit',
   },
   {
     title: '单价',
     dataIndex: 'UnitPrice',
+    width: 155,
     key: 'UnitPrice',
   },
   {
     title: '含税单价',
     dataIndex: 'TaxIncludedUnitPrice',
+    width: 155,
     key: 'TaxIncludedUnitPrice',
   },
   {
     title: '税率',
     dataIndex: 'TaxRate',
+    width: 155,
     key: 'TaxRate',
   },
   {
     title: '金额',
     dataIndex: 'Amount',
+    width: 155,
     key: 'Amount',
   },
   {
     title: '含税金额',
     dataIndex: 'TaxIncludedAmount',
+    width: 155,
     key: 'TaxIncludedAmount',
   },
   {
     title: '税额',
     dataIndex: 'Tax',
+    width: 155,
     key: 'Tax',
   },
 ]
 const selectcolumns = [
   {
-    title: '选择',
-    dataIndex: 'checked',
-    key: 'checked',
-    width: 80,
-    scopedSlots: { customRender: 'checked' },
-  },
-  {
     title: '报工申请单编码',
     dataIndex: 'WorkTimeReportApplicationCode',
+    width: 155,
     key: 'WorkTimeReportApplicationCode',
     scopedSlots: { customRender: 'WorkTimeReportApplicationCode' },
   },
   {
     title: '预计入库仓库编码',
     dataIndex: 'ExpectedInWarehouseCode',
+    width: 155,
     key: 'ExpectedInWarehouseCode',
   },
   {
     title: '存货编码',
     dataIndex: 'InventoryCode',
+    width: 155,
     key: 'InventoryCode',
   },
   {
     title: '存货名称',
     dataIndex: 'InventoryName',
+    width: 155,
     key: 'InventoryName',
   },
   {
     title: '批次编码',
     dataIndex: 'BatchCode',
+    width: 155,
     key: 'BatchCode',
   },
   {
     title: '数量',
     dataIndex: 'Quantity',
+    width: 155,
     key: 'Quantity',
   },
   {
     title: '单位',
     dataIndex: 'Unit',
+    width: 155,
     key: 'Unit',
   },
   {
     title: '包装数量',
     dataIndex: 'PackingQuantity',
+    width: 155,
     key: 'PackingQuantity',
   },
   {
     title: '包装单位',
     dataIndex: 'PackingUnit',
+    width: 155,
     key: 'PackingUnit',
   },
   {
     title: '单价',
     dataIndex: 'UnitPrice',
+    width: 155,
     key: 'UnitPrice',
   },
   {
     title: '含税单价',
     dataIndex: 'TaxIncludedUnitPrice',
+    width: 155,
     key: 'TaxIncludedUnitPrice',
   },
   {
     title: '税率',
     dataIndex: 'TaxRate',
+    width: 155,
     key: 'TaxRate',
   },
   {
     title: '金额',
     dataIndex: 'Amount',
+    width: 155,
     key: 'Amount',
   },
   {
     title: '含税金额',
     dataIndex: 'TaxIncludedAmount',
+    width: 155,
     key: 'TaxIncludedAmount',
   },
   {
     title: '税额',
     dataIndex: 'Tax',
+    width: 155,
     key: 'Tax',
   },
 ]
@@ -321,8 +345,8 @@ export default {
         authorization: 'authorization-text',
       },
       size: 'small',
-      labelCol: { span: 4 },
-      wrapperCol: { span: 14 },
+      labelCol: { span: 2 },
+      wrapperCol: { span: 22 },
       other: '',
       form: {
         WorkTimeReportApplicationCode: '', //报工申请单编码
@@ -405,6 +429,9 @@ export default {
           return false
         }
       })
+    },
+    Back() {
+      this.$router.push({ name: 'WorkTimeReportApplicationList' })
     },
     resetForm() {
       this.$refs.ruleForm.resetFields()

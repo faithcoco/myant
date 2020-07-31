@@ -33,19 +33,7 @@
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
-      <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
-        <a-input-search
-          placeholder="搜索"
-          style="width: 400px;margin-bottom:20px"
-          @search="onSearch"
-        />
-        <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
-          <span slot="checked" style="margin: 0" slot-scope="text,record">
-            <a-checkbox v-model="record.checked" @change="onChange(record)" />
-          </span>
-          <a slot="name" slot-scope="text">{{ text }}</a>
-        </a-table>
-      </a-modal>
+
       <a-form-model-item ref="name" label="关联单据" prop="RelatedDocuments">
         <a-input
           v-model="form.RelatedDocuments"
@@ -55,7 +43,7 @@
             
           }"
         >
-          <a-button slot="suffix" type="link">选择</a-button>
+          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="供应商编码" prop="Warehouse">
@@ -109,12 +97,37 @@
         >
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
-        <a-table :columns="selectcolumns" :data-source="numberRow" :pagination="false" bordered></a-table>
+        <a-table
+          :columns="selectcolumns"
+          :scroll="{ x: 1200 }"
+          :data-source="numberRow"
+          :pagination="false"
+          bordered
+        ></a-table>
       </a-form-model-item>
-
+      <a-modal v-model="visible" title="选择编码" width="1200px" @ok="handleOk">
+        <a-input-search
+          placeholder="搜索"
+          style="width: 400px;margin-bottom:20px"
+          @search="onSearch"
+        />
+        <a-table
+          :columns="columns"
+          :scroll="{ x: 1500 }"
+          :data-source="data"
+          :pagination="false"
+          bordered
+        >
+          <span slot="checked" style="margin: 0" slot-scope="text,record">
+            <a-checkbox v-model="record.checked" @change="onChange(record)" />
+          </span>
+          <a slot="name" slot-scope="text">{{ text }}</a>
+        </a-table>
+      </a-modal>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type @click="resetForm">重置表单</a-button>
+        <a-button type="primary" @click="resetForm">重置表单</a-button>
         <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
+        <a-button type style="margin-left: 10px;" @click="Back">返回</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>
@@ -311,8 +324,8 @@ export default {
         authorization: 'authorization-text',
       },
       size: 'small',
-      labelCol: { span: 4 },
-      wrapperCol: { span: 14 },
+      labelCol: { span: 2 },
+      wrapperCol: { span: 22 },
       other: '',
       form: {
         type: '', //类型
@@ -385,6 +398,9 @@ export default {
           return false
         }
       })
+    },
+    Back() {
+      this.$router.push({ name: 'OutManagementList' })
     },
     resetForm() {
       this.$refs.ruleForm.resetFields()

@@ -114,6 +114,9 @@ export default {
     onSearch(value) {
       console.log(value)
     },
+    callback(value) {
+      console.log(value)
+    },
     onChange(e) {
       console.log(`checked = ${e.target.value}`)
         

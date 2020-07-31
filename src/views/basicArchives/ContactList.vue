@@ -2,10 +2,21 @@
   <div>
     <a-card>
       <a-row>
-        <a-col :span="15">
-          <a-input-search @search="onSearch" placeholder="请输入搜索内容" />
+        <a-col :span="16">
+          <a-select default-value="全部" style="width:220px" @change="selectChange(value)">
+            <a-select-option
+              v-for="SList in selectList"
+              :key="SList.value"
+              :value="SList.value"
+            >{{SList.value}}</a-select-option>
+          </a-select>
+          <a-input-search
+            @search="onSearch"
+            style="width:220px;margin-left:20px"
+            placeholder="请输入搜索内容"
+          />
         </a-col>
-        <a-col :span="9">
+        <a-col :span="8">
           <span
             class="table-page-search-submitButtons"
             :style="{ float: 'right', overflow: 'hidden' } || {} "
@@ -27,16 +38,37 @@
         :scroll="{ x: 1500 }"
         bordered
       >
-        <!-- <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a> -->
-
-        <span slot="action" slot-scope="text, record">
-         <template v-if="$auth('table.update')">
+        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
+        <!-- <span slot="customTitle">
+          <span @click="WidthChange()">
+            <span v-if="Operat_visible ===true">
+              <a-icon type="menu-fold" :style="{ fontSize: '18px'}" />
+            </span>
+            <span v-else-if="Operat_visible ===false">
+              操作
+              <a-icon type="menu-unfold" :style="{ fontSize: '18px'}" />
+            </span>
+          </span>
+        </span>
+        <span slot="action" slot-scope="text, record" :hidden="Operat_visible">
+          <template v-if="$auth('table.update')">
             <a @click="handleDetail(record)">审批</a>
             <a-divider type="vertical" />
             <a @click="handleEdit(record)">编辑</a>
             <a-divider type="vertical" />
             <a @click="handleEdit(record)">删除</a>
           </template>
+        </span>-->
+        <span slot="customTitle">
+          <a-icon type="menu-fold" :style="{ fontSize: '18px'}" @click="WidthChange()" />
+          {{Operation}}
+        </span>
+        <span slot="action" v-show="Operat_visible" slot-scope="text, record">
+          <a @click="handleDetail(record)">审批</a>
+          <a-divider type="vertical" />
+          <a @click="handleEdit(record)">编辑</a>
+          <a-divider type="vertical" />
+          <a @click="handleEdit(record)">删除</a>
         </span>
         6t
       </s-table>
@@ -177,26 +209,186 @@ Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import { getContactList, getPersonnelList, getApproval, getContactListColumns } from '@/api/manage'
-
+const selectList = [
+  { value: '全部' },
+  { value: '联系人编码' },
+  { value: '联系人名称' },
+  { value: '所属客户' },
+  { value: '负责人' },
+  { value: '是否是主要联系人' },
+  { value: '称呼' },
+  { value: '性别' },
+  { value: '默认联系人' },
+  { value: '职务' },
+  { value: '手机' },
+  { value: '爱好' },
+]
 const timelinelist = []
-const columns = []
+const columns = [
+  {
+    key: '0',
+    title: '联系人编码',
+    dataIndex: 'ContactCode',
+    defaultSortOrder: 'descend',
+    width: 155,
+    fixed: '',
+    sorter: true,
+    scopedSlots: {
+      customRender: 'name',
+    },
+  },
+  {
+    key: '1',
+    title: '联系人名称',
+    dataIndex: 'ContactName',
+    defaultSortOrder: 'descend',
+    width: 155,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+  },
+  {
+    key: '2',
+    title: '所属客户',
+    dataIndex: 'Customer',
+    defaultSortOrder: 'descend',
+    width: 155,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+  },
+  {
+    key: '3',
+    title: '负责人',
+    dataIndex: 'Principal',
+    defaultSortOrder: 'descend',
+    width: 155,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+  },
+  {
+    key: '4',
+    title: '是否是主要联系人',
+    dataIndex: 'PrimaryContact',
+    defaultSortOrder: 'descend',
+    width: 155,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+  },
+  {
+    key: '5',
+    title: '称呼',
+    dataIndex: 'Call',
+    defaultSortOrder: 'descend',
+    width: 155,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+  },
+  {
+    key: '6',
+    title: '性别',
+    dataIndex: 'Gender',
+    defaultSortOrder: 'descend',
+    width: 155,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+  },
+  {
+    key: '7',
+    title: '默认联系人',
+    dataIndex: 'DefaultContact',
+    defaultSortOrder: 'descend',
+    width: 155,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+  },
+  {
+    key: '8',
+    title: '职务',
+    dataIndex: 'Job',
+    defaultSortOrder: 'descend',
+    width: 155,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+  },
+  {
+    key: '9',
+    title: '手机',
+    dataIndex: 'Tel',
+    defaultSortOrder: 'descend',
+    width: 155,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+  },
+  {
+    key: '10',
+    title: '爱好',
+    dataIndex: 'Hobby',
+    defaultSortOrder: 'descend',
+    width: 155,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+    },
+  },
+  {
+    key: '11',
+    slots: { title: 'customTitle' },
+    dataIndex: 'action',
+    defaultSortOrder: '',
+    width: 200,
+    fixed: 'right',
+    sorter: '',
+    scopedSlots: {
+      customRender: 'action',
+    },
+  },
+]
 const personnelList = []
 const width = 120
 const product = {}
-const targetTitle = []
+const targetTitle = columns
+const Operat_visible = ''
 export default {
   components: {
     STable,
-    STree
+    STree,
   },
   data() {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
       personnelList,
+      selectList,
       visible: false,
       chat_visible: false,
-
+      Operat_visible: true,
       status: '正在审批',
       color: '',
       product,
@@ -209,22 +401,22 @@ export default {
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
       disabled: false,
-      loadData: parameter => {
-        return getContactList(Object.assign(parameter, this.queryParam)).then(res => {
+      loadData: (parameter) => {
+        return getContactList(Object.assign(parameter, this.queryParam)).then((res) => {
           return res.result
         })
       },
       submitting: false,
       value: '',
-      moment
+      moment,
     }
   },
   created() {
-    getContactListColumns().then(res => {
-      this.columns = res.result
-      this.targetTitle = this.columns
-    })
-    getPersonnelList().then(res => {
+    // getContactListColumns().then((res) => {
+    //   this.columns = res.result
+    //   this.targetTitle = this.columns
+    // })
+    getPersonnelList().then((res) => {
       this.personnelList = res.result
       console.log(this.personnelList)
     })
@@ -236,9 +428,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
   methods: {
     afterVisibleChange(val) {
@@ -251,13 +443,9 @@ export default {
       console.log('value', value)
       const data = [...this.data]
       //this.data = data.filter(item => item.code == value)
-      this.targetList = this.data.filter(function(data) {
-        return Object.keys(data).some(function(key) {
-          return (
-            String(data[key])
-              .toLowerCase()
-              .indexOf(value) > -1
-          )
+      this.targetList = this.data.filter(function (data) {
+        return Object.keys(data).some(function (key) {
+          return String(data[key]).toLowerCase().indexOf(value) > -1
         })
       })
     },
@@ -265,9 +453,22 @@ export default {
       console.log(record),
         (this.visible = true),
         (this.product = record),
-        getApproval().then(res => {
+        getApproval().then((res) => {
           this.timelinelist = res.result
         })
+    },
+    WidthChange() {
+      for (const key in this.columns) {
+        if (this.columns[key].dataIndex == 'action') {
+          if (this.Operat_visible) {
+            this.Operat_visible = false
+            this.columns[key].width = 160
+          } else {
+            this.Operat_visible = true
+            this.columns[key].width = 200
+          }
+        }
+      }
     },
     add() {
       this.$router.push({ name: 'ContactAdd' })
@@ -283,7 +484,7 @@ export default {
     },
     onDelete(key) {
       const data = [...this.data]
-      this.data = data.filter(item => item.key !== key)
+      this.data = data.filter((item) => item.key !== key)
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
@@ -324,7 +525,7 @@ export default {
           key: '1',
           title: 'curry 评论',
           time: moment(new Date()).format('YYYY-MM-DD HH:mm'),
-          content: this.value
+          content: this.value,
         })
       }, 1000)
       this.chat_visible = false
@@ -359,8 +560,8 @@ export default {
     },
     onChange(value) {
       console.log('Change:', value)
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang='less' scoped>

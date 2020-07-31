@@ -2,8 +2,8 @@
   <div>
     <a-card>
       <a-row>
-        <a-col :span="4">
-          <a-select style="width:220px" @change="selectChange(value)">
+        <a-col :span="16">
+          <a-select default-value="全部" style="width:220px" @change="selectChange(value)">
             <a-select-option
               v-for="SList in selectList"
               :key="SList.value"
@@ -15,13 +15,15 @@
              style="width:220px"   样式设置   宽度为220像素
              @change  监听事件变化 当value变化时触发change事件绑定的函数
           -->
-        </a-col>
-        <a-col :span="6">
-          <a-input-search @search="onSearch" placeholder="请输入搜索内容" />
+          <a-input-search
+            @search="onSearch"
+            style="width:220px;margin-left:20px"
+            placeholder="请输入搜索内容"
+          />
           <!-- @search  监听搜索事件 搜索框输入时触发onSearch函数 -->
         </a-col>
 
-        <a-col :span="14">
+        <a-col :span="8">
           <!-- 将显示区域的宽度分为24等份，用:span 来表示每一个内容占的分数、比例 -->
           <span
             class="table-page-search-submitButtons"
@@ -58,18 +60,15 @@
         -->
         <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
         <span slot="customTitle">
-
-          <a-icon type="smile-o" @click="WidthChange()" />
+          <a-icon type="menu-fold" :style="{ fontSize: '18px'}" @click="WidthChange()" />
           {{Operation}}
         </span>
-        <span slot="action" slot-scope="text, record">
-          <div v-show="Operat_visible">
-            <a @click="handleDetail(record)">审批</a>
-            <a-divider type="vertical" />
-            <a @click="handleEdit(record)">编辑</a>
-            <a-divider type="vertical" />
-            <a @click="handleEdit(record)">删除</a>
-          </div>
+        <span slot="action" v-show="Operat_visible" slot-scope="text, record">
+          <a @click="handleDetail(record)">审批</a>
+          <a-divider type="vertical" />
+          <a @click="handleEdit(record)">编辑</a>
+          <a-divider type="vertical" />
+          <a @click="handleEdit(record)">删除</a>
         </span>
         6t
       </s-table>
@@ -462,7 +461,7 @@ const columns = [
     slots: { title: 'customTitle' },
     dataIndex: 'action',
     defaultSortOrder: null,
-  
+    width: 200,
     sorter: null,
     isShow: true,
     scopedSlots: {
@@ -472,6 +471,7 @@ const columns = [
   },
 ]
 const selectList = [
+  { value: '全部' },
   { value: '货品编码' },
   { value: '货品名称' },
   { value: '规格型号' },
@@ -592,16 +592,16 @@ export default {
         })
     },
     WidthChange() {
-      console.log("onclick--->")
-      if (this.Operat_visible) {
-        this.Operat_visible = false //展开状态
-        for (const key in this.columns) {
-          if (this.columns[key].dataIndex == 'action') {
-            this.Operation=""
+      for (const key in this.columns) {
+        if (this.columns[key].dataIndex == 'action') {
+          if (this.Operat_visible) {
+            this.Operat_visible = false
+            this.columns[key].width = 160
+          } else {
+            this.Operat_visible = true
+            this.columns[key].width = 200
           }
         }
-      } else if (!this.Operat_visible) {
-        this.Operat_visible = true
       }
     },
     add() {

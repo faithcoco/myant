@@ -2,10 +2,21 @@
   <div>
     <a-card>
       <a-row>
-        <a-col :span="15">
-          <a-input-search @search="onSearch" placeholder="请输入搜索内容" />
+        <a-col :span="16">
+          <a-select default-value="全部" style="width:220px" @change="selectChange(value)">
+            <a-select-option
+              v-for="SList in selectList"
+              :key="SList.value"
+              :value="SList.value"
+            >{{SList.value}}</a-select-option>
+          </a-select>
+          <a-input-search
+            @search="onSearch"
+            style="width:220px;margin-left:20px"
+            placeholder="请输入搜索内容"
+          />
         </a-col>
-        <a-col :span="9">
+        <a-col :span="8">
           <span
             class="table-page-search-submitButtons"
             :style="{ float: 'right', overflow: 'hidden' } || {} "
@@ -27,16 +38,17 @@
         :scroll="{ x: 1500 }"
         bordered
       >
-        <!-- <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a> -->
-
-        <span slot="action" slot-scope="text, record">
-          <template v-if="$auth('table.update')">
-            <a @click="handleDetail(record)">审批</a>
-            <a-divider type="vertical" />
-            <a @click="handleEdit(record)">编辑</a>
-            <a-divider type="vertical" />
-            <a @click="handleEdit(record)">删除</a>
-          </template>
+        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
+        <span slot="customTitle">
+          <a-icon type="menu-fold" :style="{ fontSize: '18px'}" @click="WidthChange()" />
+          {{Operation}}
+        </span>
+        <span slot="action" v-show="Operat_visible" slot-scope="text, record">
+          <a @click="handleDetail(record)">审批</a>
+          <a-divider type="vertical" />
+          <a @click="handleEdit(record)">编辑</a>
+          <a-divider type="vertical" />
+          <a @click="handleEdit(record)">删除</a>
         </span>
         6t
       </s-table>
@@ -176,18 +188,194 @@ Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import { getCustomerList, getApproval, getPersonnelList, getCustomerListColumns } from '@/api/manage'
-
+const selectList = [
+  { value: '全部' },
+  { value: '客户编码' },
+  { value: '客户名称' },
+  { value: '客户简称' },
+  { value: '区域名称' },
+  { value: '发展日期' },
+  { value: '联系人' },
+  { value: '电话' },
+  { value: '专营业务员名称' },
+  { value: '分管部门名称' },
+  { value: '潜在客户编码' },
+]
 const timelinelist = []
-const columns = []
+const columns = [
+  {
+    key: '0',
+    title: '客户编码',
+    dataIndex: 'CustomerCode',
+    defaultSortOrder: 'descend',
+    width: 155,
+    fixed: '',
+    sorter: true,
+    scopedSlots: {
+      customRender: 'name',
+      slots: {
+        title: null,
+      },
+    },
+  },
+  {
+    key: '1',
+    title: '客户名称',
+    dataIndex: 'CustomerName',
+    defaultSortOrder: 'descend',
+    width: 156,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+      slots: {
+        title: null,
+      },
+    },
+  },
+  {
+    key: '2',
+    title: '客户简称',
+    dataIndex: 'CustomerAbbreviation',
+    defaultSortOrder: 'descend',
+    width: 157,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+      slots: {
+        title: null,
+      },
+    },
+  },
+  {
+    key: '3',
+    title: '地区名称',
+    dataIndex: 'Area',
+    defaultSortOrder: 'descend',
+    width: 158,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+      slots: {
+        title: null,
+      },
+    },
+  },
+  {
+    key: '4',
+    title: '发展日期',
+    dataIndex: 'DevelopmentDate',
+    defaultSortOrder: 'descend',
+    width: 159,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+      slots: {
+        title: null,
+      },
+    },
+  },
+  {
+    key: '5',
+    title: '联系人',
+    dataIndex: 'ContactPerson',
+    defaultSortOrder: 'descend',
+    width: 160,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+      slots: {
+        title: null,
+      },
+    },
+  },
+  {
+    key: '6',
+    title: '电话',
+    dataIndex: 'Tel',
+    defaultSortOrder: 'descend',
+    width: 161,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+      slots: {
+        title: null,
+      },
+    },
+  },
+  {
+    key: '7',
+    title: '专营业务员名称',
+    dataIndex: 'Salesman',
+    defaultSortOrder: 'descend',
+    width: 162,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+      slots: {
+        title: null,
+      },
+    },
+  },
+  {
+    key: '8',
+    title: '分管部门名称',
+    dataIndex: 'department',
+    defaultSortOrder: 'descend',
+    width: 163,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+      slots: {
+        title: null,
+      },
+    },
+  },
+  {
+    key: '9',
+    title: '潜在客户编码',
+    dataIndex: 'PotentialCustomerCode',
+    defaultSortOrder: 'descend',
+    width: 164,
+    fixed: '',
+    sorter: '',
+    scopedSlots: {
+      customRender: '',
+      slots: {
+        title: null,
+      },
+    },
+  },
+  {
+    key: '10',
+    slots: { title: 'customTitle' },
+    dataIndex: 'action',
+    defaultSortOrder: '',
+    width: 200,
+    fixed: 'right',
+    sorter: '',
+    scopedSlots: {
+      customRender: 'action',
+    },
+  },
+]
 const personnelList = []
 const data = []
 const width = 120
 const product = {}
-const targetTitle = []
+const targetTitle = columns
+const Operat_visible = ''
 export default {
   components: {
     STable,
-    STree
+    STree,
   },
   data() {
     const oriTargetKeys = this.columns
@@ -195,7 +383,9 @@ export default {
     return {
       personnelList,
       visible: false,
+      selectList,
       chat_visible: false,
+      Operat_visible: true,
       data,
       status: '正在审批',
       color: '',
@@ -209,23 +399,23 @@ export default {
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
       disabled: false,
-      loadData: parameter => {
-        return getCustomerList(Object.assign(parameter, this.queryParam)).then(res => {
+      loadData: (parameter) => {
+        return getCustomerList(Object.assign(parameter, this.queryParam)).then((res) => {
           // console.log('/service-->', JSON.stringify(res.result))
           return res.result
         })
       },
       submitting: false,
       value: '',
-      moment
+      moment,
     }
   },
   created() {
-    getCustomerListColumns().then(res => {
-      this.columns = res.result
-      this.targetTitle = this.columns
-    })
-    getPersonnelList().then(res => {
+    // getCustomerListColumns().then((res) => {
+    //   this.columns = res.result
+    //   this.targetTitle = this.columns
+    // })
+    getPersonnelList().then((res) => {
       this.personnelList = res.result
       console.log(this.personnelList)
     })
@@ -237,9 +427,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
   methods: {
     afterVisibleChange(val) {
@@ -252,13 +442,9 @@ export default {
       console.log('value', value)
       const data = [...this.data]
       //this.data = data.filter(item => item.code == value)
-      this.targetList = this.data.filter(function(data) {
-        return Object.keys(data).some(function(key) {
-          return (
-            String(data[key])
-              .toLowerCase()
-              .indexOf(value) > -1
-          )
+      this.targetList = this.data.filter(function (data) {
+        return Object.keys(data).some(function (key) {
+          return String(data[key]).toLowerCase().indexOf(value) > -1
         })
       })
     },
@@ -266,9 +452,22 @@ export default {
       console.log(record),
         (this.visible = true),
         (this.product = record),
-        getApproval().then(res => {
+        getApproval().then((res) => {
           this.timelinelist = res.result
         })
+    },
+    WidthChange() {
+      for (const key in this.columns) {
+        if (this.columns[key].dataIndex == 'action') {
+          if (this.Operat_visible) {
+            this.Operat_visible = false
+            this.columns[key].width = 160
+          } else {
+            this.Operat_visible = true
+            this.columns[key].width = 200
+          }
+        }
+      }
     },
     add() {
       this.$router.push({ name: 'CustomerAdd' })
@@ -284,7 +483,7 @@ export default {
     },
     onDelete(key) {
       const data = [...this.data]
-      this.data = data.filter(item => item.key !== key)
+      this.data = data.filter((item) => item.key !== key)
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
@@ -325,7 +524,7 @@ export default {
           key: '1',
           title: 'curry 评论',
           time: moment(new Date()).format('YYYY-MM-DD HH:mm'),
-          content: this.value
+          content: this.value,
         })
       }, 1000)
       this.chat_visible = false
@@ -360,8 +559,8 @@ export default {
     },
     onChange(value) {
       console.log('Change:', value)
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang='less' scoped>

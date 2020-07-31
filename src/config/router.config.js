@@ -8,7 +8,7 @@ export const asyncRouterMap = [
     name: 'index',
     component: BasicLayout,
     meta: { title: '首页' },
-    redirect: '/message',
+    redirect: '/dashboard/workplace',
     children: [
       {
         path: '/basic_archives',
@@ -30,6 +30,13 @@ export const asyncRouterMap = [
             meta: { title: '商品档案新增', permission: ['dashboard'] },
             hidden: true
           },
+          {
+            path: 'classification_goods',
+            name: 'ClassificationGoods',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ClassificationGoods.vue'),
+            meta: { title: '货品分类', icon: 'user', permission: ['dashboard'] }
+          },
+
           {
             path: 'SupplierList',
             name: 'SupplierList',
@@ -96,12 +103,6 @@ export const asyncRouterMap = [
               import(/* webpackChunkName: "fail" */ '@/views/management/Inventory/OpeningInventoryAdd.vue'),
             meta: { title: '期初库存新增', permission: ['dashboard'] },
             hidden: true
-          },
-          {
-            path: 'classification_goods',
-            name: 'ClassificationGoods',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ClassificationGoods.vue'),
-            meta: { title: '货品分类', icon: 'user', permission: ['dashboard'] }
           },
           {
             path: 'Sector',
@@ -323,7 +324,6 @@ export const asyncRouterMap = [
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/EnterpriseInformation.vue'),
             meta: { title: '企业信息', icon: 'user', permission: ['dashboard'] }
           },
-
           {
             path: 'RoleSetting',
             name: 'role-setting',
@@ -348,7 +348,6 @@ export const asyncRouterMap = [
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/ApprovalSettin.vue'),
             meta: { title: '审批设置', icon: 'user', permission: ['dashboard'] }
           },
-
           {
             path: 'MessageSettin',
             name: 'message_settin',
@@ -459,6 +458,7 @@ export const asyncRouterMap = [
           {
             path: '/dashboard/workplace',
             name: 'Workplace',
+            component: RouteView,
             component: () => import('@/views/dashboard/Workplace'),
             meta: { title: '工作台', permission: ['dashboard'] }
           },

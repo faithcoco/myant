@@ -39,15 +39,15 @@
 
       <a-form-model-item label="仓库负责人" prop="WarehouseManager">
         <a-input v-model="form.WarehouseManager" placeholder="请选择仓库负责人">
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          <!-- <a-button slot="suffix" type="link" @click="showModal">选择</a-button> -->
         </a-input>
-        <a-table
+        <!-- <a-table
           :columns="selectcolumns"
           :scroll="{ x: 750 }"
           :data-source="numberRow"
           :pagination="false"
           bordered
-        ></a-table>
+        ></a-table>-->
       </a-form-model-item>
 
       <a-form-model-item ref="name" label="仓库地址" prop="WarehouseAddress">
@@ -85,7 +85,7 @@
           }
         "
         >
-          <a-button slot="suffix" type="link">选择</a-button>
+          <!-- <a-button slot="suffix" type="link">选择</a-button> -->
         </a-input>
       </a-form-model-item>
       <a-form-model-item label="批次管理" prop="BatchManagement">
@@ -113,8 +113,9 @@
         </a-upload>
       </a-form-model-item>
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type @click="resetForm">重置表单</a-button>
+        <a-button type="primary" @click="resetForm">重置表单</a-button>
         <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
+        <a-button type style="margin-left: 10px;" @click="Back">返回</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>
@@ -256,8 +257,8 @@ export default {
         authorization: 'authorization-text',
       },
       size: 'small',
-      labelCol: { span: 4 },
-      wrapperCol: { span: 14 },
+      labelCol: { span: 2 },
+      wrapperCol: { span: 22 },
       other: '',
       form: {
         WarehouseCode: '', //仓库编码
@@ -316,6 +317,9 @@ export default {
           return false
         }
       })
+    },
+    Back() {
+      this.$router.push({ name: 'WarehouseList' })
     },
     resetForm() {
       this.$refs.ruleForm.resetFields()

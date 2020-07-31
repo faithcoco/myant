@@ -110,12 +110,64 @@
                   </chart-card>
                 </a-col>
               </a-row>
-              
             </div>
           </a-card>
 
-          <a-card :loading="loading" title="动态" :bordered="false">
-            <a-list>
+          <a-card :loading="loading" title="审批" :bordered="false">
+            <a-radio-group v-model="size" style="margin-bottom: 16px" @change="onChange">
+              <a-radio-button value="approval">审批待办</a-radio-button>
+              <a-radio-button value="notification">系统通知</a-radio-button>
+              <a-radio-button value="contract">合同动态</a-radio-button>
+            </a-radio-group>
+            <!-- <div v-show="isShow">
+              <a-tabs default-active-key="1" :size="size" @change="callback">
+                <a-tab-pane key="1" tab="待我处理"></a-tab-pane>
+                <a-tab-pane key="2" tab="我已处理"></a-tab-pane>
+                <a-tab-pane key="3" tab="我发起的"></a-tab-pane>
+                <a-tab-pane key="4" tab="抄送我的"></a-tab-pane>
+              </a-tabs>
+            </div>-->
+
+            <div class="group1">
+              <a-input-search
+                class="search"
+                placeholder="请输入搜索内容"
+                style="width: 200px"
+                @search="onSearch"
+              />
+              <br />
+              <br />
+              <a-radio-group class="radio1" default-value="a" button-style="solid">
+                {{type}}
+                <a-radio-button value="a">全部</a-radio-button>
+                <a-radio-button value="b">@我的</a-radio-button>
+                <a-radio-button value="c">非@我的</a-radio-button>
+              </a-radio-group>
+              <br />
+              <br />
+
+              <div class="group2">
+                <div class="group2-btn1">
+                  <a-radio-group default-value="a" button-style="solid">
+                    {{module}}
+                    <a-radio-button value="a">全部</a-radio-button>
+                    <a-radio-button value="b">应收</a-radio-button>
+                    <a-radio-button value="c">应付</a-radio-button>
+                  </a-radio-group>
+
+                  <a-radio class="read">仅显示未读</a-radio>
+                </div>
+                <a-radio-group class="group2-btn2" default-value="a" button-style="solid">
+                  <a-radio-button value="a">标为已读</a-radio-button>
+                  <a-radio-button value="b">导出</a-radio-button>
+                </a-radio-group>
+              </div>
+
+              <a-table :columns="columns" :data-source="data" style="margin-top:20px" bordered>
+                <a slot="name" slot-scope="text">{{ text }}</a>
+              </a-table>
+            </div>
+            <!-- <a-list>
               <a-list-item :key="index" v-for="(item, index) in activities">
                 <a-list-item-meta>
                   <a-avatar slot="avatar" :src="item.user.avatar" />
@@ -129,7 +181,7 @@
                   <div slot="description">{{ item.time }}</div>
                 </a-list-item-meta>
               </a-list-item>
-            </a-list>
+            </a-list>-->
           </a-card>
         </a-col>
         <a-col style="padding: 0 12px" :xl="8" :lg="24" :md="24" :sm="24" :xs="24">
@@ -185,18 +237,75 @@ import { mapState } from 'vuex'
 
 import { PageView } from '@/layouts'
 import HeadInfo from '@/components/tools/HeadInfo'
-import { Radar,ChartCard, MiniArea, MiniBar, MiniProgress, RankList, Bar, Trend, NumberInfo, MiniSmoothArea } from '@/components'
+import {
+  Radar,
+  ChartCard,
+  MiniArea,
+  MiniBar,
+  MiniProgress,
+  RankList,
+  Bar,
+  Trend,
+  NumberInfo,
+  MiniSmoothArea,
+} from '@/components'
 
 import { getRoleList, getServiceList } from '@/api/manage'
 
 const DataSet = require('@antv/data-set')
+
+const columns = [
+  {
+    title: '标题',
+    width: 200,
+    dataIndex: 'title',
+    key: 'title',
+  },
+  {
+    title: '内容',
+    width: 200,
+    dataIndex: 'LR',
+    key: 'LR',
+  },
+  {
+    title: '来源/合同名称',
+    width: 200,
+    dataIndex: 'name',
+    key: 'name',
+  },
+  {
+    title: '时间',
+    width: 100,
+    dataIndex: 'time',
+    key: 'time',
+    sorter: (a, b) => a.age - b.age,
+  },
+  {
+    title: '状态',
+    width: 60,
+    dataIndex: 'status',
+    key: 'status',
+  },
+]
+
+const data = [
+  {
+    key: '1',
+    title: "在'上海固圣信息技术有限公司一次性服务款项目'@了你",
+    LR: '@高铭亮，高总，我的项目什么时候审批好',
+    name: '上海固圣信息技术有限公司一次性服务款项目',
+    time: '2020-04-21',
+    status: '未读',
+  },
+]
 
 export default {
   name: 'Workplace',
   components: {
     PageView,
     HeadInfo,
-    Radar, ChartCard,
+    Radar,
+    ChartCard,
     MiniArea,
     MiniBar,
     MiniProgress,
@@ -204,11 +313,18 @@ export default {
     Bar,
     Trend,
     NumberInfo,
-    MiniSmoothArea
+    MiniSmoothArea,
   },
   data() {
     return {
-        loading: true,
+      isShow: true,
+      size: 'default',
+      columns,
+      data,
+      type: '审批类型：',
+      module: '审批模块',
+
+      loading: true,
       timeFix: timeFix(),
       avatar: '',
       user: {},
@@ -226,10 +342,10 @@ export default {
         tickLine: null,
         grid: {
           lineStyle: {
-            lineDash: null
+            lineDash: null,
           },
-          hideFirstLine: false
-        }
+          hideFirstLine: false,
+        },
       },
       axis2Opts: {
         dataKey: 'score',
@@ -238,16 +354,16 @@ export default {
         grid: {
           type: 'polygon',
           lineStyle: {
-            lineDash: null
-          }
-        }
+            lineDash: null,
+          },
+        },
       },
       scale: [
         {
           dataKey: 'score',
           min: 0,
-          max: 80
-        }
+          max: 80,
+        },
       ],
       axisData: [
         { item: '引用', a: 70, b: 30, c: 40 },
@@ -255,29 +371,29 @@ export default {
         { item: '产量', a: 50, b: 60, c: 40 },
         { item: '贡献', a: 40, b: 50, c: 40 },
         { item: '热度', a: 60, b: 70, c: 40 },
-        { item: '引用', a: 70, b: 50, c: 40 }
+        { item: '引用', a: 70, b: 50, c: 40 },
       ],
-      radarData: []
+      radarData: [],
     }
   },
   computed: {
     ...mapState({
-      nickname: state => state.user.nickname,
-      welcome: state => state.user.welcome
+      nickname: (state) => state.user.nickname,
+      welcome: (state) => state.user.welcome,
     }),
     userInfo() {
       return this.$store.getters.userInfo
-    }
+    },
   },
   created() {
     this.user = this.userInfo
     this.avatar = this.userInfo.avatar
 
-    getRoleList().then(res => {
+    getRoleList().then((res) => {
       // console.log('workplace -> call getRoleList()', res)
     })
 
-    getServiceList().then(res => {
+    getServiceList().then((res) => {
       // console.log('workplace -> call getServiceList()', res)
     })
   },
@@ -289,20 +405,20 @@ export default {
   },
   methods: {
     getProjects() {
-      this.$http.get('/list/search/projects').then(res => {
+      this.$http.get('/list/search/projects').then((res) => {
         console.log('/list/search/projects res-->', JSON.stringify(res))
         this.projects = res.result && res.result.data
         this.loading = false
       })
     },
     getActivity() {
-      this.$http.get('/workplace/activity').then(res => {
+      this.$http.get('/workplace/activity').then((res) => {
         console.log('/workplace/activity res-->', JSON.stringify(res))
         this.activities = res.result
       })
     },
     getTeams() {
-      this.$http.get('/workplace/teams').then(res => {
+      this.$http.get('/workplace/teams').then((res) => {
         console.log('/workplace/teams res-->', JSON.stringify(res))
         this.teams = res.result
       })
@@ -310,21 +426,44 @@ export default {
     initRadar() {
       this.radarLoading = true
 
-      this.$http.get('/workplace/radar').then(res => {
+      this.$http.get('/workplace/radar').then((res) => {
         console.log('/workplace/radar res-->', JSON.stringify(res))
         const dv = new DataSet.View().source(res.result)
         dv.transform({
           type: 'fold',
           fields: ['个人', '团队', '部门'],
           key: 'user',
-          value: 'score'
+          value: 'score',
         })
 
         this.radarData = dv.rows
         this.radarLoading = false
       })
-    }
-  }
+    },
+    onChange(e) {
+      console.log(`checked = ${e.target.value}`)
+
+      if (e.target.value == 'approval') {
+        this.isShow = true
+        this.type = '审批类型：'
+        this.module = '审批模块：'
+      } else if (e.target.value == 'notification') {
+        this.isShow = false
+        this.type = '通知类型：'
+        this.module = '通知模块：'
+      } else if (e.target.value == 'contract') {
+        this.isShow = false
+        this.type = '类型：'
+        this.module = '模块：'
+      }
+    },
+    onSearch(value) {
+      console.log(value)
+    },
+    callback(value) {
+      console.log(value)
+    },
+  },
 }
 </script>
 
@@ -382,7 +521,13 @@ export default {
     overflow: hidden;
   }
 }
-
+.group2 {
+  display: flex;
+  justify-content: space-between;
+}
+.read {
+  margin-left: 20px;
+}
 .item-group {
   padding: 20px 0 8px 24px;
   font-size: 0;

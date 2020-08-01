@@ -70,7 +70,7 @@
           <a-divider type="vertical" />
           <a @click="handleEdit(record)">删除</a>
         </span>
-        6t
+        
       </s-table>
     </a-card>
     <a-drawer
@@ -457,17 +457,18 @@ const columns = [
     },
   },
   {
-    key: '15',
+   
     slots: { title: 'customTitle' },
     dataIndex: 'action',
     defaultSortOrder: null,
-    width: 200,
+    width: 155,
     sorter: null,
     isShow: true,
     scopedSlots: {
       customRender: 'action',
     },
     fixed: 'right',
+  
   },
 ]
 const selectList = [
@@ -493,7 +494,7 @@ const timelinelist = []
 const personnelList = []
 const product = {}
 const targetTitle = columns
-
+const Operat_visible=true
 export default {
   components: {
     STable,
@@ -507,7 +508,7 @@ export default {
       selectList,
       visible: false,
       chat_visible: false,
-      Operat_visible: true,
+      Operat_visible,
       Operation: '操作',
       status: '正在审批',
       color: '',
@@ -553,6 +554,14 @@ export default {
     //     }
     //   }
     // })
+    for (const key in this.columns) {
+      if (this.columns[key].dataIndex=="action") {
+      
+        if(this.columns[key].width==85){
+          this.Operat_visible=false
+        }
+      }
+    }
     getPersonnelList().then((res) => {
       this.personnelList = res.result
     })
@@ -592,17 +601,19 @@ export default {
         })
     },
     WidthChange() {
+    
       for (const key in this.columns) {
         if (this.columns[key].dataIndex == 'action') {
           if (this.Operat_visible) {
             this.Operat_visible = false
-            this.columns[key].width = 160
+            this.columns[key].width = 85
           } else {
             this.Operat_visible = true
-            this.columns[key].width = 200
+            this.columns[key].width = 155
           }
         }
       }
+        console.log("is run--->",this.Operat_visible)
     },
     add() {
       this.$router.push({ name: 'ProductAdd' }) //编程式导航  修改 url，完成跳转

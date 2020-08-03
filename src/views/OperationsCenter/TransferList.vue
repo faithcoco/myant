@@ -50,7 +50,6 @@
           <a-divider type="vertical" />
           <a @click="handleEdit(record)">删除</a>
         </span>
-        6t
       </s-table>
     </a-card>
     <a-drawer
@@ -399,7 +398,7 @@ const columns = [
     dataIndex: 'action',
     defaultSortOrder: '',
     sorter: '',
-    width: 200,
+    width: 155,
     fixed: 'right',
     scopedSlots: {
       customRender: 'action',
@@ -411,7 +410,7 @@ const timelinelist = []
 const width = 120
 const product = {}
 const targetTitle = columns
-const Operat_visible = ''
+const Operat_visible = true
 export default {
   components: {
     STable,
@@ -425,8 +424,9 @@ export default {
       selectList,
       visible: false,
       chat_visible: false,
-      Operat_visible: true,
+      Operat_visible,
       status: '正在审批',
+      Operation: '操作',
       color: '',
       product,
       columns,
@@ -453,6 +453,11 @@ export default {
     //   this.columns = res.result
     //   this.targetTitle = this.columns
     // })
+    for (const key in this.columns) {
+      if (this.columns[key].dataIndex == 'action' && this.columns[key].width == 85) {
+        this.Operat_visible = false
+      }
+    }
     getPersonnelList().then((res) => {
       this.personnelList = res.result
       console.log(this.personnelList)
@@ -499,10 +504,10 @@ export default {
         if (this.columns[key].dataIndex == 'action') {
           if (this.Operat_visible) {
             this.Operat_visible = false
-            this.columns[key].width = 160
+            this.columns[key].width = 85
           } else {
             this.Operat_visible = true
-            this.columns[key].width = 200
+            this.columns[key].width = 155
           }
         }
       }

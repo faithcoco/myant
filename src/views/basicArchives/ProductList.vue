@@ -61,7 +61,7 @@
         -->
         <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
         <span slot="customTitle">
-           {{Operation}}
+          {{Operation}}
           <a-icon :type="isfold" :style="{ fontSize: '18px'}" @click="WidthChange()" />
         </span>
         <span slot="action" v-show="Operat_visible" slot-scope="text, record">
@@ -71,76 +71,12 @@
           <a-divider type="vertical" />
           <a @click="handleEdit(record)">删除</a>
         </span>
-        
       </s-table>
     </a-card>
-    <a-drawer
-      title="产品详情"
-      placement="right"
-      :width="720"
-      :closable="false"
-      :visible="visible"
-      :after-visible-change="afterVisibleChange"
-      @close="onClose"
-    >
-      <a-descriptions title :column="1">
-        <a-descriptions-item label="货品编码">{{product.productCode }}</a-descriptions-item>
-        <a-descriptions-item label="货品名称">{{product.productName}}</a-descriptions-item>
-        <a-descriptions-item label="规格型号">{{product.SpecificationModel}}</a-descriptions-item>
-        <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
-        <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
-        <a-descriptions-item label="主计量单位">{{product.MainUnit}}</a-descriptions-item>
-        <a-descriptions-item label="电商销售单位">{{product.SalesUnit}}</a-descriptions-item>
-        <a-descriptions-item label="分销单位">{{product.SalesUnit}}</a-descriptions-item>
-        <a-descriptions-item label="最低售价">{{product.LowestPrice}}</a-descriptions-item>
-        <a-descriptions-item label="商品描述">{{product.description}}</a-descriptions-item>
-        <a-descriptions-item label="默认发货仓库">{{product.DefaultShippingWarehouse}}</a-descriptions-item>
-        <a-descriptions-item label="是否虚拟物品">{{product.VirtualItem}}</a-descriptions-item>
-        <a-descriptions-item label="图片">{{product.Image}}</a-descriptions-item>
-        <a-descriptions-item label="预发货日期">{{product.StorageDate}}</a-descriptions-item>
-        <a-descriptions-item label="单位毛重">{{product.UnitGrossWeight}}</a-descriptions-item>
-        <a-descriptions-item label="审批状态">
-          <a-tag :color="color">{{status}}</a-tag>
-        </a-descriptions-item>
-      </a-descriptions>
-      <a-divider>审批详情</a-divider>
-      <a-timeline>
-        <a-timeline-item v-for="item in timelinelist" :key="item.key">
-          <p>
-            <a-row>
-              <a-col :span="5">
-                <b>{{item.title}}</b>
-              </a-col>
-              <a-col :span="12">{{item.time}}</a-col>
-            </a-row>
-          </p>
-          <p>
-            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
-            {{item.content}}
-          </p>
-          <p v-show="item.isShow">
-            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
-              <img slot="extra" alt="logo" :src="item.src" />
-              <br />
-            </a-card>
-          </p>
-        </a-timeline-item>
-      </a-timeline>
-      <a-row>
-        <a-col :span="3">
-          <a-button type="primary" @click="approvalClick">审批</a-button>
-        </a-col>
-        <a-col :span="3">
-          <a-button type="danger" @click="cancelClick">撤销</a-button>
-        </a-col>
-        <a-col :span="3">
-          <a-button type="primary" @click="chatClick">评论</a-button>
-        </a-col>
-      </a-row>
-    </a-drawer>
+    <approval :visible="approval_visible" :product="product" @change="change"></approval>
     <a-modal
-      title="Title"
-      :visible="modal_visible"
+      title="设置"
+      :visible="visible_transfer"
       :confirm-loading="confirmLoading"
       @ok="handleOk"
       @cancel="handleCancel"
@@ -156,44 +92,6 @@
         @selectChange="handleSelectChange"
         @scroll="handleScroll"
       />
-    </a-modal>
-    <a-modal
-      width="1000px"
-      title="聊天"
-      :visible="chat_visible"
-      :confirm-loading="confirmLoading"
-      @ok="chatOk"
-      @cancel="chatCancel"
-    >
-      <div>
-        <a-comment>
-          <a-avatar
-            slot="avatar"
-            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-            alt="Han Solo"
-          />
-          <div slot="content">
-            <a-form-item>
-              <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
-                <a-mentions-option
-                  v-for="item in personnelList"
-                  :key="item.name"
-                  :value="item.name"
-                >{{item.name}}</a-mentions-option>
-              </a-mentions>
-            </a-form-item>
-            <a-form-item>
-              <a-button
-                html-type="submit"
-                :loading="submitting"
-                type="primary"
-                @click="handleSubmit"
-              >评论</a-button>
-            </a-form-item>
-          </div>
-        </a-comment>
-      </div>
-      <div slot="footer"></div>
     </a-modal>
   </div>
 </template>
@@ -213,265 +111,11 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getProductList, getProductListColumns, getPersonnelList, getApproval } from '@/api/manage'
+import { getProductList, getProductListColumns } from '@/api/manage'
 import action from '../../core/directives/action'
+import Approval from '../Approval'
 
-const columns = [
-  {
-    key: '0',
-    title: '货品编码',
-    dataIndex: 'productCode',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: true,
-    isShow: true,
-    scopedSlots: {
-      customRender: 'name',
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '1',
-    title: '货品名称',
-    dataIndex: 'productName',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '2',
-    title: '规格型号',
-    dataIndex: 'SpecificationModel',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '3',
-    title: '存货编码',
-    dataIndex: 'InventoryCode',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '4',
-    title: '存货名称',
-    dataIndex: 'InventoryName',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '5',
-    title: '主计量单位',
-    dataIndex: 'MainUnit',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '6',
-    title: '电商销售单位',
-    dataIndex: 'SalesUnit',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '7',
-    title: '分销单位',
-    dataIndex: 'DistributionUnit',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '8',
-    title: '最低售价',
-    dataIndex: 'LowestPrice',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '9',
-    title: '商品描述',
-    dataIndex: 'description',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '10',
-    title: '默认发货仓库',
-    dataIndex: 'DefaultShippingWarehouse',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '11',
-    title: '是否虚拟物品',
-    dataIndex: 'VirtualItem',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '12',
-    title: '图片',
-    dataIndex: 'Image',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '13',
-    title: '预发货日期',
-    dataIndex: 'StorageDate',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-    key: '14',
-    title: '单位毛重',
-    dataIndex: 'UnitGrossWeight',
-    defaultSortOrder: 'descend',
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: null,
-    },
-    fixed: null,
-    slots: {
-      title: null,
-    },
-  },
-  {
-   
-    slots: { title: 'customTitle' },
-    dataIndex: 'action',
-    defaultSortOrder: null,
-    width: 155,
-    sorter: null,
-    isShow: true,
-    scopedSlots: {
-      customRender: 'action',
-    },
-    fixed: 'right',
-  
-  },
-]
+const columns =[]
 const selectList = [
   { value: '全部' },
   { value: '货品编码' },
@@ -491,83 +135,321 @@ const selectList = [
   { value: '单位毛重' },
 ]
 
-const timelinelist = []
-const personnelList = []
 const product = {}
 const targetTitle = columns
-const Operat_visible=true
+const Operat_visible = true
 export default {
   components: {
     STable,
     STree,
+    Approval,
   },
   data() {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
-      personnelList,
       selectList,
-      visible: false,
-      chat_visible: false,
+      approval_visible: false,
       Operat_visible,
       Operation: '操作',
-      status: '正在审批',
-      color: '',
+      visible_transfer: false,
+      confirmLoading: false,
       product,
       columns,
-      timelinelist,
       targetTitle,
       queryParam: {},
       selectedRowKeys: [],
-      modal_visible: false,
-      isfold:'menu-unfold',
-      headers: {
-        authorization: 'authorization-text',
-      },
+      isfold: 'menu-unfold',
       size: 'small',
-
-      confirmLoading: false,
       targetKeys: [],
       selectedKeys: [],
       disabled: false,
       loadData: (parameter) => {
         return getProductList(Object.assign(parameter, this.queryParam)).then((res) => {
-        
           return res.result
         })
       },
-      submitting: false,
-      value: '',
       moment,
     }
   },
   created() {
-    // getProductListColumns().then(res => {
-    //   console.log('res------->',res);
-    //   this.columns = res.result
+    getProductListColumns().then((res) => {
+      console.log('res------->', res)
+      this.columns = res.result
+      this.columns = [
+        {
+          key: '0',
+          title: '货品编码',
+          dataIndex: 'productCode',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: true,
+          isShow: true,
+          scopedSlots: {
+            customRender: 'name',
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '1',
+          title: '货品名称',
+          dataIndex: 'productName',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '2',
+          title: '规格型号',
+          dataIndex: 'SpecificationModel',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '3',
+          title: '存货编码',
+          dataIndex: 'InventoryCode',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '4',
+          title: '存货名称',
+          dataIndex: 'InventoryName',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '5',
+          title: '主计量单位',
+          dataIndex: 'MainUnit',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '6',
+          title: '电商销售单位',
+          dataIndex: 'SalesUnit',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '7',
+          title: '分销单位',
+          dataIndex: 'DistributionUnit',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '8',
+          title: '最低售价',
+          dataIndex: 'LowestPrice',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '9',
+          title: '商品描述',
+          dataIndex: 'description',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '10',
+          title: '默认发货仓库',
+          dataIndex: 'DefaultShippingWarehouse',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '11',
+          title: '是否虚拟物品',
+          dataIndex: 'VirtualItem',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '12',
+          title: '图片',
+          dataIndex: 'Image',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '13',
+          title: '预发货日期',
+          dataIndex: 'StorageDate',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '14',
+          title: '单位毛重',
+          dataIndex: 'UnitGrossWeight',
+          defaultSortOrder: 'descend',
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: null,
+          },
+          fixed: null,
+          slots: {
+            title: null,
+          },
+        },
+        {
+          key: '15',
+          slots: { title: 'customTitle' },
+          dataIndex: 'action',
+          defaultSortOrder: null,
+          width: 155,
+          sorter: null,
+          isShow: true,
+          scopedSlots: {
+            customRender: 'action',
+          },
+          fixed: 'right',
+        },
+      ]
 
-    //   this.targetTitle = []
+      this.targetTitle = []
 
-    //   for (const key in this.columns) {
-    //     if (this.columns[key].isShow == true) {
-    //       this.targetKeys.push(this.columns[key].key)
-    //       this.targetTitle.push(this.columns[key])
-    //     }
-    //   }
-    // })
+      for (const key in this.columns) {
+        if (this.columns[key].isShow == true) {
+          this.targetKeys.push(this.columns[key].key)
+          this.targetTitle.push(this.columns[key])
+        }
+      }
+    })
     for (const key in this.columns) {
-      if (this.columns[key].dataIndex=="action") {
-      
-        if(this.columns[key].width==35){
-          this.Operat_visible=false
-          this.Operation=''
-          this.isfold='menu-fold'
+      if (this.columns[key].dataIndex == 'action') {
+        if (this.columns[key].width == 35) {
+          this.Operat_visible = false
+          this.Operation = ''
+          this.isfold = 'menu-fold'
         }
       }
     }
-    getPersonnelList().then((res) => {
-      this.personnelList = res.result
-    })
   },
   computed: {
     rowSelection() {
@@ -581,12 +463,6 @@ export default {
     },
   },
   methods: {
-    afterVisibleChange(val) {
-      console.log('visible', val)
-    },
-    onClose() {
-      this.visible = false
-    },
     onSearch(value) {
       console.log(value)
       this.queryParam = {
@@ -596,37 +472,30 @@ export default {
     },
     selectChange() {},
     handleDetail(record) {
-      console.log(record),
-        (this.visible = true),
-        (this.product = record),
-        getApproval().then((res) => {
-          this.timelinelist = res.result
-        })
+      console.log(record), (this.approval_visible = true), (this.product = record)
     },
     WidthChange() {
-    
       for (const key in this.columns) {
         if (this.columns[key].dataIndex == 'action') {
           if (this.Operat_visible) {
             this.Operat_visible = false
             this.columns[key].width = 35
-            this.Operation=''
-            this.isfold='menu-fold'
+            this.Operation = ''
+            this.isfold = 'menu-fold'
           } else {
             this.Operat_visible = true
             this.columns[key].width = 155
-             this.Operation='操作'
-             this.isfold='menu-unfold'
+            this.Operation = '操作'
+            this.isfold = 'menu-unfold'
           }
         }
       }
-        
     },
     add() {
       this.$router.push({ name: 'ProductAdd' }) //编程式导航  修改 url，完成跳转
     },
     handleSetting(record) {
-      console.log(record), (this.modal_visible = true) // modal_visible 置为 true  让设置界面显示
+      console.log(record), (this.visible_transfer = true) // modal_visible 置为 true  让设置界面显示
     },
     handleEdit(record) {
       console.log(record), this.$router.push({ path: '/add' })
@@ -641,24 +510,7 @@ export default {
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
-    handleOk(e) {
-      this.modal_visible = false
-      this.confirmLoading = false
-      const columns = [...this.columns]
 
-      this.targetTitle = []
-      for (let i = 0; i < this.targetKeys.length; i++) {
-        for (let j = 0; j < columns.length; j++) {
-          if (columns[j].key == this.targetKeys[i]) {
-            columns[j].isShow = true
-            this.targetTitle.push(columns[j])
-          }
-        }
-      }
-    },
-    handleCancel(e) {
-      this.modal_visible = false
-    },
     handleChange(nextTargetKeys, direction, moveKeys) {
       console.log(nextTargetKeys)
       for (const key in moveKeys) {
@@ -676,64 +528,31 @@ export default {
       }
     },
 
+    handleScroll(direction, e) {},
     handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
       this.selectedKeys = [...sourceSelectedKeys, ...targetSelectedKeys]
     },
-    handleScroll(direction, e) {},
-    handleSubmit() {
-      if (!this.value) {
-        return
+    handleCancel(e) {
+      this.visible_transfer = false
+    },
+    handleOk(e) {
+      this.visible_transfer = false
+      this.confirmLoading = false
+      const columns = [...this.columns]
+
+      this.targetTitle = []
+      for (let i = 0; i < this.targetKeys.length; i++) {
+        for (let j = 0; j < columns.length; j++) {
+          if (columns[j].key == this.targetKeys[i]) {
+            columns[j].isShow = true
+            this.targetTitle.push(columns[j])
+          }
+        }
       }
-      this.submitting = true
-      const time = new Date()
-      setTimeout(() => {
-        this.submitting = false
-        this.timelinelist.push({
-          key: '1',
-          title: 'curry 评论',
-          time: moment(new Date()).format('YYYY-MM-DD HH:mm'),
-          content: this.value,
-        })
-      }, 1000),
-        (this.chat_visible = false)
-    },
-    chatChange(e) {
-      this.value = e.target.value
-    },
-    chatClick() {
-      this.value = ''
-      this.chat_visible = true
-    },
-    cancelClick() {
-      this.status = '已撤销'
-      this.color = '#f00707a6'
-    },
-    approvalClick() {
-      this.status = '已审批'
-      this.color = '#108ee9'
-    },
-    chatOk(e) {
-      this.chat_visible = false
-    },
-    chatCancel(e) {
-      this.chat_visible = false
-    },
-    onSelect(option) {
-      console.log('select', option)
-    },
-    onChange(value) {
-      console.log('Change:', value)
     },
 
-    fileChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList)
-      }
-      if (info.file.status === 'done') {
-        this.$message.success(`${info.file.name} file uploaded successfully`)
-      } else if (info.file.status === 'error') {
-        this.$message.error(`${info.file.name} file upload failed.`)
-      }
+    change(visible) {
+      this.approval_visible = visible
     },
   },
 }

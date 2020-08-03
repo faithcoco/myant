@@ -15,6 +15,7 @@
              style="width:220px"   样式设置   宽度为220像素
              @change  监听事件变化 当value变化时触发change事件绑定的函数
           -->
+
           <a-input-search
             @search="onSearch"
             style="width:220px;margin-left:20px"
@@ -60,8 +61,8 @@
         -->
         <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
         <span slot="customTitle">
-          <a-icon type="menu-fold" :style="{ fontSize: '18px'}" @click="WidthChange()" />
-          {{Operation}}
+           {{Operation}}
+          <a-icon :type="isfold" :style="{ fontSize: '18px'}" @click="WidthChange()" />
         </span>
         <span slot="action" v-show="Operat_visible" slot-scope="text, record">
           <a @click="handleDetail(record)">审批</a>
@@ -519,7 +520,7 @@ export default {
       queryParam: {},
       selectedRowKeys: [],
       modal_visible: false,
-
+      isfold:'menu-unfold',
       headers: {
         authorization: 'authorization-text',
       },
@@ -531,7 +532,7 @@ export default {
       disabled: false,
       loadData: (parameter) => {
         return getProductList(Object.assign(parameter, this.queryParam)).then((res) => {
-          console.log(res)
+        
           return res.result
         })
       },
@@ -557,8 +558,10 @@ export default {
     for (const key in this.columns) {
       if (this.columns[key].dataIndex=="action") {
       
-        if(this.columns[key].width==85){
+        if(this.columns[key].width==35){
           this.Operat_visible=false
+          this.Operation=''
+          this.isfold='menu-fold'
         }
       }
     }
@@ -606,14 +609,18 @@ export default {
         if (this.columns[key].dataIndex == 'action') {
           if (this.Operat_visible) {
             this.Operat_visible = false
-            this.columns[key].width = 85
+            this.columns[key].width = 35
+            this.Operation=''
+            this.isfold='menu-fold'
           } else {
             this.Operat_visible = true
             this.columns[key].width = 155
+             this.Operation='操作'
+             this.isfold='menu-unfold'
           }
         }
       }
-        console.log("is run--->",this.Operat_visible)
+        
     },
     add() {
       this.$router.push({ name: 'ProductAdd' }) //编程式导航  修改 url，完成跳转

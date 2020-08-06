@@ -117,7 +117,7 @@ import Approval from '../Approval'
 
 const columns =[]
 const selectList = [
-  { value: '全部 test' },
+  { value: '全部' },
   { value: '货品编码' },
   { value: '货品名称' },
   { value: '规格型号' },

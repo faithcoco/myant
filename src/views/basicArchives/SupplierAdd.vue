@@ -1,21 +1,8 @@
 <template>
   <a-card>
-    <a-form-model
-      ref="ruleForm"
-      :model="form"
-      :rules="rules"
-      :label-col="labelCol"
-      :wrapper-col="wrapperCol"
-    >
-      <a-form-model-item label="供应商编码" required prop="SupplierCode">
-        <a-input
-          v-model="form.SupplierCode"
-          placeholder="请输入供应商编码"
-          @blur="
-          () => {
-            
-          }"
-        >
+    <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+      <a-form-model-item label="供应商编码test" required prop="SupplierCode">
+        <a-input v-model="form.SupplierCode" placeholder="请输入供应商编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
         </a-input>
       </a-form-model-item>
@@ -24,21 +11,18 @@
           v-model="form.supplierName"
           placeholder="请输入供应商名称"
           @blur="
-          () => {
-            $refs.name.onFieldBlur();
-          }"
+            () => {
+              $refs.name.onFieldBlur()
+            }
+          "
         ></a-input>
       </a-form-model-item>
 
       <a-modal v-model="visible" title="选择编号" width="1000px" @ok="handleOk">
-        <a-input-search
-          placeholder="搜索"
-          style="width: 400px;margin-bottom:20px"
-          @search="onSearch"
-        />
+        <a-input-search placeholder="搜索" style="width: 400px;margin-bottom:20px" @search="onSearch" />
 
         <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
-          <span slot="checked" style="margin: 0" slot-scope="text,record">
+          <span slot="checked" style="margin: 0" slot-scope="text, record">
             <a-checkbox v-model="record.checked" @change="onChange(record)" />
           </span>
           <a slot="name" slot-scope="text">{{ text }}</a>
@@ -56,10 +40,10 @@
           v-model="form.ContactPerson"
           placeholder="请输入联系人编码"
           @blur="
-          () => {
-            $refs.name.onFieldBlur();
-          }
-        "
+            () => {
+              $refs.name.onFieldBlur()
+            }
+          "
         />
       </a-form-model-item>
       <a-form-model-item label="备注" prop="desc">
@@ -70,10 +54,10 @@
           v-model="form.TaxpayerIdentificationNumber"
           placeholder="请输入纳税人识别号"
           @blur="
-          () => {
-            $refs.name.onFieldBlur();
-          }
-        "
+            () => {
+              $refs.name.onFieldBlur()
+            }
+          "
         />
       </a-form-model-item>
 
@@ -108,33 +92,33 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 80,
-    scopedSlots: { customRender: 'checked' },
+    scopedSlots: { customRender: 'checked' }
   },
   {
     title: '供应商名称',
     dataIndex: 'supplierName',
     key: 'supplierName',
     width: 80,
-    scopedSlots: { customRender: 'supplierName' },
+    scopedSlots: { customRender: 'supplierName' }
   },
   {
     title: '供应商编号',
     dataIndex: 'SupplierCode',
     key: 'SupplierCode',
-    width: 80,
+    width: 80
   },
   {
     title: '供应商类型',
     dataIndex: 'SupplierType',
     key: 'SupplierType',
-    width: 80,
+    width: 80
   },
   {
     title: '负责人',
     dataIndex: 'ContactPerson',
     key: 'ContactPerson',
-    width: 80,
-  },
+    width: 80
+  }
 ]
 const selectcolumns = [
   {
@@ -142,26 +126,26 @@ const selectcolumns = [
     dataIndex: 'supplierName',
     key: 'supplierName',
     width: 80,
-    scopedSlots: { customRender: 'supplierName' },
+    scopedSlots: { customRender: 'supplierName' }
   },
   {
     title: '供应商编号',
     dataIndex: 'SupplierCode',
     key: 'SupplierCode',
-    width: 80,
+    width: 80
   },
   {
     title: '供应商类型',
     dataIndex: 'SupplierType',
     key: 'SupplierType',
-    width: 80,
+    width: 80
   },
   {
     title: '负责人',
     dataIndex: 'ContactPerson',
     key: 'ContactPerson',
-    width: 80,
-  },
+    width: 80
+  }
 ]
 const data = [
   {
@@ -169,22 +153,22 @@ const data = [
     supplierName: 'John Brown',
     SupplierCode: 32,
     SupplierType: '服装',
-    ContactPerson: '老王',
+    ContactPerson: '老王'
   },
   {
     key: '2',
     supplierName: 'Jim Green',
     SupplierCode: 42,
     SupplierType: '电子',
-    ContactPerson: '李四',
+    ContactPerson: '李四'
   },
   {
     key: '3',
     supplierName: 'Joe Black',
     SupplierCode: 32,
     SupplierType: '餐饮',
-    ContactPerson: '张三',
-  },
+    ContactPerson: '张三'
+  }
 ]
 const numberRow = []
 export default {
@@ -199,7 +183,7 @@ export default {
       columns,
       selectedRowKeys: [],
       headers: {
-        authorization: 'authorization-text',
+        authorization: 'authorization-text'
       },
       size: 'small',
       labelCol: { span: 2 },
@@ -215,13 +199,13 @@ export default {
         desc: '',
         TaxpayerIdentificationNumber: '', //纳税人识别号
         ContactPerson: '', //联系人
-        Tel: '',
+        Tel: ''
       },
       rules: {
         supplierName: [{ required: true, message: '请输入供应商名称', trigger: 'blur' }],
         region: [{ required: true, message: '请选择负责人', trigger: 'change' }],
-        SupplierCode: [{ required: true, message: '请输入供应商编码', trigger: 'change' }],
-      },
+        SupplierCode: [{ required: true, message: '请输入供应商编码', trigger: 'change' }]
+      }
     }
   },
   computed: {
@@ -230,9 +214,9 @@ export default {
       return {
         selectedRowKeys,
         hideDefaultSelections: true,
-        onSelection: this.onSelection,
+        onSelection: this.onSelection
       }
-    },
+    }
   },
   methods: {
     onSearch(value) {
@@ -252,9 +236,9 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.ruleForm.validate(valid => {
         if (valid) {
-          postSupplierAdd(this.form).then((res) => {
+          postSupplierAdd(this.form).then(res => {
             console.log('res------->', res)
           })
           alert('保存成功，点击确认回到档案界面!')
@@ -303,7 +287,7 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
-    },
-  },
+    }
+  }
 }
 </script>

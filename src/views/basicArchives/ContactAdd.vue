@@ -1,7 +1,7 @@
 <template>
   <a-card>
     <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-model-item label="联系人编码test" required prop="ContactCode">
+      <a-form-model-item label="联系人编码" required prop="ContactCode">
         <a-input v-model="form.ContactCode" placeholder="请输入产品编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
         </a-input>

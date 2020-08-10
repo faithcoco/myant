@@ -49,7 +49,7 @@
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import OrgModal from '../other/modules/OrgModal'
-import { getFormSettingTree, getServiceList, getFormSettingColumns } from '@/api/manage'
+import { getFormSettingTree, getServiceList, getFormSettingList, getFormSettingColumns } from '@/api/manage'
 
 const columns = []
 
@@ -70,7 +70,7 @@ export default {
       columns,
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
+        return getFormSettingList(Object.assign(parameter, this.queryParam)).then(res => {
           return res.result
         })
       },

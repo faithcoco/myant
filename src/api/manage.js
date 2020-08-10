@@ -53,6 +53,8 @@ const api = {
   personnelList: '/personnel-list',
   MessageSettinList: '/MessageSettinList',
   classificationGoodsList: '/classification_goods',
+  PersonnelSettingList: '/PersonnelSettingList',
+  FormSettingList: '/FormSettingList',
 
   productListColumns: '/productList/columns',
   SupplierListColumns: '/SupplierList/columns',
@@ -612,6 +614,22 @@ export function getOpeningInventoryList(parameter) {
   console.log('/getOpeningInventoryList req-->', JSON.stringify(parameter))
   return axios({
     url: api.OpeningInventoryList,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getPersonnelSettingList(parameter) {
+  console.log('/getPersonnelSettingList req-->', JSON.stringify(parameter))
+  return axios({
+    url: api.PersonnelSettingList,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getFormSettingList(parameter) {
+  console.log('/getFormSettingList req-->', JSON.stringify(parameter))
+  return axios({
+    url: api.FormSettingList,
     method: 'get',
     params: parameter
   })

@@ -55,7 +55,7 @@
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import OrgModal from '../other/modules/OrgModal'
-import { getOrgTree, getServiceList, getPersonnelSettingColumns } from '@/api/manage'
+import { getOrgTree, getServiceList, getPersonnelSettingList, getPersonnelSettingColumns } from '@/api/manage'
 
 const columns = []
 
@@ -76,7 +76,7 @@ export default {
       columns,
       // 加载数据方法 必须为 Promise 对象
       loadData: parameter => {
-        return getServiceList(Object.assign(parameter, this.queryParam)).then(res => {
+        return getPersonnelSettingList(Object.assign(parameter, this.queryParam)).then(res => {
           return res.result
         })
       },

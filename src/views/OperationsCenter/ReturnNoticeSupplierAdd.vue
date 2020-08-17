@@ -1,39 +1,16 @@
 <template>
   <a-card>
-    <a-form-model
-      ref="ruleForm"
-      :model="form"
-      :rules="rules"
-      :label-col="labelCol"
-      :wrapper-col="wrapperCol"
-    >
+    <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="退货通知单编码" required prop="ReturnNotificationCode">
-        <a-input
-          v-model="form.ReturnNotificationCode"
-          placeholder="请输入退货通知单编码"
-          @blur="
-          () => {
-            
-          }"
-        >
+        <a-input v-model="form.ReturnNotificationCode" placeholder="请输入退货通知单编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
         </a-input>
       </a-form-model-item>
 
       <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
-        <a-input-search
-          placeholder="搜索"
-          style="width: 400px;margin-bottom:20px"
-          @search="onSearch"
-        />
-        <a-table
-          :columns="columns"
-          :data-source="data"
-          :scroll="{ x: 1500 }"
-          :pagination="false"
-          bordered
-        >
-          <span slot="checked" style="margin: 0" slot-scope="text,record">
+        <a-input-search placeholder="搜索" style="width: 400px;margin-bottom:20px" @search="onSearch" />
+        <a-table :columns="columns" :data-source="data" :scroll="{ x: 1500 }" :pagination="false" bordered>
+          <span slot="checked" style="margin: 0" slot-scope="text, record">
             <a-checkbox v-model="record.checked" @change="onChange(record)" />
           </span>
           <a slot="name" slot-scope="text">{{ text }}</a>
@@ -41,50 +18,22 @@
       </a-modal>
 
       <a-form-model-item ref="name" label="供应商编码" prop="SupplierCode">
-        <a-input
-          v-model="form.SupplierCode"
-          placeholder="请输入供应商编码"
-          @blur="
-          () => {
-            
-          }"
-        >
+        <a-input v-model="form.SupplierCode" placeholder="请输入供应商编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
       <a-form-model-item label="联系人编码" prop="ContactCode">
-        <a-input
-          v-model="form.ContactCode"
-          placeholder="请输入联系人编码"
-          @blur="
-          () => {
-            
-          }"
-        >
+        <a-input v-model="form.ContactCode" placeholder="请输入联系人编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码" prop="DepartmentCode">
-        <a-input
-          v-model="form.DepartmentCode"
-          placeholder="请输入部门编码"
-          @blur="
-          () => {
-            
-          }"
-        >
+        <a-input v-model="form.DepartmentCode" placeholder="请输入部门编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="业务员编码" prop="SalesmanCode">
-        <a-input
-          v-model="form.SalesmanCode"
-          placeholder="请输入业务员编码"
-          @blur="
-          () => {
-            
-          }"
-        >
+        <a-input v-model="form.SalesmanCode" placeholder="请输入业务员编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
@@ -98,16 +47,7 @@
         />
       </a-form-model-item>
       <a-form-model-item ref="Principal" label="商品清单" prop="Principal">
-        <a-input
-          v-model="form.Principal"
-          placeholder="请选择存货编码"
-          @blur="
-          () => {
-          
-         
-          }
-        "
-        >
+        <a-input v-model="form.Principal" placeholder="请选择存货编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
         <a-table
@@ -138,99 +78,99 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 80,
-    scopedSlots: { customRender: 'checked' },
+    scopedSlots: { customRender: 'checked' }
   },
   {
     title: '退货通知单编码',
     dataIndex: 'ReturnNotificationCode',
     width: 155,
     key: 'ReturnNotificationCode',
-    scopedSlots: { customRender: 'ReturnNotificationCode' },
+    scopedSlots: { customRender: 'ReturnNotificationCode' }
   },
   {
     title: '退货仓库编码',
-    dataIndex: 'CustomerCode',
+    dataIndex: 'ReturnWarehouseCode',
     width: 155,
-    key: 'CustomerCode',
+    key: 'ReturnWarehouseCode'
   },
   {
     title: '存货编码',
-    dataIndex: 'BatchCode',
+    dataIndex: 'InventoryCode',
     width: 155,
-    key: 'BatchCode',
+    key: 'InventoryCode'
   },
   {
     title: '存货名称',
-    dataIndex: 'CustomerAddressCode',
+    dataIndex: 'InventoryName',
     width: 155,
-    key: 'CustomerAddressCode',
+    key: 'InventoryName'
   },
   {
     title: '批次编码',
-    dataIndex: 'DepartmentCode',
+    dataIndex: 'BatchCode',
     width: 155,
-    key: 'DepartmentCode',
+    key: 'BatchCode'
   },
   {
     title: '数量',
-    dataIndex: 'SalesmanCode',
+    dataIndex: 'Quantity',
     width: 155,
-    key: 'SalesmanCode',
+    key: 'Quantity'
   },
   {
     title: '计量单位',
-    dataIndex: 'ShippingWarehouseCode',
+    dataIndex: 'Unit',
     width: 155,
-    key: 'ShippingWarehouseCode',
+    key: 'Unit'
   },
   {
     title: '包装数量',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'PackingQuantity',
     width: 155,
-    key: '1',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'PackingUnit',
     width: 155,
-    key: '2',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'UnitPrice',
     width: 155,
-    key: '3',
+    key: 'UnitPrice'
   },
   {
     title: '含税单价',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'TaxIncludedUnitPrice',
     width: 155,
-    key: '4',
+    key: 'TaxIncludedUnitPrice'
   },
   {
     title: '税率',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'TaxRate',
     width: 155,
-    key: '5',
+    key: 'TaxRate'
   },
   {
     title: '金额',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'Amount',
     width: 155,
-    key: '6',
+    key: 'Amount'
   },
   {
     title: '含税金额',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'TaxIncludedAmount',
     width: 155,
-    key: '7',
+    key: 'TaxIncludedAmount'
   },
   {
     title: '税额',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'Tax',
     width: 155,
-    key: '8',
-  },
+    key: 'Tax'
+  }
 ]
 const selectcolumns = [
   {
@@ -238,92 +178,92 @@ const selectcolumns = [
     dataIndex: 'ReturnNotificationCode',
     width: 155,
     key: 'ReturnNotificationCode',
-    scopedSlots: { customRender: 'ReturnNotificationCode' },
+    scopedSlots: { customRender: 'ReturnNotificationCode' }
   },
   {
     title: '退货仓库编码',
-    dataIndex: 'CustomerCode',
+    dataIndex: 'ReturnWarehouseCode',
     width: 155,
-    key: 'CustomerCode',
+    key: 'ReturnWarehouseCode'
   },
   {
     title: '存货编码',
-    dataIndex: 'BatchCode',
+    dataIndex: 'InventoryCode',
     width: 155,
-    key: 'BatchCode',
+    key: 'InventoryCode'
   },
   {
     title: '存货名称',
-    dataIndex: 'CustomerAddressCode',
+    dataIndex: 'InventoryName',
     width: 155,
-    key: 'CustomerAddressCode',
+    key: 'InventoryName'
   },
   {
     title: '批次编码',
-    dataIndex: 'DepartmentCode',
+    dataIndex: 'BatchCode',
     width: 155,
-    key: 'DepartmentCode',
+    key: 'BatchCode'
   },
   {
     title: '数量',
-    dataIndex: 'SalesmanCode',
+    dataIndex: 'Quantity',
     width: 155,
-    key: 'SalesmanCode',
+    key: 'Quantity'
   },
   {
     title: '计量单位',
-    dataIndex: 'ShippingWarehouseCode',
+    dataIndex: 'Unit',
     width: 155,
-    key: 'ShippingWarehouseCode',
+    key: 'Unit'
   },
   {
     title: '包装数量',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'PackingQuantity',
     width: 155,
-    key: '1',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'PackingUnit',
     width: 155,
-    key: '2',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'UnitPrice',
     width: 155,
-    key: '3',
+    key: 'UnitPrice'
   },
   {
     title: '含税单价',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'TaxIncludedUnitPrice',
     width: 155,
-    key: '4',
+    key: 'TaxIncludedUnitPrice'
   },
   {
     title: '税率',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'TaxRate',
     width: 155,
-    key: '5',
+    key: 'TaxRate'
   },
   {
     title: '金额',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'Amount',
     width: 155,
-    key: '6',
+    key: 'Amount'
   },
   {
     title: '含税金额',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'TaxIncludedAmount',
     width: 155,
-    key: '7',
+    key: 'TaxIncludedAmount'
   },
   {
     title: '税额',
-    dataIndex: 'InventoryCode',
+    dataIndex: 'Tax',
     width: 155,
-    key: '8',
-  },
+    key: 'Tax'
+  }
 ]
 
 const data = [
@@ -337,7 +277,7 @@ const data = [
     ReturnWarehouseCode: 'a121345',
     ShippingWarehouseCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345',
+    BatchCode: 'a121345'
   },
   {
     key: '2',
@@ -349,7 +289,7 @@ const data = [
     ReturnWarehouseCode: 'a121345',
     ShippingWarehouseCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345',
+    BatchCode: 'a121345'
   },
   {
     key: '3',
@@ -361,8 +301,8 @@ const data = [
     ReturnWarehouseCode: 'a121345',
     ShippingWarehouseCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345',
-  },
+    BatchCode: 'a121345'
+  }
 ]
 const numberRow = []
 export default {
@@ -376,7 +316,7 @@ export default {
       data,
       columns,
       headers: {
-        authorization: 'authorization-text',
+        authorization: 'authorization-text'
       },
       size: 'small',
       labelCol: { span: 2 },
@@ -402,12 +342,12 @@ export default {
         TaxRate: '', //税率
         Amount: '', //金额
         TaxIncludedAmount: '', //含税金额
-        Tax: '', //税额
+        Tax: '' //税额
       },
       rules: {
         ReturnNotificationCode: [{ required: true, message: '请输入产品编码', trigger: 'blur' }],
-        region: [{ required: true, message: '', trigger: 'change' }],
-      },
+        region: [{ required: true, message: '', trigger: 'change' }]
+      }
     }
   },
   computed: {
@@ -417,9 +357,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection,
+        onSelection: this.onSelection
       }
-    },
+    }
   },
   methods: {
     onSearch(value) {
@@ -439,10 +379,10 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
-          postReturnNoticeSupplierAdd(this.form).then((res) => {
+          postReturnNoticeSupplierAdd(this.form).then(res => {
             console.log('res---->', res)
           })
           alert('保存成功，点击确认回到档案界面!')
@@ -492,7 +432,7 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
-    },
-  },
+    }
+  }
 }
 </script>

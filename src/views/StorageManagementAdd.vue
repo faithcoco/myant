@@ -1,33 +1,13 @@
 <template>
   <a-card>
-    <a-form-model
-      ref="ruleForm"
-      :model="form"
-      :rules="rules"
-      :label-col="labelCol"
-      :wrapper-col="wrapperCol"
-    >
+    <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item ref="name" label="入库单编码" required prop="StorageCode">
-        <a-input
-          v-model="form.StorageCode"
-          placeholder="请输入入库单编码"
-          @blur="
-          () => {
-            
-          }"
-        >
+        <a-input v-model="form.StorageCode" placeholder="请输入入库单编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
         </a-input>
       </a-form-model-item>
       <a-form-model-item label="入库类型编码" required prop="StorageTypeCode">
-        <a-input
-          v-model="form.StorageTypeCode"
-          placeholder="请输入入库类型编码"
-          @blur="
-          () => {
-            
-          }"
-        ></a-input>
+        <a-input v-model="form.StorageTypeCode" placeholder="请输入入库类型编码" @blur="() => {}"></a-input>
       </a-form-model-item>
 
       <a-form-model-item label="关联单据" prop="AssociatedDocuments">
@@ -57,17 +37,8 @@
           style="width: 100%;"
         />
       </a-form-model-item>
-      <a-form-model-item ref="Principal" label="商品清单" prop="Principal">
-        <a-input
-          v-model="form.Principal"
-          placeholder="请选择存货编码"
-          @blur="
-          () => {
-          
-         
-          }
-        "
-        >
+      <a-form-model-item ref="ProductList" label="商品清单" prop="ProductList">
+        <a-input v-model="form.Principal" placeholder="请选择存货编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
         <a-table
@@ -85,19 +56,9 @@
         <a-button type style="margin-left: 10px;" @click="Back">返回</a-button>
       </a-form-model-item>
       <a-modal v-model="visible" title="选择编码" width="1200px" @ok="handleOk">
-        <a-input-search
-          placeholder="搜索"
-          style="width: 400px;margin-bottom:20px"
-          @search="onSearch"
-        />
-        <a-table
-          :columns="columns"
-          :data-source="data"
-          :scroll="{ x: 800 }"
-          :pagination="false"
-          bordered
-        >
-          <span slot="checked" style="margin: 0" slot-scope="text,record">
+        <a-input-search placeholder="搜索" style="width: 400px;margin-bottom:20px" @search="onSearch" />
+        <a-table :columns="columns" :data-source="data" :scroll="{ x: 800 }" :pagination="false" bordered>
+          <span slot="checked" style="margin: 0" slot-scope="text, record">
             <a-checkbox v-model="record.checked" @change="onChange(record)" />
           </span>
           <a slot="name" slot-scope="text">{{ text }}</a>
@@ -119,52 +80,52 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 100,
-    scopedSlots: { customRender: 'checked' },
+    scopedSlots: { customRender: 'checked' }
   },
   {
     title: '入库单编码',
     dataIndex: 'StorageCode',
     key: 'StorageCode',
     scopedSlots: { customRender: 'StorageCode' },
-    width: 100,
+    width: 100
   },
   {
     title: '入库类型编码',
     dataIndex: 'StorageTypeCode',
     key: 'StorageTypeCode',
     scopedSlots: { customRender: 'StorageTypeCode' },
-    width: 100,
+    width: 100
   },
   {
     title: '关联单据',
     dataIndex: 'AssociatedDocuments',
     key: 'AssociatedDocuments',
-    width: 100,
+    width: 100
   },
   {
     title: '供应商编码',
     dataIndex: 'supplierCode',
     key: 'supplierCode',
-    width: 100,
+    width: 100
   },
   {
     title: '客户编码',
     dataIndex: 'ClientCode',
     key: 'ClientCode',
-    width: 100,
+    width: 100
   },
   {
     title: '部门编码',
     dataIndex: 'DepartmentCode',
     key: 'DepartmentCode',
-    width: 100,
+    width: 100
   },
   {
     title: '入库日期',
     dataIndex: 'StorageDate',
     key: 'StorageDate',
-    width: 100,
-  },
+    width: 100
+  }
 ]
 const selectcolumns = [
   {
@@ -172,45 +133,45 @@ const selectcolumns = [
     dataIndex: 'StorageCode',
     key: 'StorageCode',
     scopedSlots: { customRender: 'StorageCode' },
-    width: 100,
+    width: 100
   },
   {
     title: '入库类型编码',
     dataIndex: 'StorageTypeCode',
     key: 'StorageTypeCode',
     scopedSlots: { customRender: 'StorageTypeCode' },
-    width: 120,
+    width: 120
   },
   {
     title: '关联单据',
     dataIndex: 'AssociatedDocuments',
     key: 'AssociatedDocuments',
-    width: 100,
+    width: 100
   },
   {
     title: '供应商编码',
     dataIndex: 'supplierCode',
     key: 'supplierCode',
-    width: 100,
+    width: 100
   },
   {
     title: '客户编码',
     dataIndex: 'ClientCode',
     key: 'ClientCode',
-    width: 100,
+    width: 100
   },
   {
     title: '部门编码',
     dataIndex: 'DepartmentCode',
     key: 'DepartmentCode',
-    width: 100,
+    width: 100
   },
   {
     title: '入库日期',
     dataIndex: 'StorageDate',
     key: 'StorageDate',
-    width: 100,
-  },
+    width: 100
+  }
 ]
 
 const data = [
@@ -222,7 +183,7 @@ const data = [
     supplierCode: 'S11111',
     ClientCode: 'S11111',
     DepartmentCode: 'S11111',
-    StorageDate: '2015-10-07',
+    StorageDate: '2015-10-07'
   },
   {
     key: '2',
@@ -232,7 +193,7 @@ const data = [
     supplierCode: 'S11111',
     ClientCode: 'S11111',
     DepartmentCode: 'S11111',
-    StorageDate: '2015-10-07',
+    StorageDate: '2015-10-07'
   },
   {
     key: '3',
@@ -242,7 +203,7 @@ const data = [
     supplierCode: 'S11111',
     ClientCode: 'S11111',
     DepartmentCode: 'S11111',
-    StorageDate: '2015-10-07',
+    StorageDate: '2015-10-07'
   },
   {
     key: '4',
@@ -252,8 +213,8 @@ const data = [
     supplierCode: 'S11111',
     ClientCode: 'S11111',
     DepartmentCode: 'S11111',
-    StorageDate: '2015-10-07',
-  },
+    StorageDate: '2015-10-07'
+  }
 ]
 const numberRow = []
 export default {
@@ -267,7 +228,7 @@ export default {
       data,
       columns,
       headers: {
-        authorization: 'authorization-text',
+        authorization: 'authorization-text'
       },
       size: 'small',
       labelCol: { span: 2 },
@@ -288,6 +249,7 @@ export default {
         ClientCode: '',
         DepartmentCode: '',
         price: '',
+        ProductList: '' //商品清单
       },
       rules: {
         type: [{ required: true, message: '请选择入库类型编码', trigger: 'blur' }],
@@ -300,8 +262,8 @@ export default {
 
         StorageDate: [{ required: true, message: '请选择入库日期', trigger: 'change' }],
         order: [{ required: true, message: '请选择需要关联的单据', trigger: 'blur' }],
-        StorageProduct: [{ required: true, message: '请输入入库产品', trigger: 'blur' }],
-      },
+        StorageProduct: [{ required: true, message: '请输入入库产品', trigger: 'blur' }]
+      }
     }
   },
   computed: {
@@ -311,9 +273,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection,
+        onSelection: this.onSelection
       }
-    },
+    }
   },
 
   methods: {
@@ -334,10 +296,10 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
-          postStorageManagementAdd(this.form).then((res) => {
+          postStorageManagementAdd(this.form).then(res => {
             console.log('res------->', res)
           })
           alert('保存成功，点击确认回到档案界面!')
@@ -386,7 +348,7 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
-    },
-  },
+    }
+  }
 }
 </script>

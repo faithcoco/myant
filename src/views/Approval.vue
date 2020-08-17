@@ -140,8 +140,8 @@ export default {
   },
   data() {
     return {
-      visible: false,
-      product,
+      // visible: false,
+      // product,
       status: '正在审批',
       timelinelist,
       chat_visible: false,

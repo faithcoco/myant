@@ -1,33 +1,16 @@
 <template>
   <a-card>
-    <a-form-model
-      ref="ruleForm"
-      :model="form"
-      :rules="rules"
-      :label-col="labelCol"
-      :wrapper-col="wrapperCol"
-    >
+    <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="客户编码" prop="CustomerCode">
-        <a-input
-          v-model="form.CustomerCode"
-          placeholder="请输入客户编码"
-          @blur="
-          () => {
-            
-          }"
-        >
+        <a-input v-model="form.CustomerCode" placeholder="请输入客户编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
         </a-input>
       </a-form-model-item>
 
       <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
-        <a-input-search
-          placeholder="搜索"
-          style="width: 400px;margin-bottom:20px"
-          @search="onSearch"
-        />
+        <a-input-search placeholder="搜索" style="width: 400px;margin-bottom:20px" @search="onSearch" />
         <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
-          <span slot="checked" style="margin: 0" slot-scope="text,record">
+          <span slot="checked" style="margin: 0" slot-scope="text, record">
             <a-checkbox v-model="record.checked" @change="onChange(record)" />
           </span>
           <a slot="name" slot-scope="text">{{ text }}</a>
@@ -35,14 +18,7 @@
       </a-modal>
 
       <a-form-model-item ref="name" label="客户名称" prop="CustomerName">
-        <a-input
-          v-model="form.CustomerName"
-          placeholder="请输入客户名称"
-          @blur="
-          () => {
-            
-          }"
-        ></a-input>
+        <a-input v-model="form.CustomerName" placeholder="请输入客户名称" @blur="() => {}"></a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="客户类型" prop="CustomerType">
         <a-input v-model="form.CustomerType" placeholder="请输入客户类型" />
@@ -51,8 +27,8 @@
       <a-form-model-item label="负责人" prop="principal">
         <a-input v-model="form.principal" placeholder="请输入负责人"></a-input>
       </a-form-model-item>
-      <a-form-model-item label="联系人编码" prop="CustomerNature">
-        <a-input v-model="form.CustomerNature" placeholder="请输入联系人编码" />
+      <a-form-model-item label="联系人编码" prop="ContactCode">
+        <a-input v-model="form.ContactCode" placeholder="请输入联系人编码" />
       </a-form-model-item>
       <a-form-model-item label="备注" prop="desc">
         <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
@@ -62,22 +38,14 @@
           v-model="form.Invoice"
           placeholder="请输入发票抬头"
           @blur="
-          () => {
-            $refs.name.onFieldBlur();
-          }
-        "
+            () => {
+              $refs.name.onFieldBlur()
+            }
+          "
         />
       </a-form-model-item>
       <a-form-model-item ref="name" label="纳税人识别号" prop="TaxpayerIdentificationNumber">
-        <a-input
-          v-model="form.TaxpayerIdentificationNumber"
-          placeholder="请输入纳税人识别号"
-          @blur="
-          () => {
-            
-          }
-        "
-        />
+        <a-input v-model="form.TaxpayerIdentificationNumber" placeholder="请输入纳税人识别号" @blur="() => {}" />
       </a-form-model-item>
       <a-form-model-item label="开户银行" prop="BankAccount">
         <a-input v-model="form.BankAccount" placeholder="请输入开户银行" />
@@ -117,82 +85,67 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 80,
-    scopedSlots: { customRender: 'checked' },
+    scopedSlots: { customRender: 'checked' }
   },
 
   {
     title: '客户名称',
     dataIndex: 'CustomerName',
     key: 'CustomerName',
-    width: 80,
+    width: 80
   },
   {
     title: '客户编码',
     dataIndex: 'CustomerCode',
     key: 'CustomerCode',
-    width: 80,
-  },
-  {
-    title: '客户性质',
-    dataIndex: 'CustomerNature',
-    key: 'CustomerNature',
-    width: 80,
+    width: 80
   },
   {
     title: '所属行业',
     dataIndex: 'Industry',
     key: 'Industry',
-    width: 80,
-  },
+    width: 80
+  }
 ]
 const selectcolumns = [
   {
     title: '供应商名称',
     dataIndex: 'CustomerName',
     key: 'CustomerName',
-    width: 80,
+    width: 80
   },
   {
     title: '供应商编号',
     dataIndex: 'CustomerCode',
     key: 'CustomerCode',
-    width: 80,
-  },
-  {
-    title: '供应商类型',
-    dataIndex: 'CustomerNature',
-    key: 'CustomerNature',
-    width: 80,
+    width: 80
   },
   {
     title: '负责人',
-    dataIndex: 'Industry',
-    key: 'Industry',
-    width: 80,
-  },
+    dataIndex: 'principal',
+    key: 'principal',
+    width: 80
+  }
 ]
 const data = [
   {
     key: '1',
     CustomerName: 'John Brown',
     CustomerCode: 32,
-    CustomerNature: '国有',
-    Industry: '高新技术',
+    Industry: '高新技术'
   },
   {
     key: '2',
     CustomerName: 'Jim Green',
     CustomerCode: 42,
-    CustomerNature: '私营',
-    Industry: '劳动密集型',
+    Industry: '劳动密集型'
   },
   {
     key: '3',
     CustomerName: 'Joe Black',
     CustomerCode: 32,
-    CustomerNature: '私营',
-    Industry: '加工',
-  },
+    Industry: '加工'
+  }
 ]
 
 const numberRow = []
@@ -208,7 +161,7 @@ export default {
       data,
       columns,
       headers: {
-        authorization: 'authorization-text',
+        authorization: 'authorization-text'
       },
       size: 'small',
       labelCol: { span: 2 },
@@ -218,23 +171,22 @@ export default {
         CustomerName: '', //客户名称
         CustomerType: '', //客户类型
         CustomerCode: '',
-        CustomerNature: '',
+        ContactCode: '',
         Invoice: '',
         principal: '', //负责人
         Industry: '', //行业
         Address: '', //地址
-        DetailAddress: '',
         TaxpayerIdentificationNumber: '', //纳税人识别号
         BankAccount: '',
-        AccountNumber: '',
+        AccountNumber: ''
       },
       rules: {
         CustomerName: [
           { required: true, message: '请输入客户名称', trigger: 'blur' },
-          { min: 1, max: 3, message: '', trigger: 'blur' },
+          { min: 1, max: 3, message: '', trigger: 'blur' }
         ],
-        principal: [{ required: true, message: '请输入负责人', trigger: 'blur' }],
-      },
+        principal: [{ required: true, message: '请输入负责人', trigger: 'blur' }]
+      }
     }
   },
   computed: {
@@ -243,9 +195,9 @@ export default {
       return {
         selectedRowKeys,
         hideDefaultSelections: true,
-        onSelection: this.onSelection,
+        onSelection: this.onSelection
       }
-    },
+    }
   },
 
   methods: {
@@ -266,10 +218,10 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
-          postCustomerAdd(this.form).then((res) => {
+          postCustomerAdd(this.form).then(res => {
             console.log('res------->', res)
           })
           alert('保存成功，点击确认回到档案界面!')
@@ -296,7 +248,6 @@ export default {
     filterOption(input, option) {
       return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
     },
-    ////////
     elect() {
       this.form.CustomerCode = 'PT2020062200001'
     },
@@ -316,7 +267,7 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
-    },
-  },
+    }
+  }
 }
 </script>

@@ -4,27 +4,18 @@
       <a-row>
         <a-col :span="16">
           <a-select default-value="全部" style="width:220px" @change="selectChange(value)">
-            <a-select-option
-              v-for="SList in selectList"
-              :key="SList.value"
-              :value="SList.value"
-            >{{SList.value}}</a-select-option>
+            <a-select-option v-for="SList in selectList" :key="SList.value" :value="SList.value">{{
+              SList.value
+            }}</a-select-option>
           </a-select>
-          <a-input-search
-            @search="onSearch"
-            style="width:220px;margin-left:20px"
-            placeholder="请输入搜索内容"
-          />
+          <a-input-search @search="onSearch" style="width:220px;margin-left:20px" placeholder="请输入搜索内容" />
         </a-col>
         <a-col :span="8">
-          <span
-            class="table-page-search-submitButtons"
-            :style="{ float: 'right', overflow: 'hidden' } || {} "
-          >
+          <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
             <a-button style="margin-left: 5px" type="primary" @click="add()">新增</a-button>
             <a-button style="margin-left: 5px" type="primary" @click="handleSetting()">设置</a-button>
-            <a-button style="margin-left: 5px" @click="() => queryParam = {}">导入</a-button>
-            <a-button style="margin-left: 5px" @click="() => queryParam = {}">导出</a-button>
+            <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
+            <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
           </span>
         </a-col>
       </a-row>
@@ -38,10 +29,10 @@
         :scroll="{ x: 1500 }"
         bordered
       >
-        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
+        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
         <span slot="customTitle">
-          <a-icon type="menu-fold" :style="{ fontSize: '18px'}" @click="WidthChange()" />
-          {{Operation}}
+          {{ Operation }}
+          <a-icon :type="isfold" :style="{ fontSize: '18px' }" @click="WidthChange()" />
         </span>
         <span slot="action" v-show="Operat_visible" slot-scope="text, record">
           <a @click="handleDetail(record)">审批</a>
@@ -52,7 +43,8 @@
         </span>
       </s-table>
     </a-card>
-    <a-drawer
+    <approval :visible="approval_visible" :product="product" @change="change"></approval>
+    <!--<a-drawer
       title="产品详情"
       placement="right"
       :width="720"
@@ -62,18 +54,18 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
-        <a-descriptions-item label="客户编码">{{product.CustomerCode}}</a-descriptions-item>
-        <a-descriptions-item label="客户名称">{{product.CustomerName }}</a-descriptions-item>
-        <a-descriptions-item label="客户简称">{{product.CustomerAbbreviation}}</a-descriptions-item>
-        <a-descriptions-item label="区域名称">{{product.Area}}</a-descriptions-item>
-        <a-descriptions-item label="发展日期">{{product.DevelopmentDate}}</a-descriptions-item>
-        <a-descriptions-item label="联系人">{{product.ContactPerson}}</a-descriptions-item>
-        <a-descriptions-item label="电话">{{product.Tel}}</a-descriptions-item>
-        <a-descriptions-item label="专营业务员名称">{{product.Salesman}}</a-descriptions-item>
-        <a-descriptions-item label="分管部门名称">{{product.department}}</a-descriptions-item>
-        <a-descriptions-item label="潜在客户编码">{{product.PotentialCustomerCode}}</a-descriptions-item>
+        <a-descriptions-item label="客户编码">{{ product.CustomerCode }}</a-descriptions-item>
+        <a-descriptions-item label="客户名称">{{ product.CustomerName }}</a-descriptions-item>
+        <a-descriptions-item label="客户简称">{{ product.CustomerAbbreviation }}</a-descriptions-item>
+        <a-descriptions-item label="区域名称">{{ product.Area }}</a-descriptions-item>
+        <a-descriptions-item label="发展日期">{{ product.DevelopmentDate }}</a-descriptions-item>
+        <a-descriptions-item label="联系人">{{ product.ContactPerson }}</a-descriptions-item>
+        <a-descriptions-item label="电话">{{ product.Tel }}</a-descriptions-item>
+        <a-descriptions-item label="专营业务员名称">{{ product.Salesman }}</a-descriptions-item>
+        <a-descriptions-item label="分管部门名称">{{ product.department }}</a-descriptions-item>
+        <a-descriptions-item label="潜在客户编码">{{ product.PotentialCustomerCode }}</a-descriptions-item>
         <a-descriptions-item label="审批状态">
-          <a-tag :color="color">{{status}}</a-tag>
+          <a-tag :color="color">{{ status }}</a-tag>
         </a-descriptions-item>
       </a-descriptions>
       <a-divider>审批详情</a-divider>
@@ -82,14 +74,14 @@
           <p>
             <a-row>
               <a-col :span="5">
-                <b>{{item.title}}</b>
+                <b>{{ item.title }}</b>
               </a-col>
-              <a-col :span="12">{{item.time}}</a-col>
+              <a-col :span="12">{{ item.time }}</a-col>
             </a-row>
           </p>
           <p>
-            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
-            {{item.content}}
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{ item.name }}</a>
+            {{ item.content }}
           </p>
           <p v-show="item.isShow">
             <a-card v-for="item in item.img" :key="item.src" :bordered="false">
@@ -110,10 +102,10 @@
           <a-button type="primary" @click="chatClick">评论</a-button>
         </a-col>
       </a-row>
-    </a-drawer>
+    </a-drawer>-->
     <a-modal
-      title="Title"
-      :visible="modal_visible"
+      title="设置"
+      :visible="visible_transfer"
       :confirm-loading="confirmLoading"
       @ok="handleOk"
       @cancel="handleCancel"
@@ -129,44 +121,6 @@
         @selectChange="handleSelectChange"
         @scroll="handleScroll"
       />
-    </a-modal>
-    <a-modal
-      width="1000px"
-      title="聊天"
-      :visible="chat_visible"
-      :confirm-loading="confirmLoading"
-      @ok="chatOk"
-      @cancel="chatCancel"
-    >
-      <div>
-        <a-comment>
-          <a-avatar
-            slot="avatar"
-            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-            alt="Han Solo"
-          />
-          <div slot="content">
-            <a-form-item>
-              <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
-                <a-mentions-option
-                  v-for="item in personnelList"
-                  :key="item.name"
-                  :value="item.name"
-                >{{item.name}}</a-mentions-option>
-              </a-mentions>
-            </a-form-item>
-            <a-form-item>
-              <a-button
-                html-type="submit"
-                :loading="submitting"
-                type="primary"
-                @click="handleSubmit"
-              >评论</a-button>
-            </a-form-item>
-          </div>
-        </a-comment>
-      </div>
-      <div slot="footer"></div>
     </a-modal>
   </div>
 </template>
@@ -186,7 +140,10 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getCustomerList, getApproval, getPersonnelList, getCustomerListColumns } from '@/api/manage'
+import { getCustomerList, getCustomerListColumns } from '@/api/manage'
+import action from '../../core/directives/action'
+import Approval from '../Approval'
+
 const selectList = [
   { value: '全部' },
   { value: '客户编码' },
@@ -198,173 +155,9 @@ const selectList = [
   { value: '电话' },
   { value: '专营业务员名称' },
   { value: '分管部门名称' },
-  { value: '潜在客户编码' },
+  { value: '潜在客户编码' }
 ]
-const timelinelist = []
-const columns = [
-  {
-    key: '0',
-    title: '客户编码',
-    dataIndex: 'CustomerCode',
-    defaultSortOrder: 'descend',
-    width: 155,
-    fixed: '',
-    sorter: true,
-    scopedSlots: {
-      customRender: 'name',
-      slots: {
-        title: null,
-      },
-    },
-  },
-  {
-    key: '1',
-    title: '客户名称',
-    dataIndex: 'CustomerName',
-    defaultSortOrder: 'descend',
-    width: 156,
-    fixed: '',
-    sorter: '',
-    scopedSlots: {
-      customRender: '',
-      slots: {
-        title: null,
-      },
-    },
-  },
-  {
-    key: '2',
-    title: '客户简称',
-    dataIndex: 'CustomerAbbreviation',
-    defaultSortOrder: 'descend',
-    width: 157,
-    fixed: '',
-    sorter: '',
-    scopedSlots: {
-      customRender: '',
-      slots: {
-        title: null,
-      },
-    },
-  },
-  {
-    key: '3',
-    title: '地区名称',
-    dataIndex: 'Area',
-    defaultSortOrder: 'descend',
-    width: 158,
-    fixed: '',
-    sorter: '',
-    scopedSlots: {
-      customRender: '',
-      slots: {
-        title: null,
-      },
-    },
-  },
-  {
-    key: '4',
-    title: '发展日期',
-    dataIndex: 'DevelopmentDate',
-    defaultSortOrder: 'descend',
-    width: 159,
-    fixed: '',
-    sorter: '',
-    scopedSlots: {
-      customRender: '',
-      slots: {
-        title: null,
-      },
-    },
-  },
-  {
-    key: '5',
-    title: '联系人',
-    dataIndex: 'ContactPerson',
-    defaultSortOrder: 'descend',
-    width: 160,
-    fixed: '',
-    sorter: '',
-    scopedSlots: {
-      customRender: '',
-      slots: {
-        title: null,
-      },
-    },
-  },
-  {
-    key: '6',
-    title: '电话',
-    dataIndex: 'Tel',
-    defaultSortOrder: 'descend',
-    width: 161,
-    fixed: '',
-    sorter: '',
-    scopedSlots: {
-      customRender: '',
-      slots: {
-        title: null,
-      },
-    },
-  },
-  {
-    key: '7',
-    title: '专营业务员名称',
-    dataIndex: 'Salesman',
-    defaultSortOrder: 'descend',
-    width: 162,
-    fixed: '',
-    sorter: '',
-    scopedSlots: {
-      customRender: '',
-      slots: {
-        title: null,
-      },
-    },
-  },
-  {
-    key: '8',
-    title: '分管部门名称',
-    dataIndex: 'department',
-    defaultSortOrder: 'descend',
-    width: 163,
-    fixed: '',
-    sorter: '',
-    scopedSlots: {
-      customRender: '',
-      slots: {
-        title: null,
-      },
-    },
-  },
-  {
-    key: '9',
-    title: '潜在客户编码',
-    dataIndex: 'PotentialCustomerCode',
-    defaultSortOrder: 'descend',
-    width: 164,
-    fixed: '',
-    sorter: '',
-    scopedSlots: {
-      customRender: '',
-      slots: {
-        title: null,
-      },
-    },
-  },
-  {
-    slots: { title: 'customTitle' },
-    dataIndex: 'action',
-    defaultSortOrder: '',
-    width: 155,
-    fixed: 'right',
-    sorter: '',
-    scopedSlots: {
-      customRender: 'action',
-    },
-  },
-]
-const personnelList = []
+const columns = []
 const data = []
 
 const product = {}
@@ -374,57 +167,230 @@ export default {
   components: {
     STable,
     STree,
+    Approval
   },
   data() {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
-      personnelList,
-      visible: false,
       selectList,
-      chat_visible: false,
+      approval_visible: false,
       Operat_visible,
-      data,
-      status: '正在审批',
       Operation: '操作',
-      color: '',
+      visible_transfer: false,
+      confirmLoading: false,
       product,
       columns,
-      timelinelist,
       targetTitle,
+      queryParam: {},
       selectedRowKeys: [],
-      modal_visible: false,
-      confirmLoading: false,
-      targetKeys: oriTargetKeys,
-      selectedKeys: ['0'],
+      isfold: 'menu-unfold',
+      size: 'small',
+      targetKeys: [],
+      selectedKeys: [],
       disabled: false,
-      loadData: (parameter) => {
-        return getCustomerList(Object.assign(parameter, this.queryParam)).then((res) => {
-          // console.log('/service-->', JSON.stringify(res.result))
+      loadData: parameter => {
+        return getCustomerList(Object.assign(parameter, this.queryParam)).then(res => {
           return res.result
         })
       },
-      submitting: false,
-      value: '',
-      moment,
+      moment
     }
   },
   created() {
-    // getCustomerListColumns().then((res) => {
-    //   this.columns = res.result
-    //   this.targetTitle = this.columns
-    // })
+    getCustomerListColumns().then(res => {
+      this.columns = res.result
+      this.columns = [
+        {
+          key: '0',
+          title: '客户编码',
+          dataIndex: 'CustomerCode',
+          defaultSortOrder: 'descend',
+          width: 155,
+          fixed: '',
+          isShow: true,
+          sorter: true,
+          scopedSlots: {
+            customRender: 'name',
+            slots: {
+              title: null
+            }
+          }
+        },
+        {
+          key: '1',
+          title: '客户名称',
+          dataIndex: 'CustomerName',
+          defaultSortOrder: 'descend',
+          width: 156,
+          fixed: '',
+          isShow: true,
+          sorter: '',
+          scopedSlots: {
+            customRender: '',
+            slots: {
+              title: null
+            }
+          }
+        },
+        {
+          key: '2',
+          title: '客户简称',
+          dataIndex: 'CustomerAbbreviation',
+          defaultSortOrder: 'descend',
+          width: 157,
+          fixed: '',
+          sorter: '',
+          isShow: true,
+          scopedSlots: {
+            customRender: '',
+            slots: {
+              title: null
+            }
+          }
+        },
+        {
+          key: '3',
+          title: '地区名称',
+          dataIndex: 'Area',
+          defaultSortOrder: 'descend',
+          width: 158,
+          fixed: '',
+          sorter: '',
+          isShow: true,
+          scopedSlots: {
+            customRender: '',
+            slots: {
+              title: null
+            }
+          }
+        },
+        {
+          key: '4',
+          title: '发展日期',
+          dataIndex: 'DevelopmentDate',
+          defaultSortOrder: 'descend',
+          width: 159,
+          fixed: '',
+          sorter: '',
+          isShow: true,
+          scopedSlots: {
+            customRender: '',
+            slots: {
+              title: null
+            }
+          }
+        },
+        {
+          key: '5',
+          title: '联系人',
+          dataIndex: 'ContactPerson',
+          defaultSortOrder: 'descend',
+          width: 160,
+          fixed: '',
+          sorter: '',
+          isShow: true,
+          scopedSlots: {
+            customRender: '',
+            slots: {
+              title: null
+            }
+          }
+        },
+        {
+          key: '6',
+          title: '电话',
+          dataIndex: 'Tel',
+          defaultSortOrder: 'descend',
+          width: 161,
+          fixed: '',
+          sorter: '',
+          isShow: true,
+          scopedSlots: {
+            customRender: '',
+            slots: {
+              title: null
+            }
+          }
+        },
+        {
+          key: '7',
+          title: '专营业务员名称',
+          dataIndex: 'Salesman',
+          defaultSortOrder: 'descend',
+          width: 162,
+          fixed: '',
+          sorter: '',
+          isShow: true,
+          scopedSlots: {
+            customRender: '',
+            slots: {
+              title: null
+            }
+          }
+        },
+        {
+          key: '8',
+          title: '分管部门名称',
+          dataIndex: 'department',
+          defaultSortOrder: 'descend',
+          width: 163,
+          fixed: '',
+          sorter: '',
+          isShow: true,
+          scopedSlots: {
+            customRender: '',
+            slots: {
+              title: null
+            }
+          }
+        },
+        {
+          key: '9',
+          title: '潜在客户编码',
+          dataIndex: 'PotentialCustomerCode',
+          defaultSortOrder: 'descend',
+          width: 164,
+          fixed: '',
+          sorter: '',
+          isShow: true,
+          scopedSlots: {
+            customRender: '',
+            slots: {
+              title: null
+            }
+          }
+        },
+        {
+          slots: { title: 'customTitle' },
+          dataIndex: 'action',
+          defaultSortOrder: '',
+          width: 155,
+          fixed: 'right',
+          sorter: '',
+          isShow: true,
+          scopedSlots: {
+            customRender: 'action'
+          }
+        }
+      ]
+      this.targetTitle = []
+      for (const key in this.columns) {
+        if (this.columns[key].isShow == true) {
+          this.targetKeys.push(this.columns[key].key)
+          this.targetTitle.push(this.columns[key])
+        }
+      }
+    })
     for (const key in this.columns) {
       if (this.columns[key].dataIndex == 'action') {
-        if (this.columns[key].width == 85) {
+        if (this.columns[key].width == 35) {
           this.Operat_visible = false
+          this.Operation = ''
+          this.isfold = 'menu-fold'
         }
       }
     }
-    getPersonnelList().then((res) => {
-      this.personnelList = res.result
-      console.log(this.personnelList)
-    })
   },
   computed: {
     rowSelection() {
@@ -433,44 +399,35 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection,
+        onSelection: this.onSelection
       }
-    },
+    }
   },
   methods: {
-    afterVisibleChange(val) {
-      console.log('visible', val)
-    },
-    onClose() {
-      this.visible = false
-    },
     onSearch(value) {
-      console.log('value', value)
-      const data = [...this.data]
-      //this.data = data.filter(item => item.code == value)
-      this.targetList = this.data.filter(function (data) {
-        return Object.keys(data).some(function (key) {
-          return String(data[key]).toLowerCase().indexOf(value) > -1
-        })
-      })
+      console.log(value)
+      this.queryParam = {
+        key: value
+      }
+      this.$refs.table.refresh(true) //用refresh方法刷新表格
     },
+    selectChange() {},
     handleDetail(record) {
-      console.log(record),
-        (this.visible = true),
-        (this.product = record),
-        getApproval().then((res) => {
-          this.timelinelist = res.result
-        })
+      console.log(record), (this.approval_visible = true), (this.product = record)
     },
     WidthChange() {
       for (const key in this.columns) {
         if (this.columns[key].dataIndex == 'action') {
           if (this.Operat_visible) {
             this.Operat_visible = false
-            this.columns[key].width = 85
+            this.columns[key].width = 35
+            this.Operation = ''
+            this.isfold = 'menu-fold'
           } else {
             this.Operat_visible = true
             this.columns[key].width = 155
+            this.Operation = '操作'
+            this.isfold = 'menu-unfold'
           }
         }
       }
@@ -479,7 +436,7 @@ export default {
       this.$router.push({ name: 'CustomerAdd' })
     },
     handleSetting(record) {
-      console.log(record), (this.modal_visible = true)
+      console.log(record), (this.visible_transfer = true)
     },
     handleEdit(record) {
       console.log(record), this.$router.push({ path: '/add' })
@@ -489,85 +446,53 @@ export default {
     },
     onDelete(key) {
       const data = [...this.data]
-      this.data = data.filter((item) => item.key !== key)
+      this.data = data.filter(item => item.key !== key)
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
+    handleChange(nextTargetKeys, direction, moveKeys) {
+      console.log(nextTargetKeys)
+      for (const key in moveKeys) {
+        if (direction == 'right') {
+          this.targetKeys.push(moveKeys[key])
+        } else {
+          for (const item in this.targetKeys) {
+            // console.log(this.targetKeys[item])
+            if (this.targetKeys[item] == moveKeys[key]) {
+              this.targetKeys.splice(item, 1)
+            }
+          }
+          //
+        }
+      }
+    },
+    handleScroll(direction, e) {},
+    handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
+      this.selectedKeys = [...sourceSelectedKeys, ...targetSelectedKeys]
+    },
+    handleCancel(e) {
+      this.visible_transfer = false
+    },
     handleOk(e) {
-      this.modal_visible = false
+      this.visible_transfer = false
       this.confirmLoading = false
       const columns = [...this.columns]
+
       this.targetTitle = []
       for (let i = 0; i < this.targetKeys.length; i++) {
         for (let j = 0; j < columns.length; j++) {
           if (columns[j].key == this.targetKeys[i]) {
+            columns[j].isShow = true
             this.targetTitle.push(columns[j])
           }
         }
       }
     },
-    handleCancel(e) {
-      this.modal_visible = false
-    },
-    handleChange(nextTargetKeys, direction, moveKeys) {
-      this.targetKeys = nextTargetKeys
-    },
-    handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
-      this.selectedKeys = [...sourceSelectedKeys, ...targetSelectedKeys]
-    },
-    handleScroll(direction, e) {},
-    handleSubmit() {
-      if (!this.value) {
-        return
-      }
-
-      this.submitting = true
-      const time = new Date()
-      setTimeout(() => {
-        this.submitting = false
-        this.timelinelist.push({
-          key: '1',
-          title: 'curry 评论',
-          time: moment(new Date()).format('YYYY-MM-DD HH:mm'),
-          content: this.value,
-        })
-      }, 1000)
-      this.chat_visible = false
-    },
-    chatChange(e) {
-      this.value = e.target.value
-    },
-    chatClick() {
-      this.value = ''
-      this.chat_visible = true
-    },
-    cancelClick() {
-      this.status = '已撤销'
-      this.color = '#f00707a6'
-    },
-    approvalClick() {
-      this.status = '已审批'
-      this.color = '#108ee9'
-    },
-    chatOk(e) {
-      this.chat_visible = false
-    },
-    chatCancel(e) {
-      this.chat_visible = false
-    },
-    reply(item) {
-      this.value = `回复 ${item.author}:`
-      console.log(item.datetime)
-    },
-    onSelect(option) {
-      console.log('select', option)
-    },
-    onChange(value) {
-      console.log('Change:', value)
-    },
-  },
+    change(visible) {
+      this.approval_visible = visible
+    }
+  }
 }
 </script>
-<style lang='less' scoped>
-</style>
+<style lang="less" scoped></style>

@@ -1,39 +1,16 @@
 <template>
   <a-card>
-    <a-form-model
-      ref="ruleForm"
-      :model="form"
-      :rules="rules"
-      :label-col="labelCol"
-      :wrapper-col="wrapperCol"
-    >
+    <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="装箱单编码" required prop="PackingListCode">
-        <a-input
-          v-model="form.PackingListCode"
-          placeholder="请输入装箱单编码"
-          @blur="
-          () => {
-            
-          }"
-        >
+        <a-input v-model="form.PackingListCode" placeholder="请输入装箱单编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
         </a-input>
       </a-form-model-item>
 
       <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
-        <a-input-search
-          placeholder="搜索"
-          style="width: 400px;margin-bottom:20px"
-          @search="onSearch"
-        />
-        <a-table
-          :columns="columns"
-          :data-source="data"
-          :scroll="{ x: 1500 }"
-          :pagination="false"
-          bordered
-        >
-          <span slot="checked" style="margin: 0" slot-scope="text,record">
+        <a-input-search placeholder="搜索" style="width: 400px;margin-bottom:20px" @search="onSearch" />
+        <a-table :columns="columns" :data-source="data" :scroll="{ x: 1500 }" :pagination="false" bordered>
+          <span slot="checked" style="margin: 0" slot-scope="text, record">
             <a-checkbox v-model="record.checked" @change="onChange(record)" />
           </span>
           <a slot="name" slot-scope="text">{{ text }}</a>
@@ -41,38 +18,17 @@
       </a-modal>
 
       <a-form-model-item ref="name" label="装箱仓库编码" prop="PackingWarehouseCode">
-        <a-input
-          v-model="form.PackingWarehouseCode"
-          placeholder="请输入装箱仓库编码"
-          @blur="
-          () => {
-            
-          }"
-        >
+        <a-input v-model="form.PackingWarehouseCode" placeholder="请输入装箱仓库编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="部门编码" prop="DepartmentCode">
-        <a-input
-          v-model="form.DepartmentCode"
-          placeholder="请输入部门编码"
-          @blur="
-          () => {
-            
-          }"
-        >
+        <a-input v-model="form.DepartmentCode" placeholder="请输入部门编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
       <a-form-model-item ref="name" label="业务员编码" prop="SalesmanCode">
-        <a-input
-          v-model="form.SalesmanCode"
-          placeholder="请输入业务员编码"
-          @blur="
-          () => {
-            
-          }"
-        >
+        <a-input v-model="form.SalesmanCode" placeholder="请输入业务员编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
       </a-form-model-item>
@@ -92,17 +48,8 @@
           <a-select-option value="3">手工关闭</a-select-option>
         </a-select>
       </a-form-model-item>
-      <a-form-model-item ref="Principal" label="商品清单" prop="Principal">
-        <a-input
-          v-model="form.Principal"
-          placeholder="请选择存货编码"
-          @blur="
-          () => {
-          
-         
-          }
-        "
-        >
+      <a-form-model-item ref="ProductList" label="商品清单" prop="ProductList">
+        <a-input v-model="form.ProductList" placeholder="请选择存货编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
         </a-input>
         <a-table
@@ -133,122 +80,162 @@ const columns = [
     dataIndex: 'checked',
     key: 'checked',
     width: 80,
-    scopedSlots: { customRender: 'checked' },
+    scopedSlots: { customRender: 'checked' }
   },
   {
     title: '装箱单编码',
     dataIndex: 'PackingListCode',
     key: 'PackingListCode',
-    scopedSlots: { customRender: 'PackingListCode' },
+    scopedSlots: { customRender: 'PackingListCode' }
   },
   {
     title: '存货编码',
-    dataIndex: 'PackingWarehouseCode',
-    key: 'PackingWarehouseCode',
+    dataIndex: 'InventoryCode',
+    key: 'InventoryCode'
   },
   {
     title: '存货名称',
-    dataIndex: 'DepartmentCode',
-    key: 'DepartmentCode',
+    dataIndex: 'InventoryName',
+    key: 'InventoryName'
   },
   {
     title: '批次编码',
-    dataIndex: 'SalesmanCode',
-    key: 'SalesmanCode',
+    dataIndex: 'BatchCode',
+    key: 'BatchCode'
   },
   {
     title: '货位编码',
     dataIndex: 'InventoryCode',
-    key: 'InventoryCode',
+    key: 'InventoryCode'
   },
   {
     title: '数量',
-    dataIndex: 'LocationCode',
-    key: 'LocationCode',
+    dataIndex: 'Quantity',
+    key: 'Quantity'
   },
   {
     title: '计量单位',
     dataIndex: 'Unit',
-    key: 'Unit',
+    key: 'Unit'
   },
   {
     title: '包装数量',
     dataIndex: 'PackingQuantity',
-    key: 'PackingQuantity',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
     dataIndex: 'PackingUnit',
-    key: 'PackingUnit',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'UnitQrice',
-    key: 'UnitQrice',
+    dataIndex: 'UnitPrice',
+    key: 'UnitPrice'
+  },
+  {
+    title: '含税单价',
+    dataIndex: 'TaxIncludedUnitPrice',
+    key: 'TaxIncludedUnitPrice'
+  },
+  {
+    title: '税率',
+    dataIndex: 'TaxRate',
+    key: 'TaxRate'
   },
   {
     title: '金额',
     dataIndex: 'Amount',
-    key: 'Amount',
+    key: 'Amount'
   },
+  {
+    title: '含税金额',
+    dataIndex: 'TaxIncludedAmount',
+    key: 'TaxIncludedAmount'
+  },
+  {
+    title: '税额',
+    dataIndex: 'Tax',
+    key: 'Tax'
+  }
 ]
 const selectcolumns = [
   {
     title: '装箱单编码',
     dataIndex: 'PackingListCode',
     key: 'PackingListCode',
-    scopedSlots: { customRender: 'PackingListCode' },
+    scopedSlots: { customRender: 'PackingListCode' }
   },
   {
     title: '存货编码',
-    dataIndex: 'PackingWarehouseCode',
-    key: 'PackingWarehouseCode',
+    dataIndex: 'InventoryCode',
+    key: 'InventoryCode'
   },
   {
     title: '存货名称',
-    dataIndex: 'DepartmentCode',
-    key: 'DepartmentCode',
+    dataIndex: 'InventoryName',
+    key: 'InventoryName'
   },
   {
     title: '批次编码',
-    dataIndex: 'SalesmanCode',
-    key: 'SalesmanCode',
+    dataIndex: 'BatchCode',
+    key: 'BatchCode'
   },
   {
     title: '货位编码',
     dataIndex: 'InventoryCode',
-    key: 'InventoryCode',
+    key: 'InventoryCode'
   },
   {
     title: '数量',
-    dataIndex: 'LocationCode',
-    key: 'LocationCode',
+    dataIndex: 'Quantity',
+    key: 'Quantity'
   },
   {
     title: '计量单位',
     dataIndex: 'Unit',
-    key: 'Unit',
+    key: 'Unit'
   },
   {
     title: '包装数量',
     dataIndex: 'PackingQuantity',
-    key: 'PackingQuantity',
+    key: 'PackingQuantity'
   },
   {
     title: '包装单位',
     dataIndex: 'PackingUnit',
-    key: 'PackingUnit',
+    key: 'PackingUnit'
   },
   {
     title: '单价',
-    dataIndex: 'UnitQrice',
-    key: 'UnitQrice',
+    dataIndex: 'UnitPrice',
+    key: 'UnitPrice'
+  },
+  {
+    title: '含税单价',
+    dataIndex: 'TaxIncludedUnitPrice',
+    key: 'TaxIncludedUnitPrice'
+  },
+  {
+    title: '税率',
+    dataIndex: 'TaxRate',
+    key: 'TaxRate'
   },
   {
     title: '金额',
     dataIndex: 'Amount',
-    key: 'Amount',
+    key: 'Amount'
   },
+  {
+    title: '含税金额',
+    dataIndex: 'TaxIncludedAmount',
+    key: 'TaxIncludedAmount'
+  },
+  {
+    title: '税额',
+    dataIndex: 'Tax',
+    key: 'Tax'
+  }
 ]
 
 const data = [
@@ -259,7 +246,7 @@ const data = [
     DepartmentCode: 'a121345',
     SalesmanCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345',
+    BatchCode: 'a121345'
   },
   {
     key: '2',
@@ -268,7 +255,7 @@ const data = [
     DepartmentCode: 'a121345',
     SalesmanCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345',
+    BatchCode: 'a121345'
   },
   {
     key: '3',
@@ -277,8 +264,8 @@ const data = [
     DepartmentCode: 'a121345',
     SalesmanCode: 'a121345',
     InventoryCode: 'a121345',
-    BatchCode: 'a121345',
-  },
+    BatchCode: 'a121345'
+  }
 ]
 const numberRow = []
 export default {
@@ -292,13 +279,14 @@ export default {
       data,
       columns,
       headers: {
-        authorization: 'authorization-text',
+        authorization: 'authorization-text'
       },
       size: 'small',
       labelCol: { span: 2 },
       wrapperCol: { span: 22 },
       other: '',
       form: {
+        ProductList: '', //商品清单
         PackingListCode: '', //装箱单编码
         PackingWarehouseCode: '', //装箱仓库编码
         DepartmentCode: '', //部门编码
@@ -317,7 +305,7 @@ export default {
         TaxRate: '', //税率
         Amount: '', //金额
         TaxIncludedAmount: '', //含税金额
-        Tax: '', //税额
+        Tax: '' //税额
       },
       rules: {
         PackingListCode: [{ required: true, message: '请输入装箱单编码', trigger: 'blur' }],
@@ -328,12 +316,12 @@ export default {
             type: 'array',
             required: true,
             message: 'Please select at least one activity type',
-            trigger: 'change',
-          },
+            trigger: 'change'
+          }
         ],
         resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }],
-      },
+        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
+      }
     }
   },
   computed: {
@@ -343,9 +331,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection,
+        onSelection: this.onSelection
       }
-    },
+    }
   },
   methods: {
     onSearch(value) {
@@ -365,10 +353,10 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      this.$refs.ruleForm.validate((valid) => {
+      this.$refs.ruleForm.validate(valid => {
         console.log('name--->', this.form)
         if (valid) {
-          postBaleAdd(this.form).then((res) => {
+          postBaleAdd(this.form).then(res => {
             console.log('res---->', res)
           })
           alert('保存成功，点击确认回到档案界面!')
@@ -421,7 +409,7 @@ export default {
         this.selectedRow.push(record)
         console.log(this.selectedRow)
       }
-    },
-  },
+    }
+  }
 }
 </script>

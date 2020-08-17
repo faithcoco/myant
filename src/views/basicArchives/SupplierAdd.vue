@@ -1,7 +1,7 @@
 <template>
   <a-card>
     <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-model-item label="供应商编码test" required prop="SupplierCode">
+      <a-form-model-item label="供应商编码" required prop="SupplierCode">
         <a-input v-model="form.SupplierCode" placeholder="请输入供应商编码" @blur="() => {}">
           <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
         </a-input>
@@ -35,9 +35,9 @@
       <a-form-model-item label="负责人" prop="region">
         <a-input v-model="form.region" placeholder="请选择负责人"></a-input>
       </a-form-model-item>
-      <a-form-model-item ref="name" label="联系人编码" prop="ContactPerson">
+      <a-form-model-item ref="name" label="联系人编码" prop="ContactPersonCode">
         <a-input
-          v-model="form.ContactPerson"
+          v-model="form.ContactPersonCode"
           placeholder="请输入联系人编码"
           @blur="
             () => {
@@ -115,8 +115,8 @@ const columns = [
   },
   {
     title: '负责人',
-    dataIndex: 'ContactPerson',
-    key: 'ContactPerson',
+    dataIndex: 'region',
+    key: 'region',
     width: 80
   }
 ]
@@ -142,8 +142,8 @@ const selectcolumns = [
   },
   {
     title: '负责人',
-    dataIndex: 'ContactPerson',
-    key: 'ContactPerson',
+    dataIndex: 'region',
+    key: 'region',
     width: 80
   }
 ]
@@ -189,13 +189,11 @@ export default {
       labelCol: { span: 2 },
       wrapperCol: { span: 22 },
       form: {
-        code: '',
         supplierName: '', //供应商名称
         region: '', //负责人
         SupplierCode: '', //供应商编号
         delivery: false,
         SupplierType: '',
-        resource: '',
         desc: '',
         TaxpayerIdentificationNumber: '', //纳税人识别号
         ContactPerson: '', //联系人

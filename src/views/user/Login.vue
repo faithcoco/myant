@@ -152,8 +152,7 @@ import { getSmsCaptcha, get2step } from '@/api/login'
 export default {
   name: 'VueTelInput',
   components: {
-    TwoStepCaptcha,
-    countryCodeSelector
+    TwoStepCaptcha
   },
   data() {
     return {

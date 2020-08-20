@@ -1,8 +1,8 @@
 <template>
   <div>
     <a-card>
-      <a-row :gutter="8">
-        <a-col :span="3">
+      <a-row :gutter="10">
+        <a-col :span="4">
           <span>货品分类</span>
           <a-button style="margin-left: 40px" type="primary" @click="Classify()">分类设置</a-button>
           <a-divider type="horizontal" />
@@ -15,7 +15,7 @@
           ></s-tree>
         </a-col>
 
-        <a-col :span="21">
+        <a-col :span="20">
           <a-select default-value="全部" style="width:220px" @change="selectChange(value)">
             <a-select-option v-for="SList in selectList" :key="SList.value" :value="SList.value">{{
               SList.value

@@ -7,19 +7,28 @@ export const asyncRouterMap = [
     path: '/',
     name: 'index',
     component: BasicLayout,
-    // meta: { title: '首页' },
+    meta: { title: '首页' },
     redirect: '/dashboard/workplace',
     children: [
       {
         path: '/account',
         component: RouteView,
+        redirect: '/dashboard/workplace',
+        name: 'account',
+        meta: { title: '首页', icon: 'user', keepAlive: true, permission: ['user'] }
+      },
+      {
+        path: '/account',
+        component: RouteView,
         redirect: '/account/center',
         name: 'account',
+        hidden: true,
         meta: { title: '首页', icon: 'user', keepAlive: true, permission: ['user'] },
         children: [
           {
             path: '/dashboard/analysis',
             name: 'Analysis',
+            hidden: true,
             component: () => import('@/views/dashboard/Analysis'),
             meta: { title: '分析页', permission: ['dashboard'] }
           },
@@ -40,12 +49,14 @@ export const asyncRouterMap = [
           {
             path: '/account/center',
             name: 'center',
+            hidden: true,
             component: () => import('@/views/account/center/Index'),
             meta: { title: '个人中心', keepAlive: true, permission: ['user'] }
           },
           {
             path: '/account/settings',
             name: 'settings',
+            hidden: true,
             component: () => import('@/views/account/settings/Index'),
             meta: { title: '个人设置', hideHeader: true, permission: ['user'] },
             redirect: '/account/settings/base',
@@ -109,7 +120,8 @@ export const asyncRouterMap = [
             path: 'classification_goods',
             name: 'ClassificationGoods',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ClassificationGoods.vue'),
-            meta: { title: '货品分类', icon: 'user', permission: ['dashboard'] }
+            meta: { title: '货品分类', icon: 'user', permission: ['dashboard'] },
+            hidden: true
           },
 
           {
@@ -369,22 +381,24 @@ export const asyncRouterMap = [
             component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/BaleAdd.vue'),
             meta: { title: '包装新增', permission: ['dashboard'] },
             hidden: true
+          },
+          {
+            path: 'PositionAdjustmentList',
+            name: 'PositionAdjustmentList',
+            hidden: true,
+            component: () =>
+              import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/PositionAdjustmentList.vue'),
+            meta: { title: '货位调整', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'PositionAdjustmentAdd',
+            name: 'PositionAdjustmentAdd',
+            hidden: true,
+            component: () =>
+              import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/PositionAdjustmentAdd.vue'),
+            meta: { title: '货位调整新增', permission: ['dashboard'] },
+            hidden: true
           }
-          // {
-          //   path: 'PositionAdjustmentList',
-          //   name: 'PositionAdjustmentList',
-          //   component: () =>
-          //     import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/PositionAdjustmentList.vue'),
-          //   meta: { title: '货位调整', icon: 'user', permission: ['dashboard'] }
-          // },
-          // {
-          //   path: 'PositionAdjustmentAdd',
-          //   name: 'PositionAdjustmentAdd',
-          //   component: () =>
-          //     import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/PositionAdjustmentAdd.vue'),
-          //   meta: { title: '货位调整新增', permission: ['dashboard'] },
-          //   hidden: true
-          // }
         ]
       },
       {
@@ -481,27 +495,28 @@ export const asyncRouterMap = [
             meta: { title: '收发存汇总表', icon: 'user', permission: ['dashboard'] }
           }
         ]
+      },
+      {
+        path: '/panel',
+        name: '/panel',
+        component: RouteView,
+        hidden: true,
+        meta: { title: '仪表盘', icon: 'user', permission: ['dashboard'] },
+        children: [
+          {
+            path: 'ShippingPlan',
+            name: 'ShippingPlan',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/dashboard/ShippingPlan.vue'),
+            meta: { title: '发货计划', icon: 'user', permission: ['dashboard'] }
+          },
+          {
+            path: 'ReceiptPlan',
+            name: 'ReceiptPlan',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/dashboard/ReceiptPlan.vue'),
+            meta: { title: '收货计划', icon: 'user', permission: ['dashboard'] }
+          }
+        ]
       }
-      // {
-      //   path: '/panel',
-      //   name: '/panel',
-      //   component: RouteView,
-      //   meta: { title: '仪表盘', icon: 'user', permission: ['dashboard'] },
-      //   children: [
-      //     {
-      //       path: 'ShippingPlan',
-      //       name: 'ShippingPlan',
-      //       component: () => import(/* webpackChunkName: "fail" */ '@/views/dashboard/ShippingPlan.vue'),
-      //       meta: { title: '发货计划', icon: 'user', permission: ['dashboard'] }
-      //     },
-      //     {
-      //       path: 'ReceiptPlan',
-      //       name: 'ReceiptPlan',
-      //       component: () => import(/* webpackChunkName: "fail" */ '@/views/dashboard/ReceiptPlan.vue'),
-      //       meta: { title: '收货计划', icon: 'user', permission: ['dashboard'] }
-      //     }
-      //   ]
-      // },
     ]
   },
   {

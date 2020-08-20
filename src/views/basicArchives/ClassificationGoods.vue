@@ -8,6 +8,7 @@
           :style="{ float: 'right', overflow: 'hidden' } || {} "
         >
           <a-button style="margin-left: 5px" type="primary" @click="handleAdd">新增</a-button>
+          <a-button style="margin-left: 5px" type="primary" @click='back'>返回</a-button>
         </span>
       </a-col>
     </a-row>
@@ -78,6 +79,9 @@ export default {
     handleAdd() {
       this.tag = 1
       this.visible = true
+    },
+    back() {
+      this.$router.push({ name: 'ProductList' }) //编程式导航  修改 url，完成跳转
     },
     handleOk(e) {
       this.visible = false

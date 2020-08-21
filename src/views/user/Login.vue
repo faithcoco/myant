@@ -148,13 +148,11 @@ import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
 import { getSmsCaptcha, get2step } from '@/api/login'
-import countryCodeSelector from 'vue-country-code-selector'
 
 export default {
   name: 'VueTelInput',
   components: {
-    TwoStepCaptcha,
-    countryCodeSelector
+    TwoStepCaptcha
   },
   data() {
     return {

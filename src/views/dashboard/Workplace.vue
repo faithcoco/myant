@@ -25,11 +25,20 @@
       <a-row :gutter="24">
         <a-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">
           <a-card :loading="loading" title="审批" :bordered="false">
-            <a-radio-group v-model="size" style="margin-bottom: 16px" @change="onChange">
-              <a-radio-button value="approval">审批待办</a-radio-button>
-              <a-radio-button value="notification">系统通知</a-radio-button>
-              <a-radio-button value="contract">合同动态</a-radio-button>
+            <a-radio-group
+              v-model="size"
+              style="margin-bottom: 16px;  display: flex;justify-content: space-between;"
+              @change="onChange"
+            >
+              <div>
+                <a-radio-button value="approval">审批待办</a-radio-button>
+                <a-radio-button value="notification">系统通知</a-radio-button>
+                <a-radio-button value="contract">合同动态</a-radio-button>
+              </div>
+              <a-input-search class="search" placeholder="请输入搜索内容" style="width:300px" @search="onSearch" />
             </a-radio-group>
+            <br />
+            <br />
             <!-- <div v-show="isShow">
               <a-tabs default-active-key="1" :size="size" @change="callback">
                 <a-tab-pane key="1" tab="待我处理"></a-tab-pane>
@@ -40,9 +49,6 @@
             </div>-->
 
             <div class="group1">
-              <a-input-search class="search" placeholder="请输入搜索内容" style="width: 200px" @search="onSearch" />
-              <br />
-              <br />
               <a-radio-group class="radio1" default-value="a" button-style="solid">
                 {{ type }}
                 <a-radio-button value="a">全部</a-radio-button>

@@ -62,7 +62,7 @@
             </a-input>
           </a-form-item>
         </a-tab-pane>
-        <a-tab-pane key="tab2" tab="验证码">
+        <a-tab-pane key="tab2" tab="验证码登录">
           <a-form-item>
             <a-input
               size="large"

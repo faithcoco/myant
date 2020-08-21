@@ -54,7 +54,7 @@ export const asyncRouterMap = [
             meta: { title: '个人中心', keepAlive: true, permission: ['user'] }
           },
           {
-            path: '/account/center',
+            path: '/account/center/CorporationInfo',
             name: 'CorporationInfo',
             hidden: true,
             component: () => import('@/views/account/center/CorporationInfo'),

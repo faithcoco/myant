@@ -111,10 +111,16 @@ export const asyncRouterMap = [
         meta: { title: '基础档案', icon: 'user', permission: ['dashboard'] },
         children: [
           {
+            path: 'Sector',
+            name: 'sector',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/management/Sector.vue'),
+            meta: { title: '部门人员档案', icon: 'user', permission: ['dashboard'] }
+          },
+          {
             path: 'product-list',
             name: 'ProductList',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductList.vue'),
-            meta: { title: '商品档案', icon: 'user', permission: ['dashboard'] }
+            meta: { title: '料品档案', icon: 'user', permission: ['dashboard'] }
           },
           {
             path: 'ProductAdd',
@@ -161,7 +167,8 @@ export const asyncRouterMap = [
             path: 'ContactList',
             name: 'ContactList',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ContactList.vue'),
-            meta: { title: '联系人档案', icon: 'user', permission: ['dashboard'] }
+            meta: { title: '联系人档案', icon: 'user', permission: ['dashboard'] },
+            hidden: true
           },
           {
             path: 'ContactAdd',
@@ -174,7 +181,7 @@ export const asyncRouterMap = [
             path: 'WarehouseList',
             name: 'WarehouseList',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/warehouse/WarehouseList.vue'),
-            meta: { title: '仓库档案', icon: 'user', permission: ['dashboard'] }
+            meta: { title: '仓位档案', icon: 'user', permission: ['dashboard'] }
           },
           {
             path: 'WarehouseAdd',
@@ -188,7 +195,8 @@ export const asyncRouterMap = [
             name: 'OpeningInventoryList',
             component: () =>
               import(/* webpackChunkName: "fail" */ '@/views/management/Inventory/OpeningInventoryList.vue'),
-            meta: { title: '期初库存', icon: 'user', permission: ['dashboard'] }
+            meta: { title: '期初库存', icon: 'user', permission: ['dashboard'] },
+            hidden: true
           },
           {
             path: 'OpeningInventoryAdd',
@@ -198,17 +206,13 @@ export const asyncRouterMap = [
             meta: { title: '期初库存新增', permission: ['dashboard'] },
             hidden: true
           },
-          {
-            path: 'Sector',
-            name: 'sector',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/management/Sector.vue'),
-            meta: { title: '部门设置', icon: 'user', permission: ['dashboard'] }
-          },
+
           {
             path: 'PersonnelSetting',
             name: 'personnel-setting',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/PersonnelSetting.vue'),
-            meta: { title: '人员设置', icon: 'user', permission: ['dashboard'] }
+            meta: { title: '人员设置', icon: 'user', permission: ['dashboard'] },
+            hidden: true
           }
         ]
       },

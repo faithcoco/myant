@@ -186,7 +186,7 @@
       </a-form-model>
     </a-card>
 
-    <a-layout-footer :style="{ position: 'fixed',width:'100%',marginTop: '750px',marginLeft:'-25px'}">
+    <a-layout-footer :style="{ position: 'fixed',width:'100%',bottom:'0px',marginLeft:'-25px'}">
       <a-card>
         <a-row>
           <a-col :span="1" :offset="4">

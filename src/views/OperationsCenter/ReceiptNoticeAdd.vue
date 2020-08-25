@@ -1,69 +1,83 @@
 <template>
-  <a-card>
-    <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-model-item label="收货通知单编码" required prop="ReceiptNotificationCode">
-        <a-input v-model="form.ReceiptNotificationCode" placeholder="请输入收货通知单编码" @blur="() => {}">
-          <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
-        </a-input>
-      </a-form-model-item>
+  <a-layout>
+    <a-card>
+      <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-form-model-item label="收货单编码" required prop="ReceiptNotificationCode">
+          <a-input v-model="form.ReceiptNotificationCode" placeholder="请输入收货通知单编码" @blur="() => {}">
+            <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
+          </a-input>
+        </a-form-model-item>
 
-      <a-modal v-model="visible" title="选择编码" width="1200px" @ok="handleOk">
-        <a-input-search placeholder="搜索" style="width: 400px;margin-bottom:20px" @search="onSearch" />
-        <a-table :columns="columns" :data-source="data" :scroll="{ x: 1500 }" :pagination="false" bordered>
-          <span slot="checked" style="margin: 0" slot-scope="text, record">
-            <a-checkbox v-model="record.checked" @change="onChange(record)" />
-          </span>
-          <a slot="name" slot-scope="text">{{ text }}</a>
-        </a-table>
-      </a-modal>
-      <a-form-model-item ref="name" label="供应商编码" prop="SupplierCode">
-        <a-input v-model="form.SupplierCode" placeholder="请输入供应商编码" @blur="() => {}">
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
-      </a-form-model-item>
-      <a-form-model-item label="联系人编码" prop="ContactCode">
-        <a-input v-model="form.ContactCode" placeholder="请输入联系人编码" @blur="() => {}">
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="部门编码" prop="DepartmentCode">
-        <a-input v-model="form.DepartmentCode" placeholder="请输入部门编码" @blur="() => {}">
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="业务员编码" prop="SalesmanCode">
-        <a-input v-model="form.SalesmanCode" placeholder="请输入业务员编码" @blur="() => {}">
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="预计入库日期" prop="ExpectedInWarehouseDate">
-        <a-date-picker
-          v-model="form.ExpectedInWarehouseDate"
-          show-time
-          type="date"
-          placeholder="请选择预计入库日期"
-          style="width: 100%;"
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="Principal" label="商品清单" prop="Principal">
-        <a-input v-model="form.Principal" placeholder="请选择存货编码" @blur="() => {}">
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
-        <a-table
-          :columns="selectcolumns"
-          :data-source="numberRow"
-          :scroll="{ x: 1500 }"
-          :pagination="false"
-          bordered
-        ></a-table>
-      </a-form-model-item>
-      <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="resetForm">重置表单</a-button>
-        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
-        <a-button type style="margin-left: 10px;" @click="Back">返回</a-button>
-      </a-form-model-item>
-    </a-form-model>
-  </a-card>
+        <a-modal v-model="visible" title="选择编码" width="1200px" @ok="handleOk">
+          <a-input-search placeholder="搜索" style="width: 400px;margin-bottom:20px" @search="onSearch" />
+          <a-table :columns="columns" :data-source="data" :scroll="{ x: 1500 }" :pagination="false" bordered>
+            <span slot="checked" style="margin: 0" slot-scope="text, record">
+              <a-checkbox v-model="record.checked" @change="onChange(record)" />
+            </span>
+            <a slot="name" slot-scope="text">{{ text }}</a>
+          </a-table>
+        </a-modal>
+        <a-form-model-item ref="name" label="供应商编码" prop="SupplierCode">
+          <a-input v-model="form.SupplierCode" placeholder="请输入供应商编码" @blur="() => {}">
+            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item label="联系人编码" prop="ContactCode">
+          <a-input v-model="form.ContactCode" placeholder="请输入联系人编码" @blur="() => {}">
+            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item ref="name" label="部门编码" prop="DepartmentCode">
+          <a-input v-model="form.DepartmentCode" placeholder="请输入部门编码" @blur="() => {}">
+            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item ref="name" label="业务员编码" prop="SalesmanCode">
+          <a-input v-model="form.SalesmanCode" placeholder="请输入业务员编码" @blur="() => {}">
+            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item ref="name" label="预计入库日期" prop="ExpectedInWarehouseDate">
+          <a-date-picker
+            v-model="form.ExpectedInWarehouseDate"
+            show-time
+            type="date"
+            placeholder="请选择预计入库日期"
+            style="width: 100%;"
+          />
+        </a-form-model-item>
+        <a-form-model-item ref="Principal" label="商品清单" prop="Principal">
+          <a-input v-model="form.Principal" placeholder="请选择存货编码" @blur="() => {}">
+            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          </a-input>
+          <a-table
+            :locale="{emptyText: '暂无数据'}"
+            :columns="selectcolumns"
+            :data-source="numberRow"
+            :scroll="{ x: 1500 }"
+            :pagination="false"
+            bordered
+          ></a-table>
+        </a-form-model-item>
+      </a-form-model>
+    </a-card>
+
+    <a-layout-footer :style="{ position: 'fixed',width:'100%',bottom:'0px',marginLeft:'-25px',zIndex:'999'}">
+      <a-card>
+        <a-row>
+          <a-col :span="1" :offset="4">
+            <a-button type="primary" @click="resetForm">重置表单</a-button>
+          </a-col>
+          <a-col :span="1" :offset="1">
+            <a-button type="primary" @click="onSubmit">保存</a-button>
+          </a-col>
+          <a-col :span="1" :offset="1">
+            <a-button type  @click="Back">返回</a-button>
+          </a-col>
+        </a-row>
+      </a-card>
+    </a-layout-footer>
+  </a-layout>
 </template>
 <script>
 import Vue from 'vue'
@@ -80,7 +94,7 @@ const columns = [
     scopedSlots: { customRender: 'checked' }
   },
   {
-    title: '收货通知单编码',
+    title: '收货单编码',
     dataIndex: 'ReceiptNotificationCode',
     key: 'ReceiptNotificationCode',
     width: 155,
@@ -173,7 +187,7 @@ const columns = [
 ]
 const selectcolumns = [
   {
-    title: '收货通知单编码',
+    title: '收货单编码',
     dataIndex: 'ReceiptNotificationCode',
     key: 'ReceiptNotificationCode',
     width: 155,
@@ -319,7 +333,7 @@ export default {
       wrapperCol: { span: 22 },
       other: '',
       form: {
-        ReceiptNotificationCode: '', //收货通知单编码
+        ReceiptNotificationCode: '', //收货单编码
         SupplierCode: '', //供应商编码
         ContactCode: '', //联系人编码
         DepartmentCode: '', //部门编码
@@ -341,7 +355,7 @@ export default {
         Tax: '' //税额
       },
       rules: {
-        ReceiptNotificationCode: [{ required: true, message: '请输入收货通知单编码', trigger: 'blur' }],
+        ReceiptNotificationCode: [{ required: true, message: '请输入收货单编码', trigger: 'blur' }],
         SupplierCode: [{ required: true, message: '请输入供应商编码', trigger: 'change' }]
       }
     }

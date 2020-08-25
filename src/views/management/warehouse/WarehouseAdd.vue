@@ -1,124 +1,138 @@
 <template>
-  <a-card>
-    <a-form-model
-      ref="ruleForm"
-      :model="form"
-      :rules="rules"
-      :label-col="labelCol"
-      :wrapper-col="wrapperCol"
-    >
-      <a-form-model-item ref="name" label="仓库编码" prop="WarehouseCode">
-        <a-input
-          v-model="form.WarehouseCode"
-          placeholder="请输入仓库编码"
-          @blur="
-          () => {
+  <a-layout>
+    <a-card>
+      <a-form-model
+        ref="ruleForm"
+        :model="form"
+        :rules="rules"
+        :label-col="labelCol"
+        :wrapper-col="wrapperCol"
+      >
+        <a-form-model-item ref="name" label="仓库编码" prop="WarehouseCode">
+          <a-input
+            v-model="form.WarehouseCode"
+            placeholder="请输入仓库编码"
+            @blur="
+            () => {
+              
+            }"
+          >
+            <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item label="仓库名称" prop="WarehouseName">
+          <a-input v-model="form.WarehouseName" placeholder="请输入仓库名称"></a-input>
+        </a-form-model-item>
+
+        <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
+          <a-input-search
+            placeholder="搜索"
+            style="width: 400px;margin-bottom:20px"
+            @search="onSearch"
+          />
+          <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
+            <span slot="checked" style="margin: 0" slot-scope="text,record">
+              <a-checkbox v-model="record.checked" @change="onChange(record)" />
+            </span>
+            <a slot="name" slot-scope="text">{{ text }}</a>
+          </a-table>
+        </a-modal>
+
+        <a-form-model-item label="仓库负责人" prop="WarehouseManager">
+          <a-input v-model="form.WarehouseManager" placeholder="请选择仓库负责人">
+            <!-- <a-button slot="suffix" type="link" @click="showModal">选择</a-button> -->
+          </a-input>
+          <!-- <a-table
+            :locale="{emptyText: '暂无数据'}"
+            :columns="selectcolumns"
+            :scroll="{ x: 750 }"
+            :data-source="numberRow"
+            :pagination="false"
+            bordered
+          ></a-table>-->
+        </a-form-model-item>
+
+        <a-form-model-item ref="name" label="仓库地址" prop="WarehouseAddress">
+          <a-input
+            v-model="form.WarehouseAddress"
+            placeholder="请选择省、区、市"
+            @blur="
+            () => {
+          
+            }
+          "
+          />
+        </a-form-model-item>
+        <a-form-model-item ref="name" label="仓库地址" prop="WarehouseDetailedAddress">
+          <a-input
+            v-model="form.WarehouseDetailedAddress"
+            type="textarea"
+            placeholder="请输入仓库详细地址"
+            @blur="
+            () => {
+          
+            }
+          "
+          />
+        </a-form-model-item>
+
+        <a-form-model-item ref="principal" label="货位管理" prop="CargoSpaceManagement">
+          <a-input
+            v-model="form.CargoSpaceManagement"
+            placeholder="请输入货位管理"
+            @blur="
+            () => {
             
-          }"
-        >
-          <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
-        </a-input>
-      </a-form-model-item>
-      <a-form-model-item label="仓库名称" prop="WarehouseName">
-        <a-input v-model="form.WarehouseName" placeholder="请输入仓库名称"></a-input>
-      </a-form-model-item>
-
-      <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
-        <a-input-search
-          placeholder="搜索"
-          style="width: 400px;margin-bottom:20px"
-          @search="onSearch"
-        />
-        <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
-          <span slot="checked" style="margin: 0" slot-scope="text,record">
-            <a-checkbox v-model="record.checked" @change="onChange(record)" />
-          </span>
-          <a slot="name" slot-scope="text">{{ text }}</a>
-        </a-table>
-      </a-modal>
-
-      <a-form-model-item label="仓库负责人" prop="WarehouseManager">
-        <a-input v-model="form.WarehouseManager" placeholder="请选择仓库负责人">
-          <!-- <a-button slot="suffix" type="link" @click="showModal">选择</a-button> -->
-        </a-input>
-        <!-- <a-table
-          :columns="selectcolumns"
-          :scroll="{ x: 750 }"
-          :data-source="numberRow"
-          :pagination="false"
-          bordered
-        ></a-table>-->
-      </a-form-model-item>
-
-      <a-form-model-item ref="name" label="仓库地址" prop="WarehouseAddress">
-        <a-input
-          v-model="form.WarehouseAddress"
-          placeholder="请选择省、区、市"
-          @blur="
-          () => {
-         
-          }
-        "
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="仓库地址" prop="WarehouseDetailedAddress">
-        <a-input
-          v-model="form.WarehouseDetailedAddress"
-          type="textarea"
-          placeholder="请输入仓库详细地址"
-          @blur="
-          () => {
-         
-          }
-        "
-        />
-      </a-form-model-item>
-
-      <a-form-model-item ref="principal" label="货位管理" prop="CargoSpaceManagement">
-        <a-input
-          v-model="form.CargoSpaceManagement"
-          placeholder="请输入货位管理"
-          @blur="
-          () => {
           
-         
-          }
-        "
-        >
-          <!-- <a-button slot="suffix" type="link">选择</a-button> -->
-        </a-input>
-      </a-form-model-item>
-      <a-form-model-item label="批次管理" prop="BatchManagement">
-        <a-input
-          v-model="form.BatchManagement"
-          placeholder="请输入批次管理"
-          @blur="
-          () => {
+            }
+          "
+          >
+            <!-- <a-button slot="suffix" type="link">选择</a-button> -->
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item label="批次管理" prop="BatchManagement">
+          <a-input
+            v-model="form.BatchManagement"
+            placeholder="请输入批次管理"
+            @blur="
+            () => {
+            
           
-         
-          }
-        "
-        />
-      </a-form-model-item>
+            }
+          "
+          />
+        </a-form-model-item>
 
-      <a-form-model-item label="附件">
-        <a-upload
-          name="file"
-          :multiple="true"
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          :headers="headers"
-          @change="handleChange"
-        >
-          <a-button type="link" :size="size">添加附件</a-button>
-        </a-upload>
-      </a-form-model-item>
-      <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="resetForm">重置表单</a-button>
-        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
-        <a-button type style="margin-left: 10px;" @click="Back">返回</a-button>
-      </a-form-model-item>
-    </a-form-model>
-  </a-card>
+        <a-form-model-item label="附件">
+          <a-upload
+            name="file"
+            :multiple="true"
+            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+            :headers="headers"
+            @change="handleChange"
+          >
+            <a-button type="link" :size="size">添加附件</a-button>
+          </a-upload>
+        </a-form-model-item>
+      </a-form-model>
+    </a-card>
+
+    <a-layout-footer :style="{ position: 'fixed',width: '100%',bottom: '0px', marginLeft: '-25px'}">
+      <a-card>
+        <a-row>
+          <a-col :span='1' :offset="4">
+            <a-button type="primary" @click="resetForm">重置表单</a-button>
+          </a-col>
+          <a-col :span='1' :offset="1">
+            <a-button type="primary"  @click="onSubmit">保存</a-button>
+          </a-col>
+          <a-col :span='1' :offset="1">
+            <a-button type  @click="Back">返回</a-button>
+          </a-col>
+        </a-row>
+      </a-card>
+    </a-layout-footer>
+  </a-layout>
 </template>
 <script>
 import Vue from 'vue'

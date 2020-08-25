@@ -1,71 +1,85 @@
 <template>
-  <a-card>
-    <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-model-item ref="name" label="入库单编码" required prop="StorageCode">
-        <a-input v-model="form.StorageCode" placeholder="请输入入库单编码" @blur="() => {}">
-          <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
-        </a-input>
-      </a-form-model-item>
-      <a-form-model-item label="入库类型编码" required prop="StorageTypeCode">
-        <a-input v-model="form.StorageTypeCode" placeholder="请输入入库类型编码" @blur="() => {}"></a-input>
-      </a-form-model-item>
+  <a-layout>
+    <a-card>
+      <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-form-model-item ref="name" label="入库单编码" required prop="StorageCode">
+          <a-input v-model="form.StorageCode" placeholder="请输入入库单编码" @blur="() => {}">
+            <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item label="入库类型编码" required prop="StorageTypeCode">
+          <a-input v-model="form.StorageTypeCode" placeholder="请输入入库类型编码" @blur="() => {}"></a-input>
+        </a-form-model-item>
 
-      <a-form-model-item label="关联单据" prop="AssociatedDocuments">
-        <a-input v-model="form.AssociatedDocuments" placeholder="请选择关联单据">
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
-      </a-form-model-item>
+        <a-form-model-item label="关联单据" prop="AssociatedDocuments">
+          <a-input v-model="form.AssociatedDocuments" placeholder="请选择关联单据">
+            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          </a-input>
+        </a-form-model-item>
 
-      <a-form-model-item label="供应商编码" prop="supplierCode">
-        <a-input v-model="form.supplierCode" placeholder="请选择供应商编码">
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
-      </a-form-model-item>
+        <a-form-model-item label="供应商编码" prop="supplierCode">
+          <a-input v-model="form.supplierCode" placeholder="请选择供应商编码">
+            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          </a-input>
+        </a-form-model-item>
 
-      <a-form-model-item label="客户编码" prop="ClientCode">
-        <a-input v-model="form.ClientCode" placeholder="请选择客户编码"></a-input>
-      </a-form-model-item>
-      <a-form-model-item label="部门编码" prop="DepartmentCode">
-        <a-input v-model="form.DepartmentCode" placeholder="请选择部门编码"></a-input>
-      </a-form-model-item>
-      <a-form-model-item ref="date" label="入库日期" prop="StorageDate">
-        <a-date-picker
-          v-model="form.StorageDate"
-          show-time
-          type="date"
-          placeholder="请选择入库日期"
-          style="width: 100%;"
-        />
-      </a-form-model-item>
-      <a-form-model-item ref="ProductList" label="商品清单" prop="ProductList">
-        <a-input v-model="form.Principal" placeholder="请选择存货编码" @blur="() => {}">
-          <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-        </a-input>
-        <a-table
-          :columns="selectcolumns"
-          :data-source="numberRow"
-          :scroll="{ x: 800 }"
-          :pagination="false"
-          bordered
-        ></a-table>
-      </a-form-model-item>
+        <a-form-model-item label="客户编码" prop="ClientCode">
+          <a-input v-model="form.ClientCode" placeholder="请选择客户编码"></a-input>
+        </a-form-model-item>
+        <a-form-model-item label="部门编码" prop="DepartmentCode">
+          <a-input v-model="form.DepartmentCode" placeholder="请选择部门编码"></a-input>
+        </a-form-model-item>
+        <a-form-model-item ref="date" label="入库日期" prop="StorageDate">
+          <a-date-picker
+            v-model="form.StorageDate"
+            show-time
+            type="date"
+            placeholder="请选择入库日期"
+            style="width: 100%;"
+          />
+        </a-form-model-item>
+        <a-form-model-item ref="ProductList" label="商品清单" prop="ProductList">
+          <a-input v-model="form.Principal" placeholder="请选择存货编码" @blur="() => {}">
+            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+          </a-input>
+          <a-table
+            :locale="{emptyText: '暂无数据'}"
+            :columns="selectcolumns"
+            :data-source="numberRow"
+            :scroll="{ x: 800 }"
+            :pagination="false"
+            bordered
+          ></a-table>
+        </a-form-model-item>
 
-      <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="resetForm">重置表单</a-button>
-        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
-        <a-button type style="margin-left: 10px;" @click="Back">返回</a-button>
-      </a-form-model-item>
-      <a-modal v-model="visible" title="选择编码" width="1200px" @ok="handleOk">
-        <a-input-search placeholder="搜索" style="width: 400px;margin-bottom:20px" @search="onSearch" />
-        <a-table :columns="columns" :data-source="data" :scroll="{ x: 800 }" :pagination="false" bordered>
-          <span slot="checked" style="margin: 0" slot-scope="text, record">
-            <a-checkbox v-model="record.checked" @change="onChange(record)" />
-          </span>
-          <a slot="name" slot-scope="text">{{ text }}</a>
-        </a-table>
-      </a-modal>
-    </a-form-model>
-  </a-card>
+        <a-modal v-model="visible" title="选择编码" width="1200px" @ok="handleOk">
+          <a-input-search placeholder="搜索" style="width: 400px;margin-bottom:20px" @search="onSearch" />
+          <a-table :columns="columns" :data-source="data" :scroll="{ x: 800 }" :pagination="false" bordered>
+            <span slot="checked" style="margin: 0" slot-scope="text, record">
+              <a-checkbox v-model="record.checked" @change="onChange(record)" />
+            </span>
+            <a slot="name" slot-scope="text">{{ text }}</a>
+          </a-table>
+        </a-modal>
+      </a-form-model>
+    </a-card>
+
+    <a-layout-footer :style="{position: 'fixed',width:'100%',bottom:'0px',marginLeft:'-25px',zIndex:'999'}">
+      <a-card>
+        <a-row>
+          <a-col :span="1" :offset="4">
+            <a-button type="primary" @click="resetForm">重置表单</a-button>
+          </a-col>
+          <a-col :span="1" :offset="1">
+            <a-button type="primary" @click="onSubmit">保存</a-button>
+          </a-col>
+          <a-col :span="1" :offset="1">
+            <a-button type  @click="Back">返回</a-button>
+          </a-col>
+        </a-row>
+      </a-card>
+    </a-layout-footer>
+  </a-layout>
 </template>
 <script>
 import Vue from 'vue'

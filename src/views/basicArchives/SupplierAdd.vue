@@ -1,84 +1,96 @@
 <template>
-  <a-card>
-    <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-      <a-form-model-item label="供应商编码" required prop="SupplierCode">
-        <a-input v-model="form.SupplierCode" placeholder="请输入供应商编码" @blur="() => {}">
-          <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
-        </a-input>
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="供应商名称" prop="supplierName">
-        <a-input
-          v-model="form.supplierName"
-          placeholder="请输入供应商名称"
-          @blur="
-            () => {
-              $refs.name.onFieldBlur()
-            }
-          "
-        ></a-input>
-      </a-form-model-item>
+  <a-layout>
+    <a-card>
+      <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-form-model-item label="供应商编码" required prop="SupplierCode">
+          <a-input v-model="form.SupplierCode" placeholder="请输入供应商编码" @blur="() => {}">
+            <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
+          </a-input>
+        </a-form-model-item>
+        <a-form-model-item ref="name" label="供应商名称" prop="supplierName">
+          <a-input
+            v-model="form.supplierName"
+            placeholder="请输入供应商名称"
+            @blur="
+              () => {
+                $refs.name.onFieldBlur()
+              }
+            "
+          ></a-input>
+        </a-form-model-item>
 
-      <a-modal v-model="visible" title="选择编号" width="1000px" @ok="handleOk">
-        <a-input-search placeholder="搜索" style="width: 400px;margin-bottom:20px" @search="onSearch" />
+        <a-modal v-model="visible" title="选择编号" width="1000px" @ok="handleOk">
+          <a-input-search placeholder="搜索" style="width: 400px;margin-bottom:20px" @search="onSearch" />
 
-        <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
-          <span slot="checked" style="margin: 0" slot-scope="text, record">
-            <a-checkbox v-model="record.checked" @change="onChange(record)" />
-          </span>
-          <a slot="name" slot-scope="text">{{ text }}</a>
-        </a-table>
-      </a-modal>
+          <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
+            <span slot="checked" style="margin: 0" slot-scope="text, record">
+              <a-checkbox v-model="record.checked" @change="onChange(record)" />
+            </span>
+            <a slot="name" slot-scope="text">{{ text }}</a>
+          </a-table>
+        </a-modal>
 
-      <a-form-model-item label="供应商类型" prop="SupplierType">
-        <a-input v-model="form.SupplierType" placeholder="请输入供应商类型"></a-input>
-      </a-form-model-item>
-      <a-form-model-item label="负责人" prop="region">
-        <a-input v-model="form.region" placeholder="请选择负责人"></a-input>
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="联系人编码" prop="ContactPersonCode">
-        <a-input
-          v-model="form.ContactPersonCode"
-          placeholder="请输入联系人编码"
-          @blur="
-            () => {
-              $refs.name.onFieldBlur()
-            }
-          "
-        />
-      </a-form-model-item>
-      <a-form-model-item label="备注" prop="desc">
-        <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
-      </a-form-model-item>
-      <a-form-model-item ref="name" label="纳税人识别号" prop="TaxpayerIdentificationNumber">
-        <a-input
-          v-model="form.TaxpayerIdentificationNumber"
-          placeholder="请输入纳税人识别号"
-          @blur="
-            () => {
-              $refs.name.onFieldBlur()
-            }
-          "
-        />
-      </a-form-model-item>
+        <a-form-model-item label="供应商类型" prop="SupplierType">
+          <a-input v-model="form.SupplierType" placeholder="请输入供应商类型"></a-input>
+        </a-form-model-item>
+        <a-form-model-item label="负责人" prop="region">
+          <a-input v-model="form.region" placeholder="请选择负责人"></a-input>
+        </a-form-model-item>
+        <a-form-model-item ref="name" label="联系人编码" prop="ContactPersonCode">
+          <a-input
+            v-model="form.ContactPersonCode"
+            placeholder="请输入联系人编码"
+            @blur="
+              () => {
+                $refs.name.onFieldBlur()
+              }
+            "
+          />
+        </a-form-model-item>
+        <a-form-model-item label="备注" prop="desc">
+          <a-input v-model="form.desc" type="textarea" placeholder="30字以内产品说明" />
+        </a-form-model-item>
+        <a-form-model-item ref="name" label="纳税人识别号" prop="TaxpayerIdentificationNumber">
+          <a-input
+            v-model="form.TaxpayerIdentificationNumber"
+            placeholder="请输入纳税人识别号"
+            @blur="
+              () => {
+                $refs.name.onFieldBlur()
+              }
+            "
+          />
+        </a-form-model-item>
 
-      <a-form-model-item label="附件">
-        <a-upload
-          name="file"
-          :multiple="true"
-          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-          :headers="headers"
-          @change="handleChange"
-        >
-          <a-button type="link" :size="size">添加附件</a-button>
-        </a-upload>
-      </a-form-model-item>
-      <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
-        <a-button type="primary" @click="resetForm">重置表单</a-button>
-        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
-        <a-button type style="margin-left: 10px;" @click="Back">返回</a-button>
-      </a-form-model-item>
-    </a-form-model>
-  </a-card>
+        <a-form-model-item label="附件">
+          <a-upload
+            name="file"
+            :multiple="true"
+            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+            :headers="headers"
+            @change="handleChange"
+          >
+            <a-button type="link" :size="size">添加附件</a-button>
+          </a-upload>
+        </a-form-model-item>
+      </a-form-model>
+    </a-card>
+     <a-layout-footer :style="{ position: 'fixed',width:'100%',bottom:'0px',marginLeft:'-25px',zIndex:'999'}">
+      <a-card>
+        <a-row>
+          <a-col :span="1" :offset="4">
+            <a-button type="primary" @click="resetForm">重置表单</a-button>
+          </a-col>
+          <a-col :span="1" :offset="1">
+            <a-button type="primary" @click="onSubmit">保存</a-button>
+          </a-col>
+          <a-col :span="1" :offset="1">
+            <a-button type  @click="Back">返回</a-button>
+          </a-col>
+        </a-row>
+      </a-card>
+    </a-layout-footer>
+  </a-layout>
 </template>
 <script>
 import Vue from 'vue'

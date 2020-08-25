@@ -22,6 +22,7 @@
           <!-- <a-button slot="suffix" type="link" @click="showModal">选择</a-button> -->
         </a-input>
         <!-- <a-table
+          :locale="{emptyText: '暂无数据'}"
           :columns="selectcolumns"
           :data-source="numberRow"
           :scroll="{ x: 1000 }"
@@ -60,8 +61,8 @@
 
       <a-form-model-item :wrapper-col="{ span: 14, offset: 4 }">
         <a-button type="primary" @click="resetForm">重置表单</a-button>
-        <a-button type="primary" style="margin-left: 10px;" @click="onSubmit">保存</a-button>
-        <a-button type style="margin-left: 10px;" @click="Back">返回</a-button>
+        <a-button type="primary"  @click="onSubmit">保存</a-button>
+        <a-button type @click="Back">返回</a-button>
       </a-form-model-item>
     </a-form-model>
   </a-card>

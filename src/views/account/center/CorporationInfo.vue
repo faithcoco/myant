@@ -150,6 +150,7 @@
     <a-form-model
         ref="ruleForm"
         :model="form"
+        :rules="rules"
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
         style="text-align:center"
@@ -157,13 +158,13 @@
       <a-form-model-item >
         <span>手机验证通过后会初始化数据</span>
       </a-form-model-item>
-      <a-form-model-item label="输入手机号:" prop="Newphone" required>
+      <a-form-model-item label="输入手机号:" prop="Newphone" >
       <a-input v-model="form.Newphone" placeholder="请输入手机号"></a-input>
       </a-form-model-item>
       <a-form-model-item label="滑动验证码:">
         <slider ref="slideblock" v-on:confirmSuccess="confirmSuccess"></slider>
       </a-form-model-item>
-      <a-form-model-item label="输入验证码:" prop="VerificationCode" required>
+      <a-form-model-item label="输入验证码:" prop="VerificationCode" >
         <a-input v-model="form.VerificationCode" placeholder="输入验证码-111">
           <a-button  slot="suffix" type="link" @click="getMailVerificationCode">获取验证码</a-button>
         </a-input>
@@ -194,7 +195,6 @@ components: {
       confirmVisible: false,
       confirmLoading: false,
       phoneVisible: false,
-      cName:'',
       form:{
         companyCode: 'rEcbrupMpQv400',
         companyName: '上古',
@@ -214,6 +214,8 @@ components: {
           //校验规则
           companyName: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
           cName: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
+          Newphone: [{ required: true, message: '请输入手机号', trigger: 'blur' }],
+          VerificationCode: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
       },
     }
   },
@@ -290,6 +292,7 @@ components: {
         this.visible = false
         this.confirmLoading = false
         this.confirmVisible = true
+        this.ok=false
       }, 2000)
     },
     confirmOk(e) {
@@ -302,28 +305,41 @@ components: {
           if (this.form.cName===this.form.companyName) {
             console.log('ok');
               this.confirmVisible = false
+              this.phoneVisible = true
+              this.confirmLoading = false
+              this.form.cName=''
           } else {
             this.$message.info("企业名称不一致")
             console.log('error submit!!')
+            this.confirmLoading = false
+            return false
             }
           }      
-          this.confirmLoading = false
-          this.phoneVisible = true
-          return false
+
         })
       }, 2000)
+
     },
     phoneOk(){
-      this.confirmLoading = true
-      setTimeout(() => {
-      this.phoneVisible = false
-      this.$refs.slideblock.reset();
-      this.confirmLoading = false
-      }, 4000)
+      this.$refs.ruleForm.validate((valid) => {
+        if (valid) {
+          this.confirmLoading = true
+          setTimeout(() => {
+            this.phoneVisible = false
+            this.$refs.slideblock.reset();
+            this.confirmLoading = false
+            this.form.Newphone = ''
+            this.form.VerificationCode = ''
+            this.$message.info('初始化成功！！！')
+          }, 4000)
+        }
+      })
     },
     phoneCancel(){
       this.confirmLoading = false
       this.phoneVisible = false
+      this.form.Newphone = ''
+      this.form.VerificationCode = ''
 
     },
     getMailVerificationCode(){
@@ -336,6 +352,7 @@ components: {
     handleCancel(e) {
       console.log('Clicked cancel button')
       this.visible = false
+      this.ok=false
     },
     confirmCancel(e) {
       console.log('Clicked cancel button')
@@ -345,7 +362,7 @@ components: {
     onSearch(value) {
       console.log(value)
     },
-    cancel(e) {
+    cancel(e) {       
         this.$refs.ruleForm.resetFields()
         this.visible = true
         this.editVisible = false

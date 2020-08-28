@@ -38,15 +38,14 @@
               <a-input-search class="search" placeholder="请输入搜索内容" style="width:300px" @search="onSearch" />
             </a-radio-group>
             <br />
-            <br />
-            <!-- <div v-show="isShow">
+            <div v-show="isShow">
               <a-tabs default-active-key="1" :size="size" @change="callback">
                 <a-tab-pane key="1" tab="待我处理"></a-tab-pane>
                 <a-tab-pane key="2" tab="我已处理"></a-tab-pane>
                 <a-tab-pane key="3" tab="我发起的"></a-tab-pane>
                 <a-tab-pane key="4" tab="抄送我的"></a-tab-pane>
               </a-tabs>
-            </div>-->
+            </div>
 
             <div class="group1">
               <a-radio-group class="radio1" default-value="a" button-style="solid">
@@ -67,10 +66,10 @@
                     <a-radio-button value="c">应付</a-radio-button>
                   </a-radio-group>
 
-                  <a-radio class="read">仅显示未读</a-radio>
+                  <a-checkbox class="read">仅显示未读</a-checkbox>
                 </div>
                 <a-radio-group class="group2-btn2" default-value="a" button-style="solid">
-                  <a-radio-button value="a">标为已读</a-radio-button>
+                  <a-radio-button value="a" style="margin-right:10px">标为已读</a-radio-button>
                   <a-radio-button value="b">导出</a-radio-button>
                 </a-radio-group>
               </div>
@@ -93,7 +92,7 @@
                   <div slot="description">{{ item.time }}</div>
                 </a-list-item-meta>
               </a-list-item>
-            </a-list>-->
+            </a-list> -->
           </a-card>
           <a-card
             class="project-list"

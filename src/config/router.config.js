@@ -110,11 +110,20 @@ export const asyncRouterMap = [
         redirect: '/basic_archives/goods_file/product-list',
         meta: { title: '基础档案', icon: 'user', permission: ['dashboard'] },
         children: [
+          
+          {
+            path: 'PersonnelSetting',
+            name: 'personnel-setting',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/management/PersonnelSetting.vue'),
+            meta: { title: '部门人员档案', icon: 'user', permission: ['dashboard'] },
+            
+          },
           {
             path: 'Sector',
             name: 'sector',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/Sector.vue'),
-            meta: { title: '部门人员档案', icon: 'user', permission: ['dashboard'] }
+            meta: { title: '部门人员档案', icon: 'user', permission: ['dashboard'] },
+            hidden: true
           },
           {
             path: 'product-list',
@@ -206,14 +215,6 @@ export const asyncRouterMap = [
             meta: { title: '期初库存新增', permission: ['dashboard'] },
             hidden: true
           },
-
-          {
-            path: 'PersonnelSetting',
-            name: 'personnel-setting',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/management/PersonnelSetting.vue'),
-            meta: { title: '人员设置', icon: 'user', permission: ['dashboard'] },
-            hidden: true
-          }
         ]
       },
       {

@@ -2,14 +2,19 @@
   <a-card :bordered="false">
     <a-row :gutter="8">
       <a-col :span="5">
-        <s-tree
-          :dataSource="orgTree"
-          :openKeys.sync="openKeys"
-          :search="true"
-          @click="handleClick"
-          @add="handleAdd"
-          @titleClick="handleTitleClick"
-        ></s-tree>
+        <span>部门结构</span>
+        <a-tree
+          :tree-data="treeData"
+          show-icon
+          @expand="onExpand"
+          :expanded-keys="expandedKeys"
+          :auto-expand-parent="autoExpandParent"
+        >
+          <a-icon slot="apartment" type="apartment" :style="{ color: '#1890FF' }" />
+          <template slot="custom" slot-scope="{ selected }">
+            <a-icon :type="selected ? 'frown' : 'frown-o'" />
+          </template>
+        </a-tree>
       </a-col>
       <a-col :span="19">
         <s-table
@@ -52,10 +57,14 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
+import { Tree } from 'ant-design-vue'
+Vue.use(Tree)
 import OrgModal from '../other/modules/OrgModal'
 import { getOrgTree, getServiceList, getPersonnelSettingList, getPersonnelSettingColumns } from '@/api/manage'
+import { getSector } from '@/api/manage'
 
 const columns = []
 
@@ -69,7 +78,9 @@ export default {
   data() {
     return {
       openKeys: ['key-01'],
-
+      treeData: [],
+      expandedKeys: [],
+      autoExpandParent: true,
       // 查询参数
       queryParam: {},
       // 表头
@@ -89,6 +100,11 @@ export default {
     getPersonnelSettingColumns().then(res => {
       console.log('res.result---------->', res.columns)
       this.columns = res.columns
+    })
+    getSector().then((res) => {
+      console.log('res.result---------->', JSON.stringify(res.result))
+      this.treeData = res.result
+      this.expandedKeys=['0-0-0', '0-0-1']
     })
     getOrgTree().then(res => {
       this.orgTree = res.result
@@ -141,6 +157,18 @@ export default {
     })
   },
   methods: {
+    onSelect(selectedKeys, info) {
+      console.log('selected', selectedKeys, info)
+    },
+    onCheck(checkedKeys, info) {
+      console.log('onCheck', checkedKeys, info)
+    },
+    onExpand(expandedKeys) {
+      // if not set autoExpandParent to false, if children expanded, parent can not collapse.
+      // or, you can remove all expanded children keys.
+      this.expandedKeys = expandedKeys
+      this.autoExpandParent = false
+    },
     handleClick(e) {
       console.log('handleClick', e)
       this.queryParam = {

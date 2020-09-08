@@ -27,7 +27,8 @@
                                 <a-icon style="margin-right:10px" type="deployment-unit"  />备注:{{ form.Remarks }}
                             </a-form-item>
                             <a-form-item>
-                                <a-icon style="margin-right:10px" type="apartment"  />部门: {{ form.defaultDepart }}<a-tag :color="departmentColor" style="margin-left:10px">{{departmentStatus}}</a-tag>{{departments}}
+                                <a-icon style="margin-right:10px" type="apartment"  />部门: {{ form.defaultDepart }}<a-tag :color="departmentColor" style="margin-left:10px">{{departmentStatus}}</a-tag><br>
+                                <!-- {{departments}} -->
                             </a-form-item>
                             <a-form-item>
                                 <a-icon style="margin-right:10px" type="safety"  />权限: {{ form.Authority }}
@@ -421,7 +422,8 @@ export default {
         handleChange(value) {
             console.log(value);
             this.department = value 
-            this.departments = value.toString() 
+            this.departments = value.toString()
+            console.log(this.departments);
         },
         // 部门修改
         departChange(){

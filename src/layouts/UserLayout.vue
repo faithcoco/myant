@@ -65,7 +65,7 @@ export default {
     min-height: 100%;
     background: #f0f2f5 url(~@/assets/background.svg) no-repeat 50%;
     background-size: 100%;
-    padding: 110px 0 144px;
+    padding: 45px 0 0px;
     position: relative;
 
     a {

@@ -9,7 +9,7 @@
         <a-card>
           <a-row type="flex" justify="space-between">
             <a-col style="font-weight:bold">
-              <a-avatar shape="square" :size="70" icon="user" src="/avatar2.jpg" style="margin-right:30px"/>
+              <a-avatar shape="square" :size="70" icon="user" :src="form.LOGO" style="margin-right:30px"/>
                {{ form.companyName }}&nbsp;(ID:&nbsp;{{ form.companyCode }})
             </a-col>
             <a-col style="margin-right:50px">
@@ -86,7 +86,7 @@
       :confirm-loading="confirmLoading"
       @ok="companyOk"
       @cancel="companyCancel"
-      :width='800'
+      :width='1000'
       >
       <p style="font-weight:bold">
         基础信息
@@ -254,7 +254,7 @@ components: {
         Newphone: '',
         mail:'无',
         userCount: '无',
-        LOGO: '无',
+        LOGO: '/avatar2.jpg',
         expiryDate: '2020-09-01',
         time: '2020-09-01',
         cName:'',

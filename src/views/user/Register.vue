@@ -1,86 +1,75 @@
 <template>
   <div class="main user-layout-register">
-    <h3><span>注册</span></h3>
-    <a-form ref="formRegister" :form="form" id="formRegister">
-      <a-form-item>
+    <div style="text-align:center">
+      <h2><span>填写信息，获取免费试用名额</span></h2>
+      <h4><span>客服人员会尽快与您取得联系，安排试用</span></h4><br>
+    </div>
+    <a-form 
+    ref="formRegister" 
+    :form="form" id="formRegister"  
+    :label-col="labelCol"
+    :wrapper-col="wrapperCol">
+      <a-form-item label="姓名">
         <a-input
           size="large"
           type="text"
-          placeholder="邮箱"
-          v-decorator="['email', {rules: [{ required: true, type: 'email', message: '请输入邮箱地址' }], validateTrigger: ['change', 'blur']}]"
+          placeholder="请输入正确姓名"
+          v-decorator="['PersonName', {rules: [{ required: true, message: '请输入正确姓名' }], validateTrigger: ['change', 'blur']}]"
         ></a-input>
       </a-form-item>
-
-      <a-popover
-        placement="rightTop"
-        :trigger="['focus']"
-        :getPopupContainer="(trigger) => trigger.parentElement"
-        v-model="state.passwordLevelChecked">
-        <template slot="content">
-          <div :style="{ width: '240px' }" >
-            <div :class="['user-register', passwordLevelClass]">强度：<span>{{ passwordLevelName }}</span></div>
-            <a-progress :percent="state.percent" :showInfo="false" :strokeColor=" passwordLevelColor " />
-            <div style="margin-top: 10px;">
-              <span>请至少输入 6 个字符。请不要使用容易被猜到的密码。</span>
-            </div>
-          </div>
-        </template>
-        <a-form-item>
-          <a-input
-            size="large"
-            type="password"
-            @click="handlePasswordInputClick"
-            autocomplete="false"
-            placeholder="至少6位密码，区分大小写"
-            v-decorator="['password', {rules: [{ required: true, message: '至少6位密码，区分大小写'}, { validator: this.handlePasswordLevel }], validateTrigger: ['change', 'blur']}]"
-          ></a-input>
-        </a-form-item>
-      </a-popover>
-
-      <a-form-item>
-        <a-input
-          size="large"
-          type="password"
-          autocomplete="false"
-          placeholder="确认密码"
-          v-decorator="['password2', {rules: [{ required: true, message: '至少6位密码，区分大小写' }, { validator: this.handlePasswordCheck }], validateTrigger: ['change', 'blur']}]"
-        ></a-input>
-      </a-form-item>
-
-      <a-form-item>
-        <a-input size="large" placeholder="11 位手机号" v-decorator="['mobile', {rules: [{ required: true, message: '请输入正确的手机号', pattern: /^1[3456789]\d{9}$/ }, { validator: this.handlePhoneCheck } ], validateTrigger: ['change', 'blur'] }]">
+      <a-form-item label="手机号码">
+        <a-input size="large" placeholder="请输入正确手机号" v-decorator="['mobile', {rules: [{ required: true, message: '请输入正确的手机号', pattern: /^1[3456789]\d{9}$/ }, { validator: this.handlePhoneCheck } ], validateTrigger: ['change', 'blur'] }]">
           <a-select slot="addonBefore" size="large" defaultValue="+86">
             <a-select-option value="+86">+86</a-select-option>
             <a-select-option value="+87">+87</a-select-option>
           </a-select>
         </a-input>
       </a-form-item>
-      <!--<a-input-group size="large" compact>
-            <a-select style="width: 20%" size="large" defaultValue="+86">
-              <a-select-option value="+86">+86</a-select-option>
-              <a-select-option value="+87">+87</a-select-option>
-            </a-select>
-            <a-input style="width: 80%" size="large" placeholder="11 位手机号"></a-input>
-          </a-input-group>-->
-
-      <a-row :gutter="16">
-        <a-col class="gutter-row" :span="16">
-          <a-form-item>
-            <a-input size="large" type="text" placeholder="验证码" v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]">
-              <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }"/>
+      <a-form-item label="图片验证">
+        <div style="display: flex;justify-content: space-between;">
+          <a-input  
+          style="max-width:150px"  
+          size="large" 
+          placeholder="图片验证码" 
+          @change="pictureCodeFn"
+          v-decorator="['pictureCode', {rules: [{ required: true, message: '请输入正确的图片验证码' }], validateTrigger: ['change', 'blur']}]">
+          </a-input>
+          <div @click="refreshCode">
+            <sidentify style="margin-bottom:-14.5px" ref="sidentifyblock" :identifyCode="identifyCode" :contentWidth="120" :contentHeight="40"></sidentify>
+          </div>
+        </div>
+      </a-form-item>
+        <a-form-item label="手机验证">
+          <div style="display: flex;justify-content: space-between;">
+            <a-input 
+              size="large" 
+              style="max-width:160px" 
+              type="text" 
+              placeholder="短信验证码" 
+              v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]"> 
             </a-input>
+            <a-button
+              type="primary"
+              class="getCaptcha"
+              size="large"
+              :disabled="state.smsSendBtn"
+              @click.stop.prevent="getCaptcha"
+              v-text="!state.smsSendBtn && '获取验证码'||(state.time+' s')">
+            </a-button>
+          </div>
           </a-form-item>
-        </a-col>
-        <a-col class="gutter-row" :span="8">
-          <a-button
-            class="getCaptcha"
-            size="large"
-            :disabled="state.smsSendBtn"
-            @click.stop.prevent="getCaptcha"
-            v-text="!state.smsSendBtn && '获取验证码'||(state.time+' s')"></a-button>
-        </a-col>
-      </a-row>
-
+      <a-form-item label="企业名称">
+        <a-input
+          size="large"
+          type="text"
+          placeholder="请输入正确的企业名称"
+          v-decorator="['email', {rules: [{ required: true,  message: '请输入正确的企业名称' }], validateTrigger: ['change', 'blur']}]"
+        ></a-input>
+      </a-form-item>
+      <!-- <a-form-item>
+        <a-checkbox/>
+        <a-button type="link"  class="privacy" @click="privacy">同意《用户注册服务协议》</a-button>
+      </a-form-item> -->
       <a-form-item>
         <a-button
           size="large"
@@ -89,44 +78,51 @@
           class="register-button"
           :loading="registerBtn"
           @click.stop.prevent="handleSubmit"
-          :disabled="registerBtn">注册
+          :disabled="registerBtn">立即获取
         </a-button>
         <router-link class="login" :to="{ name: 'login' }">使用已有账户登录</router-link>
       </a-form-item>
-
     </a-form>
+    <a-modal
+      :width="1000"
+      :visible="privacyVisible"
+      @cancel="handleCancel"
+      :footer="null"
+    >
+      <privacy></privacy>
+    </a-modal>
   </div>
 </template>
 
 <script>
 import { mixinDevice } from '@/utils/mixin.js'
 import { getSmsCaptcha } from '@/api/login'
+import Privacy from './Privacy'
+import Sidentify from '@/components/tools/SIdentify'
 
-const levelNames = {
-  0: '低',
-  1: '低',
-  2: '中',
-  3: '强'
-}
-const levelClass = {
-  0: 'error',
-  1: 'error',
-  2: 'warning',
-  3: 'success'
-}
-const levelColor = {
-  0: '#ff0000',
-  1: '#ff0000',
-  2: '#ff7e05',
-  3: '#52c41a'
-}
 export default {
   name: 'Register',
   components: {
+    Privacy,
+    Sidentify 
   },
   mixins: [mixinDevice],
   data () {
+    const validateCode = (rule, value, callback) => {
+      if (this.identifyCode !== value) {
+        this.from.code = "";
+        this.refreshCode();
+        callback(new Error("请输入正确的验证码"));
+      } else {
+        callback();
+      }
+    };
     return {
+      identifyCodes: '1234567890',  // 设置验证码为数字验证码，如果想要验证码为字母数字组合，可以加字母，如： identifyCodes: 'ABCD1234567890abcd'
+      identifyCode: '',
+      labelCol: { span: 6 },
+      wrapperCol: { span: 18 },
+      privacyVisible:false,
       form: this.$form.createForm(this),
 
       state: {
@@ -140,6 +136,10 @@ export default {
       registerBtn: false
     }
   },
+    mounted() {
+    this.identifyCode = "";
+    this.makeCode(this.identifyCodes, 4);
+  },
   computed: {
     passwordLevelClass () {
       return levelClass[this.state.passwordLevel]
@@ -152,6 +152,33 @@ export default {
     }
   },
   methods: {
+    randomNum(min, max) {
+      return   Math.floor(Math.random() * (max - min) + min);
+    },
+    refreshCode() {
+      this.identifyCode = "";
+      this.makeCode(this.identifyCodes, 4);
+    },
+    makeCode(o, l) {
+      for (let i = 0; i < l; i++) {
+        this.identifyCode += this.identifyCodes[
+          this.randomNum(0, this.identifyCodes.length)
+        ];
+      }
+    },
+    pictureCodeFn(){
+    },
+    privacy(){
+      this.privacyVisible = true
+    },
+    handleOk(e) {
+      setTimeout(() => {
+        this.privacyVisible = false;
+      }, 2000);
+    },
+    handleCancel(e) {
+      this.privacyVisible = false;
+    },
     handlePasswordLevel (rule, value, callback) {
       let level = 0
 
@@ -305,17 +332,18 @@ export default {
     }
 
     .getCaptcha {
+      margin-left: 10px;
       display: block;
       width: 100%;
       height: 40px;
     }
 
     .register-button {
-      width: 50%;
+      width: 133%;
     }
 
     .login {
-      float: right;
+      float: left;
       line-height: 40px;
     }
   }

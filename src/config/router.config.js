@@ -573,15 +573,16 @@ export const constantRouterMap = [
   },
 
   {
-    path: '/test',
-    component: BlankLayout,
-    redirect: '/test/home',
+    path: '/Newbusiness',
+    component: UserLayout,
     children: [
       {
-        path: 'home',
-        name: 'TestHome',
-        component: () => import('@/views/Home')
-      }
+        path: '/Newbusiness',
+        name: 'Newbusiness',
+        hidden: true,
+        component: () => import('@/views/account/center/Newbusiness'),
+        meta: { title: '', permission: ['dashboard'] }
+      },
     ]
   },
 

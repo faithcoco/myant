@@ -15,6 +15,7 @@
             <a-col style="margin-right:50px">
               <a-button type="primary" style="margin-left:20px" @click="Initialize()">初始化</a-button>
               <a-button type="primary" style="margin-left:20px" @click="edit()">编辑</a-button>
+              <a-button type="primary" style="margin-left:20px" @click="Newbusiness()">新建企业</a-button>
               <a-button type="primary" style="margin-left:20px" @click="disband()">解散企业</a-button>
             </a-col>
           </a-row>
@@ -276,6 +277,9 @@ components: {
     }
   },
   methods: {
+    Newbusiness(){
+      this.$router.push({ path: '/Newbusiness' })
+    },
     setavatar(url) {
       console.log('--------->',url);
       this.option.img = url

@@ -14,7 +14,7 @@
           size="large"
           type="text"
           placeholder="请输入正确姓名"
-          v-decorator="['PersonName', {rules: [{ required: true, message: '请输入正确姓名' }], validateTrigger: ['change', 'blur']}]"
+          v-decorator="['EnterpriseRegistrant', {rules: [{ required: true, message: '请输入正确姓名' }], validateTrigger: ['change', 'blur']}]"
         ></a-input>
       </a-form-item>
       <a-form-item label="手机号码">
@@ -32,7 +32,7 @@
           size="large" 
           placeholder="图片验证码" 
           @change="pictureCodeFn"
-          v-decorator="['pictureCode', {rules: [{ required: true, message: '请输入正确的图片验证码' }], validateTrigger: ['change', 'blur']}]">
+          v-decorator="['userToken', {rules: [{ required: true, message: '请输入正确的图片验证码' }], validateTrigger: ['change', 'blur']}]">
           </a-input>
           <div @click="refreshCode">
             <sidentify style="margin-bottom:-14.5px" ref="sidentifyblock" :identifyCode="identifyCode" :contentWidth="120" :contentHeight="40"></sidentify>
@@ -46,16 +46,15 @@
               style="max-width:160px" 
               type="text" 
               placeholder="短信验证码" 
-              v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]"> 
+              v-decorator="['enterprisephone', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]"> 
             </a-input>
-            <a-button
-              type="primary"
-              class="getCaptcha"
-              size="large"
-              :disabled="state.smsSendBtn"
-              @click.stop.prevent="getCaptcha"
-              v-text="!state.smsSendBtn && '获取验证码'||(state.time+' s')">
-            </a-button>
+                  <a-button
+                    class="getCaptcha"
+                    tabindex="-1"
+                    :disabled="state.smsSendBtn"
+                    @click.stop.prevent="getCaptcha"
+                    v-text="(!state.smsSendBtn && '获取验证码') || state.time + ' s'"
+                  ></a-button>
           </div>
           </a-form-item>
       <a-form-item label="企业名称">
@@ -63,7 +62,15 @@
           size="large"
           type="text"
           placeholder="请输入正确的企业名称"
-          v-decorator="['email', {rules: [{ required: true,  message: '请输入正确的企业名称' }], validateTrigger: ['change', 'blur']}]"
+          v-decorator="['EnterpriseName', {rules: [{ required: true,  message: '请输入正确的企业名称' }], validateTrigger: ['change', 'blur']}]"
+        ></a-input>
+      </a-form-item>
+      <a-form-item label="密码">
+        <a-input
+          size="large"
+          type="password"
+          placeholder="请输入密码"
+          v-decorator="['PersonPassword', {rules: [{ required: true, message: '请输入密码' }], validateTrigger: ['change', 'blur']}]"
         ></a-input>
       </a-form-item>
       <!-- <a-form-item>

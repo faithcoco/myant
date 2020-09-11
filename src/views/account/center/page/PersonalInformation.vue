@@ -12,30 +12,40 @@
                         :model="form"
                         :rules="rules">
                             <a-form-item>
-                                <a-icon style="margin-right:10px" type="user"  />姓名:{{ form.Name }}
-                            </a-form-item>
-                            <a-form-item>
-                                <a-icon style="margin-right:10px" type="idcard"  />工号: {{ form.JobNumber }}
-                            </a-form-item>
-                            <a-form-item>
-                                <a-icon style="margin-right:10px" type="phone"  />手机: {{ form.Phone }}<a-tag :color="phoneColor" style="margin-left:10px">{{phoneStatus}}</a-tag>
-                            </a-form-item>
-                            <a-form-item>
-                                <a-icon style="margin-right:10px" type="mail"  />邮箱: {{ form.mail }}<a-tag :color="mailColor" style="margin-left:10px">{{mailStatus}}</a-tag>
-                            </a-form-item>
-                            <a-form-item>
-                                <a-icon style="margin-right:10px" type="deployment-unit"  />备注:{{ form.Remarks }}
-                            </a-form-item>
-                            <a-form-item>
-                                <a-icon style="margin-right:10px" type="apartment"  />部门: {{ form.defaultDepart }}<a-tag :color="departmentColor" style="margin-left:10px">{{departmentStatus}}</a-tag><br>
+                                <a-icon style="margin-right:10px" type="apartment"  />所在部门: {{ form.DepartmentID }}
+                                <!-- <a-tag :color="departmentColor" style="margin-left:10px">{{departmentStatus}}</a-tag><br> -->
                                 <!-- {{departments}} -->
                             </a-form-item>
                             <a-form-item>
+                                <a-icon style="margin-right:10px" type="idcard"  />工号: {{ form.PersonCode }}
+                            </a-form-item>
+                            <a-form-item>
+                                <a-icon style="margin-right:10px" type="user"  />姓名:{{ form.PersonName }}
+                            </a-form-item>
+
+                            <a-form-item>
+                                <a-icon style="margin-right:10px" type="phone"  />手机号: {{ form.PersonPhone }}<a-tag :color="phoneColor" style="margin-left:10px">{{phoneStatus}}</a-tag>
+                            </a-form-item>
+                            <!-- <a-form-item>
+                                <a-icon style="margin-right:10px" type="mail"  />邮箱: {{ form.mail }}<a-tag :color="mailColor" style="margin-left:10px">{{mailStatus}}</a-tag>
+                            </a-form-item> -->
+                            <a-form-item>
+                                <a-icon style="margin-right:10px" type="deployment-unit"  />入职时间:{{ form.PersonBeginTime }}
+                            </a-form-item>
+                            <a-form-item>
+                                <a-icon style="margin-right:10px" type="apartment"  />建立时间: {{ form.PersonCreationdate }}
+                                <!-- {{departments}} -->
+                            </a-form-item>
+                            <a-form-item>
+                                <a-icon style="margin-right:10px" type="apartment"  />个性签名: {{ form.PersonMemo }}
+                                <!-- {{departments}} -->
+                            </a-form-item>
+                            <!-- <a-form-item>
                                 <a-icon style="margin-right:10px" type="safety"  />权限: {{ form.Authority }}
                             </a-form-item>
                             <a-form-item>
                                 <a-icon style="margin-right:10px" type="contacts"  />角色: {{ form.Character }}
-                            </a-form-item>
+                            </a-form-item> -->
                         </a-form>
                     </a-col>
                 </a-row>
@@ -48,6 +58,7 @@
                 :bordered='false'
                 >
                 <a-button type="primary" @click="edit()">编辑</a-button>
+                <a-button type="primary" style="margin-left:10px" @click="changePassword()">密码修改</a-button>
             </a-card>
         </div>
 
@@ -65,22 +76,29 @@
                             :label-col="labelCol"
                             :wrapper-col="wrapperCol"
                         >
-                            <a-form-model-item label="姓名:"  prop="Name">
-                            <a-input v-model="form.Name" placeholder="请输入姓名"></a-input>
+                            <a-form-model-item label="所在部门:"   prop="DepartmentID">
+                            <a-input v-model="form.DepartmentID" disabled placeholder="请输入姓名"></a-input>
                             </a-form-model-item>
-                            <a-form-model-item label="工号:"  prop="JobNumber">
-                            <a-input v-model="form.JobNumber" placeholder="请输入工号"></a-input>
+                            <a-form-model-item label="工号:"  prop="PersonCode">
+                            <a-input v-model="form.PersonCode" disabled placeholder="请输入工号"></a-input>
                             </a-form-model-item>
-                            <a-form-model-item label="手机:"   prop="Phone">
-                            <a-input v-model="form.Phone" style="width:100%;margin-right:10px" disabled placeholder="请输入手机"></a-input><!-- <a @click="changePhone">更改</a> -->
+                            <a-form-model-item label="姓名:"  prop="PersonName">
+                            <a-input v-model="form.PersonName" disabled placeholder="请输入姓名"></a-input>
                             </a-form-model-item>
-                            <a-form-model-item label="邮箱:"  prop="mail">
-                            <a-input v-model="form.mail" style="width:90%;margin-right:10px" disabled placeholder="请输入邮箱"></a-input><a @click="changeMail">绑定</a>
+                            <a-form-model-item label="手机号:"   prop="PersonPhone">
+                            <a-input v-model="form.PersonPhone" disabled style="width:85%;margin-right:10px"  placeholder="请输入手机"></a-input> <a @click="changePhone">更改</a>
                             </a-form-model-item>
-                            <a-form-model-item label="备注:"  prop="Remarks">
-                            <a-input v-model="form.Remarks" placeholder="请输入备注"></a-input>
+                            <a-form-model-item label="入职时间:"  prop="PersonBeginTime">
+                            <a-input v-model="form.PersonBeginTime" disabled  placeholder="请输入邮箱"></a-input>
+                                 <!--<a @click="changeMail">绑定</a> -->
                             </a-form-model-item>
-                            <a-form-model-item label="部门:" >
+                            <a-form-model-item label="建立时间:"  prop="PersonCreationdate">
+                            <a-input v-model="form.PersonCreationdate" disabled placeholder="请输入备注"></a-input>
+                            </a-form-model-item>
+                            <a-form-model-item label="个性签名:"  prop="PersonMemo">
+                            <a-input v-model="form.PersonMemo" placeholder="请输入个性签名"></a-input>
+                            </a-form-model-item>
+                            <!-- <a-form-model-item label="部门:" >
                             <a-select
                                 mode="tags"
                                 placeholder="请选择部门"
@@ -91,11 +109,7 @@
                                 </a-select-option>
                             </a-select>
                             默认部门:{{form.defaultDepart}}<a @click="departChange" style="margin-left:10px">修改</a>
-                            </a-form-model-item>
-                            <a-form-model-item label="权限:"  >{{form.Authority}}
-                            </a-form-model-item>
-                            <a-form-model-item label="角色:"  >{{form.Character}}
-                            </a-form-model-item>
+                            </a-form-model-item> -->
                         </a-form-model>
                     </a-col>
                 </a-row>
@@ -111,7 +125,7 @@
             </a-card>
         </div>
         <a-modal
-            title="更换手机号"
+            title="更换手机号第一步"
             :visible="changeVisible"
             :confirm-loading="confirmLoading"
             @ok="handleOk"
@@ -120,43 +134,44 @@
         >
             <p>更改前需校验当前绑定的手机号</p>
             <a-form-model 
-                ref="ruleForm"
+                ref="ruleForm1"
                 :model="form"
                 :rules="rules"
                 >
                 <a-form-model-item>
-                    <a-input v-model="form.Phone"  disabled ></a-input>
+                    <a-input v-model="form.PersonPhone"  disabled ></a-input>
                 </a-form-model-item>
-                <a-form-model-item prop="code">
-                    <a-input v-model="form.code"  placeholder="请输入验证码--783209">
-                        <a-button  slot="suffix" type="link" @click="getVerificationCode">获取验证码</a-button>
+                <a-form-model-item prop="phoneCode1">
+                    <a-input v-model="form.phoneCode1" placeholder="请输入验证码">
+                        <a-button class="GPBtn" :disabled="false" slot="suffix" type="link" @click="getVerificationCode">获取验证码</a-button>
                     </a-input>
-                    <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p>
+                    <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
                 </a-form-model-item>
             </a-form-model>
         </a-modal>
 
         <a-modal
-            title="更换手机号"
+            title="更换手机号第二步"
             :visible="changeNewVisible"
             :confirm-loading="confirmLoading"
             @ok="changeNewOk"
             @cancel="changeNewCancel"
-        >
+            v-show="show"
+            >
             <p>更改手机号后，您将使用新的手机号进行登录</p>
             <a-form-model 
-                ref="ruleForm"
+                ref="PruleForm2"
                 :model="form"
                 :rules="rules"
                 >
                 <a-form-model-item>
-                    <a-input v-model="form.Phone" placeholder="请输入您新的手机号"></a-input>
+                    <a-input v-model="form.PersonPhone" placeholder="请输入您新的手机号"></a-input>
                 </a-form-model-item>
-                <a-form-model-item prop="code">
-                    <a-input v-model="form.code"  placeholder="请输入验证码--783209">
-                        <a-button  slot="suffix" type="link" @click="getVerificationCode">获取验证码</a-button>
+                <a-form-model-item prop="phoneCode2">
+                    <a-input v-model="form.phoneCode2"   placeholder="请输入验证码">
+                        <a-button class="GPBtn2" slot="suffix" :disabled="false" type="link" @click="getVerificationCode1">获取验证码</a-button>
                     </a-input>
-                    <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p>
+                    <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
                 </a-form-model-item>
             </a-form-model>
         </a-modal>
@@ -182,8 +197,8 @@
                 :model="form"
                 :rules="Mrules"
                 >
-                <a-form-model-item prop="code">
-                    <a-input v-model="form.code"  placeholder="请输入验证码">
+                <a-form-model-item prop="phoneCode">
+                    <a-input v-model="form.phoneCode"  placeholder="请输入验证码">
                         <a-button class="GMBtn" :disabled="false" slot="suffix" type="link" @click="getMailVerificationCode">获取验证码</a-button>
                     </a-input>
                 </a-form-model-item>
@@ -195,8 +210,16 @@
             @ok="verificationOk"
             @cancel="verificationCancel"
         >
-            <slider ref="slideblock" v-on:confirmSuccess="confirmSuccess"></slider>
+            <slider  ref="slideblock" v-on:confirmSuccess="confirmSuccess"></slider>
         </a-modal>
+        <!-- <a-modal
+            title="滑动验证2"
+            :visible="verificationVisible1"
+            @ok="verificationOk1"
+            @cancel="verificationCancel1"
+        >
+            <slider  ref="slideblock" v-on:confirmSuccess="confirmSuccess"></slider>
+        </a-modal> -->
         <a-modal
             title="设置提单默认部门"
             :visible="departVisible"
@@ -210,6 +233,32 @@
                 </a-radio>
             </a-radio-group>
         </a-modal>
+        <a-modal
+        title="修改密码"
+        :visible="changePasswordVisible"
+        :confirm-loading="confirmLoading"
+        @ok="changePasswordhandleOk"
+        @cancel="changePasswordhandleCancel"
+        >
+            <a-form-model 
+                ref="CPruleForm"
+                :model="form"
+                :rules="GPrules"
+                >
+                <a-form-model-item  label="原密码:" prop="inputPassword">
+                    <a-input-password v-model="form.inputPassword" @change="CPchange" placeholder="请输入原密码">
+                    </a-input-password>
+                </a-form-model-item>
+                <a-form-model-item  label="新密码:" prop="newPersonPassword">
+                    <a-input-password v-model="form.newPersonPassword"  :disabled="disabled" placeholder="请输入密码">
+                    </a-input-password>
+                </a-form-model-item>
+                <a-form-model-item  label="确认密码:" prop="CPersonPassword">
+                    <a-input-password v-model="form.CPersonPassword"  :disabled="disabled" placeholder="请输入密码">
+                    </a-input-password>
+                </a-form-model-item>
+            </a-form-model>
+        </a-modal>
     </div>
 </template>
 <script>
@@ -217,7 +266,6 @@ import Vue from 'vue'
 import Slider from '@/components/tools/Slider'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
-
 export default {
     name: 'PersonalInformation',
     components: {
@@ -240,31 +288,51 @@ export default {
                 lineHeight: '30px',
             },
             form:{
-                Name: 'curry',
-                Phone: '13333333333',
-                JobNumber: '无',
+                DepartmentID: '开发部',
+                PersonName: 'curry',
+                PersonPhone: '13333333333',
+                PersonCode: '无',
+                PersonBeginTime: '2020.9.9',
+                PersonCreationdate: '2020.9.9',
+                PersonMemo: '我就是我，不一样的烟火',
                 mail: '无',
                 NewMail: '',
                 defaultDepart:'开发部',
-                Remarks: '无',
+                PersonPassword: '123456',
+                inputPassword: '',
+                newPersonPassword:'',
+                CPersonPassword:'',
                 Authority: '系统管理',
                 Character: '主管理员',
-                code: '',
+                phoneCode1: '',
+                phoneCode2: '',
             },
-            labelCol: { span: 2 },
-            wrapperCol: { span: 18 },
+            labelCol: { span: 4 },
+            wrapperCol: { span: 16 },
             visible: true,
             editVisible: false,
             changeVisible: false,
             loading: false,
             confirmLoading: false,
             verificationVisible: false,
+            // verificationVisible1: false,
             changeNewVisible: false,
             mailVisible: false,
             departVisible:false,
+            show:true,
+            CPshow:true,
+            changePasswordVisible:false,
+            disabled:true,
             rules: {
                 //校验规则
-                Name: [{ required: true, message: '请输入姓名', trigger: 'blur' }],
+                phoneCode1: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+                phoneCode2: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
+            },
+            GPrules: {
+                //校验规则
+                inputPassword: [{ required: true, message: '请输入原密码', trigger: 'blur' }],
+                newPersonPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
+                CPersonPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
             },
             Mrules: {
                 //校验规则
@@ -280,6 +348,37 @@ export default {
         confirmSuccess:function (confirmSuccess) {
             this.Success = confirmSuccess
             console.log(this.Success);
+        },
+        CPchange(){
+            if (this.form.PersonPassword === this.form.inputPassword) {
+                this.disabled = false
+            }
+        },
+        changePassword(){
+            this.changePasswordVisible = true
+        },
+        changePasswordhandleOk(e) {
+            this.confirmLoading = true;
+            this.$refs.CPruleForm.validate((valid) => {
+                if (valid&&this.form.newPersonPassword === this.form.CPersonPassword) {
+                    setTimeout(() => {
+                        this.changePasswordVisible = false;
+                        this.confirmLoading = false;
+                    }, 2000);
+                }
+                else{
+                    this.confirmLoading = false;
+                    this.$message.info("密码不一致")
+                    return false
+                }
+            })
+
+        },
+        changePasswordhandleCancel(e) {
+        this.changePasswordVisible = false;
+        },
+        getVerificationCode2(){
+             this.verificationVisible = true
         },
         edit() {
         this.visible = false
@@ -316,16 +415,16 @@ export default {
             this.editVisible = false
         },
         changePhone(){
-            // this.changeVisible = true;   
+            this.changeVisible = true;   
         },
         changeMail(){
             this.mailVisible = true;
         },
 
         handleOk(e) {
-             this.$refs.ruleForm.validate((valid) => {
+             this.$refs.ruleForm1.validate((valid) => {
                  if (!valid) {
-                    this.$message.info('请填写正确的验证码！');
+                    // this.$message.info('请填写正确的验证码！');
                     return false
                  }
                 this.confirmLoading = true
@@ -340,7 +439,36 @@ export default {
             this.changeVisible = false;
         },
         getVerificationCode(){
-            // this.verificationVisible = true
+            this.verificationVisible = true
+        },
+        getVerificationCode1(){
+            this.verificationVisible = true
+            this.show = false
+            var oBtn1 = document.getElementsByClassName('GPBtn2')[0];
+            // this.$message.info("发送验证码成功！")
+            var time = 60;
+            var timer = null;
+            oBtn1.innerHTML = time + '秒后重新发送';
+            oBtn1.setAttribute('disabled', 'disabled');  // 禁用按钮
+            // oBtn.setAttribute('class', 'disabled');   // 添加class 按钮样式变灰
+            timer = setInterval(function(){
+              // 定时器到底了 兄弟们回家啦
+              if(time == 1){
+                clearInterval(timer);       
+                oBtn1.innerHTML = '获取验证码';  
+                oBtn1.removeAttribute('disabled'); //移除禁用效果
+                // oBtn.removeAttribute('class');  //移除变灰样式效果
+              }else if (this.phoneVisible === false){
+                clearInterval(timer); 
+                console.log("结束计时器");   
+              }else{
+                time--;
+                oBtn1.innerHTML = time + '秒后重新发送';
+              }
+            }, 1000)
+            console.log("获取验证码");
+            this.Success=false
+            this.$refs.slideblock.reset();//重置滑动验证
         },
         getMailVerificationCode(){
             this.$refs.mailRuleForm.validate((valid)=>{
@@ -356,8 +484,8 @@ export default {
                 this.$message.info('验证未通过！');
                 return false
             }
-            
-            var oBtn = document.getElementsByClassName('GMBtn')[0];
+            this.show = true
+            var oBtn = document.getElementsByClassName('GPBtn')[0];
             this.$message.info("发送验证码成功！")
             var time = 60;
             var timer = null;
@@ -384,14 +512,23 @@ export default {
             this.verificationVisible = false
             this.$refs.slideblock.reset();//重置滑动验证
         },
+      
         verificationCancel(){
             this.verificationVisible = false
             this.$refs.slideblock.reset();//重置滑动验证
         },
 
+
         changeNewOk(){
-            this.changeNewVisible = false
+            this.$refs.PruleForm2.validate((valid)=>{
+                if (valid) {            
+                    this.changeNewVisible = false
+                }else{
+                    return false
+                }
+            })
         },
+
         changeNewCancel(e) {
             this.changeNewVisible = false;
         },

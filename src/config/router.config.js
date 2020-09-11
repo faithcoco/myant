@@ -587,6 +587,20 @@ export const constantRouterMap = [
   },
 
   {
+    path: '/changeCorporation',
+    component: UserLayout,
+    children: [
+      {
+        path: '/changeCorporation',
+        name: 'changeCorporation',
+        hidden: true,
+        component: () => import('@/views/account/center/changeCorporation'),
+        meta: { title: '', permission: ['dashboard'] }
+      },
+    ]
+  },
+
+  {
     path: '/404',
     component: () => import(/* webpackChunkName: "fail" */ '@/views/exception/404')
   }

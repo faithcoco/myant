@@ -10,11 +10,13 @@
           <a-row type="flex" justify="space-between">
             <a-col style="font-weight:bold">
               <a-avatar shape="square" :size="70" icon="user" :src="form.LOGO" style="margin-right:30px"/>
-               {{ form.companyName }}&nbsp;(ID:&nbsp;{{ form.companyCode }})
+               {{ form.EnterpriseName }}
+               <!-- &nbsp;(ID:&nbsp;{{ form.companyCode }}) -->
             </a-col>
             <a-col style="margin-right:50px">
               <a-button type="primary" style="margin-left:20px" @click="Initialize()">初始化</a-button>
               <a-button type="primary" style="margin-left:20px" @click="edit()">编辑</a-button>
+              <a-button type="primary" style="margin-left:20px" @click="change()">切换所在企业</a-button>
               <a-button type="primary" style="margin-left:20px" @click="Newbusiness()">新建企业</a-button>
               <a-button type="primary" style="margin-left:20px" @click="disband()">解散企业</a-button>
             </a-col>
@@ -27,23 +29,27 @@
               ref="ruleForm"
               :model="form"
               :rules="rules">
-                <!-- <a-form-item>
-                  <a-icon style="margin-right:10px" type="barcode" class="upload-icon" />企业编码:{{ form.companyCode }}
+                <a-form-item>
+                  <a-icon style="margin-right:10px" type="barcode" class="upload-icon" />企业地址:{{ form.EnterpriseAddress }}
+                </a-form-item>
+
+                <a-form-item>
+                  <a-icon style="margin-right:10px" type="user" class="upload-icon" />联系人: {{ form.EnterpriseContact }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right:10px" type="bank" class="upload-icon" />企业名称: {{ form.companyName }}
-                </a-form-item> -->
-                <a-form-item>
-                  <a-icon style="margin-right:10px" type="user" class="upload-icon" />联系人: {{ form.contactPerson }}
+                  <a-icon style="margin-right:10px" type="bank" class="upload-icon" />电话: {{ form.EnterpriseTel }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right:10px" type="phone" class="upload-icon" />手机: {{ form.phone }}
+                  <a-icon style="margin-right:10px" type="bank" class="upload-icon" />注册人: {{ form.EnterpriseRegistrant }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right:10px" type="mail" class="upload-icon" />邮箱: {{ form.mail }}
+                  <a-icon style="margin-right:10px" type="phone" class="upload-icon" />注册手机: {{ form.EnterprisePhone }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right:10px" type="deployment-unit" class="upload-icon" />使用人数:{{ form.userCount }}
+                  <a-icon style="margin-right:10px" type="mail" class="upload-icon" />注册时间: {{ form.EnterpriseRegistrationtime }}
+                </a-form-item>
+                <a-form-item>
+                  <a-icon style="margin-right:10px" type="deployment-unit" class="upload-icon" />状态:{{ form.EnterpriseStatus }}
                 </a-form-item>
                 <!-- <a-form-item>
                   <a-icon style="margin-right:10px" type="logout" class="upload-icon" />
@@ -51,9 +57,9 @@
                   <a-avatar shape :size="100" icon="user" src="/avatar2.jpg" />
                   {{ form.LOGO }}
                 </a-form-item> -->
-                <a-form-item>
+                <!-- <a-form-item>
                   <a-icon style="margin-right:10px" type="contacts" class="upload-icon" />到期日: {{ form.time }}
-                </a-form-item>
+                </a-form-item> -->
               </a-form>
             </a-col>
           </a-row>
@@ -61,7 +67,6 @@
         <br />
       </a-layout-content>
     </a-layout>
-
     <a-modal
       title="单据数据初始化"
       :visible="visible"
@@ -82,16 +87,13 @@
     </a-modal>
 
     <a-modal
-      title="企业基础设置"
+      title="修改信息"
       :visible="companyVisible"
       :confirm-loading="confirmLoading"
       @ok="companyOk"
       @cancel="companyCancel"
-      :width='1000'
+      :width='800'
       >
-      <p style="font-weight:bold">
-        基础信息
-      </p>
       <a-form-model
         ref="ruleForm"
         :model="form"
@@ -99,41 +101,30 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-          <a-form-model-item label="企业编码:"  prop="companyCode">
-          <a-input v-model="form.companyCode" placeholder="请输入企业编码"></a-input>
+          <a-form-model-item label="企业名称:"  prop="EnterpriseName">
+          <a-input v-model="form.EnterpriseName"  placeholder="请输入企业名称"></a-input>
           </a-form-model-item>
-          <a-form-model-item label="企业名称:"  prop="companyName">
-          <a-input v-model="form.companyName" placeholder="请输入企业名称"></a-input>
+          <a-form-model-item label="企业地址:"  prop="EnterpriseAddress">
+          <a-input v-model="form.EnterpriseAddress"  placeholder="请输入企业地址"></a-input>
           </a-form-model-item>
-          <a-form-model-item label="联系人:"   prop="contactPerson">
-          <a-input v-model="form.contactPerson"  placeholder="请输入联系人"></a-input>
+          <a-form-model-item label="联系人:"  prop="EnterpriseContact">
+          <a-input v-model="form.EnterpriseContact"  placeholder="请输入联系人"></a-input>
           </a-form-model-item>
-          <a-form-model-item label="手机:"   prop="phone">
-          <a-input v-model="form.phone"   placeholder="请输入手机"></a-input>
+          <a-form-model-item label="电话:"  prop="EnterpriseTel">
+          <a-input v-model="form.EnterpriseTel" disabled style="width:90%;margin-right:10px" placeholder="请输入电话"></a-input> <a @click="changeTel">更改</a>
           </a-form-model-item>
-          <a-form-model-item label="邮箱:"  prop="mail">
-          <a-input v-model="form.mail"   placeholder="请输入邮箱"></a-input>
+          <a-form-model-item label="注册人:"   prop="EnterpriseRegistrant">
+          <a-input v-model="form.EnterpriseRegistrant" disabled  placeholder="请输入注册人"></a-input>
           </a-form-model-item>
-          <a-form-model-item label="使用人数:"  prop="userCount">
-          <a-input v-model="form.userCount" placeholder="请输入使用人数"></a-input>
+          <a-form-model-item label="更换手机:"  prop="EnterprisePhone">
+          <a-input v-model="form.EnterprisePhone" disabled style="width:90%;margin-right:10px"  placeholder="请输入新手机号"></a-input> <a @click="changePhone">更改</a>
           </a-form-model-item>
-          <a-form-model-item label="LOGO:"  prop="LOGO">
-            <a-col :md="15" :lg="4" :style="{ minHeight: '100px' }">
-              <div class="ant-upload-preview" @click="$refs.modal.edit(1)">
-                <div class="mask">
-                  <a-icon type="plus" />
-                </div>
-                <img :src="option.img" />
-              </div>
-            </a-col>
-            <avatar-modal ref="modal" @ok="setavatar" />
+          <a-form-model-item label="注册时间:"  prop="EnterpriseRegistrationtime">
+          <a-input v-model="form.EnterpriseRegistrationtime" disabled  placeholder="请输入新手机号"></a-input>
           </a-form-model-item>
-          <a-form-model-item label="到期日:"  prop="expiryDate">
-            <a-date-picker 
-              v-model="form.expiryDate"
-              placeholder="请选择入库日期"
-              style="width: 100%;" />
-            </a-form-model-item>
+          <a-form-model-item label="状态:"  prop="EnterpriseStatus">
+          <a-input v-model="form.EnterpriseStatus" disabled  placeholder="请输入新手机号"></a-input>
+          </a-form-model-item>
       </a-form-model>
     </a-modal>
     
@@ -151,7 +142,7 @@
         >
         <a-form-model-item 
           style="display: flex; align-items: center;justify-content: center;text-align: justify;">
-        {{form.companyName}}
+        {{form.EnterpriseName}}
         </a-form-model-item>
         <a-form-model-item label="" prop="cName">
         <a-input v-model="form.cName" placeholder="输入企业名称以确认初始化企业数据"></a-input>
@@ -206,6 +197,132 @@
         </a-form-model-item>
       </a-form-model>
     </a-modal>
+
+     <a-modal
+      title="切换所在企业"
+      :visible="changeVisible"
+      :confirm-loading="changeConfirmLoading"
+      @ok="changeHandleOk"
+      @cancel="changeHandleCancel"
+    >
+      <p>请从下面选择一个企业进行切换</p>
+        <a-radio-group :default-value="1" @change="onChange">
+            <a-radio v-for="defaultEnterpriseName in EnterpriseName" :key="defaultEnterpriseName" :style="radioStyle" :value="defaultEnterpriseName">
+                {{defaultEnterpriseName}}
+            </a-radio>
+        </a-radio-group>
+    </a-modal>
+        <a-modal
+            title="更换电话号第一步"
+            :visible="changeTelVisible1"
+            :confirm-loading="confirmLoading"
+            @ok="changeTelhandleOk"
+            okText="下一步"
+            @cancel="changeTelhandleCancel"
+        >
+            <p>更改前需校验当前绑定的手机号</p>
+            <a-form-model 
+                ref="ruleForm1"
+                :model="form"
+                :rules="rules"
+                >
+                <a-form-model-item>
+                    <a-input v-model="form.EnterpriseTel"  disabled ></a-input>
+                </a-form-model-item>
+                <a-form-model-item prop="phoneCode1">
+                    <a-input v-model="form.phoneCode1" placeholder="请输入验证码">
+                        <a-button class="GPBtn"   slot="suffix" type="link" @click="getVerificationCode">获取验证码</a-button>
+                    </a-input>
+                    <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
+                </a-form-model-item>
+            </a-form-model>
+        </a-modal>
+        <a-modal
+            title="更换手机号第一步"
+            :visible="changePhoneVisible1"
+            :confirm-loading="confirmLoading"
+            @ok="changePhonehandleOk"
+            okText="下一步"
+            @cancel="changePhonehandleCancel"
+        >
+            <p>更改前需校验当前绑定的手机号</p>
+            <a-form-model 
+                ref="CPruleForm"
+                :model="form"
+                :rules="rules"
+                >
+                <a-form-model-item>
+                    <a-input v-model="form.EnterprisePhone"  disabled ></a-input>
+                </a-form-model-item>
+                <a-form-model-item prop="phoneCode3">
+                    <a-input v-model="form.phoneCode3" placeholder="请输入验证码">
+                        <a-button class="GPBtn3"   slot="suffix" type="link" @click="getPhoneVerificationCode">获取验证码</a-button>
+                    </a-input>
+                    <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
+                </a-form-model-item>
+            </a-form-model>
+        </a-modal>
+        <a-modal
+            title="更换电话号第二步"
+            :visible="changeNewVisible"
+            :confirm-loading="confirmLoading"
+            @ok="changeNewOk"
+            @cancel="changeNewCancel"
+            >
+            <p>更改手机号后，您将使用新的手机号进行登录</p>
+            <a-form-model 
+                ref="PruleForm2"
+                :model="form"
+                :rules="rules"
+                >
+                <a-form-model-item prop="NewTel">
+                    <a-input v-model="form.NewTel" placeholder="请输入您新的手机号"></a-input>
+                </a-form-model-item>
+            </a-form-model>
+            <a-form-model 
+                ref="PruleForm3"
+                :model="form"
+                :rules="rules"
+                >
+                <a-form-model-item prop="phoneCode2">
+                    <a-input v-model="form.phoneCode2"   placeholder="请输入验证码">
+                        <a-button class="GPBtn2" slot="suffix" :disabled="false" type="link" @click="getVerificationCode1">获取验证码</a-button>
+                    </a-input>
+                    <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
+                </a-form-model-item>
+            </a-form-model>
+        </a-modal>
+        <a-modal
+            title="更换手机第二步"
+            :visible="changeNewPhoneVisible"
+            :confirm-loading="confirmLoading"
+            @ok="changeNewPhoneOk"
+            @cancel="changeNewPhoneCancel"
+            >
+            <p>更改手机号后，您将使用新的手机号进行登录</p>
+            <a-form-model 
+                ref="PruleForm4"
+                :model="form"
+                :rules="rules"
+                >
+                <a-form-model-item prop="Newphone">
+                    <a-input v-model="form.Newphone" placeholder="请输入您新的手机号"></a-input>
+                </a-form-model-item>
+            </a-form-model>
+            <a-form-model 
+                ref="PruleForm5"
+                :model="form"
+                :rules="rules"
+                >
+                <a-form-model-item prop="phoneCode4">
+                    <a-input v-model="form.phoneCode4"   placeholder="请输入验证码">
+                        <a-button class="GPBtn4" slot="suffix" :disabled="false" type="link" @click="getNewPhoneVerificationCode">获取验证码</a-button>
+                    </a-input>
+                    <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
+                </a-form-model-item>
+            </a-form-model>
+
+        </a-modal>
   </div>
 </template>
 <script>
@@ -223,7 +340,14 @@ components: {
 	},
   data() {
     return {
+      changeTelVisible1:false,
+      changePhoneVisible1:false,
       preview: {},
+      radioStyle: {
+        display: 'block',
+        height: '30px',
+        lineHeight: '30px',
+      },
       option: {
         img: '/avatar2.jpg',
         info: true,
@@ -247,12 +371,26 @@ components: {
       confirmLoading: false,
       loading: false,
       phoneVisible: false,
-      form:{
-        companyCode: 'rEcbrupMpQv400',
-        companyName: '上古',
-        contactPerson: 'curry',
-        phone: '无',
+      changeVisible: false,
+      changeConfirmLoading: false,  
+      changeNewVisible: false,  
+      changeNewPhoneVisible: false,  
+      name:'',   
+      EnterpriseName : ['上古', '下海'],
+      Form:Object,
+      form:Object,
+      form1:{
+        EnterpriseAddress: '上海',
+        EnterpriseName: '上古',
+        EnterpriseContact: 'curry',
+        EnterpriseTel: '无',
+        EnterpriseRegistrant: 'curry',
+        EnterprisePhone: '无',
+        NewTel: '',
         Newphone: '',
+        PersonPhone: '',
+        EnterpriseRegistrationtime: '',
+        EnterpriseStatus: '试用中',
         mail:'无',
         userCount: '无',
         LOGO: '/avatar2.jpg',
@@ -261,22 +399,198 @@ components: {
         cName:'',
         VerificationCode:'',
       },
+      form2:{
+        EnterpriseAddress: '上海浦东',
+        EnterpriseName: '下海',
+        EnterpriseContact: 'curry',
+        EnterpriseTel: '13333333333',
+        EnterpriseRegistrant: 'curry',
+        EnterprisePhone: '13333333333',
+        NewTel: '',
+        Newphone: '',
+        PersonPhone: '',
+        EnterpriseRegistrationtime: '2020.09.09',
+        EnterpriseStatus: '试用中，剩余30天',
+        mail:'无',
+        userCount: '无',
+        LOGO: '/avatar2.jpg',
+        expiryDate: '2020-09-09',
+        time: '2020-09-09',
+        cName:'',
+        VerificationCode:'',
+      },
       labelCol: { span: 4 },
       wrapperCol: { span: 18 },
       rules: {
           //校验规则
-          companyName: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
-          cName: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
+          EnterpriseName: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
+          EnterpriseAddress: [{ required: true, message: '请输入企业地址', trigger: 'blur' }],
+          EnterpriseContact: [{ required: true, message: '请输入联系人', trigger: 'blur' }],
+          EnterpriseTel: [{ required: true, message: '请输入电话', trigger: 'blur' },
+                          { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },],
+          EnterprisePhone: [
+              { required: true, message: '请输入手机号', trigger: 'blur' },
+              { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
+            ],
           Newphone: [
               { required: true, message: '请输入手机号', trigger: 'blur' },
               { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
             ],
+          NewTel: [
+              { required: true, message: '请输入手机号', trigger: 'blur' },
+              { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
+            ],
+          PersonPhone: [
+              { required: true, message: '请输入手机号', trigger: 'blur' },
+              { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
+            ],
           VerificationCode: [{ required: true, message: '请输入验证码'}],
-          expiryDate: [{ required: true, message: '请选择到期日', trigger: 'blur' }],
+          phoneCode1: [{ required: true, message: '请输入验证码'}],
+          phoneCode2: [{ required: true, message: '请输入验证码'}],
+          phoneCode3: [{ required: true, message: '请输入验证码'}],
+          phoneCode4: [{ required: true, message: '请输入验证码'}],
       },
     }
   },
+  created(){
+    this.form = this.form2
+  },
+
   methods: {
+        getNewPhoneVerificationCode(){
+      this.$refs.PruleForm4.validate((valid) => {
+        if (valid) {
+            var oBtn1 = document.getElementsByClassName('GPBtn2')[0];
+            this.$message.info("发送验证码成功！")
+            var time = 60;
+            var timer = null;
+            oBtn1.innerHTML = time + '秒后重新发送';
+            oBtn1.setAttribute('disabled', 'disabled');  // 禁用按钮
+            // oBtn.setAttribute('class', 'disabled');   // 添加class 按钮样式变灰
+            timer = setInterval(function(){
+              // 定时器到底了 兄弟们回家啦
+              if(time == 1){
+                clearInterval(timer);       
+                oBtn1.innerHTML = '获取验证码';  
+                oBtn1.removeAttribute('disabled'); //移除禁用效果
+                // oBtn.removeAttribute('class');  //移除变灰样式效果
+              }else{
+                time--;
+                oBtn1.innerHTML = time + '秒后重新发送';
+              }
+            }, 1000)
+            console.log("获取验证码");
+          }
+        })
+
+        },
+        getVerificationCode1(){
+      this.$refs.PruleForm2.validate((valid) => {
+        if (valid) {
+            var oBtn1 = document.getElementsByClassName('GPBtn2')[0];
+            this.$message.info("发送验证码成功！")
+            var time = 60;
+            var timer = null;
+            oBtn1.innerHTML = time + '秒后重新发送';
+            oBtn1.setAttribute('disabled', 'disabled');  // 禁用按钮
+            // oBtn.setAttribute('class', 'disabled');   // 添加class 按钮样式变灰
+            timer = setInterval(function(){
+              // 定时器到底了 兄弟们回家啦
+              if(time == 1){
+                clearInterval(timer);       
+                oBtn1.innerHTML = '获取验证码';  
+                oBtn1.removeAttribute('disabled'); //移除禁用效果
+                // oBtn.removeAttribute('class');  //移除变灰样式效果
+              }else{
+                time--;
+                oBtn1.innerHTML = time + '秒后重新发送';
+              }
+            }, 1000)
+            console.log("获取验证码");
+          }
+        })
+
+        },
+        changeNewOk(){
+            this.$refs.PruleForm3.validate((valid)=>{
+                if (valid) {   
+                  this.form.EnterpriseTel = this.form.NewTel
+                    this.changeNewVisible = false
+                }else{
+                    return false
+                }
+            })
+        },
+        changeNewPhoneOk(){
+            this.$refs.PruleForm5.validate((valid)=>{
+                if (valid) {   
+                  this.form.EnterprisePhone = this.form.Newphone
+                    this.changeNewPhoneVisible = false
+                }else{
+                    return false
+                }
+            })
+        },
+
+        changeNewPhoneCancel(e) {
+            this.changeNewPhoneVisible = false;
+        },
+        changeNewCancel(e) {
+            this.changeNewVisible = false;
+        },
+        changeTelhandleOk(){
+            this.$refs.ruleForm1.validate((valid)=>{
+                if (valid) {            
+                    this.changeTelVisible1 = false
+                    this.changeNewVisible = true
+                }else{
+                    return false
+                }
+            })
+        },
+        changePhonehandleOk(){
+            this.$refs.CPruleForm.validate((valid)=>{
+                if (valid) {            
+                    this.changePhoneVisible1 = false
+                    this.changeNewPhoneVisible = true
+                }else{
+                    return false
+                }
+            })
+        },
+        changeTelhandleCancel(){         
+          this.changeTelVisible1 = false
+        },
+        changePhonehandleCancel(){         
+          this.changePhoneVisible1 = false
+        },
+        changePhone(){
+            this.changePhoneVisible1 = true;   
+        },
+        changeTel(){
+            this.changeTelVisible1 = true;   
+        },
+    onChange(e) {
+      console.log('radio checked', e.target.value);
+      console.log('radio checked', this.form1.EnterpriseName);
+
+      if (e.target.value == this.form1.EnterpriseName) {
+        this.Form = this.form1
+      }else{
+        this.Form = this.form2
+      }
+    },
+    changeHandleOk(e) {
+      this.changeConfirmLoading = true;
+      setTimeout(() => {
+        this.changeVisible = false;
+        this.changeConfirmLoading = false;
+        this.form = this.Form
+      }, 2000);
+    },
+    changeHandleCancel(e) {
+      this.changeVisible = false;
+    },
     Newbusiness(){
       this.$router.push({ path: '/Newbusiness' })
     },
@@ -289,6 +603,7 @@ components: {
     },
     confirmSuccess:function (confirmSuccess) {
       this.Success = confirmSuccess
+      console.log(confirmSuccess);
       var oBtn = document.getElementsByClassName('GVbtn')[0];
       oBtn.removeAttribute('disabled'); //移除禁用效果
     },
@@ -297,6 +612,10 @@ components: {
     },
     edit(){
       this.companyVisible = true
+    },
+    change(){
+     
+      this.changeVisible = true;
     },
     companyOk(e) {
       this.confirmLoading = true
@@ -336,6 +655,11 @@ components: {
         title: '确认将要解散企业？',
         content: '解散企业操作不可撤回，请慎重考虑',
         onOk: () => {
+          if (this.EnterpriseName != []) {
+            
+            this.$router.push({ path: '/changeCorporation', })
+            return 
+          }
           return this.Logout({})
             .then(() => {
               setTimeout(() => {
@@ -370,11 +694,11 @@ components: {
     confirmOk(e) {
 
       console.log('this.form.cName------>',this.form.cName);
-      console.log('this.form.companyName------>',this.form.companyName);
+      console.log('this.form.EnterpriseName------>',this.form.EnterpriseName);
           this.$refs.CruleForm.validate((valid) => {
           if (valid) {
               this.confirmLoading = true
-              if (this.form.cName==this.form.companyName) {
+              if (this.form.cName==this.form.EnterpriseName) {
                 setTimeout(() => {
                   console.log('ok');
                   this.confirmLoading = false
@@ -427,6 +751,51 @@ components: {
       this.$refs.GruleForm.resetFields()
       var pBtn = document.getElementsByClassName('phoneBtn')[0];
       pBtn.setAttribute('disabled', 'disabled');  // 禁用按钮
+    },
+
+    getVerificationCode(){
+            var oBtn1 = document.getElementsByClassName('GPBtn')[0];
+            this.$message.info("发送验证码成功！")
+            var time = 60;
+            var timer = null;
+            oBtn1.innerHTML = time + '秒后重新发送';
+            oBtn1.setAttribute('disabled', 'disabled');  // 禁用按钮
+            // oBtn.setAttribute('class', 'disabled');   // 添加class 按钮样式变灰
+            timer = setInterval(function(){
+              // 定时器到底了 兄弟们回家啦
+              if(time == 1){
+                clearInterval(timer);       
+                oBtn1.innerHTML = '获取验证码';  
+                oBtn1.removeAttribute('disabled'); //移除禁用效果
+                // oBtn.removeAttribute('class');  //移除变灰样式效果
+              }else{
+                time--;
+                oBtn1.innerHTML = time + '秒后重新发送';
+              }
+            }, 1000)
+            console.log("获取验证码");
+    },
+    getPhoneVerificationCode(){
+            var oBtn1 = document.getElementsByClassName('GPBtn3')[0];
+            this.$message.info("发送验证码成功！")
+            var time = 60;
+            var timer = null;
+            oBtn1.innerHTML = time + '秒后重新发送';
+            oBtn1.setAttribute('disabled', 'disabled');  // 禁用按钮
+            // oBtn.setAttribute('class', 'disabled');   // 添加class 按钮样式变灰
+            timer = setInterval(function(){
+              // 定时器到底了 兄弟们回家啦
+              if(time == 1){
+                clearInterval(timer);       
+                oBtn1.innerHTML = '获取验证码';  
+                oBtn1.removeAttribute('disabled'); //移除禁用效果
+                // oBtn.removeAttribute('class');  //移除变灰样式效果
+              }else{
+                time--;
+                oBtn1.innerHTML = time + '秒后重新发送';
+              }
+            }, 1000)
+            console.log("获取验证码");
     },
     getMailVerificationCode(){
       if (this.Success!=true) {

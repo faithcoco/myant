@@ -2,23 +2,17 @@
     <div  class="main">
         <a-form v-show="createVisible"  id="formLogin" class="user-layout-login" :form="form">
             <a-form-item>
-                <h1 style="text-align : center;font-weight:bold">创建企业</h1>
+                <h1 style="text-align : center;font-weight:bold">选择企业</h1>
             </a-form-item>
             <a-form-item>
-            <a-input
-                size="large"
-                type="text"
-                placeholder="最多可输入50个字符"
-                v-decorator="[
-                    'EnterpriseName',
-                    { rules: 
-                        [   { required: true, message: '请填写企业名称' },
-                            { min: 1, max: 50, message: '最少可输入1个字符，最多可输入50个字符', trigger: 'blur' },
-                        ] 
-                    },
-                ]"
-            >
-            </a-input>
+            <a-list item-layout="horizontal" :data-source="EnterpriseName">
+                <a-list-item slot="renderItem" slot-scope="item, index">
+                <a-list-item-meta
+                >
+                    <a slot="title" href="">{{ item.title }}</a>
+                </a-list-item-meta>
+                </a-list-item>
+            </a-list>
             </a-form-item>
             <a-form-item>
                 <a-button
@@ -28,7 +22,18 @@
                 class="login-button"
                 :loading="loginBtn"
                 @click="handleSubmit"
-                >创建</a-button
+                >进入企业</a-button
+                >
+            </a-form-item>
+            <a-form-item>
+                <a-button
+                size="large"
+                type="primary"
+                htmlType="submit"
+                class="login-button"
+                :loading="loginBtn1"
+                @click="Newbusiness"
+                >创建企业</a-button
                 >
             </a-form-item>
         </a-form>
@@ -111,7 +116,14 @@
 </template>
 
 <script>
-
+const EnterpriseName = [
+  {
+    title: '上古',
+  },
+  {
+    title: '下海',
+  },
+];
 import Countdown from '@/components/tools/Countdown'
 export default {
     components: {
@@ -119,8 +131,10 @@ export default {
 	},
   data() {
     return {
+         EnterpriseName,
       form: this.$form.createForm(this, { name: 'dynamic_rule' }),
       loginBtn: false,
+      loginBtn1: false,
       createVisible: true,
       centerVisible: false,
       linkVisible: false,
@@ -133,22 +147,24 @@ export default {
     }
   },
   methods: {
+    Newbusiness(){
+        this.loginBtn1 = true
+                setTimeout(() => {
+                    this.loginBtn1 = false
+
+      this.$router.push({ path: '/Newbusiness' })
+                }, 2000); 
+    },
     handleSubmit(e) {
         this.loginBtn = true
-        this.form.validateFields(err => {
-            if (!err) {
+
                 setTimeout(() => {
                     this.loginBtn = false
                     this.createVisible = false
-                    this.centerVisible = true
+                    this.$router.push({ path: '/account/center/CorporationInfo', })
                     console.log("表单提交了");
                     console.info('success');
                 }, 2000); 
-            }else{
-                this.loginBtn = false
-                console.log("提交失败！！");
-            }
-        });
     },
     handleCenter(){
         this.loginBtn = true

@@ -14,14 +14,14 @@
           </div>
             
             <a-form-item>
-            <a-list item-layout="horizontal" :data-source="EnterpriseName">
-                <a-list-item slot="renderItem" slot-scope="item, index">
-                <a-list-item-meta
-                >
-                    <a slot="title" href="">{{ item.title }}</a>
-                </a-list-item-meta>
-                </a-list-item>
-            </a-list>
+                    <a-radio-group style="width:100%;text-align : center;margin-bottom:50px" button-style="solid" v-model="value" @change="onChange">
+                      <a-radio-button style="margin-bottom:10px" :style="radioStyle" :value="1">
+                       上古
+                      </a-radio-button>
+                      <a-radio-button :style="radioStyle" :value="2">
+                        下海
+                      </a-radio-button>
+                    </a-radio-group>
             </a-form-item>
             <a-form-item>
                 <a-button
@@ -32,17 +32,6 @@
                 :loading="loginBtn"
                 @click="handleSubmit"
                 >进入企业</a-button
-                >
-            </a-form-item>
-            <a-form-item>
-                <a-button
-                size="large"
-                type="primary"
-                htmlType="submit"
-                class="login-button"
-                :loading="loginBtn1"
-                @click="Newbusiness"
-                >创建企业</a-button
                 >
             </a-form-item>
 
@@ -128,10 +117,10 @@
 <script>
 const EnterpriseName = [
   {
-    title: '上古',
+    title: '上古',value:1
   },
   {
-    title: '下海',
+    title: '下海',value:2
   },
 ];
 
@@ -143,6 +132,12 @@ export default {
 	},
   data() {
     return {
+       value: 1,
+       radioStyle: {
+        display: 'block',
+        height: '30px',
+        lineHeight: '30px',
+      },
          EnterpriseName,
       form: this.$form.createForm(this, { name: 'dynamic_rule' }),
       loginBtn: false,
@@ -160,13 +155,8 @@ export default {
     }
   },
   methods: {
-    Newbusiness(){
-        this.loginBtn1 = true
-                setTimeout(() => {
-                    this.loginBtn1 = false
-
-      this.$router.push({ path: '/Newbusiness' })
-                }, 2000); 
+ onChange(e) {
+      console.log('radio checked', e.target.value);
     },
     
     ...mapActions(['Logout']),
@@ -249,10 +239,11 @@ export default {
 
   button.login-button {
     margin-top: 0px;
+    margin-left:100px;
     padding: 0 15px;
     font-size: 16px;
     height: 40px;
-    width: 100%;
+    width: 50%;
   }
 }
 </style>

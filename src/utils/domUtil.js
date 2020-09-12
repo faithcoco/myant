@@ -16,4 +16,4 @@ export const setDocumentTitle = function (title) {
   }
 }
 
-export const domTitle = '仓库管理系统'
+export const domTitle = '未来仓'

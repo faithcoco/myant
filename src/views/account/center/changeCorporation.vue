@@ -1,9 +1,18 @@
 <template>
     <div  class="main">
         <a-form v-show="createVisible"  id="formLogin" class="user-layout-login" :form="form">
+          <div style="display:flex;justify-content:space-between">
             <a-form-item>
                 <h1 style="text-align : center;font-weight:bold">选择企业</h1>
             </a-form-item>
+            <a-form-item>
+                <a
+                @click="handleLogout"
+                >登出</a
+                >
+            </a-form-item>
+          </div>
+            
             <a-form-item>
             <a-list item-layout="horizontal" :data-source="EnterpriseName">
                 <a-list-item slot="renderItem" slot-scope="item, index">
@@ -36,6 +45,7 @@
                 >创建企业</a-button
                 >
             </a-form-item>
+
         </a-form>
         <a-form v-show="centerVisible"  id="formLogin" class="user-layout-login" :form="form">
             <a-form-item>
@@ -124,6 +134,8 @@ const EnterpriseName = [
     title: '下海',
   },
 ];
+
+import { mapActions } from 'vuex'
 import Countdown from '@/components/tools/Countdown'
 export default {
     components: {
@@ -135,6 +147,7 @@ export default {
       form: this.$form.createForm(this, { name: 'dynamic_rule' }),
       loginBtn: false,
       loginBtn1: false,
+      loginBtn2: false,
       createVisible: true,
       centerVisible: false,
       linkVisible: false,
@@ -154,6 +167,29 @@ export default {
 
       this.$router.push({ path: '/Newbusiness' })
                 }, 2000); 
+    },
+    
+    ...mapActions(['Logout']),
+    handleLogout() {
+      this.$confirm({
+        title: '提示',
+        content: '真的要注销登录吗 ?',
+        onOk: () => {
+          return this.Logout({})
+            .then(() => {
+              setTimeout(() => {
+                window.location.reload()
+              }, 16)
+            })
+            .catch(err => {
+              this.$message.error({
+                title: '错误',
+                description: err.message
+              })
+            })
+        },
+        onCancel() {}
+      })
     },
     handleSubmit(e) {
         this.loginBtn = true

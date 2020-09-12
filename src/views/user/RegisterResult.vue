@@ -3,7 +3,7 @@
     :isSuccess="true"
     :content="false"
     :title="EnterpriseName"
-    :description="description">
+    >
 
     <template slot="action">
       <!-- <a-button size="large" type="primary">查看邮箱</a-button> -->
@@ -23,19 +23,22 @@ export default {
   },
   data () {
     return {
-      // description: '激活邮件已发送到你的邮箱中，邮件有效期为24小时。请及时登录邮箱，点击邮件中的链接激活帐户。',
-      form: {}
+     description: '激活邮件已发送到你的邮箱中，邮件有效期为24小时。请及时登录邮箱，点击邮件中的链接激活帐户。',
+      form: {},
+      data:''
     }
   },
   computed: {
     EnterpriseName () {
-      const v = this.form && this.form.EnterpriseName || 'xxx'
+      
+      const v = this.$route.params.EnterpriseName
       const title = `你的账户：${v} 注册成功`
       return title
     }
   },
   created () {
-    this.form = this.$route.params
+    this.form = this.$route.params.data
+   
   },
   methods: {
     goHomeHandle () {

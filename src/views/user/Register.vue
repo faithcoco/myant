@@ -9,23 +9,25 @@
       </h4>
       <br />
     </div>
-    <a-form
+    <a-form-model
       ref="formRegister"
       :form="form"
       id="formRegister"
       :label-col="labelCol"
       :wrapper-col="wrapperCol"
     >
-      <a-form-item label="姓名">
+      <a-form-model-item label="姓名">
         <a-input
+          v-model="data.enterpriseregistrant"
           size="large"
           type="text"
           placeholder="请输入正确姓名"
           v-decorator="['EnterpriseRegistrant', {rules: [{ required: true, message: '请输入正确姓名' }], validateTrigger: ['change', 'blur']}]"
         ></a-input>
-      </a-form-item>
-      <a-form-item label="手机号码">
+      </a-form-model-item>
+      <a-form-model-item label="手机号码">
         <a-input
+          v-model="data.enterprisephone"
           size="large"
           placeholder="请输入正确手机号"
           v-decorator="['mobile', {rules: [{ required: true, message: '请输入正确的手机号', pattern: /^1[3456789]\d{9}$/ }, { validator: this.handlePhoneCheck } ], validateTrigger: ['change', 'blur'] }]"
@@ -35,10 +37,11 @@
             <a-select-option value="+87">+87</a-select-option>
           </a-select>
         </a-input>
-      </a-form-item>
-      <a-form-item label="图片验证">
+      </a-form-model-item>
+      <a-form-model-item label="图片验证">
         <div style="display: flex;justify-content: space-between;">
           <a-input
+            v-model="data.captchaCode"
             style="max-width:150px"
             size="large"
             placeholder="图片验证码"
@@ -55,10 +58,11 @@
             ></sidentify>
           </div>
         </div>
-      </a-form-item>
-      <a-form-item label="手机验证">
+      </a-form-model-item>
+      <a-form-model-item label="手机验证">
         <div style="display: flex;justify-content: space-between;">
           <a-input
+            v-model="data.phoneCode"
             size="large"
             style="max-width:160px"
             type="text"
@@ -73,23 +77,25 @@
             v-text="(!state.smsSendBtn && '获取验证码') || state.time + ' s'"
           ></a-button>
         </div>
-      </a-form-item>
-      <a-form-item label="企业名称">
+      </a-form-model-item>
+      <a-form-model-item label="企业名称">
         <a-input
+          v-model="data.enterprisename"
           size="large"
           type="text"
           placeholder="请输入正确的企业名称"
           v-decorator="['EnterpriseName', {rules: [{ required: true,  message: '请输入正确的企业名称' }], validateTrigger: ['change', 'blur']}]"
         ></a-input>
-      </a-form-item>
-      <a-form-item label="密码">
+      </a-form-model-item>
+      <a-form-model-item label="密码">
         <a-input
           size="large"
           type="password"
+          v-model="data.password"
           placeholder="请输入密码"
           v-decorator="['PersonPassword', {rules: [{ required: true, message: '请输入密码' }], validateTrigger: ['change', 'blur']}]"
         ></a-input>
-      </a-form-item>
+      </a-form-model-item>
       <!-- <a-form-item>
         <a-checkbox/>
         <a-button type="link"  class="privacy" @click="privacy">同意《用户注册服务协议》</a-button>
@@ -106,7 +112,7 @@
         >立即获取</a-button>
         <router-link class="login" :to="{ name: 'login' }">使用已有账户登录</router-link>
       </a-form-item>
-    </a-form>
+    </a-form-model>
     <a-modal :width="1000" :visible="privacyVisible" @cancel="handleCancel" :footer="null">
       <privacy></privacy>
     </a-modal>
@@ -116,9 +122,12 @@
 <script>
 import { mixinDevice } from '@/utils/mixin.js'
 import { getSmsCaptcha } from '@/api/login'
-import { retrievePsdSendSMSregister, getPictureVerification } from '@/api/register'
+import { retrievePsdSendSMSregister, getPictureVerification, insertBdregister } from '@/api/register'
 import Privacy from './Privacy'
 import Sidentify from '@/components/tools/SIdentify'
+import Vue from 'vue'
+import { formModel, Button } from 'ant-design-vue'
+Vue.use(formModel, Button)
 
 export default {
   name: 'Register',
@@ -146,7 +155,12 @@ export default {
       form: this.$form.createForm(this),
       data: {
         enterprisephone: '',
-        userToken: '12345678912121212121212',
+        userToken: this.randomNum,
+        enterpriseregistrant: '',
+        captchaCode: '',
+        phoneCode: '',
+        enterprisename: '',
+        password: '',
       },
       state: {
         time: 60,
@@ -159,9 +173,15 @@ export default {
       registerBtn: false,
     }
   },
-  mounted() {
-    this.identifyCode = ''
-    this.makeCode(this.identifyCodes, 4)
+
+  created() {
+    const params = {}
+    this.makeCode()
+    params.userToken = this.data.userToken
+    getPictureVerification(params).then((res) => {
+      this.identifyCode = res.result
+      console.log('getPictureVerification res-->', res)
+    })
   },
   computed: {
     passwordLevelClass() {
@@ -181,17 +201,23 @@ export default {
     refreshCode() {
       this.identifyCode = ''
       const params = {}
-      params.userToken = '12345678912121212121212'
+
+      this.makeCode()
+      params.userToken = this.data.userToken
+
       getPictureVerification(params).then((res) => {
         this.identifyCode = res.result
         console.log('getPictureVerification res-->', res)
       })
     },
-    makeCode(o, l) {
-      for (let i = 0; i < l; i++) {
-        this.identifyCode += this.identifyCodes[this.randomNum(0, this.identifyCodes.length)]
+    makeCode() {
+      this.data.userToken = ''
+      for (let i = 0; i < 10; i++) {
+        this.data.userToken += this.identifyCodes[this.randomNum(0, this.identifyCodes.length)]
       }
+      console.log('user', this.data.userToken)
     },
+
     pictureCodeFn() {},
     privacy() {
       this.privacyVisible = true
@@ -236,7 +262,7 @@ export default {
 
     handlePasswordCheck(rule, value, callback) {
       const password = this.form.getFieldValue('password')
-      console.log('value', value)
+
       if (value === undefined) {
         callback(new Error('请输入密码'))
       }
@@ -247,10 +273,6 @@ export default {
     },
 
     handlePhoneCheck(rule, value, callback) {
-      console.log('handlePhoneCheck, rule:', rule)
-      console.log('handlePhoneCheck, value', value)
-      console.log('handlePhoneCheck, callback', callback)
-
       callback()
     },
 
@@ -263,15 +285,22 @@ export default {
     },
 
     handleSubmit() {
-      const {
-        form: { validateFields },
-        state,
-        $router,
-      } = this
-      validateFields({ force: true }, (err, values) => {
-        if (!err) {
-          state.passwordLevelChecked = false
-          $router.push({ name: 'registerResult', params: { ...values } })
+      const params = {}
+      params.enterprisephone = this.data.enterprisephone
+      params.enterpriseregistrant = this.data.enterpriseregistrant
+      params.captchaCode = this.data.captchaCode
+      params.userToken = this.data.userToken
+      params.enterprisename = this.data.enterprisename
+      params.phoneCode = this.data.phoneCode
+      insertBdregister(params).then((res) => {
+        console.log('insertBdregister res-->', res)
+        if (res.status == 'SUCCESS') {
+          this.$router.push({
+            name: `registerResult`, // 这里只能是name，对应路由
+            params: { EnterpriseName: this.data.enterprisename },
+          })
+        } else {
+          this.$message.error(res.errorMsg)
         }
       })
     },
@@ -300,8 +329,7 @@ export default {
           // const hide = $message.loading('验证码发送中..', 0)
 
           const params = {}
-          params.userToken = '12345678912121212121212'
-          params.enterprisephone = values.mobile
+          params.enterprisephone = this.data.enterprisephone
           retrievePsdSendSMSregister(params).then((res) => {
             console.log('getPictureVerification res-->', res)
           })

@@ -13,6 +13,7 @@ import { axios } from '@/utils/request'
  * @returns {*}
  */
 export function login (parameter) {
+  console.log('/login-->', JSON.stringify(parameter))
   return axios({
     url: '/sys/login',
     method: 'post',

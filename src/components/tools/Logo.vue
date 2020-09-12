@@ -18,7 +18,7 @@ export default {
   props: {
     title: {
       type: String,
-      default: '仓库管理系统',
+      default: '未来仓',
       required: false
     },
     showTitle: {

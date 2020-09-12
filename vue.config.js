@@ -1,8 +1,9 @@
 const path = require('path')
 const webpack = require('webpack')
 const createThemeColorReplacerPlugin = require('./config/plugin.config')
+const proxy = require('http-proxy-middleware');
 
-function resolve (dir) {
+function resolve(dir) {
   return path.join(__dirname, dir)
 }
 
@@ -84,18 +85,20 @@ const vueConfig = {
     }
   },
 
+
   devServer: {
-    // development server port 8000
-    port: 8000,
-    // If you want to turn on the proxy, please remove the mockjs /src/main.jsL11
-    // proxy: {
-    //   '/api': {
-    //     target: 'http://localhost:3000',
-    //     ws: false,
-    //     changeOrigin: true
-    //   }
-    // }
+    port:8000,
+    proxy: {
+      '/api': {
+        target: 'http://47.102.103.27:8080/wms-web/pc',
+        changeOrigin: true,
+        pathRewrite: {
+          '^/api': '/'
+        }
+      },
+    }
   },
+
 
   // disable source map in production
   productionSourceMap: false,

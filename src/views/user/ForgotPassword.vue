@@ -4,7 +4,10 @@
     <a-form ref="formRegister" :form="form" id="formRegister">
 
       <a-form-item>
-        <a-input size="large" placeholder="请输入11 位手机号" v-decorator="['mobile', {rules: [{ required: true, message: '请输入正确的手机号', pattern: /^1[3456789]\d{9}$/ }, { validator: this.handlePhoneCheck } ], validateTrigger: ['change', 'blur'] }]">
+        <a-input size="large"
+         v-model="data.enterprisephone" 
+         placeholder="请输入11 位手机号" 
+         v-decorator="['enterprisephone', {rules: [{ required: true, message: '请输入正确的手机号', pattern: /^1[3456789]\d{9}$/ }, { validator: this.handlePhoneCheck } ], validateTrigger: ['change', 'blur'] }]">
           <a-select slot="addonBefore" size="large" defaultValue="+86">
             <a-select-option value="+86">+86</a-select-option>
             <a-select-option value="+87">+87</a-select-option>
@@ -22,7 +25,10 @@
       <a-row :gutter="16">
         <a-col class="gutter-row" :span="16">
           <a-form-item>
-            <a-input size="large" type="text" placeholder="验证码" v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]">
+            <a-input 
+            v-model="data.phoneCode"  
+            size="large" type="text" placeholder="验证码" 
+            v-decorator="['phoneCode', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]">
               <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }"/>
             </a-input>
           </a-form-item>
@@ -54,8 +60,9 @@
         <a-form-item>
           <a-input
             size="large"
-            type="password"
+            v-model="data.password"
             @click="handlePasswordInputClick"
+            type="password"
             autocomplete="false"
             placeholder="至少6位新密码，区分大小写"
             v-decorator="['password', {rules: [{ required: true, message: '至少6位新密码，区分大小写'}, { validator: this.handlePasswordLevel }], validateTrigger: ['change', 'blur']}]"
@@ -66,6 +73,7 @@
         <a-input
           size="large"
           type="password"
+          v-model="data.password2"
           autocomplete="false"
           placeholder="确认密码"
           v-decorator="['password2', {rules: [{ required: true, message: '至少6位密码，区分大小写' }, { validator: this.handlePasswordCheck }], validateTrigger: ['change', 'blur']}]"
@@ -89,6 +97,8 @@
 <script>
 import { mixinDevice } from '@/utils/mixin.js'
 import { getSmsCaptcha } from '@/api/login'
+import {  retrievePsdSendSMSregister } from '@/api/register'
+import { forgetPasswordlogin } from '@/api/ForgotPassword'
 
 const levelNames = {
   0: '低',
@@ -116,7 +126,12 @@ export default {
   data () {
     return {
       form: this.$form.createForm(this),
-
+      data: {
+        enterprisephone: '',
+        phoneCode: '',
+        password: '',
+        password2: '',
+      },
       state: {
         time: 60,
         smsSendBtn: false,
@@ -202,8 +217,25 @@ export default {
       const { form: { validateFields }, state, $router } = this
       validateFields({ force: true }, (err, values) => {
         if (!err) {
-          state.passwordLevelChecked = false
-          $router.push({ name: 'registerResult', params: { ...values } })
+          const params = {}
+            params.enterprisephone = this.data.enterprisephone
+            params.password = this.data.password
+            params.phoneCode = this.data.phoneCode
+          
+          forgetPasswordlogin(params).then((res) => {
+            console.log("params -------->",params);
+            console.log("forgetPasswordlogin -------->",res);
+            if (res.status == 'SUCCESS') {
+              console.log('提交修改成功');
+              this.$router.push({
+                name: 'login',
+                params:{Enterprisephone: this.data.enterprisephone},
+              })
+            }else{
+              console.log("修改错误",res.errorMsg);
+              this.$message.error(res.errorMsg)
+            }
+          })
         }
       })
     },
@@ -212,7 +244,7 @@ export default {
       e.preventDefault()
       const { form: { validateFields }, state, $message, $notification } = this
 
-      validateFields(['mobile'], { force: true },
+      validateFields(['enterprisephone'], { force: true },
         (err, values) => {
           if (!err) {
             state.smsSendBtn = true
@@ -225,22 +257,13 @@ export default {
               }
             }, 1000)
 
-            const hide = $message.loading('验证码发送中..', 0)
+            // const hide = $message.loading('验证码发送中..', 0)
 
-            getSmsCaptcha({ mobile: values.mobile }).then(res => {
-              setTimeout(hide, 2500)
-              $notification['success']({
-                message: '提示',
-                description: '验证码获取成功，您的验证码为：' + res.result.captcha,
-                duration: 8
-              })
-            }).catch(err => {
-              setTimeout(hide, 1)
-              clearInterval(interval)
-              state.time = 60
-              state.smsSendBtn = false
-              this.requestFailed(err)
-            })
+          const params = {}
+          params.enterprisephone = this.data.enterprisephone
+          retrievePsdSendSMSregister(params).then((res) => {
+            console.log('retrievePsdSendSMSregister res-->', res)
+          })
           }
         }
       )

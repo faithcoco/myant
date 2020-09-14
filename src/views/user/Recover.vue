@@ -119,9 +119,8 @@ const levelColor = {
   3: '#52c41a'
 }
 export default {
-  name: 'Register',
-  components: {
-  },
+  name: 'Recover',
+
   mixins: [mixinDevice],
   data () {
     return {

@@ -136,6 +136,9 @@ export default {
   data() {
     return {
       customActiveKey: '2',
+      enterprisephone: '',
+      password: '',
+      phoneCode: '',
       loginBtn: false,
       // login type: 0 email, 1 username, 2 telephone
       loginType: 0,
@@ -149,9 +152,6 @@ export default {
         // login type: 0 email, 1 username, 2 telephone
         loginType: 0,
         smsSendBtn: false,
-      enterprisephone: '',
-      password: '',
-      phoneCode: '',      
       },
     }
   },

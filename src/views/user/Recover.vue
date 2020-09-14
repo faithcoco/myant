@@ -87,7 +87,7 @@
           class="getCaptcha"
           :loading="registerBtn"
           @click.stop.prevent="handleSubmit"
-          :disabled="registerBtn">完成并登录
+          :disabled="registerBtn">完成
         </a-button>
           </a-form-item>
     </a-form>
@@ -97,6 +97,7 @@
 <script>
 import { mixinDevice } from '@/utils/mixin.js'
 import { getSmsCaptcha } from '@/api/login'
+import { timeFix } from '@/utils/util'
 import { forgetPasswordlogin,retrievePsdSendSMSregister } from '@/api/ForgotPassword'
 
 const levelNames = {
@@ -224,7 +225,13 @@ export default {
             console.log("params -------->",params);
             console.log("forgetPasswordlogin -------->",res);
             if (res.status == 'SUCCESS') {
-              console.log('提交修改成功');
+              console.log('修改成功！！！');
+              setTimeout(() => {
+                this.$notification.success({
+                  message: '修改成功！！！',
+                  description: `${timeFix()}，请重新登录`
+                })
+              }, 1000)
               this.$router.push({
                 name: 'login',
                 params:{Enterprisephone: this.data.enterprisephone},

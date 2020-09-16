@@ -263,7 +263,7 @@ Vue.use(formModel, Button)
 import {  mapGetters } from 'vuex'
 import { retrievePsdSendSMSregister } from '@/api/register'
 
-import { getBasepersonInfo } from '@/api/manage'
+import { getBasepersonInfo,updateBaseperson } from '@/api/manage'
 export default {
     name: 'PersonalInformation',
     components: {
@@ -305,6 +305,8 @@ export default {
                 phoneCode1: '',
                 phoneCode2: '',
             },
+            enterpriseid:'',
+            personid:'',
             labelCol: { span: 4 },
             wrapperCol: { span: 16 },
             visible: true,
@@ -345,17 +347,20 @@ export default {
     },
 created(){
     const params = {}
-      params.enterprisephone =  this.basepersonPO.personid
       getBasepersonInfo(params)
       .then((res)=>{
-        console.log("返回值--getBasepersonInfo----->",res)
+        console.log("返回值--getBasepersonInfo----->",JSON.stringify(res))
         this.form = res.result
       })
       .catch(err => {})
+        console.log('this.basepersonPO-------->',this.basepersonPO);
+        this.enterpriseid = this.baseenterprisePO.enterpriseid
+        this.personid = this.basepersonPO.personid
+        console.log("this.enterpriseid",this.enterpriseid);
+        console.log(this.personid);
 },
-
     computed: {
-    ...mapGetters(['basepersonPO'])
+    ...mapGetters(['basepersonPO',"baseenterprisePO"])
   },
     methods: {
         confirmSuccess:function (confirmSuccess) {
@@ -405,21 +410,25 @@ created(){
                 //validate   对整个表单进行校验的方法
                 if (valid) {
                 //判断valid是否等于true     
-                return new Promise(() => {
-                    const loginParams = {}
-                    loginParams.enterprisephone = this.form.PersonPhone
-                    loginParams.password = this.basepersonPO.personpassword
-                    loginParams.phoneCode =''
-                    loginParams.loginType = '2'
-                    login(loginParams).then(response => {
-                        if (response.status == 'SUCCESS') {
+                    const data = {}
+                    data.enterpriseid = this.basepersonPO.enterpriseid
+                    data.personid = this.basepersonPO.personid
+                    data.personname = this.form.personname
+                    data.personlabel = this.form.personlabel
+                    data.personphone = this.form.personphone
+                    console.log(data);
+                    updateBaseperson(data)
+                    .then((res)=>{
+                        console.log('updateBaseperson--->',res);
+                        if (res.status == 'SUCCESS') {
                             this.$message.info('保存成功！');
                             this.editVisible = false
                             this.visible = true
                         //   提示用户信息
                         }
+                    } ).catch((err)=>{
+                        console.log('错误------》',err);
                     })
-                })
                 } else {
                 // 等于false
                 console.log('error submit!!')
@@ -428,8 +437,8 @@ created(){
                 return false
                 //   结束函数
                 }
-            })
-                this.loading = false;
+                })
+                    this.loading = false;
 
             }, 2000);
         },
@@ -515,16 +524,27 @@ created(){
             const hide = this.$message.loading('验证码发送中..', 0)
             console.log(this.form.personphone);
             const params = {}
-            params.enterprisephone =  this.basepersonPO.personphone
+            console.log('新手机号--------》',this.form.PersonPhone);
+            params.enterprisephone =  this.form.PersonPhone
             retrievePsdSendSMSregister(params)
                 .then((res) => {
-                console.log('getPictureVerification res-->', res)
-                setTimeout(hide, 2500)
-                this.$notification['success']({
+                console.log('retrievePsdSendSMSregister res-->', res)
+                if (res.status == "SUCCESS") {
+                    setTimeout(hide, 2500)
+                    this.$notification['success']({
                     message: '提示',
-                    description: '验证码获取成功，请注意查收！',
+                    description: res.errorMsg,
                     duration: 8,
                 })
+                }
+                else if(res.status == "FAILED" ||  res.status == "EXCEPTION"){
+                    setTimeout(hide, 2500)
+                    this.$notification['error']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                })
+                }
                 })
                 .catch((err) => {
                 setTimeout(hide, 1)
@@ -570,6 +590,7 @@ created(){
             this.$refs.PruleForm2.validate((valid)=>{
                 if (valid) {            
                     this.changeNewVisible = false
+                    this.form.personphone = this.form.PersonPhone
                 }else{
                     return false
                 }

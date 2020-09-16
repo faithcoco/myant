@@ -102,28 +102,28 @@
         :wrapper-col="wrapperCol"
       >
           <a-form-model-item label="企业名称:"  prop="EnterpriseName">
-          <a-input v-model="baseenterprisePO.enterprisename"  placeholder="请输入企业名称"></a-input>
+          <a-input v-model="form.enterprisename"  placeholder="请输入企业名称"></a-input>
           </a-form-model-item>
           <a-form-model-item label="企业地址:"  prop="EnterpriseAddress">
-          <a-input v-model="baseenterprisePO.enterpriseaddress"  placeholder="请输入企业地址"></a-input>
+          <a-input v-model="form.enterpriseaddress"  placeholder="请输入企业地址"></a-input>
           </a-form-model-item>
           <a-form-model-item label="联系人:"  prop="EnterpriseContact">
-          <a-input v-model="baseenterprisePO.enterprisecontact"  placeholder="请输入联系人"></a-input>
+          <a-input v-model="form.enterprisecontact"  placeholder="请输入联系人"></a-input>
           </a-form-model-item>
           <a-form-model-item label="电话:"  prop="EnterpriseTel">
-          <a-input v-model="baseenterprisePO.enterprisetel" disabled style="width:90%;margin-right:10px" placeholder="请输入电话"></a-input> <a @click="changeTel">更改</a>
+          <a-input v-model="form.enterprisetel" disabled style="width:90%;margin-right:10px" placeholder="请输入电话"></a-input> <a @click="changeTel">更改</a>
           </a-form-model-item>
           <a-form-model-item label="注册人:"   prop="EnterpriseRegistrant">
-          <a-input v-model="baseenterprisePO.enterpriseregistrant" disabled  placeholder="请输入注册人"></a-input>
+          <a-input v-model="form.enterpriseregistrant" disabled  placeholder="请输入注册人"></a-input>
           </a-form-model-item>
           <a-form-model-item label="更换手机:"  prop="EnterprisePhone">
-          <a-input v-model="baseenterprisePO.enterprisephone" disabled style="width:90%;margin-right:10px"  placeholder="请输入新手机号"></a-input> <a @click="changePhone">更改</a>
+          <a-input v-model="form.enterprisephone" disabled style="width:90%;margin-right:10px"  placeholder="请输入新手机号"></a-input> <a @click="changePhone">更改</a>
           </a-form-model-item>
           <a-form-model-item label="注册时间:"  prop="EnterpriseRegistrationtime">
-          <a-input v-model="baseenterprisePO.enterpriseregistrationtime" disabled  placeholder="请输入新手机号"></a-input>
+          <a-input v-model="form.enterpriseregistrationtime" disabled  placeholder="无"></a-input>
           </a-form-model-item>
           <a-form-model-item label="状态:"  prop="EnterpriseStatus">
-          <a-input v-model="baseenterprisePO.enterprisestatus" disabled  placeholder="请输入新手机号"></a-input>
+          <a-input v-model="form.enterprisestatus" disabled  placeholder="请输入新手机号"></a-input>
           </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -252,7 +252,7 @@
             :rules="rules"
             >
             <a-form-model-item>
-                <a-input v-model="form.EnterprisePhone"  disabled ></a-input>
+                <a-input v-model="form.enterprisephone"  disabled ></a-input>
             </a-form-model-item>
             <a-form-model-item prop="phoneCode3">
                 <a-input v-model="form.phoneCode3" placeholder="请输入验证码">
@@ -333,7 +333,7 @@ Vue.use(formModel, Button)
 import moment from 'moment'
 import { mapActions } from 'vuex'
 import AvatarModal from '../settings/AvatarModal'
-import {getBaseenterpriseInfo} from '@/api/manage'
+import {getBaseenterpriseInfo,updateBaseenterprise} from '@/api/manage'
 import {  mapGetters } from 'vuex'
 export default {
 components: {
@@ -404,15 +404,15 @@ components: {
       wrapperCol: { span: 18 },
       rules: {
           //校验规则
-          EnterpriseName: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
-          EnterpriseAddress: [{ required: true, message: '请输入企业地址', trigger: 'blur' }],
-          EnterpriseContact: [{ required: true, message: '请输入联系人', trigger: 'blur' }],
-          EnterpriseTel: [{ required: true, message: '请输入电话', trigger: 'blur' },
-                          { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },],
-          EnterprisePhone: [
-              { required: true, message: '请输入手机号', trigger: 'blur' },
-              { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
-            ],
+          // EnterpriseName: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
+          // EnterpriseAddress: [{ required: true, message: '请输入企业地址', trigger: 'blur' }],
+          // EnterpriseContact: [{ required: true, message: '请输入联系人', trigger: 'blur' }],
+          // EnterpriseTel: [{ required: true, message: '请输入电话', trigger: 'blur' },
+          //                 { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },],
+          // EnterprisePhone: [
+          //     { required: true, message: '请输入手机号', trigger: 'blur' },
+          //     { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
+          //   ],
           Newphone: [
               { required: true, message: '请输入手机号', trigger: 'blur' },
               { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
@@ -514,7 +514,7 @@ components: {
         changeNewPhoneOk(){
             this.$refs.PruleForm5.validate((valid)=>{
                 if (valid) {   
-                  this.form.EnterprisePhone = this.form.Newphone
+                  this.form.enterprisephone = this.form.Newphone
                     this.changeNewPhoneVisible = false
                 }else{
                     return false
@@ -615,10 +615,29 @@ components: {
           if (valid) {
             setTimeout(() => {
           //判断valid是否等于true
+          const data = {}
+          data.enterpriseid = this.baseenterprisePO.enterpriseid
+          data.enterprisename = this.form.enterprisename
+          data.enterpriseaddress = this.form.enterpriseaddress
+          data.enterprisecontact = this.form.enterprisecontact
+          data.enterprisetel = this.form.enterprisetel
+          data.enterprisephone = this.form.enterprisephone
+          console.log(data);
+          updateBaseenterprise(data)
+          .then((res)=>{
+            console.log('updateBaseenterprise-->',res);
+            if (res.status == 'SUCCESS') {
               this.confirmLoading = false
-              this.$message.info('保存成功！');
-              this.companyVisible = false
-          //   提示用户信息
+                this.$message.info('保存成功！');
+                this.companyVisible = false
+              //   提示用户信息
+            }
+            
+          }).catch((err)=>{
+            console.log('错误------》',err);
+            this.confirmLoading = false
+          })
+
             }, 2000)
           } else {
           // 等于false

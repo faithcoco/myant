@@ -5,12 +5,12 @@
         <a-card>
           <h2>企业信息</h2>
         </a-card>
-        <br />
+
         <a-card>
           <a-row type="flex" justify="space-between">
             <a-col style="font-weight:bold">
               <a-avatar shape="square" :size="70" icon="user" :src="form.LOGO" style="margin-right:30px"/>
-               {{ form.EnterpriseName }}
+               {{ form.enterprisename }}
                <!-- &nbsp;(ID:&nbsp;{{ form.companyCode }}) -->
             </a-col>
             <a-col style="margin-right:50px">
@@ -30,35 +30,35 @@
               :model="form"
               :rules="rules">
                 <a-form-item>
-                  <a-icon style="margin-right:10px" type="barcode" class="upload-icon" />企业地址:{{ form.EnterpriseAddress }}
+                  <a-icon style="margin-right:10px" type="barcode" class="upload-icon" />企业地址:{{ form.enterpriseaddress }}
                 </a-form-item>
 
                 <a-form-item>
-                  <a-icon style="margin-right:10px" type="user" class="upload-icon" />联系人: {{ form.EnterpriseContact }}
+                  <a-icon style="margin-right:10px" type="user" class="upload-icon" />联系人: {{ form.enterprisecontact }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right:10px" type="bank" class="upload-icon" />电话: {{ form.EnterpriseTel }}
+                  <a-icon style="margin-right:10px" type="bank" class="upload-icon" />电话: {{ form.enterprisetel }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right:10px" type="bank" class="upload-icon" />注册人: {{ form.EnterpriseRegistrant }}
+                  <a-icon style="margin-right:10px" type="bank" class="upload-icon" />注册人: {{ form.enterpriseregistrant }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right:10px" type="phone" class="upload-icon" />注册手机: {{ form.EnterprisePhone }}
+                  <a-icon style="margin-right:10px" type="phone" class="upload-icon" />注册手机: {{ form.enterprisephone }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right:10px" type="mail" class="upload-icon" />注册时间: {{ form.EnterpriseRegistrationtime }}
+                  <a-icon style="margin-right:10px" type="mail" class="upload-icon" />注册时间: {{ form.enterpriseregistrationtime }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right:10px" type="deployment-unit" class="upload-icon" />状态:{{ form.EnterpriseStatus }}
+                  <a-icon style="margin-right:10px" type="deployment-unit" class="upload-icon" />状态:{{ form.enterprisestatus }}
                 </a-form-item>
                 <!-- <a-form-item>
                   <a-icon style="margin-right:10px" type="logout" class="upload-icon" />
                   LOGO: 
                   <a-avatar shape :size="100" icon="user" src="/avatar2.jpg" />
-                  {{ form.LOGO }}
+                  {{ baseenterprisePO.LOGO }}
                 </a-form-item> -->
                 <!-- <a-form-item>
-                  <a-icon style="margin-right:10px" type="contacts" class="upload-icon" />到期日: {{ form.time }}
+                  <a-icon style="margin-right:10px" type="contacts" class="upload-icon" />到期日: {{ baseenterprisePO.time }}
                 </a-form-item> -->
               </a-form>
             </a-col>
@@ -102,28 +102,28 @@
         :wrapper-col="wrapperCol"
       >
           <a-form-model-item label="企业名称:"  prop="EnterpriseName">
-          <a-input v-model="form.EnterpriseName"  placeholder="请输入企业名称"></a-input>
+          <a-input v-model="baseenterprisePO.enterprisename"  placeholder="请输入企业名称"></a-input>
           </a-form-model-item>
           <a-form-model-item label="企业地址:"  prop="EnterpriseAddress">
-          <a-input v-model="form.EnterpriseAddress"  placeholder="请输入企业地址"></a-input>
+          <a-input v-model="baseenterprisePO.enterpriseaddress"  placeholder="请输入企业地址"></a-input>
           </a-form-model-item>
           <a-form-model-item label="联系人:"  prop="EnterpriseContact">
-          <a-input v-model="form.EnterpriseContact"  placeholder="请输入联系人"></a-input>
+          <a-input v-model="baseenterprisePO.enterprisecontact"  placeholder="请输入联系人"></a-input>
           </a-form-model-item>
           <a-form-model-item label="电话:"  prop="EnterpriseTel">
-          <a-input v-model="form.EnterpriseTel" disabled style="width:90%;margin-right:10px" placeholder="请输入电话"></a-input> <a @click="changeTel">更改</a>
+          <a-input v-model="baseenterprisePO.enterprisetel" disabled style="width:90%;margin-right:10px" placeholder="请输入电话"></a-input> <a @click="changeTel">更改</a>
           </a-form-model-item>
           <a-form-model-item label="注册人:"   prop="EnterpriseRegistrant">
-          <a-input v-model="form.EnterpriseRegistrant" disabled  placeholder="请输入注册人"></a-input>
+          <a-input v-model="baseenterprisePO.enterpriseregistrant" disabled  placeholder="请输入注册人"></a-input>
           </a-form-model-item>
           <a-form-model-item label="更换手机:"  prop="EnterprisePhone">
-          <a-input v-model="form.EnterprisePhone" disabled style="width:90%;margin-right:10px"  placeholder="请输入新手机号"></a-input> <a @click="changePhone">更改</a>
+          <a-input v-model="baseenterprisePO.enterprisephone" disabled style="width:90%;margin-right:10px"  placeholder="请输入新手机号"></a-input> <a @click="changePhone">更改</a>
           </a-form-model-item>
           <a-form-model-item label="注册时间:"  prop="EnterpriseRegistrationtime">
-          <a-input v-model="form.EnterpriseRegistrationtime" disabled  placeholder="请输入新手机号"></a-input>
+          <a-input v-model="baseenterprisePO.enterpriseregistrationtime" disabled  placeholder="请输入新手机号"></a-input>
           </a-form-model-item>
           <a-form-model-item label="状态:"  prop="EnterpriseStatus">
-          <a-input v-model="form.EnterpriseStatus" disabled  placeholder="请输入新手机号"></a-input>
+          <a-input v-model="baseenterprisePO.enterprisestatus" disabled  placeholder="请输入新手机号"></a-input>
           </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -150,7 +150,7 @@
       </a-form-model>
     </a-modal>
 
-      <a-modal
+    <a-modal
         :visible="phoneVisible"
         :width='700'
         style="text-align:center"
@@ -198,7 +198,7 @@
       </a-form-model>
     </a-modal>
 
-     <a-modal
+    <a-modal
       title="切换所在企业"
       :visible="changeVisible"
       :confirm-loading="changeConfirmLoading"
@@ -212,117 +212,117 @@
             </a-radio>
         </a-radio-group>
     </a-modal>
-        <a-modal
-            title="更换电话号第一步"
-            :visible="changeTelVisible1"
-            :confirm-loading="confirmLoading"
-            @ok="changeTelhandleOk"
-            okText="下一步"
-            @cancel="changeTelhandleCancel"
-        >
-            <p>更改前需校验当前绑定的手机号</p>
-            <a-form-model 
-                ref="ruleForm1"
-                :model="form"
-                :rules="rules"
-                >
-                <a-form-model-item>
-                    <a-input v-model="form.EnterpriseTel"  disabled ></a-input>
-                </a-form-model-item>
-                <a-form-model-item prop="phoneCode1">
-                    <a-input v-model="form.phoneCode1" placeholder="请输入验证码">
-                        <a-button class="GPBtn"   slot="suffix" type="link" @click="getVerificationCode">获取验证码</a-button>
-                    </a-input>
-                    <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
-                </a-form-model-item>
-            </a-form-model>
-        </a-modal>
-        <a-modal
-            title="更换手机号第一步"
-            :visible="changePhoneVisible1"
-            :confirm-loading="confirmLoading"
-            @ok="changePhonehandleOk"
-            okText="下一步"
-            @cancel="changePhonehandleCancel"
-        >
-            <p>更改前需校验当前绑定的手机号</p>
-            <a-form-model 
-                ref="CPruleForm"
-                :model="form"
-                :rules="rules"
-                >
-                <a-form-model-item>
-                    <a-input v-model="form.EnterprisePhone"  disabled ></a-input>
-                </a-form-model-item>
-                <a-form-model-item prop="phoneCode3">
-                    <a-input v-model="form.phoneCode3" placeholder="请输入验证码">
-                        <a-button class="GPBtn3"   slot="suffix" type="link" @click="getPhoneVerificationCode">获取验证码</a-button>
-                    </a-input>
-                    <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
-                </a-form-model-item>
-            </a-form-model>
-        </a-modal>
-        <a-modal
-            title="更换电话号第二步"
-            :visible="changeNewVisible"
-            :confirm-loading="confirmLoading"
-            @ok="changeNewOk"
-            @cancel="changeNewCancel"
+    <a-modal
+        title="更换电话号第一步"
+        :visible="changeTelVisible1"
+        :confirm-loading="confirmLoading"
+        @ok="changeTelhandleOk"
+        okText="下一步"
+        @cancel="changeTelhandleCancel"
+    >
+        <p>更改前需校验当前绑定的手机号</p>
+        <a-form-model 
+            ref="ruleForm1"
+            :model="form"
+            :rules="rules"
             >
-            <p>更改手机号后，您将使用新的手机号进行登录</p>
-            <a-form-model 
-                ref="PruleForm2"
-                :model="form"
-                :rules="rules"
-                >
-                <a-form-model-item prop="NewTel">
-                    <a-input v-model="form.NewTel" placeholder="请输入您新的手机号"></a-input>
-                </a-form-model-item>
-            </a-form-model>
-            <a-form-model 
-                ref="PruleForm3"
-                :model="form"
-                :rules="rules"
-                >
-                <a-form-model-item prop="phoneCode2">
-                    <a-input v-model="form.phoneCode2"   placeholder="请输入验证码">
-                        <a-button class="GPBtn2" slot="suffix" :disabled="false" type="link" @click="getVerificationCode1">获取验证码</a-button>
-                    </a-input>
-                    <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
-                </a-form-model-item>
-            </a-form-model>
-        </a-modal>
-        <a-modal
-            title="更换手机第二步"
-            :visible="changeNewPhoneVisible"
-            :confirm-loading="confirmLoading"
-            @ok="changeNewPhoneOk"
-            @cancel="changeNewPhoneCancel"
+            <a-form-model-item>
+                <a-input v-model="form.EnterpriseTel"  disabled ></a-input>
+            </a-form-model-item>
+            <a-form-model-item prop="phoneCode1">
+                <a-input v-model="form.phoneCode1" placeholder="请输入验证码">
+                    <a-button class="GPBtn"   slot="suffix" type="link" @click="getVerificationCode">获取验证码</a-button>
+                </a-input>
+                <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
+            </a-form-model-item>
+        </a-form-model>
+    </a-modal>
+    <a-modal
+        title="更换手机号第一步"
+        :visible="changePhoneVisible1"
+        :confirm-loading="confirmLoading"
+        @ok="changePhonehandleOk"
+        okText="下一步"
+        @cancel="changePhonehandleCancel"
+    >
+        <p>更改前需校验当前绑定的手机号</p>
+        <a-form-model 
+            ref="CPruleForm"
+            :model="form"
+            :rules="rules"
             >
-            <p>更改手机号后，您将使用新的手机号进行登录</p>
-            <a-form-model 
-                ref="PruleForm4"
-                :model="form"
-                :rules="rules"
-                >
-                <a-form-model-item prop="Newphone">
-                    <a-input v-model="form.Newphone" placeholder="请输入您新的手机号"></a-input>
-                </a-form-model-item>
-            </a-form-model>
-            <a-form-model 
-                ref="PruleForm5"
-                :model="form"
-                :rules="rules"
-                >
-                <a-form-model-item prop="phoneCode4">
-                    <a-input v-model="form.phoneCode4"   placeholder="请输入验证码">
-                        <a-button class="GPBtn4" slot="suffix" :disabled="false" type="link" @click="getNewPhoneVerificationCode">获取验证码</a-button>
-                    </a-input>
-                    <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
-                </a-form-model-item>
-            </a-form-model>
+            <a-form-model-item>
+                <a-input v-model="form.EnterprisePhone"  disabled ></a-input>
+            </a-form-model-item>
+            <a-form-model-item prop="phoneCode3">
+                <a-input v-model="form.phoneCode3" placeholder="请输入验证码">
+                    <a-button class="GPBtn3"   slot="suffix" type="link" @click="getPhoneVerificationCode">获取验证码</a-button>
+                </a-input>
+                <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
+            </a-form-model-item>
+        </a-form-model>
+    </a-modal>
+    <a-modal
+        title="更换电话号第二步"
+        :visible="changeNewVisible"
+        :confirm-loading="confirmLoading"
+        @ok="changeNewOk"
+        @cancel="changeNewCancel"
+        >
+        <p>更改手机号后，您将使用新的手机号进行登录</p>
+        <a-form-model 
+            ref="PruleForm2"
+            :model="form"
+            :rules="rules"
+            >
+            <a-form-model-item prop="NewTel">
+                <a-input v-model="form.NewTel" placeholder="请输入您新的手机号"></a-input>
+            </a-form-model-item>
+        </a-form-model>
+        <a-form-model 
+            ref="PruleForm3"
+            :model="form"
+            :rules="rules"
+            >
+            <a-form-model-item prop="phoneCode2">
+                <a-input v-model="form.phoneCode2"   placeholder="请输入验证码">
+                    <a-button class="GPBtn2" slot="suffix" :disabled="false" type="link" @click="getVerificationCode1">获取验证码</a-button>
+                </a-input>
+                <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
+            </a-form-model-item>
+        </a-form-model>
+    </a-modal>
+    <a-modal
+        title="更换手机第二步"
+        :visible="changeNewPhoneVisible"
+        :confirm-loading="confirmLoading"
+        @ok="changeNewPhoneOk"
+        @cancel="changeNewPhoneCancel"
+        >
+        <p>更改手机号后，您将使用新的手机号进行登录</p>
+        <a-form-model 
+            ref="PruleForm4"
+            :model="form"
+            :rules="rules"
+            >
+            <a-form-model-item prop="Newphone">
+                <a-input v-model="form.Newphone" placeholder="请输入您新的手机号"></a-input>
+            </a-form-model-item>
+        </a-form-model>
+        <a-form-model 
+            ref="PruleForm5"
+            :model="form"
+            :rules="rules"
+            >
+            <a-form-model-item prop="phoneCode4">
+                <a-input v-model="form.phoneCode4"   placeholder="请输入验证码">
+                    <a-button class="GPBtn4" slot="suffix" :disabled="false" type="link" @click="getNewPhoneVerificationCode">获取验证码</a-button>
+                </a-input>
+                <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
+            </a-form-model-item>
+        </a-form-model>
 
-        </a-modal>
+    </a-modal>
   </div>
 </template>
 <script>
@@ -333,6 +333,8 @@ Vue.use(formModel, Button)
 import moment from 'moment'
 import { mapActions } from 'vuex'
 import AvatarModal from '../settings/AvatarModal'
+import {getBaseenterpriseInfo} from '@/api/manage'
+import {  mapGetters } from 'vuex'
 export default {
 components: {
     Slider,
@@ -378,8 +380,7 @@ components: {
       name:'',   
       EnterpriseName : ['上古', '下海'],
       Form:Object,
-      form:Object,
-      form1:{
+      form:{
         EnterpriseAddress: '上海',
         EnterpriseName: '上古',
         EnterpriseContact: 'curry',
@@ -396,26 +397,6 @@ components: {
         LOGO: '/avatar2.jpg',
         expiryDate: '2020-09-01',
         time: '2020-09-01',
-        cName:'',
-        VerificationCode:'',
-      },
-      form2:{
-        EnterpriseAddress: '上海浦东',
-        EnterpriseName: '下海',
-        EnterpriseContact: 'curry',
-        EnterpriseTel: '13333333333',
-        EnterpriseRegistrant: 'curry',
-        EnterprisePhone: '13333333333',
-        NewTel: '',
-        Newphone: '',
-        PersonPhone: '',
-        EnterpriseRegistrationtime: '2020.09.09',
-        EnterpriseStatus: '试用中，剩余30天',
-        mail:'无',
-        userCount: '无',
-        LOGO: '/avatar2.jpg',
-        expiryDate: '2020-09-09',
-        time: '2020-09-09',
         cName:'',
         VerificationCode:'',
       },
@@ -453,9 +434,18 @@ components: {
     }
   },
   created(){
-    this.form = this.form2
+      const params = {}
+        params.enterpriseid =  this.baseenterprisePO.enterpriseid
+        getBaseenterpriseInfo(params)
+        .then((res)=>{
+          console.log("返回值--getBaseenterpriseInfo----->",res)
+          this.form = res.result
+        })
+        .catch(err => {})
   },
-
+    computed: {
+    ...mapGetters(['baseenterprisePO'])
+  },
   methods: {
         getNewPhoneVerificationCode(){
       this.$refs.PruleForm4.validate((valid) => {

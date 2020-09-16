@@ -9,6 +9,8 @@ const user = {
     name: '',
     welcome: '',
     avatar: '',
+    basepersonPO:[],
+    baseenterprisePO:[],
     roles: [],
     info: {}
   },
@@ -16,6 +18,12 @@ const user = {
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
+    },
+    SET_BASEPERSONPO: (state, basepersonPO) => {
+        state.basepersonPO = basepersonPO
+    },
+    SET_BASEENTERPRISEPO: (state, baseenterprisePO) => {
+        state.baseenterprisePO = baseenterprisePO
     },
     SET_NAME: (state, { name, welcome }) => {
       state.name = name
@@ -40,13 +48,16 @@ const user = {
         login(userInfo).then(response => {
 
           if (response.status == "SUCCESS") {
-
-            response = { "result": { "id": "8edCeDD4-CfBd-32fd-E3E4-C7a4F5207C0f", "name": "Daniel Hernandez", "username": "admin", "password": "", "avatar": "https://gw.alipayobjects.com/zos/rmsportal/jZUIxmJycoymBprLOUbT.png", "status": 1, "telephone": "", "lastLoginIp": "27.154.74.117", "lastLoginTime": 1534837621348, "creatorId": "admin", "createTime": 1497160610259, "deleted": 0, "roleId": "admin", "lang": "zh-CN", "token": "4291d7da9005377ec9aec4a71ea837f", "EnterprisePhone": 13333333333 }, "message": "", "timestamp": 1592791121590, "code": 200, "_headers": { "Custom-Header": "bf99C3E5-eeCF-B749-0B3c-9cB9a9b1F05f" } }
+            console.log('成功返回值--------》',response);
+            // response = { "result": { "id": "8edCeDD4-CfBd-32fd-E3E4-C7a4F5207C0f", "name": "Daniel Hernandez", "username": "admin", "password": "", "avatar": "https://gw.alipayobjects.com/zos/rmsportal/jZUIxmJycoymBprLOUbT.png", "status": 1, "telephone": "", "lastLoginIp": "27.154.74.117", "lastLoginTime": 1534837621348, "creatorId": "admin", "createTime": 1497160610259, "deleted": 0, "roleId": "admin", "lang": "zh-CN", "token": "4291d7da9005377ec9aec4a71ea837f", "EnterprisePhone": 13333333333 }, "message": "", "timestamp": 1592791121590, "code": 200, "_headers": { "Custom-Header": "bf99C3E5-eeCF-B749-0B3c-9cB9a9b1F05f" } }
           }
           const result = response.result
 
-          Vue.ls.set(ACCESS_TOKEN, result.token, 7 * 24 * 60 * 60 * 1000)
-          commit('SET_TOKEN', result.token)
+          Vue.ls.set(ACCESS_TOKEN, "result.baseenterprisePO.userToken", 7 * 24 * 60 * 60 * 1000)
+          commit('SET_TOKEN', "result.baseenterprisePO.userToken")
+          commit('SET_BASEPERSONPO', result.basepersonPO)
+          commit('SET_BASEENTERPRISEPO', result.baseenterprisePO)          
+          commit('SET_NAME', { name: result.basepersonPO.personname, welcome: welcome() })
           resolve()
         }).catch(error => {
           reject(error)
@@ -75,8 +86,6 @@ const user = {
           } else {
             reject(new Error('getInfo: roles must be a non-null array !'))
           }
-
-          commit('SET_NAME', { name: result.name, welcome: welcome() })
           commit('SET_AVATAR', result.avatar)
 
           resolve(response)

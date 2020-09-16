@@ -31,6 +31,7 @@ const api = {
   MessageSettin: '/MessageSettin/tree',
   approval: '/approval',
   Sector: '/Sector',
+  BasepersonInfo: '/bd/baseperson/getBasepersonInfo?id=9f787274-ce08-4f54-9cd8-8df8b6b2901c',
 
   productList: '/productList',
   SupplierList: '/SupplierList',
@@ -667,6 +668,13 @@ export function getapprovalSettinTree(parameter) {
 export function getMessageSettinTree(parameter) {
   return axios({
     url: api.MessageSettin,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getBasepersonInfo(parameter) {
+  return axios({
+    url: api.BasepersonInfo,
     method: 'get',
     params: parameter
   })

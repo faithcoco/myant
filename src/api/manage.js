@@ -34,7 +34,8 @@ const api = {
   BasepersonInfo: '/bd/baseperson/getBasepersonInfo?id=9f787274-ce08-4f54-9cd8-8df8b6b2901c',
   BaseenterpriseInfo: '/bd/Baseenterprise/getBaseenterpriseInfo?id=2f39d743-4ad8-4291-b470-86b8b1b662aa',
   updateBaseperson: '/bd/baseperson/updateBaseperson',
-  updateBaseenterprise: 'bd/Baseenterprise/updateBaseenterprise',
+  updateBaseenterprise: '/bd/Baseenterprise/updateBaseenterprise',
+  insertBaseenterprise: '/bd/Baseenterprise//insertBaseenterprise',
 
   productList: '/productList',
   SupplierList: '/SupplierList',
@@ -699,6 +700,13 @@ export function updateBaseperson(parameter) {
 export function updateBaseenterprise(parameter) {
   return axios({
     url: api.updateBaseenterprise,
+    method: 'post',
+    data: parameter
+  })
+}
+export function insertBaseenterprise(parameter) {
+  return axios({
+    url: api.insertBaseenterprise,
     method: 'post',
     data: parameter
   })

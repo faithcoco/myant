@@ -9,6 +9,7 @@
                 size="large"
                 type="text"
                 placeholder="最多可输入50个字符"
+                v-model="enterprisename"
                 v-decorator="[
                     'EnterpriseName',
                     { rules: 
@@ -111,8 +112,9 @@
 </template>
 
 <script>
-
+import {  mapGetters } from 'vuex'
 import Countdown from '@/components/tools/Countdown'
+import {insertBaseenterprise} from '@/api/manage'
 export default {
     components: {
     Countdown,
@@ -129,8 +131,11 @@ export default {
       codeConfirmLoading: false,
       InvitationCode:85438613,
       defaultEnterpriseName:'',
-
+      enterprisename:''
     }
+  },
+    computed: {
+    ...mapGetters(['baseenterprisePO'])
   },
   methods: {
     handleSubmit(e) {
@@ -138,11 +143,33 @@ export default {
         this.form.validateFields(err => {
             if (!err) {
                 setTimeout(() => {
+                    this.baseenterprisePO.enterpriseid = JSON.stringify(this.baseenterprisePO.enterpriseid)
+                    console.log('企业ID------------->',this.baseenterprisePO.enterpriseid);
+                    const data = {}
+                    data.enterpriseid = this.baseenterprisePO.enterpriseid
+                    data.enterprisename = this.enterprisename
+                    insertBaseenterprise(data)
+                    .then((res)=>{
+                      console.log('返回值--------》',res);
+                      if (res.status == 'SUCCESS') {
+                    this.$message.info("新建成功")
+                    console.log("新建成功");
+                    console.info('success');
+                      //   提示用户信息
                     this.loginBtn = false
                     this.createVisible = false
                     this.centerVisible = true
-                    console.log("表单提交了");
-                    console.info('success');
+                    }else if (res.status == 'FAILED') {
+                      this.$message.info(res.errorMsg)
+                      
+                   this.loginBtn = false
+                    }
+                    })
+                  .catch((err)=>{
+                  console.log('错误------》',err);
+                  this.$message.info('新建企业失败！！')
+                   this.loginBtn = false
+                })
                 }, 2000); 
             }else{
                 this.loginBtn = false

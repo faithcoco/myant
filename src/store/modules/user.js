@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { login, getInfo, logout } from '@/api/login'
-import { ACCESS_TOKEN } from '@/store/mutation-types'
+import { ACCESS_TOKEN,baseenterprisePO,basepersonPO } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 
 const user = {
@@ -54,6 +54,9 @@ const user = {
           const result = response.result
 
           Vue.ls.set(ACCESS_TOKEN, "result.baseenterprisePO.userToken", 7 * 24 * 60 * 60 * 1000)
+          Vue.ls.set(basepersonPO, result.basepersonPO, 7 * 24 * 60 * 60 * 1000)
+          Vue.ls.set(baseenterprisePO, result.baseenterprisePO, 7 * 24 * 60 * 60 * 1000)
+
           commit('SET_TOKEN', "result.baseenterprisePO.userToken")
           commit('SET_BASEPERSONPO', result.basepersonPO)
           commit('SET_BASEENTERPRISEPO', result.baseenterprisePO)          

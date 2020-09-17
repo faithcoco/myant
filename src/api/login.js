@@ -31,7 +31,7 @@ export function getSmsCaptcha (parameter) {
 
 export function getInfo () {
   return axios({
-    url: '/user/info',
+    url: '/bd/baseperson/getBasepersonInfo?id=9f787274-ce08-4f54-9cd8-8df8b6b2901c',
     method: 'get',
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'

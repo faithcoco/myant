@@ -9,7 +9,7 @@
         <a-card>
           <a-row type="flex" justify="space-between">
             <a-col style="font-weight:bold">
-              <a-avatar shape="square" :size="70" icon="user" :src="form.LOGO" style="margin-right:30px"/>
+              <a-avatar shape="square" :size="70" icon="user"  style="margin-right:30px"/>
                {{ form.enterprisename }}
                <!-- &nbsp;(ID:&nbsp;{{ form.companyCode }}) -->
             </a-col>
@@ -386,6 +386,7 @@ components: {
         EnterpriseContact: 'curry',
         EnterpriseTel: '无',
         EnterpriseRegistrant: 'curry',
+        enterprisename:'',
         EnterprisePhone: '无',
         NewTel: '',
         Newphone: '',
@@ -435,7 +436,8 @@ components: {
   },
   created(){
       const params = {}
-        params.enterpriseid =  this.baseenterprisePO.enterpriseid
+        params.id =  this.baseenterprisePO.enterpriseid
+        console.log(params);
         getBaseenterpriseInfo(params)
         .then((res)=>{
           console.log("返回值--getBaseenterpriseInfo----->",res)

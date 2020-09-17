@@ -346,7 +346,8 @@ export default {
         }
     },
 created(){
-    const params = {}
+      const params = {}
+        params.id =  this.basepersonPO.personid
       getBasepersonInfo(params)
       .then((res)=>{
         console.log("返回值--getBasepersonInfo----->",JSON.stringify(res))

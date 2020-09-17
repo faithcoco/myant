@@ -87,7 +87,7 @@ const vueConfig = {
 
 
   devServer: {
-    port:8000,
+  
     proxy: {
       '/api': {
         target: 'http://47.102.103.27:8080/wms-web/pc',

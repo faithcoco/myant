@@ -227,7 +227,7 @@
             :rules="rules"
             >
             <a-form-model-item>
-                <a-input v-model="form.EnterpriseTel"  disabled ></a-input>
+                <a-input v-model="form.enterprisetel"  disabled ></a-input>
             </a-form-model-item>
             <a-form-model-item prop="phoneCode1">
                 <a-input v-model="form.phoneCode1" placeholder="请输入验证码">
@@ -506,7 +506,7 @@ components: {
         changeNewOk(){
             this.$refs.PruleForm3.validate((valid)=>{
                 if (valid) {   
-                  this.form.EnterpriseTel = this.form.NewTel
+                  this.form.enterprisetel = this.form.NewTel
                     this.changeNewVisible = false
                 }else{
                     return false

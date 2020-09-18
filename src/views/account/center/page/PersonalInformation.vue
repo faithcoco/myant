@@ -639,7 +639,7 @@ created(){
             this.departments = value.toString()
             console.log(this.departments);
         },
-        // 部门修改
+        //  部门修改
         departChange(){
             this.departVisible = true
         },

@@ -351,14 +351,22 @@ created(){
       getBasepersonInfo(params)
       .then((res)=>{
         console.log("返回值--getBasepersonInfo----->",JSON.stringify(res))
+        console.log("返回值--getBasepersonInfo----->",res)
         this.form = res.result
+         this.form.personcreationdate = PersonCreationdate
+         this.form.personbegintime = personbegintime
       })
       .catch(err => {})
-        console.log('this.basepersonPO-------->',this.basepersonPO);
         this.enterpriseid = this.baseenterprisePO.enterpriseid
         this.personid = this.basepersonPO.personid
-        console.log("this.enterpriseid",this.enterpriseid);
-        console.log(this.personid);
+        function getTimes(ns){
+            return new Date(parseInt(ns)*1000).toLocaleString().replace(/:\d{1,2}$/,'')
+        } 
+        let d = new Date(this.basepersonPO.personcreationdate);
+        let b = new Date(this.basepersonPO.personbegintime);
+        
+        let PersonCreationdate = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() +'日'
+        let personbegintime = b.getFullYear() + '年' + (b.getMonth() + 1) + '月' + b.getDate() +'日'     
 },
     computed: {
     ...mapGetters(['basepersonPO',"baseenterprisePO"])

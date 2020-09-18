@@ -49,14 +49,12 @@
                   <a-icon style="margin-right:10px" type="mail" class="upload-icon" />注册时间: {{ form.enterpriseregistrationtime }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right:10px" type="deployment-unit" class="upload-icon" />状态:{{ form.enterprisestatus }}
+                  <a-icon style="margin-right:10px" type="deployment-unit" class="upload-icon" />
+                  状态:
+                  <a-tag :color="color" style="margin-left:10px">{{form.enterprisestatus}}</a-tag>                  
+                  剩余试用时间:
+                  {{ form.enterprisetrialdays }}天
                 </a-form-item>
-                <!-- <a-form-item>
-                  <a-icon style="margin-right:10px" type="logout" class="upload-icon" />
-                  LOGO: 
-                  <a-avatar shape :size="100" icon="user" src="/avatar2.jpg" />
-                  {{ baseenterprisePO.LOGO }}
-                </a-form-item> -->
                 <!-- <a-form-item>
                   <a-icon style="margin-right:10px" type="contacts" class="upload-icon" />到期日: {{ baseenterprisePO.time }}
                 </a-form-item> -->
@@ -231,7 +229,7 @@
             </a-form-model-item>
             <a-form-model-item prop="phoneCode1">
                 <a-input v-model="form.phoneCode1" placeholder="请输入验证码">
-                    <a-button class="GPBtn"   slot="suffix" type="link" @click="getVerificationCode">获取验证码</a-button>
+                    <a-button class="GPBtn" :disabled="false"  slot="suffix" type="link" @click="getVerificationCode">获取验证码</a-button>
                 </a-input>
                 <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
             </a-form-model-item>
@@ -256,7 +254,7 @@
             </a-form-model-item>
             <a-form-model-item prop="phoneCode3">
                 <a-input v-model="form.phoneCode3" placeholder="请输入验证码">
-                    <a-button class="GPBtn3"   slot="suffix" type="link" @click="getPhoneVerificationCode">获取验证码</a-button>
+                    <a-button class="GPBtn3" :disabled='false'  slot="suffix" type="link" @click="getPhoneVerificationCode">获取验证码</a-button>
                 </a-input>
                 <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
             </a-form-model-item>
@@ -268,6 +266,7 @@
         :confirm-loading="confirmLoading"
         @ok="changeNewOk"
         @cancel="changeNewCancel"
+        v-show="Telshow"
         >
         <p>更改手机号后，您将使用新的手机号进行登录</p>
         <a-form-model 
@@ -275,8 +274,8 @@
             :model="form"
             :rules="rules"
             >
-            <a-form-model-item prop="NewTel">
-                <a-input v-model="form.NewTel" placeholder="请输入您新的手机号"></a-input>
+            <a-form-model-item prop="enterprisetel">
+                <a-input v-model="form.enterprisetel" placeholder="请输入您新的手机号"></a-input>
             </a-form-model-item>
         </a-form-model>
         <a-form-model 
@@ -298,6 +297,7 @@
         :confirm-loading="confirmLoading"
         @ok="changeNewPhoneOk"
         @cancel="changeNewPhoneCancel"
+        v-show="true"
         >
         <p>更改手机号后，您将使用新的手机号进行登录</p>
         <a-form-model 
@@ -327,7 +327,6 @@
 </template>
 <script>
 import Vue from 'vue'
-import Slider from '@/components/tools/Slider'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
 import moment from 'moment'
@@ -335,13 +334,15 @@ import { mapActions } from 'vuex'
 import AvatarModal from '../settings/AvatarModal'
 import {getBaseenterpriseInfo,updateBaseenterprise} from '@/api/manage'
 import {  mapGetters } from 'vuex'
+import { retrievePsdSendSMSregister } from '@/api/register'
 export default {
 components: {
-    Slider,
     AvatarModal
 	},
   data() {
     return {
+      Telshow: false,
+      Phoneshow: false,
       changeTelVisible1:false,
       changePhoneVisible1:false,
       preview: {},
@@ -391,8 +392,9 @@ components: {
         NewTel: '',
         Newphone: '',
         PersonPhone: '',
-        EnterpriseRegistrationtime: '',
+        enterpriseregistrationtime: '',
         EnterpriseStatus: '试用中',
+        enterprisetrialdays: '7',
         mail:'无',
         userCount: '无',
         LOGO: '/avatar2.jpg',
@@ -401,6 +403,7 @@ components: {
         cName:'',
         VerificationCode:'',
       },
+      color:'black',
       labelCol: { span: 4 },
       wrapperCol: { span: 18 },
       rules: {
@@ -418,7 +421,7 @@ components: {
               { required: true, message: '请输入手机号', trigger: 'blur' },
               { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
             ],
-          NewTel: [
+          enterprisetel: [
               { required: true, message: '请输入手机号', trigger: 'blur' },
               { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
             ],
@@ -435,52 +438,146 @@ components: {
     }
   },
   created(){
-      const params = {}
+    //企业状态：0待审核、1已审核、2已过期、5试用中、9已注销——注册成功默认5
+        if (this.baseenterprisePO.enterprisestatus === 5) {
+          this.baseenterprisePO.enterprisestatus = "试用中"
+          this.color = 'yellowgreen'
+        }
+        else if (this.baseenterprisePO.enterprisestatus === 1) {
+          this.baseenterprisePO.enterprisestatus = "待审核"
+          this.color = 'red'        
+        }
+        else if (this.baseenterprisePO.enterprisestatus === 2) {
+          this.baseenterprisePO.enterprisestatus = "已过期"
+          this.color = 'gray'        
+        }
+        else if (this.baseenterprisePO.enterprisestatus === 9) {
+          this.baseenterprisePO.enterprisestatus = "已注销"
+          this.color = 'black'        
+        }
+        const params = {}
         params.id =  this.baseenterprisePO.enterpriseid
         console.log(params);
         getBaseenterpriseInfo(params)
         .then((res)=>{
           console.log("返回值--getBaseenterpriseInfo----->",res)
           this.form = res.result
+          this.form.enterpriseregistrationtime = enterpriseregistrationtime
+          this.form.enterprisestatus = this.baseenterprisePO.enterprisestatus
+          this.color  = color
         })
         .catch(err => {})
+        let d = new Date(this.baseenterprisePO.enterpriseregistrationtime);
+        
+        let enterpriseregistrationtime = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() +'日'
+
+
   },
     computed: {
     ...mapGetters(['baseenterprisePO'])
   },
   methods: {
         getNewPhoneVerificationCode(){
-      this.$refs.PruleForm4.validate((valid) => {
-        if (valid) {
-            var oBtn1 = document.getElementsByClassName('GPBtn2')[0];
-            this.$message.info("发送验证码成功！")
-            var time = 60;
-            var timer = null;
-            oBtn1.innerHTML = time + '秒后重新发送';
-            oBtn1.setAttribute('disabled', 'disabled');  // 禁用按钮
-            // oBtn.setAttribute('class', 'disabled');   // 添加class 按钮样式变灰
-            timer = setInterval(function(){
-              // 定时器到底了 兄弟们回家啦
-              if(time == 1){
-                clearInterval(timer);       
-                oBtn1.innerHTML = '获取验证码';  
-                oBtn1.removeAttribute('disabled'); //移除禁用效果
-                // oBtn.removeAttribute('class');  //移除变灰样式效果
-              }else{
-                time--;
+          this.$refs.PruleForm4.validate((valid) => {
+            if (valid) {
+            const hide = this.$message.loading('验证码发送中..', 0)
+              console.log(this.form.Newphone);
+            const  params = {}
+            params.enterprisephone =  this.form.Newphone
+            retrievePsdSendSMSregister(params)
+                .then((res) => {
+                if (res.status == "SUCCESS") {
+                    setTimeout(hide, 2500)
+                    this.$notification['success']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                })
+                }
+                else if(res.status == "FAILED" ||  res.status == "EXCEPTION"){
+                    setTimeout(hide, 2500)
+                    this.$notification['error']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                })
+                }
+                })
+                .catch((err) => {
+                setTimeout(hide, 1)
+                clearInterval(interval)
+                state.time = 60
+                state.smsSendBtn = false
+                this.requestFailed(err)
+                })
+                var oBtn1 = document.getElementsByClassName('GPBtn4')[0];
+                // this.$message.info("发送验证码成功！")
+                var time = 60;
+                var timer = null;
                 oBtn1.innerHTML = time + '秒后重新发送';
+                oBtn1.setAttribute('disabled', 'disabled');  // 禁用按钮
+                // oBtn.setAttribute('class', 'disabled');   // 添加class 按钮样式变灰
+                timer = setInterval(function(){
+                  // 定时器到底了 兄弟们回家啦
+                  if(time == 1){
+                    clearInterval(timer);       
+                    oBtn1.innerHTML = '获取验证码';  
+                    oBtn1.removeAttribute('disabled'); //移除禁用效果
+                    // oBtn.removeAttribute('class');  //移除变灰样式效果
+                  }else{
+                    time--;
+                    oBtn1.innerHTML = time + '秒后重新发送';
+                  }
+                }, 1000)
+                console.log("获取验证码");
               }
-            }, 1000)
-            console.log("获取验证码");
-          }
-        })
+            })
 
         },
+        verificationCancel(){
+            this.verificationVisible = false
+            this.Success=false
+            this.$refs.slideblock.reset();//重置滑动验证
+        },
+        phoneverificationCancel(){
+            this.phoneVerificationVisible = false
+            this.Success=false
+            this.$refs.slideblock.reset();//重置滑动验证
+        },
         getVerificationCode1(){
-      this.$refs.PruleForm2.validate((valid) => {
-        if (valid) {
+           this.$refs.PruleForm2.validate((valid) => {
+            if (valid) {
+            const  params = {}
+            const hide = this.$message.loading('验证码发送中..', 0)
+            console.log( this.form.enterprisetel);
+            params.enterprisephone =  this.form.enterprisetel
+            retrievePsdSendSMSregister(params)
+                .then((res) => {
+                if (res.status == "SUCCESS") {
+                    setTimeout(hide, 2500)
+                    this.$notification['success']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                })
+                }
+                else if(res.status == "FAILED" ||  res.status == "EXCEPTION"){
+                    setTimeout(hide, 2500)
+                    this.$notification['error']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                })
+                }
+                })
+                .catch((err) => {
+                setTimeout(hide, 1)
+                clearInterval(interval)
+                state.time = 60
+                state.smsSendBtn = false
+                this.requestFailed(err)
+                })
             var oBtn1 = document.getElementsByClassName('GPBtn2')[0];
-            this.$message.info("发送验证码成功！")
             var time = 60;
             var timer = null;
             oBtn1.innerHTML = time + '秒后重新发送';
@@ -506,7 +603,6 @@ components: {
         changeNewOk(){
             this.$refs.PruleForm3.validate((valid)=>{
                 if (valid) {   
-                  this.form.enterprisetel = this.form.NewTel
                     this.changeNewVisible = false
                 }else{
                     return false
@@ -531,6 +627,7 @@ components: {
             this.changeNewVisible = false;
         },
         changeTelhandleOk(){
+          this.Telshow = true
             this.$refs.ruleForm1.validate((valid)=>{
                 if (valid) {            
                     this.changeTelVisible1 = false
@@ -736,12 +833,12 @@ components: {
               setTimeout(() => {
                 this.loading = false
                 this.phoneVisible = false
-                this.$refs.slideblock.reset();//重置滑动验证
                 this.form.Newphone = ''
                 this.form.VerificationCode = ''
                 this.$message.info('初始化成功！！！')
                 var oBtn = document.getElementsByClassName('GVbtn')[0];
                 oBtn.setAttribute('disabled', 'disabled');  // 禁用按钮
+                this.success = false
                 this.$refs.slideblock.reset();//重置滑动验证
               }, 4000)
             }
@@ -757,16 +854,46 @@ components: {
       this.form.VerificationCode = ''
       var oBtn = document.getElementsByClassName('GVbtn')[0];
       oBtn.setAttribute('disabled', 'disabled');  // 禁用按钮
+      this.Success=false
       this.$refs.slideblock.reset();//重置滑动验证
       this.$refs.PruleForm.resetFields()
       this.$refs.GruleForm.resetFields()
       var pBtn = document.getElementsByClassName('phoneBtn')[0];
       pBtn.setAttribute('disabled', 'disabled');  // 禁用按钮
     },
-
     getVerificationCode(){
             var oBtn1 = document.getElementsByClassName('GPBtn')[0];
-            this.$message.info("发送验证码成功！")
+            // this.$message.info("发送验证码成功！")
+            const hide = this.$message.loading('验证码发送中..', 0)
+            console.log(this.form.enterprisetel);
+            const  params = {}
+            params.enterprisephone =  this.form.enterprisetel
+            retrievePsdSendSMSregister(params)
+                .then((res) => {
+                if (res.status == "SUCCESS") {
+                    setTimeout(hide, 2500)
+                    this.$notification['success']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                })
+                }
+                else if(res.status == "FAILED" ||  res.status == "EXCEPTION"){
+                    setTimeout(hide, 2500)
+                    this.$notification['error']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                })
+                }
+                })
+                .catch((err) => {
+                setTimeout(hide, 1)
+                clearInterval(interval)
+                state.time = 60
+                state.smsSendBtn = false
+                this.requestFailed(err)
+                })
             var time = 60;
             var timer = null;
             oBtn1.innerHTML = time + '秒后重新发送';
@@ -787,8 +914,38 @@ components: {
             console.log("获取验证码");
     },
     getPhoneVerificationCode(){
+      console.log(this.form.enterprisephone);
+            const hide = this.$message.loading('验证码发送中..', 0)
+              const  params = {}
+            params.enterprisephone =  this.form.enterprisephone
+            retrievePsdSendSMSregister(params)
+                .then((res) => {
+                if (res.status == "SUCCESS") {
+                    setTimeout(hide, 2500)
+                    this.$notification['success']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                })
+                }
+                else if(res.status == "FAILED" ||  res.status == "EXCEPTION"){
+                    setTimeout(hide, 2500)
+                    this.$notification['error']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                })
+                }
+                })
+                .catch((err) => {
+                setTimeout(hide, 1)
+                clearInterval(interval)
+                state.time = 60
+                state.smsSendBtn = false
+                this.requestFailed(err)
+                })
             var oBtn1 = document.getElementsByClassName('GPBtn3')[0];
-            this.$message.info("发送验证码成功！")
+            // this.$message.info("发送验证码成功！")
             var time = 60;
             var timer = null;
             oBtn1.innerHTML = time + '秒后重新发送';
@@ -819,7 +976,7 @@ components: {
             console.log("pBtn_________>",pBtn);
             pBtn.removeAttribute('disabled')
             var oBtn = document.getElementsByClassName('GVbtn')[0];
-            this.$message.info("发送验证码成功！")
+            // this.$message.info("发送验证码成功！")
             var time = 60;
             var timer = null;
             oBtn.innerHTML = time + '秒后重新发送';

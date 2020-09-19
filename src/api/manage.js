@@ -31,6 +31,11 @@ const api = {
   MessageSettin: '/MessageSettin/tree',
   approval: '/approval',
   Sector: '/Sector',
+  BasepersonInfo: '/bd/baseperson/getBasepersonInfo',
+  BaseenterpriseInfo: '/bd/Baseenterprise/getBaseenterpriseInfo',
+  updateBaseperson: '/bd/baseperson/updateBaseperson',
+  updateBaseenterprise: '/bd/Baseenterprise/updateBaseenterprise',
+  insertBaseenterprise: '/bd/Baseenterprise//insertBaseenterprise',
 
   productList: '/productList',
   SupplierList: '/SupplierList',
@@ -669,6 +674,41 @@ export function getMessageSettinTree(parameter) {
     url: api.MessageSettin,
     method: 'get',
     params: parameter
+  })
+}
+export function getBasepersonInfo(parameter) {
+  return axios({
+    url: api.BasepersonInfo,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getBaseenterpriseInfo(parameter) {
+  return axios({
+    url: api.BaseenterpriseInfo,
+    method: 'get',
+    params: parameter
+  })
+}
+export function updateBaseperson(parameter) {
+  return axios({
+    url: api.updateBaseperson,
+    method: 'post',
+    data: parameter
+  })
+}
+export function updateBaseenterprise(parameter) {
+  return axios({
+    url: api.updateBaseenterprise,
+    method: 'post',
+    data: parameter
+  })
+}
+export function insertBaseenterprise(parameter) {
+  return axios({
+    url: api.insertBaseenterprise,
+    method: 'post',
+    data: parameter
   })
 }
 

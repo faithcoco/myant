@@ -136,6 +136,9 @@ export default {
   data() {
     return {
       customActiveKey: '2',
+      enterprisephone: '',
+      password: '',
+      phoneCode: '',
       loginBtn: false,
       // login type: 0 email, 1 username, 2 telephone
       loginType: 0,
@@ -149,9 +152,6 @@ export default {
         // login type: 0 email, 1 username, 2 telephone
         loginType: 0,
         smsSendBtn: false,
-        enterprisephone: '',
-        password: '',
-        phoneCode: '',
       },
     }
   },
@@ -181,7 +181,7 @@ export default {
     },
     handleTabClick(key) {
       this.customActiveKey = key
-
+      console.log(key);
       // this.form.resetFields()
     },
     handleSubmit(e) {
@@ -195,12 +195,12 @@ export default {
 
       state.loginBtn = true
 
-      const validateFieldsKey = customActiveKey === '1' ? ['username', 'password'] : ['mobile', 'captcha']
+      const validateFieldsKey = customActiveKey === '2' ? ['username', 'password'] : ['mobile', 'captcha']
 
       validateFields(validateFieldsKey, { force: true }, (err, values) => {
         if (!err) {
           const loginParams = {}
-
+          console.log(this.customActiveKey);
           loginParams.enterprisephone = this.enterprisephone
           loginParams.password = this.password
           loginParams.phoneCode = this.phoneCode

@@ -46,10 +46,10 @@ export const asyncRouterMap = [
             meta: { title: '工作台', permission: ['00'] }
           },
           {
-            path: '/account/center',
+            path: '/account/center/PersonalInformation',
             name: 'center',
             hidden: true,
-            component: () => import('@/views/account/center/Index'),
+            component: () => import('@/views/account/center/page/PersonalInformation'),
             meta: { title: '个人中心', keepAlive: true, permission: ['user'] }
           },
           {

@@ -13,11 +13,11 @@
       </a-col>
       <a-col :md="20">
         <div style="max-width: 800px">
-          <a-divider v-if="isMobile()" />
+        
           <div v-if="mdl.id">
             <h3>角色：{{ mdl.name }}</h3>
           </div>
-          <a-form :form="form" :layout="isMobile() ? 'vertical' : 'horizontal'">
+          <a-form :form="form" >
             <a-form-item label="唯一键">
               <a-input v-decorator="[ 'id', {rules: [{ required: true, message: 'Please input unique key!' }]} ]" placeholder="请填写唯一键" />
             </a-form-item>
@@ -63,14 +63,13 @@
 </template>
 
 <script>
-import { getRoleList, getPermissions } from '@/api/manage'
-import { mixinDevice } from '@/utils/mixin'
-import { actionToObject } from '@/utils/permissions'
 import pick from 'lodash.pick'
+import { getRoleList, getPermissions } from '@/api/manage'
+import { actionToObject } from '@/utils/permissions'
+
 
 export default {
   name: 'RoleList',
-  mixins: [mixinDevice],
   components: {},
   data () {
     return {
@@ -83,6 +82,7 @@ export default {
   },
   created () {
     getRoleList().then((res) => {
+      console.log(" getRoleList---->",JSON.stringify(res))
       this.roles = res.result.data
       this.roles.push({
         id: '-1',
@@ -144,6 +144,7 @@ export default {
     },
     loadPermissions () {
       getPermissions().then(res => {
+        console.log(" getPermissions---------->",JSON.stringify(res))
         const result = res.result
         this.permissions = result.map(permission => {
           const options = actionToObject(permission.actionData)

@@ -86,18 +86,18 @@ const vueConfig = {
   },
 
 
-  devServer: {
+  // devServer: {
   
-    proxy: {
-      '/api': {
-        target: 'http://47.102.103.27:8080/wms-web/pc',
-        changeOrigin: true,
-        pathRewrite: {
-          '^/api': '/'
-        }
-      },
-    }
-  },
+  //   proxy: {
+  //     '/api': {
+  //       target: 'http://47.102.103.27:8080/wms-web/pc',
+  //       changeOrigin: true,
+  //       pathRewrite: {
+  //         '^/api': '/'
+  //       }
+  //     },
+  //   }
+  // },
 
 
   // disable source map in production

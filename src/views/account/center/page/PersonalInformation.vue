@@ -239,18 +239,22 @@
                 :model="form"
                 :rules="GPrules"
                 >
-                <a-form-model-item  label="原密码:" prop="inputPassword">
-                    <a-input-password v-model="form.inputPassword" @change="CPchange" placeholder="请输入原密码">
-                    </a-input-password>
-                </a-form-model-item>
                 <a-form-model-item  label="新密码:" prop="newPersonPassword">
-                    <a-input-password v-model="form.newPersonPassword"  :disabled="disabled" placeholder="请输入密码">
+                    <a-input-password v-model="form.newPersonPassword"  placeholder="请输入密码">
                     </a-input-password>
                 </a-form-model-item>
                 <a-form-model-item  label="确认密码:" prop="CPersonPassword">
-                    <a-input-password v-model="form.CPersonPassword"  :disabled="disabled" placeholder="请输入密码">
+                    <a-input-password v-model="form.CPersonPassword"  placeholder="请输入密码">
                     </a-input-password>
                 </a-form-model-item>
+
+            <a-form-model-item prop="phoneCode4">
+                <a-input v-model="form.phoneCode4"   placeholder="请输入验证码">
+                    <a-button class="GPBtn4" slot="suffix" :disabled="false" type="link" @click="getNewpasswordVerificationCode">获取验证码</a-button>
+                </a-input>
+                <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
+            </a-form-model-item>
+
             </a-form-model>
         </a-modal>
     </div>
@@ -262,8 +266,9 @@ import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
 import {  mapGetters } from 'vuex'
 import { retrievePsdSendSMSregister } from '@/api/register'
+import { forgetPasswordlogin } from '@/api/ForgotPassword'
 
-import { getBasepersonInfo,updateBaseperson } from '@/api/manage'
+import { getBaseenterpriseInfo,getBasepersonInfo,updateBaseperson } from '@/api/manage'
 export default {
     name: 'PersonalInformation',
     components: {
@@ -286,6 +291,7 @@ export default {
                 lineHeight: '30px',
             },
             form:{
+                enterprisephone:'',
                 DepartmentID: '开发部',
                 PersonName: 'curry',
                 PersonPhone: '',
@@ -304,7 +310,9 @@ export default {
                 Character: '主管理员',
                 phoneCode1: '',
                 phoneCode2: '',
+                phoneCode4: '',
             },
+            enterprisephone:'',
             enterpriseid:'',
             personid:'',
             labelCol: { span: 4 },
@@ -334,6 +342,7 @@ export default {
                 inputPassword: [{ required: true, message: '请输入原密码', trigger: 'blur' }],
                 newPersonPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
                 CPersonPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
+                phoneCode4: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
             },
             Mrules: {
                 //校验规则
@@ -346,11 +355,24 @@ export default {
         }
     },
 created(){
+        const Params = {}
+        Params.id =  this.baseenterprisePO.enterpriseid
+        console.log(Params);
+        getBaseenterpriseInfo(Params)
+        .then((res)=>{
+          console.log("企业信息返回值--getBaseenterpriseInfo----->",res.result)
+          console.log("企业手机信息返回值--getBaseenterpriseInfo----->",res.result.enterprisephone)
+            this.enterprisephone = res.result.enterprisephone
+            console.log(this.enterprisephone);
+        })
+        .catch(err => {})
+
+
       const params = {}
         params.id =  this.basepersonPO.personid
       getBasepersonInfo(params)
       .then((res)=>{
-        console.log("返回值--getBasepersonInfo----->",JSON.stringify(res))
+        console.log("个人信息返回值--getBasepersonInfo----->",JSON.stringify(res))
         console.log("返回值--getBasepersonInfo----->",res)
         this.form = res.result
          this.form.personcreationdate = PersonCreationdate
@@ -376,7 +398,66 @@ created(){
             this.Success = confirmSuccess
             console.log(this.Success);
         },
+       getNewpasswordVerificationCode(){
+          this.$refs.CPruleForm.validate((valid) => {
+            if (valid) {
+            const hide = this.$message.loading('验证码发送中..', 0)
+              console.log(this.enterprisephone);
+            const  params = {}
+            params.enterprisephone =  this.enterprisephone
+            console.log(params);
+            retrievePsdSendSMSregister(params)
+                .then((res) => {
+                if (res.status == "SUCCESS") {
+                    setTimeout(hide, 2500)
+                    this.$notification['success']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                })
+                }
+                else if(res.status == "FAILED" ||  res.status == "EXCEPTION"){
+                    setTimeout(hide, 2500)
+                    this.$notification['error']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                })
+                }
+                })
+                .catch((err) => {
+                setTimeout(hide, 1)
+                clearInterval(interval)
+                state.time = 60
+                state.smsSendBtn = false
+                this.requestFailed(err)
+                })
+                var oBtn1 = document.getElementsByClassName('GPBtn4')[0];
+                // this.$message.info("发送验证码成功！")
+                var time = 60;
+                var timer = null;
+                oBtn1.innerHTML = time + '秒后重新发送';
+                oBtn1.setAttribute('disabled', 'disabled');  // 禁用按钮
+                // oBtn.setAttribute('class', 'disabled');   // 添加class 按钮样式变灰
+                timer = setInterval(function(){
+                  // 定时器到底了 兄弟们回家啦
+                  if(time == 1){
+                    clearInterval(timer);       
+                    oBtn1.innerHTML = '获取验证码';  
+                    oBtn1.removeAttribute('disabled'); //移除禁用效果
+                    // oBtn.removeAttribute('class');  //移除变灰样式效果
+                  }else{
+                    time--;
+                    oBtn1.innerHTML = time + '秒后重新发送';
+                  }
+                }, 1000)
+                console.log("获取验证码");
+              }
+            })
+
+        },
         CPchange(){
+            console.log();
             if (this.form.PersonPassword === this.form.inputPassword) {
                 this.disabled = false
             }
@@ -385,11 +466,34 @@ created(){
             this.changePasswordVisible = true
         },
         changePasswordhandleOk(e) {
-            this.confirmLoading = true;
+            // this.confirmLoading = true;
             this.$refs.CPruleForm.validate((valid) => {
                 if (valid&&this.form.newPersonPassword === this.form.CPersonPassword) {
+                const params = {}
+                    params.enterprisephone = this.enterprisephone
+                    params.password = this.form.newPersonPassword
+                    params.phoneCode = this.form.phoneCode
+                    console.log("params----->",params);
+                forgetPasswordlogin(params).then((res) => {
+                    console.log("params -------->",params);
+                    console.log("forgetPasswordlogin -------->",res);
+                    if (res.status == 'SUCCESS') {
+                    console.log('修改成功！！！');
                     setTimeout(() => {
+                        this.$notification.success({
+                        message: '修改成功！！！',
+                        })
+                        
                         this.changePasswordVisible = false;
+                    }, 1000)
+                    }else{
+                    console.log("修改错误",res.errorMsg);
+                    this.$message.error(res.errorMsg)
+                     return false
+                    }
+                })
+
+                    setTimeout(() => {
                         this.confirmLoading = false;
                     }, 2000);
                 }

@@ -20,7 +20,7 @@
             </router-link>
           </a-menu-item>
           <a-menu-item key="1">
-            <router-link :to="{ name: 'CorporationInfo' }">
+            <router-link :to="{ name: 'enterprise-information' }">
               <a-icon type="home" />
               <span>企业信息</span>
             </router-link>

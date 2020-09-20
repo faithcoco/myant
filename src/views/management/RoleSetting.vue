@@ -39,10 +39,10 @@
 
             <a-form-item label="拥有权限">
               <a-row :gutter="16" v-for="(permission, index) in permissions" :key="index">
-                <a-col :xl="4" :lg="24">
+                <a-col :xl="3" :lg="24">
                   {{ permission.name }}：
                 </a-col>
-                <a-col :xl="20" :lg="24">
+                <a-col :xl="21" :lg="24">
                   <a-checkbox
                     v-if="permission.actionsOptions.length > 0"
                     :indeterminate="permission.indeterminate"

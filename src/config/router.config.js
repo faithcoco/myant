@@ -17,92 +17,6 @@ export const asyncRouterMap = [
         meta: { title: '首页', icon: 'user', keepAlive: true, permission: ['00'] }
       },
       {
-        path: '/account',
-        component: RouteView,
-        redirect: '/account/center',
-        name: 'account',
-        hidden: true,
-        meta: { title: '首页', icon: 'user', keepAlive: true, permission: ['user'] },
-        children: [
-          {
-            path: '/dashboard/analysis',
-            name: 'Analysis',
-            hidden: true,
-            component: () => import('@/views/dashboard/Analysis'),
-            meta: { title: '分析页', permission: ['dashboard'] }
-          },
-          {
-            path: '/dashboard/monitor',
-            name: 'Monitor',
-            hidden: true,
-            component: () => import('@/views/dashboard/Monitor'),
-            meta: { title: '监控页', permission: ['dashboard'] }
-          },
-          {
-            path: '/dashboard/workplace',
-            name: 'Workplace',
-            component: RouteView,
-            component: () => import('@/views/dashboard/Workplace'),
-            meta: { title: '工作台', permission: ['00'] }
-          },
-          {
-            path: '/account/center/PersonalInformation',
-            name: 'center',
-            hidden: true,
-            component: () => import('@/views/account/center/page/PersonalInformation'),
-            meta: { title: '个人中心', keepAlive: true, permission: ['user'] }
-          },
-          {
-            path: '/account/center/CorporationInfo',
-            name: 'CorporationInfo',
-            hidden: true,
-            component: () => import('@/views/account/center/CorporationInfo'),
-            meta: { title: '企业中心', keepAlive: true, permission: ['user'] }
-          },
-          {
-            path: '/account/settings',
-            name: 'settings',
-            hidden: true,
-            component: () => import('@/views/account/settings/Index'),
-            meta: { title: '个人设置', hideHeader: true, permission: ['user'] },
-            redirect: '/account/settings/base',
-            hideChildrenInMenu: true,
-            children: [
-              {
-                path: '/account/settings/base',
-                name: 'BaseSettings',
-                component: () => import('@/views/account/settings/BaseSetting'),
-                meta: { title: '基本设置', hidden: true, permission: ['user'] }
-              },
-              {
-                path: '/account/settings/security',
-                name: 'SecuritySettings',
-                component: () => import('@/views/account/settings/Security'),
-                meta: { title: '安全设置', hidden: true, keepAlive: true, permission: ['user'] }
-              },
-              {
-                path: '/account/settings/custom',
-                name: 'CustomSettings',
-                component: () => import('@/views/account/settings/Custom'),
-                meta: { title: '个性化设置', hidden: true, keepAlive: true, permission: ['user'] }
-              },
-              {
-                path: '/account/settings/binding',
-                name: 'BindingSettings',
-                component: () => import('@/views/account/settings/Binding'),
-                meta: { title: '账户绑定', hidden: true, keepAlive: true, permission: ['user'] }
-              },
-              {
-                path: '/account/settings/notification',
-                name: 'NotificationSettings',
-                component: () => import('@/views/account/settings/Notification'),
-                meta: { title: '新消息通知', hidden: true, keepAlive: true, permission: ['user'] }
-              }
-            ]
-          }
-        ]
-      },
-      {
         path: '/basic_archives',
         name: 'basic_archives',
         component: RouteView,
@@ -367,8 +281,14 @@ export const asyncRouterMap = [
           {
             path: 'EnterpriseInformation',
             name: 'enterprise-information',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/management/EnterpriseInformation.vue'),
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/account/center/CorporationInfo'),
             meta: { title: '企业信息', icon: 'user', permission: ['05-01'] }
+          }, {
+            path: '/account/center/PersonalInformation',
+            name: 'center',
+            hidden: true,
+            component: () => import('@/views/account/center/page/PersonalInformation'),
+            meta: { title: '个人中心', keepAlive: true }
           },
           {
             path: 'RoleSetting',

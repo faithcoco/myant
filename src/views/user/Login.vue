@@ -54,6 +54,7 @@
         <a-tab-pane key="1" tab="验证码登录">
           <a-form-item>
             <a-input
+              v-model="enterprisephone"
               size="large"
               type="text"
               placeholder="手机号"

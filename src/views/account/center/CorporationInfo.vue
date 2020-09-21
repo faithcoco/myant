@@ -99,7 +99,7 @@
         :label-col="labelCol"
         :wrapper-col="wrapperCol"
       >
-          <a-form-model-item label="企业名称:"  prop="EnterpriseName">
+          <a-form-model-item label="企业名称:"  prop="enterprisename">
           <a-input v-model="form.enterprisename"  placeholder="请输入企业名称"></a-input>
           </a-form-model-item>
           <a-form-model-item label="企业地址:"  prop="EnterpriseAddress">
@@ -140,7 +140,7 @@
         >
         <a-form-model-item 
           style="display: flex; align-items: center;justify-content: center;text-align: justify;">
-        {{form.EnterpriseName}}
+        {{form.enterprisename}}
         </a-form-model-item>
         <a-form-model-item label="" prop="cName">
         <a-input v-model="form.cName" placeholder="输入企业名称以确认初始化企业数据"></a-input>
@@ -171,11 +171,8 @@
         <a-form-model-item>
           <span>手机验证通过后会初始化数据</span>
         </a-form-model-item>
-        <a-form-model-item label="输入手机号:" prop="Newphone" >
-        <a-input v-model="form.Newphone" placeholder="请输入手机号"></a-input>
-        </a-form-model-item>
-        <a-form-model-item label="滑动验证码:">
-          <slider ref="slideblock" v-on:confirmSuccess="confirmSuccess"></slider>
+        <a-form-model-item label="输入手机号:" prop="enterprisephone" >
+        <a-input v-model="form.enterprisephone" placeholder="请输入手机号"></a-input>
         </a-form-model-item>
       </a-form-model>
       <a-form-model
@@ -186,8 +183,8 @@
         :wrapper-col="wrapperCol"
       >
         <a-form-model-item label="输入验证码:" prop="VerificationCode">
-          <a-input v-model="form.VerificationCode" placeholder="输入验证码-111">
-            <a-button class="GVbtn" disabled slot="suffix" type="link" @click="getMailVerificationCode">获取验证码</a-button>
+          <a-input v-model="form.VerificationCode" placeholder="输入验证码">
+            <a-button class="GVbtn" :disabled="false" slot="suffix" type="link" @click="getMailVerificationCode">获取验证码</a-button>
           </a-input>
         </a-form-model-item>
         <a-form-model-item >
@@ -205,7 +202,7 @@
     >
       <p>请从下面选择一个企业进行切换</p>
         <a-radio-group :default-value="1" @change="onChange">
-            <a-radio v-for="defaultEnterpriseName in EnterpriseName" :key="defaultEnterpriseName" :style="radioStyle" :value="defaultEnterpriseName">
+            <a-radio v-for="defaultEnterpriseName in enterprisename" :key="defaultEnterpriseName" :style="radioStyle" :value="defaultEnterpriseName">
                 {{defaultEnterpriseName}}
             </a-radio>
         </a-radio-group>
@@ -379,16 +376,17 @@ components: {
       changeNewVisible: false,  
       changeNewPhoneVisible: false,  
       name:'',   
-      EnterpriseName : ['上古', '下海'],
+      enterprisename : ['上古', '下海'],
       Form:Object,
       form:{
         EnterpriseAddress: '上海',
-        EnterpriseName: '上古',
+        enterprisename: '上古',
         EnterpriseContact: 'curry',
         EnterpriseTel: '无',
         EnterpriseRegistrant: 'curry',
         enterprisename:'',
         EnterprisePhone: '无',
+        enterprisephone: '',
         NewTel: '',
         Newphone: '',
         PersonPhone: '',
@@ -403,20 +401,20 @@ components: {
         cName:'',
         VerificationCode:'',
       },
-      color:'black',
+      color:'green',
       labelCol: { span: 4 },
       wrapperCol: { span: 18 },
       rules: {
           //校验规则
-          // EnterpriseName: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
+          enterprisename: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
           // EnterpriseAddress: [{ required: true, message: '请输入企业地址', trigger: 'blur' }],
           // EnterpriseContact: [{ required: true, message: '请输入联系人', trigger: 'blur' }],
           // EnterpriseTel: [{ required: true, message: '请输入电话', trigger: 'blur' },
           //                 { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },],
-          // EnterprisePhone: [
-          //     { required: true, message: '请输入手机号', trigger: 'blur' },
-          //     { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
-          //   ],
+          EnterprisePhone: [
+              { required: true, message: '请输入手机号', trigger: 'blur' },
+              { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
+            ],
           Newphone: [
               { required: true, message: '请输入手机号', trigger: 'blur' },
               { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
@@ -441,11 +439,15 @@ components: {
     //企业状态：0待审核、1已审核、2已过期、5试用中、9已注销——注册成功默认5
         if (this.baseenterprisePO.enterprisestatus === 5) {
           this.baseenterprisePO.enterprisestatus = "试用中"
-          this.color = 'yellowgreen'
+          this.color = 'yellow'
         }
-        else if (this.baseenterprisePO.enterprisestatus === 1) {
+        else if (this.baseenterprisePO.enterprisestatus === 0) {
           this.baseenterprisePO.enterprisestatus = "待审核"
           this.color = 'red'        
+        }
+        else if (this.baseenterprisePO.enterprisestatus === 1) {
+          this.baseenterprisePO.enterprisestatus = "已审核"
+          this.color = 'yellowgreen'        
         }
         else if (this.baseenterprisePO.enterprisestatus === 2) {
           this.baseenterprisePO.enterprisestatus = "已过期"
@@ -464,7 +466,6 @@ components: {
           this.form = res.result
           this.form.enterpriseregistrationtime = enterpriseregistrationtime
           this.form.enterprisestatus = this.baseenterprisePO.enterprisestatus
-          this.color  = color
         })
         .catch(err => {})
         let d = new Date(this.baseenterprisePO.enterpriseregistrationtime);
@@ -536,13 +537,9 @@ components: {
         },
         verificationCancel(){
             this.verificationVisible = false
-            this.Success=false
-            this.$refs.slideblock.reset();//重置滑动验证
         },
         phoneverificationCancel(){
             this.phoneVerificationVisible = false
-            this.Success=false
-            this.$refs.slideblock.reset();//重置滑动验证
         },
         getVerificationCode1(){
            this.$refs.PruleForm2.validate((valid) => {
@@ -661,9 +658,9 @@ components: {
         },
     onChange(e) {
       console.log('radio checked', e.target.value);
-      console.log('radio checked', this.form1.EnterpriseName);
+      console.log('radio checked', this.form.enterprisename);
 
-      if (e.target.value == this.form1.EnterpriseName) {
+      if (e.target.value == this.form.enterprisename) {
         this.Form = this.form1
       }else{
         this.Form = this.form2
@@ -763,7 +760,7 @@ components: {
         title: '确认将要解散企业？',
         content: '解散企业操作不可撤回，请慎重考虑',
         onOk: () => {
-          if (this.EnterpriseName != []) {
+          if (this.enterprisename != []) {
             
             this.$router.push({ path: '/changeCorporation', })
             return 
@@ -802,11 +799,11 @@ components: {
     confirmOk(e) {
 
       console.log('this.form.cName------>',this.form.cName);
-      console.log('this.form.EnterpriseName------>',this.form.EnterpriseName);
+      console.log('this.form.enterprisename------>',this.form.enterprisename);
           this.$refs.CruleForm.validate((valid) => {
           if (valid) {
               this.confirmLoading = true
-              if (this.form.cName==this.form.EnterpriseName) {
+              if (this.form.cName==this.form.enterprisename) {
                 setTimeout(() => {
                   console.log('ok');
                   this.confirmLoading = false
@@ -838,8 +835,6 @@ components: {
                 this.$message.info('初始化成功！！！')
                 var oBtn = document.getElementsByClassName('GVbtn')[0];
                 oBtn.setAttribute('disabled', 'disabled');  // 禁用按钮
-                this.success = false
-                this.$refs.slideblock.reset();//重置滑动验证
               }, 4000)
             }
           })
@@ -854,8 +849,6 @@ components: {
       this.form.VerificationCode = ''
       var oBtn = document.getElementsByClassName('GVbtn')[0];
       oBtn.setAttribute('disabled', 'disabled');  // 禁用按钮
-      this.Success=false
-      this.$refs.slideblock.reset();//重置滑动验证
       this.$refs.PruleForm.resetFields()
       this.$refs.GruleForm.resetFields()
       var pBtn = document.getElementsByClassName('phoneBtn')[0];
@@ -965,42 +958,75 @@ components: {
             }, 1000)
             console.log("获取验证码");
     },
+    // Newphonechange(){
+    //   this.$refs.PruleForm.validate((valid) => {
+    //     if (valid) {  
+    //         var oBtn = document.getElementsByClassName('GVbtn')[0];
+    //         oBtn.removeAttribute('disabled'); //移除禁用效果
+    //     }
+    //     return false    
+    //   })
+    // },
     getMailVerificationCode(){
-      if (this.Success!=true) {
-          this.$message.info('验证未通过！');
-          return false
-      }
-      this.$refs.PruleForm.validate((valid) => {
-        if (valid) {
             var pBtn = document.getElementsByClassName('phoneBtn')[0];
             console.log("pBtn_________>",pBtn);
             pBtn.removeAttribute('disabled')
             var oBtn = document.getElementsByClassName('GVbtn')[0];
-            // this.$message.info("发送验证码成功！")
+
+            const hide = this.$message.loading('验证码发送中..', 0)
+            const  params = {}
+            console.log('手机号码----->',this.form.enterprisephone);
+            params.enterprisephone =  this.form.enterprisephone
+            retrievePsdSendSMSregister(params)
+                .then((res) => {
+                if (res.status == "SUCCESS") {
+                    setTimeout(hide, 2500)
+                    this.$notification['success']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                })
+                }
+                else if(res.status == "FAILED" ||  res.status == "EXCEPTION"){
+                    setTimeout(hide, 2500)
+                    this.$notification['error']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                })
+                }
+                })
+                .catch((err) => {
+                setTimeout(hide, 1)
+                clearInterval(interval)
+                state.time = 60
+                state.smsSendBtn = false
+                this.requestFailed(err)
+                })
+
             var time = 60;
             var timer = null;
             oBtn.innerHTML = time + '秒后重新发送';
             oBtn.setAttribute('disabled', 'disabled');  // 禁用按钮
             // oBtn.setAttribute('class', 'disabled');   // 添加class 按钮样式变灰
             timer = setInterval(function(){
-              // 定时器到底了 兄弟们回家啦
-              if(time == 1){
-                clearInterval(timer);       
-                oBtn.innerHTML = '获取验证码';  
-                oBtn.removeAttribute('disabled'); //移除禁用效果
-                // oBtn.removeAttribute('class');  //移除变灰样式效果
-              }else if (this.phoneVisible === false){
-                clearInterval(timer); 
-                console.log("结束计时器");   
-              }else{
-                time--;
-                oBtn.innerHTML = time + '秒后重新发送';
-              }
-            }, 1000)
-          console.log("获取验证码");
-        }
-        return false
-      })
+                // 定时器到底了 兄弟们回家啦
+                if(time == 1){
+                  clearInterval(timer);       
+                  oBtn.innerHTML = '获取验证码';  
+                  oBtn.removeAttribute('disabled'); //移除禁用效果
+                  // oBtn.removeAttribute('class');  //移除变灰样式效果
+                }else if (this.phoneVisible === false){
+                  clearInterval(timer); 
+                  console.log("结束计时器");   
+                }else{
+                  time--;
+                  oBtn.innerHTML = time + '秒后重新发送';
+                }
+              }, 1000)
+            console.log("获取验证码");
+
+
     },
     handleCancel(e) {
       console.log('Clicked cancel button')

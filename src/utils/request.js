@@ -22,8 +22,8 @@ export {
  console.log("url-->",url)
 // 创建 axios 实例
 const service = axios.create({
-  // baseURL: url, // api base_url
-  baseURL: 'http://rap2.taobao.org:38080/app/mock/254479',
+   //baseURL: url, // api base_url
+  baseURL: 'http://rap2.taobao.org:38080/app/mock/267037',
   timeout: 6000 // 请求超时时间
 })
 

@@ -642,7 +642,7 @@ export function getFormSettingList(parameter) {
 
 export function getPermissions(parameter) {
   return axios({
-    url: api.permissionNoPager,
+    url: '/bd/menu/getMenuList',
     method: 'get',
     params: parameter
   })

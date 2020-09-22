@@ -22,12 +22,11 @@
           />
           <a-form-item>
             <a-input
-              v-model="enterprisephone"
               size="large"
               type="text"
               placeholder="请输入账号"
               v-decorator="[
-                'username',
+                'enterprisephone',
                 {rules: [{ required: true, message: '请输入帐户名或邮箱地址' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
               ]"
             >
@@ -37,7 +36,6 @@
 
           <a-form-item>
             <a-input
-              v-model="password"
               size="large"
               type="password"
               autocomplete="false"
@@ -54,11 +52,10 @@
         <a-tab-pane key="1" tab="验证码登录">
           <a-form-item>
             <a-input
-              v-model="enterprisephone"
               size="large"
               type="text"
               placeholder="手机号"
-              v-decorator="['mobile', {rules: [{ required: true, pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号' }], validateTrigger: 'change'}]"
+              v-decorator="['enterprisephone', {rules: [{ required: true, pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号' }], validateTrigger: 'change'}]"
             >
               <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input>
@@ -68,11 +65,10 @@
             <a-col class="gutter-row" :span="16">
               <a-form-item>
                 <a-input
-                  v-model="phoneCode"
                   size="large"
                   type="text"
                   placeholder="验证码"
-                  v-decorator="['captcha', {rules: [{ required: true, message: '请输入验证码' }], validateTrigger: 'blur'}]"
+                  v-decorator="['phoneCode', { initialValue:'',rules: [{ required: false,len:4, message: '请输入验证码' }], validateTrigger: 'change'}]"
                 >
                   <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }" />
                 </a-input>
@@ -146,7 +142,7 @@ export default {
       isLoginError: false,
       requiredTwoStepCaptcha: false,
       stepCaptchaVisible: false,
-      form: this.$form.createForm(this),
+      form: this.$form.createForm(this, { name: 'coordinated' }),
       state: {
         time: 60,
         loginBtn: false,
@@ -182,7 +178,7 @@ export default {
     },
     handleTabClick(key) {
       this.customActiveKey = key
-      console.log(key);
+      console.log(key)
       // this.form.resetFields()
     },
     handleSubmit(e) {
@@ -197,14 +193,13 @@ export default {
       state.loginBtn = true
 
       const validateFieldsKey = customActiveKey === '2' ? ['username', 'password'] : ['mobile', 'captcha']
-
-      validateFields(validateFieldsKey, { force: true }, (err, values) => {
+      this.form.validateFields((err, values) => {
         if (!err) {
           const loginParams = {}
-          console.log(this.customActiveKey);
-          loginParams.enterprisephone = this.enterprisephone
-          loginParams.password = this.password
-          loginParams.phoneCode = this.phoneCode
+
+          loginParams.enterprisephone = values.enterprisephone
+          loginParams.password = values.password
+          loginParams.phoneCode = values.phoneCode
           loginParams.loginType = this.customActiveKey
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
@@ -212,10 +207,6 @@ export default {
             .finally(() => {
               state.loginBtn = false
             })
-        } else {
-          setTimeout(() => {
-            state.loginBtn = false
-          }, 600)
         }
       })
     },

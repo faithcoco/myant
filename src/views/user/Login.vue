@@ -143,6 +143,7 @@ export default {
   },
   data() {
     return {
+      enterpriseid:"",
       companyDefault:"",
       companyList: {},
       customActiveKey: '2',
@@ -195,8 +196,8 @@ export default {
         })
     },
     handleChange(value) {
-      console.log(value)
-      this.value = value
+      console.log("change",value)
+      this.enterpriseid=value
     },
     dropdownVisibleChange(value) {
     
@@ -236,7 +237,7 @@ export default {
           loginParams.password = values.password
           loginParams.phoneCode = values.phoneCode
           loginParams.loginType = this.customActiveKey
-          loginParams.enterpriseid = '5c44518b-62e8-446f-a893-1708820739f4'
+          loginParams.enterpriseid = ''
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
             .catch((err) => this.requestFailed(err))

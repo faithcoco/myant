@@ -30,9 +30,11 @@ export function getSmsCaptcha (parameter) {
 }
 
 export function getInfo (parameter) {
+  console.log("getinfo-->",JSON.stringify(parameter))
   return axios({
-    url: '/sys/user/info?id=12121',
+    url: '/sys/user/info',
     method: 'get',
+    params:parameter,
     headers: {
       'Content-Type': 'application/json;charset=UTF-8'
     }
@@ -65,5 +67,13 @@ export function get2step (parameter) {
     url: api.twoStepCode,
     method: 'post',
     data: parameter
+  })
+}
+export function getCompanyList (parameter) {
+  console.log(" getCompanyList res--->",JSON.stringify(parameter))
+  return axios({
+    url: '/sys/getCompanyList',
+    method: 'get',
+    params: parameter
   })
 }

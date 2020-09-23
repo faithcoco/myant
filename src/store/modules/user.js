@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { login, getInfo, logout } from '@/api/login'
-import { ACCESS_TOKEN,baseenterprisePO,basepersonPO } from '@/store/mutation-types'
+import { ACCESS_TOKEN,logininfo } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 
 const user = {
@@ -9,21 +9,14 @@ const user = {
     name: '',
     welcome: '',
     avatar: '',
-    basepersonPO:[],
-    baseenterprisePO:[],
     roles: [],
-    info: {}
+    info: {},
+
   },
 
   mutations: {
     SET_TOKEN: (state, token) => {
       state.token = token
-    },
-    SET_BASEPERSONPO: (state, basepersonPO) => {
-      state.basepersonPO = basepersonPO
-    },
-    SET_BASEENTERPRISEPO: (state, baseenterprisePO) => {
-        state.baseenterprisePO = baseenterprisePO
     },
     SET_NAME: (state, { name, welcome }) => {
       state.name = name
@@ -43,17 +36,16 @@ const user = {
   actions: {
     // 登录
     Login ({ commit }, userInfo) {
-      console.log('/auth/login', userInfo)
+      console.log('login--->', userInfo)
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const result = response.result
-          console.log("登录返回值——————————————————>",response.result);
+        
           Vue.ls.set(ACCESS_TOKEN, result.userToken, 7 * 24 * 60 * 60 * 1000)
-          Vue.ls.set(basepersonPO, result.basepersonPO, 7 * 24 * 60 * 60 * 1000)
-          Vue.ls.set(baseenterprisePO, result.baseenterprisePO, 7 * 24 * 60 * 60 * 1000)
+          console.log("id---->",result.basepersonPO)
+          Vue.ls.set(logininfo,result)
           commit('SET_TOKEN', result.userToken)
-          commit('SET_BASEPERSONPO', result.basepersonPO)
-          commit('SET_BASEENTERPRISEPO', result.baseenterprisePO)   
+       
           resolve()
         }).catch(error => {
           reject(error)
@@ -64,7 +56,10 @@ const user = {
     // 获取用户信息
     GetInfo ({ commit }) {
       return new Promise((resolve, reject) => {
-        getInfo().then(response => {
+        const params = {}
+        params.id =Vue.ls.get(logininfo).basepersonPO.personid
+        getInfo(params).then(response => {
+          console.log("getinfo--->",JSON.stringify(response))
         const result = response.result
           if (result.role && result.role.permissions.length > 0) {
             const role = result.role
@@ -81,8 +76,10 @@ const user = {
           } else {
             reject(new Error('getInfo: roles must be a non-null array !'))
           }
+
           commit('SET_NAME', { name: result.name, welcome: welcome() })
-          commit('SET_AVATAR', result.avatar)       
+          commit('SET_AVATAR', result.avatar)
+
           resolve(response)
         }).catch(error => {
           reject(error)

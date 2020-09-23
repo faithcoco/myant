@@ -22,6 +22,7 @@
           />
           <a-form-item>
             <a-input
+              @change="handleUserChange"
               size="large"
               type="text"
               placeholder="请输入账号"
@@ -86,7 +87,17 @@
           </a-row>
         </a-tab-pane>
       </a-tabs>
-
+      <a-form-item>
+        企业：
+        <a-select
+          defaultValue='请选择'
+          style="width: 150px"
+          @change="handleChange"
+         
+        >
+          <a-select-option v-for="d in companyList" :key="d.enterpriseid">{{ d.enterprisename }}</a-select-option>
+        </a-select>
+      </a-form-item>
       <a-form-item>
         <a-checkbox v-decorator="['rememberMe', { valuePropName: 'checked' }]">自动登录</a-checkbox>
         <router-link
@@ -124,7 +135,7 @@ import md5 from 'md5'
 import TwoStepCaptcha from '@/components/tools/TwoStepCaptcha'
 import { mapActions } from 'vuex'
 import { timeFix } from '@/utils/util'
-import { getSmsCaptcha, get2step } from '@/api/login'
+import { getSmsCaptcha, get2step, getCompanyList } from '@/api/login'
 import { retrievePsdSendSMSregister } from '@/api/register'
 export default {
   components: {
@@ -132,6 +143,8 @@ export default {
   },
   data() {
     return {
+      companyDefault:"",
+      companyList: {},
       customActiveKey: '2',
       enterprisephone: '',
       password: '',
@@ -165,7 +178,29 @@ export default {
   },
   methods: {
     ...mapActions(['Login', 'Logout']),
+
     // handler
+    handleUserChange(e) {
+  
+       const loginParams = {}
+
+      loginParams.phone = e.target.value
+      getCompanyList(loginParams)
+        .then((res) => {
+          console.log('2step-code-->', JSON.stringify(res))
+          this.companyList = res.result
+        })
+        .catch(() => {
+          this.requiredTwoStepCaptcha = false
+        })
+    },
+    handleChange(value) {
+      console.log(value)
+      this.value = value
+    },
+    dropdownVisibleChange(value) {
+    
+    },
     handleUsernameOrEmail(rule, value, callback) {
       const { state } = this
       const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/
@@ -201,6 +236,7 @@ export default {
           loginParams.password = values.password
           loginParams.phoneCode = values.phoneCode
           loginParams.loginType = this.customActiveKey
+          loginParams.enterpriseid = '5c44518b-62e8-446f-a893-1708820739f4'
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
             .catch((err) => this.requestFailed(err))
@@ -216,8 +252,7 @@ export default {
         form: { validateFields },
         state,
       } = this
-
-      validateFields(['mobile'], { force: true }, (err, values) => {
+      this.form.validateFields((err, values) => {
         if (!err) {
           state.smsSendBtn = true
 
@@ -231,7 +266,7 @@ export default {
 
           const hide = this.$message.loading('验证码发送中..', 0)
           const params = {}
-          params.enterprisephone = this.enterprisephone
+          params.enterprisephone = values.enterprisephone
           retrievePsdSendSMSregister(params)
             .then((res) => {
               console.log('getPictureVerification res-->', res)

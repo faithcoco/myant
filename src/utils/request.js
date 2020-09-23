@@ -1,9 +1,10 @@
 import Vue from 'vue'
 import axios from 'axios'
-import store from '@/store'
+
 import notification from 'ant-design-vue/es/notification'
 import { VueAxios } from './axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
+import store from '@/store'
 let url;
 if(process.env.NODE_ENV==='production'){
   // 有些浏览器(主要是IE)没有这个属性，所以我们需要手工构建它……
@@ -22,8 +23,8 @@ export {
  console.log("url-->",url)
 // 创建 axios 实例
 const service = axios.create({
-   //baseURL: url, // api base_url
-  baseURL: 'http://rap2.taobao.org:38080/app/mock/267037',
+  baseURL: url, // api base_url
+ // baseURL: 'http://rap2.taobao.org:38080/app/mock/267037',
   timeout: 6000 // 请求超时时间
 })
 

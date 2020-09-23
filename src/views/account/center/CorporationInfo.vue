@@ -332,6 +332,7 @@ import AvatarModal from '../settings/AvatarModal'
 import {getBaseenterpriseInfo,updateBaseenterprise} from '@/api/manage'
 import {  mapGetters } from 'vuex'
 import { retrievePsdSendSMSregister } from '@/api/register'
+import {  logininfo } from '@/store/mutation-types'
 export default {
 components: {
     AvatarModal
@@ -436,6 +437,7 @@ components: {
     }
   },
   created(){
+    this.baseenterprisePO=Vue.ls.get(logininfo).baseenterprisePO
     //企业状态：0待审核、1已审核、2已过期、5试用中、9已注销——注册成功默认5
         if (this.baseenterprisePO.enterprisestatus === 5) {
           this.baseenterprisePO.enterprisestatus = "试用中"
@@ -475,7 +477,7 @@ components: {
 
   },
     computed: {
-    ...mapGetters(['baseenterprisePO'])
+
   },
   methods: {
         getNewPhoneVerificationCode(){

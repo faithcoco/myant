@@ -237,7 +237,7 @@ export default {
           loginParams.password = values.password
           loginParams.phoneCode = values.phoneCode
           loginParams.loginType = this.customActiveKey
-          loginParams.enterpriseid = ''
+          loginParams.enterpriseid = this.enterpriseid
           Login(loginParams)
             .then((res) => this.loginSuccess(res))
             .catch((err) => this.requestFailed(err))

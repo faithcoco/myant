@@ -87,14 +87,9 @@
           </a-row>
         </a-tab-pane>
       </a-tabs>
-      <a-form-item>
+      <a-form-item v-show="enterpriseVisible">
         企业：
-        <a-select
-          defaultValue='请选择'
-          style="width: 150px"
-          @change="handleChange"
-         
-        >
+        <a-select value="请选择" style="width: 150px" @change="handleChange">
           <a-select-option v-for="d in companyList" :key="d.enterpriseid">{{ d.enterprisename }}</a-select-option>
         </a-select>
       </a-form-item>
@@ -143,8 +138,9 @@ export default {
   },
   data() {
     return {
-      enterpriseid:"",
-      companyDefault:"",
+      enterpriseVisible: false,
+      enterpriseid: '',
+      companyDefault: '',
       companyList: {},
       customActiveKey: '2',
       enterprisephone: '',
@@ -182,26 +178,27 @@ export default {
 
     // handler
     handleUserChange(e) {
-  
-       const loginParams = {}
+      const loginParams = {}
 
       loginParams.phone = e.target.value
       getCompanyList(loginParams)
         .then((res) => {
-          console.log('2step-code-->', JSON.stringify(res))
-          this.companyList = res.result
+          if (res.result.length == 1) {
+            this.enterpriseid = res.result[0].enterpriseid
+          } else {
+            this.enterpriseVisible = true
+            this.companyList = res.result
+          }
         })
         .catch(() => {
           this.requiredTwoStepCaptcha = false
         })
     },
     handleChange(value) {
-      console.log("change",value)
-      this.enterpriseid=value
+      console.log('change', value)
+      this.enterpriseid = value
     },
-    dropdownVisibleChange(value) {
-    
-    },
+    dropdownVisibleChange(value) {},
     handleUsernameOrEmail(rule, value, callback) {
       const { state } = this
       const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/

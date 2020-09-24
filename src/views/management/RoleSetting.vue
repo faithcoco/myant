@@ -19,13 +19,14 @@
           <a-form :form="form">
             <a-form-item label="角色名称">
               <a-input
+                @change="onChange"
                 v-decorator="['name', { rules: [{ required: true, message: 'Please input role name!' }] }]"
                 placeholder="请填写角色名称"
               />
             </a-form-item>
 
             <a-form-item label="状态">
-              <a-select v-decorator="['status', { rules: [] }]">
+              <a-select v-decorator="['status', { rules: [] }]" @change="handleChange">
                 <a-select-option :value="1">正常</a-select-option>
                 <a-select-option :value="2">禁用</a-select-option>
               </a-select>
@@ -34,6 +35,7 @@
             <a-form-item label="备注说明">
               <a-textarea
                 :row="3"
+                @change="onDescribeChange"
                 v-decorator="['describe', { rules: [{ required: true, message: 'Please input role name!' }] }]"
                 placeholder="请填写角色名称"
               />
@@ -93,33 +95,43 @@ export default {
       mdl: {},
       state: 1, //0：add1：change2delete
       roles: [],
-
       permissions: [],
+      idParapms: {},
     }
   },
   created() {
-    const Params = {}
-    Params.id = Vue.ls.get(logininfo).basepersonPO.personid
-    console.log(Params)
-    getRoleList(Params).then((res) => {
-      console.log(' getRoleList---->', JSON.stringify(res))
-
-      this.roles = res.result.data
-      this.roles.push({
-        name: '新增角色',
-        describe: '新增一个角色',
-        permissions: [
-          {
-            permissionId: '01',
-            actionEntitySet: [],
-          },
-        ],
-      })
-      console.log('this.roles', this.roles)
-    })
+    this.idParapms.id = Vue.ls.get(logininfo).basepersonPO.personid
+    this.setRole()
     this.loadPermissions()
   },
   methods: {
+    setRole() {
+      getRoleList(this.idParapms).then((res) => {
+        this.roles = res.result.data
+        this.roles.push({
+          personid: Vue.ls.get(logininfo).basepersonPO.personid,
+          enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
+          name: '新增角色',
+          describe: '新增一个角色',
+          status: '',
+          permissions: [
+            {
+              permissionId: '01',
+              actionEntitySet: [],
+            },
+          ],
+        })
+      })
+    },
+    onChange(e) {
+      this.mdl.name = e.target.value
+    },
+    onDescribeChange(e) {
+      this.mdl.describe = e.target.value
+    },
+    handleChange(value) {
+      this.mdl.status = value
+    },
     onSubmit() {
       this.mdl.permissions = []
       for (const key in this.permissions) {
@@ -131,27 +143,43 @@ export default {
           }
         }
       }
-      console.log('2---->', JSON.stringify(this.mdl))
 
       if (this.state == 0) {
         insertRole(this.mdl).then((res) => {
-          console.log('insertRole---------->', JSON.stringify(res))
+          console.log('insertRole res---------->', JSON.stringify(res))
+          if (res.status != 'SUCCESS') {
+            this.$message.error(res.errorMsg)
+          } else {
+            this.setRole()
+          }
         })
       } else {
         updateRole(this.mdl).then((res) => {
-          console.log('  updateRole---------->', JSON.stringify(res))
+          console.log('  updateRole res---------->', JSON.stringify(res))
+
+          if (res.status != 'SUCCESS') {
+            this.$message.error(res.errorMsg)
+          } else {
+            this.setRole()
+          }
         })
       }
     },
     onBack() {
       // 路由跳转
     },
+
     onDelete() {
       const params = {}
-      params.id =this.mdl.id
-      console.log("delete--->",params)
+      params.id = this.mdl.id
+      console.log('delete--->', params)
       deleteRole(params).then((res) => {
         console.log('  updateRole---------->', JSON.stringify(res))
+        if (res.status != 'SUCCESS') {
+          this.$message.error(res.errorMsg)
+        } else {
+          this.setRole()
+        }
       })
     },
 
@@ -214,7 +242,6 @@ export default {
     },
     loadPermissions() {
       getPermissions().then((res) => {
-        console.log(' getPermissions---------->', JSON.stringify(res))
         const result = res.result
         this.permissions = result.map((permission) => {
           const options = actionToObject(permission.actionData)

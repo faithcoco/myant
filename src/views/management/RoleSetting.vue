@@ -106,10 +106,14 @@ export default {
 
       this.roles = res.result.data
       this.roles.push({
-      
         name: '新增角色',
         describe: '新增一个角色',
-        permissions:null
+        permissions: [
+          {
+            permissionId: '01',
+            actionEntitySet: [],
+          },
+        ],
       })
       console.log('this.roles', this.roles)
     })
@@ -117,6 +121,18 @@ export default {
   },
   methods: {
     onSubmit() {
+      this.mdl.permissions = []
+      for (const key in this.permissions) {
+        this.mdl.permissions.push({ permissionId: this.permissions[key].action, actionEntitySet: [] })
+
+        for (const i in this.permissions[key].selected) {
+          if (this.permissions[key].selected.length != 0) {
+            this.mdl.permissions[key].actionEntitySet.push({ action: this.permissions[key].selected[i] })
+          }
+        }
+      }
+      console.log('2---->', JSON.stringify(this.mdl))
+
       if (this.state == 0) {
         insertRole(this.mdl).then((res) => {
           console.log('insertRole---------->', JSON.stringify(res))
@@ -131,7 +147,12 @@ export default {
       // 路由跳转
     },
     onDelete() {
-      this.state = 2
+      const params = {}
+      params.id =this.mdl.id
+      console.log("delete--->",params)
+      deleteRole(params).then((res) => {
+        console.log('  updateRole---------->', JSON.stringify(res))
+      })
     },
 
     callback(val) {
@@ -177,13 +198,13 @@ export default {
     },
 
     onChangeCheck(permission) {
-        console.log('permission:', JSON.stringify(permission))
+      console.log('permission:', permission.action + JSON.stringify(permission.selected))
       permission.indeterminate =
         !!permission.selected.length && permission.selected.length < permission.actionsOptions.length
       permission.checkedAll = permission.selected.length === permission.actionsOptions.length
     },
     onChangeCheckAll(e, permission) {
-      console.log('permission all:', JSON.stringify(permission))
+      console.log('permission all:', permission.action + JSON.stringify(permission.selected))
 
       Object.assign(permission, {
         selected: e.target.checked ? permission.actionsOptions.map((obj) => obj.value) : [],

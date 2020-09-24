@@ -181,18 +181,20 @@ export default {
       const loginParams = {}
 
       loginParams.phone = e.target.value
-      getCompanyList(loginParams)
-        .then((res) => {
-          if (res.result.length == 1) {
-            this.enterpriseid = res.result[0].enterpriseid
-          } else {
-            this.enterpriseVisible = true
-            this.companyList = res.result
-          }
-        })
-        .catch(() => {
-          this.requiredTwoStepCaptcha = false
-        })
+      if (loginParams.phone.length == 11) {
+        getCompanyList(loginParams)
+          .then((res) => {
+            if (res.result.length == 1) {
+              this.enterpriseid = res.result[0].enterpriseid
+            } else {
+              this.enterpriseVisible = true
+              this.companyList = res.result
+            }
+          })
+          .catch(() => {
+            this.requiredTwoStepCaptcha = false
+          })
+      }
     },
     handleChange(value) {
       console.log('change', value)

@@ -12,51 +12,66 @@
         </a-list>
       </a-col>
       <a-col :md="20">
-        <div style="max-width: 800px">
-        
+        <div style="max-width: 1000px">
           <div v-if="mdl.id">
             <h3>角色：{{ mdl.name }}</h3>
           </div>
-          <a-form :form="form" >
-            <a-form-item label="唯一键">
-              <a-input v-decorator="[ 'id', {rules: [{ required: true, message: 'Please input unique key!' }]} ]" placeholder="请填写唯一键" />
-            </a-form-item>
-
+          <a-form :form="form">
             <a-form-item label="角色名称">
-              <a-input v-decorator="[ 'name', {rules: [{ required: true, message: 'Please input role name!' }]} ]" placeholder="请填写角色名称" />
+              <a-input
+                v-decorator="['name', { rules: [{ required: true, message: 'Please input role name!' }] }]"
+                placeholder="请填写角色名称"
+              />
             </a-form-item>
 
             <a-form-item label="状态">
-              <a-select v-decorator="[ 'status', {rules: []} ]">
+              <a-select v-decorator="['status', { rules: [] }]">
                 <a-select-option :value="1">正常</a-select-option>
                 <a-select-option :value="2">禁用</a-select-option>
               </a-select>
             </a-form-item>
 
             <a-form-item label="备注说明">
-              <a-textarea :row="3" v-decorator="[ 'describe', {rules: [{ required: true, message: 'Please input role name!' }]} ]" placeholder="请填写角色名称" />
+              <a-textarea
+                :row="3"
+                v-decorator="['describe', { rules: [{ required: true, message: 'Please input role name!' }] }]"
+                placeholder="请填写角色名称"
+              />
             </a-form-item>
 
             <a-form-item label="拥有权限">
               <a-row :gutter="16" v-for="(permission, index) in permissions" :key="index">
-                <a-col :xl="3" :lg="24">
-                  {{ permission.name }}：
-                </a-col>
+                <a-col :xl="3" :lg="24"> {{ permission.name }}： </a-col>
                 <a-col :xl="21" :lg="24">
                   <a-checkbox
                     v-if="permission.actionsOptions.length > 0"
                     :indeterminate="permission.indeterminate"
                     :checked="permission.checkedAll"
-                    @change="onChangeCheckAll($event, permission)">
+                    @change="onChangeCheckAll($event, permission)"
+                  >
                     全选
                   </a-checkbox>
-                  <a-checkbox-group :options="permission.actionsOptions" v-model="permission.selected" @change="onChangeCheck(permission)" />
+                  <a-checkbox-group
+                    :options="permission.actionsOptions"
+                    v-model="permission.selected"
+                    @change="onChangeCheck(permission)"
+                  />
                 </a-col>
               </a-row>
             </a-form-item>
-
           </a-form>
         </div>
+        <a-row>
+          <a-col :span="1" :offset="7">
+            <a-button type="primary" @click="onSubmit">保存</a-button>
+          </a-col>
+          <a-col :span="1" :offset="1">
+            <a-button type="danger" @click="onDelete">删除</a-button>
+          </a-col>
+          <a-col :span="1" :offset="1">
+            <a-button type @click="onBack">返回</a-button>
+          </a-col>
+        </a-row>
       </a-col>
     </a-row>
   </a-card>
@@ -64,57 +79,89 @@
 
 <script>
 import pick from 'lodash.pick'
-import { getRoleList, getPermissions } from '@/api/manage'
+import { getRoleList, getPermissions, insertRole, updateRole, deleteRole } from '@/api/manage'
 import { actionToObject } from '@/utils/permissions'
-
+import { logininfo } from '@/store/mutation-types'
+import Vue from 'vue'
 
 export default {
   name: 'RoleList',
   components: {},
-  data () {
+  data() {
     return {
       form: this.$form.createForm(this),
       mdl: {},
-
+      state: 1, //0：add1：change2delete
       roles: [],
-      permissions: []
+
+      permissions: [],
     }
   },
-  created () {
-    getRoleList().then((res) => {
-      console.log(" getRoleList---->",JSON.stringify(res))
+  created() {
+    const Params = {}
+    Params.id = Vue.ls.get(logininfo).basepersonPO.personid
+    console.log(Params)
+    getRoleList(Params).then((res) => {
+      console.log(' getRoleList---->', JSON.stringify(res))
+
       this.roles = res.result.data
       this.roles.push({
-        id: '-1',
+      
         name: '新增角色',
-        describe: '新增一个角色'
+        describe: '新增一个角色',
+        permissions:null
       })
       console.log('this.roles', this.roles)
     })
     this.loadPermissions()
   },
   methods: {
-    callback (val) {
+    onSubmit() {
+      if (this.state == 0) {
+        insertRole(this.mdl).then((res) => {
+          console.log('insertRole---------->', JSON.stringify(res))
+        })
+      } else {
+        updateRole(this.mdl).then((res) => {
+          console.log('  updateRole---------->', JSON.stringify(res))
+        })
+      }
+    },
+    onBack() {
+      // 路由跳转
+    },
+    onDelete() {
+      this.state = 2
+    },
+
+    callback(val) {
       console.log(val)
     },
 
-    add () {
+    add() {
       this.edit({ id: 0 })
     },
 
-    edit (record) {
+    edit(record) {
       this.mdl = Object.assign({}, record)
+      console.log('mdl-->', this.mdl)
+
+      if (this.mdl.name == '新增角色') {
+        this.state = 0
+      }
       // 有权限表，处理勾选
       if (this.mdl.permissions && this.permissions) {
         // 先处理要勾选的权限结构
         const permissionsAction = {}
-        this.mdl.permissions.forEach(permission => {
-          permissionsAction[permission.permissionId] = permission.actionEntitySet.map(entity => entity.action)
+        this.mdl.permissions.forEach((permission) => {
+          if (permission.actionEntitySet != null) {
+            permissionsAction[permission.permissionId] = permission.actionEntitySet.map((entity) => entity.action)
+          }
         })
 
         console.log('permissionsAction', permissionsAction)
         // 把权限表遍历一遍，设定要勾选的权限 action
-        this.permissions.forEach(permission => {
+        this.permissions.forEach((permission) => {
           const selected = permissionsAction[permission.id]
           permission.selected = selected || []
           this.onChangeCheck(permission)
@@ -129,42 +176,43 @@ export default {
       console.log('this.mdl', this.mdl)
     },
 
-    onChangeCheck (permission) {
-      permission.indeterminate = !!permission.selected.length && (permission.selected.length < permission.actionsOptions.length)
+    onChangeCheck(permission) {
+        console.log('permission:', JSON.stringify(permission))
+      permission.indeterminate =
+        !!permission.selected.length && permission.selected.length < permission.actionsOptions.length
       permission.checkedAll = permission.selected.length === permission.actionsOptions.length
     },
-    onChangeCheckAll (e, permission) {
-      console.log('permission:', permission)
+    onChangeCheckAll(e, permission) {
+      console.log('permission all:', JSON.stringify(permission))
 
       Object.assign(permission, {
-        selected: e.target.checked ? permission.actionsOptions.map(obj => obj.value) : [],
+        selected: e.target.checked ? permission.actionsOptions.map((obj) => obj.value) : [],
         indeterminate: false,
-        checkedAll: e.target.checked
+        checkedAll: e.target.checked,
       })
     },
-    loadPermissions () {
-      getPermissions().then(res => {
-        console.log(" getPermissions---------->",JSON.stringify(res))
+    loadPermissions() {
+      getPermissions().then((res) => {
+        console.log(' getPermissions---------->', JSON.stringify(res))
         const result = res.result
-        this.permissions = result.map(permission => {
+        this.permissions = result.map((permission) => {
           const options = actionToObject(permission.actionData)
           permission.checkedAll = false
           permission.selected = []
           permission.indeterminate = false
-          permission.actionsOptions = options.map(option => {
+          permission.actionsOptions = options.map((option) => {
             return {
               label: option.describe,
-              value: option.action
+              value: option.action,
             }
           })
           return permission
         })
       })
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style scoped>
-
 </style>

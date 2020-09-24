@@ -633,10 +633,10 @@ export default {
       // this.$message.info("发送验证码成功！")
 
       const hide = this.$message.loading('验证码发送中..', 0)
-      console.log(this.form.personphone)
+   
       const params = {}
-      console.log('新手机号--------》', this.form.PersonPhone)
-      params.enterprisephone = this.form.PersonPhone
+     
+      params.enterprisephone = this.form.personphone
       retrievePsdSendSMSregister(params)
         .then((res) => {
           console.log('retrievePsdSendSMSregister res-->', res)
@@ -696,10 +696,11 @@ export default {
     },
 
     changeNewOk() {
+      console
       this.$refs.PruleForm2.validate((valid) => {
         if (valid) {
           this.changeNewVisible = false
-          this.form.personphone = this.form.PersonPhone
+          this.form.personphone = this.form.personphone
         } else {
           return false
         }

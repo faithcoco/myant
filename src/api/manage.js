@@ -21,7 +21,7 @@ const api = {
   OpeningInventoryAdd: '/OpeningInventoryAdd',
 
   user: '/user',
-  role: '/role',
+  role: '/bd/role/getRole',
   service: '/service',
   permission: '/permission',
   permissionNoPager: '/permission/no-pager',
@@ -469,6 +469,29 @@ export function getRoleList(parameter) {
     url: api.role,
     method: 'get',
     params: parameter
+  })
+}
+export function insertRole(parameter) {
+  console.log(' insertRole(parameter)--->',JSON.stringify(parameter))
+  return axios({
+    url: '/bd/role/insertRole',
+    method: 'post',
+    data: parameter
+  })
+}
+export function updateRole(parameter) {
+  console.log('updateRole(parameter) --->',JSON.stringify(parameter))
+  return axios({
+    url: '/bd/role/updateRole',
+    method: 'post',
+    data: parameter
+  })
+}
+export function deleteRole(parameter) {
+  return axios({
+    url: '/bd/role/deleteRole',
+    method: 'post',
+    data: parameter
   })
 }
 

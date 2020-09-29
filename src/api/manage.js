@@ -26,11 +26,11 @@ const api = {
   permission: '/permission',
   permissionNoPager: '/permission/no-pager',
   orgTree: '/org/tree',
-  FormSettingTree: '/FormSetting/tree',
+  FormSettingTree: '/bd/menu/getTreeMenuList',
   approvalSettin: '/approval-settin/tree',
   MessageSettin: '/MessageSettin/tree',
   approval: '/approval',
-  Sector: '/Sector',
+  Sector: '/bd/Sector',
   BasepersonInfo: '/bd/baseperson/getBasepersonInfo',
   BaseenterpriseInfo: '/bd/Baseenterprise/getBaseenterpriseInfo',
   updateBaseperson: '/bd/baseperson/updateBaseperson',
@@ -58,8 +58,8 @@ const api = {
   personnelList: '/personnel-list',
   MessageSettinList: '/MessageSettinList',
   classificationGoodsList: '/classification_goods',
-  PersonnelSettingList: '/PersonnelSettingList',
-  FormSettingList: '/FormSettingList',
+  PersonnelSettingList: '/bd/baseperson/PersonnelSettingList',
+  FormSettingList: '/bd/FormSetting/FormSettingList',
 
   productListColumns: '/productList/columns',
   SupplierListColumns: '/SupplierList/columns',
@@ -79,8 +79,8 @@ const api = {
   PickingApplicationListColumns: '/PickingApplicationListColumns/columns',
   WarehouseListColumns: '/WarehouseListColumns/columns',
   OpeningInventoryListColumns: '/OpeningInventoryListColumns/columns',
-  PersonnelSettingColumns: '/PersonnelSetting/columns',
-  FormSettingColumns: '/FormSetting/columns',
+  PersonnelSettingColumns: '/sys/setting/getSetting',
+  FormSettingColumns: '/bd/FormSetting/columns',
   CodeSettingColumns: '/CodeSetting/columns',
   classificationGoodsColumns: '/classification_goods/columns',
   approvalSettinColumns: '/approval-settin/columns'
@@ -400,7 +400,7 @@ export function getOpeningInventoryListColumns(parameter) {
   })
 }
 export function getPersonnelSettingColumns(parameter) {
-  console.log('/getPersonnelSettingColumns-->', JSON.stringify(parameter))
+  console.log('getPersonnelSettingColumns req-->', JSON.stringify(parameter))
   return axios({
     url: api.PersonnelSettingColumns,
     method: 'get',
@@ -655,7 +655,7 @@ export function getPersonnelSettingList(parameter) {
   })
 }
 export function getFormSettingList(parameter) {
-  console.log('/getFormSettingList req-->', JSON.stringify(parameter))
+  console.log('getFormSettingList req-->', JSON.stringify(parameter))
   return axios({
     url: api.FormSettingList,
     method: 'get',

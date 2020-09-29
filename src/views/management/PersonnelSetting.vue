@@ -23,6 +23,7 @@
           :columns="columns"
           :data="loadData"
           :alert="false"
+           :scroll="{ x: 1300 }"
           :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         >
           <span slot="action" slot-scope="text, record">
@@ -65,6 +66,7 @@ Vue.use(Tree)
 import OrgModal from '../other/modules/OrgModal'
 import { getOrgTree, getServiceList, getPersonnelSettingList, getPersonnelSettingColumns } from '@/api/manage'
 import { getSector } from '@/api/manage'
+import { logininfo } from '@/store/mutation-types'
 
 const columns = []
 
@@ -73,7 +75,7 @@ export default {
   components: {
     STable,
     STree,
-    OrgModal
+    OrgModal,
   },
   data() {
     return {
@@ -86,74 +88,36 @@ export default {
       // 表头
       columns,
       // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        return getPersonnelSettingList(Object.assign(parameter, this.queryParam)).then(res => {
+      loadData: (parameter) => {
+        parameter.menuid='03bf0fb1-e9fb-4014-92e7-7121f4f71005'
+        parameter.enterpriseid = '23e34e91-d6c5-43af-886b-2327ade04bcc'
+        return getPersonnelSettingList(Object.assign(parameter, this.queryParam)).then((res) => {
+          console.log("getPersonnelSettingList-->",JSON.stringify(res))
           return res.result
         })
       },
       orgTree: [],
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
     }
   },
   created() {
-    getPersonnelSettingColumns().then(res => {
-      console.log('res.result---------->', res.columns)
-      this.columns = res.columns
+    const columnsParams = {}
+    columnsParams.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
+    columnsParams.enterpriseid = '23e34e91-d6c5-43af-886b-2327ade04bcc'
+    getPersonnelSettingColumns(columnsParams).then((res) => {
+      console.log("getPersonnelSettingColumns-->",JSON.stringify(res))
+      this.columns = res.result.columns
     })
-    getSector().then((res) => {
-      console.log('res.result---------->', JSON.stringify(res.result))
+    const treeParams = {}
+    treeParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+    getSector(treeParams).then((res) => {
+      
       this.treeData = res.result
-      this.expandedKeys=['0-0-0', '0-0-1']
+      this.expandedKeys = ['0-0-0', '0-0-1']
     })
-    getOrgTree().then(res => {
+    getOrgTree().then((res) => {
       this.orgTree = res.result
-      // this.orgTree = [
-      //   {
-      //     title: '上海砺学信息科技有限公司',
-      //     key: 'key-01',
-      //     icon: 'apartment',
-      //     children: [
-      //       { title: '渠道业务', key: '0-0-0', icon: 'apartment' },
-      //       {
-      //         title: '销售总部',
-      //         key: '0-0-1',
-      //         icon: 'apartment',
-      //         children: [
-      //           {
-      //             title: '销售部',
-      //             key: '0-0-1-2',
-      //             icon: 'apartment',
-      //             children: [
-      //               { title: '司宏宇组', key: '0-0-2-0', slots: { icon: 'apartment' } },
-      //               { title: '胡燕菲组', key: '0-0-2-1', slots: { icon: 'apartment' } }
-      //             ]
-      //           }
-      //         ]
-      //       },
-      //       {
-      //         title: '交付中心',
-      //         key: '0-0-2',
-      //         icon: 'apartment'
-      //       },
-      //       {
-      //         title: '管理部门',
-      //         key: '0-0-3',
-      //         icon: 'apartment'
-      //       },
-      //       {
-      //         title: '管理',
-      //         key: '0-0-4',
-      //         icon: 'apartment'
-      //       },
-      //       {
-      //         title: '智能制造',
-      //         key: '0-0-5',
-      //         icon: 'apartment'
-      //       }
-      //     ]
-      //   }
-      // ]
     })
   },
   methods: {
@@ -172,7 +136,7 @@ export default {
     handleClick(e) {
       console.log('handleClick', e)
       this.queryParam = {
-        key: e.key
+        key: e.key,
       }
       this.$refs.table.refresh(true)
     },
@@ -193,8 +157,8 @@ export default {
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
-    }
-  }
+    },
+  },
 }
 </script>
 

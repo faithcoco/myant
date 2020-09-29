@@ -17,21 +17,22 @@
           size="default"
           :columns="columns"
           :data="loadData"
-          :scroll="{ x: 100 }"
+          :scroll="{ x: 1300 }"
           :alert="false"
           bordered
         >
-          <span slot="use" style="margin: 0">
+          <span slot="Vdef2"> <a-input value="" style="width: 50px" />px </span>
+          <span slot="FieldDisplay" style="margin: 0">
             <a-checkbox @change="onChange" />
           </span>
-          <span slot="must" style="margin: 0">
+          <span slot="FieldMust" style="margin: 0">
             <a-checkbox @change="onChange" />
           </span>
-          <span slot="sort" style="margin: 0">
+          <span slot="Sort" style="margin: 0">
             <a-icon type="unordered-list" />
           </span>
-          <span slot="action" slot-scope="text, record">
-            <template v-if="$auth('table.update')">
+          <span slot="Handle" slot-scope="text, record">
+            <template>
               <a @click="handleEdit(record)">编辑</a>
               <a-divider type="vertical" />
               <a @click="handleEdit(record)">删除</a>
@@ -50,7 +51,8 @@ import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import OrgModal from '../other/modules/OrgModal'
 import { getFormSettingTree, getServiceList, getFormSettingList, getFormSettingColumns } from '@/api/manage'
-
+import { logininfo } from '@/store/mutation-types'
+import Vue from 'vue'
 const columns = []
 
 export default {
@@ -58,34 +60,39 @@ export default {
   components: {
     STable,
     STree,
-    OrgModal
+    OrgModal,
   },
   data() {
     return {
-      openKeys: ['key-01'],
-
+      openKeys: ['01-01'],
+      menuid: "",
       // 查询参数
       queryParam: {},
       // 表头
       columns,
       // 加载数据方法 必须为 Promise 对象
-      loadData: parameter => {
-        return getFormSettingList(Object.assign(parameter, this.queryParam)).then(res => {
+      loadData: (parameter) => {
+        parameter.enterpriseid=Vue.ls.get(logininfo).basepersonPO.enterpriseid      
+        //parameter.enterpriseid = '23e34e91-d6c5-43af-886b-2327ade04bcc'
+        return getFormSettingList(Object.assign(parameter, this.queryParam)).then((res) => {
+          console.log('getFormSettingList-->', JSON.stringify(res))
           return res.result
         })
       },
       FormSettingTree: [],
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
     }
   },
   created() {
-    getFormSettingColumns().then(res => {
-      console.log('res.result---------->', res.columns)
-      this.columns = res.columns
+    getFormSettingColumns().then((res) => {
+     
+
+      this.columns = res.result.columns
     })
-    getFormSettingTree().then(res => {
-      this.FormSettingTree = res.tree
+    getFormSettingTree().then((res) => {
+     
+      this.FormSettingTree = res.result
     })
   },
   methods: {
@@ -93,10 +100,19 @@ export default {
       console.log(`checked = ${e.target.checked}`)
     },
     handleClick(e) {
-      console.log('handleClick', e)
-      this.queryParam = {
-        key: e.key
+      for (const key in this.FormSettingTree) {
+        for (const i in this.FormSettingTree[key].children) {
+          if (e.key == this.FormSettingTree[key].children[i].key) {
+            this.menuid = this.FormSettingTree[key].children[i].memuid
+          
+          }
+        }
       }
+      
+      this.queryParam = {
+        menuid: this.menuid,
+      }
+       
       this.$refs.table.refresh(true)
     },
     handleAdd(item) {
@@ -111,8 +127,8 @@ export default {
       console.log('titleClick', e)
     },
     handleSaveOk() {},
-    handleSaveClose() {}
-  }
+    handleSaveClose() {},
+  },
 }
 </script>
 

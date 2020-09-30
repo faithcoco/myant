@@ -21,6 +21,9 @@
           :alert="false"
           bordered
         >
+          <span slot="fieldname" slot-scope="text, record">
+            <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fieldname"  />
+          </span>
           <span slot="vdef2" slot-scope="text, record">
             <a-input @change="(e) => vdef2Change(e.target.value, record)" :value="record.vdef2" style="width: 50px" />px
           </span>
@@ -61,7 +64,7 @@
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import OrgModal from '../other/modules/OrgModal'
-import { getFormSettingTree, getServiceList, getFormSettingList, getFormSettingColumns,updateForm } from '@/api/manage'
+import { getFormSettingTree, getServiceList, getFormSettingList, getFormSettingColumns, updateForm } from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
 import Vue from 'vue'
 const columns = []
@@ -108,11 +111,11 @@ export default {
   },
   methods: {
     onSubmit(e) {
-       const updateParams = {}
-       
+      const updateParams = {}
+
       updateForm(this.formSettingList).then((res) => {
-         this.$message.success('更改成功');
-         location.reload()
+        this.$message.success('更改成功')
+        location.reload()
       })
     },
     onBcak(e) {},
@@ -120,6 +123,13 @@ export default {
       for (const key in this.formSettingList.data) {
         if (record.id == this.formSettingList.data[key].id) {
           this.formSettingList.data[key].vdef2 = value
+        }
+      }
+    },
+    fieldname(value, record) {
+      for (const key in this.formSettingList.data) {
+        if (record.id == this.formSettingList.data[key].id) {
+          this.formSettingList.data[key].fieldname = value
         }
       }
     },

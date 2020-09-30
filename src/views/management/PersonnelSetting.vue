@@ -50,6 +50,7 @@
             </a-dropdown>
           </span>
         </s-table>
+        
       </a-col>
     </a-row>
 
@@ -64,7 +65,7 @@ import { STable } from '@/components'
 import { Tree } from 'ant-design-vue'
 Vue.use(Tree)
 import OrgModal from '../other/modules/OrgModal'
-import { getOrgTree, getServiceList, getPersonnelSettingList, getPersonnelSettingColumns } from '@/api/manage'
+import { getOrgTree, getServiceList, getPersonnelSettingList, getPersonnelSettingColumns} from '@/api/manage'
 import { getSector } from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
 
@@ -90,7 +91,7 @@ export default {
       // 加载数据方法 必须为 Promise 对象
       loadData: (parameter) => {
         parameter.menuid='03bf0fb1-e9fb-4014-92e7-7121f4f71005'
-        parameter.enterpriseid = '23e34e91-d6c5-43af-886b-2327ade04bcc'
+        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         return getPersonnelSettingList(Object.assign(parameter, this.queryParam)).then((res) => {
           console.log("getPersonnelSettingList-->",JSON.stringify(res))
           return res.result
@@ -104,7 +105,7 @@ export default {
   created() {
     const columnsParams = {}
     columnsParams.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
-    columnsParams.enterpriseid = '23e34e91-d6c5-43af-886b-2327ade04bcc'
+    columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
     getPersonnelSettingColumns(columnsParams).then((res) => {
       console.log("getPersonnelSettingColumns-->",JSON.stringify(res))
       this.columns = res.result.columns
@@ -112,7 +113,7 @@ export default {
     const treeParams = {}
     treeParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
     getSector(treeParams).then((res) => {
-      
+       console.log("getSector-->",JSON.stringify(res))
       this.treeData = res.result
       this.expandedKeys = ['0-0-0', '0-0-1']
     })

@@ -32,7 +32,7 @@ export default {
   },
   methods: {
     handleToHome () {
-      this.$router.push({ name: 'login' })
+      this.$router.push({ name: 'index' })
     }
   }
 }

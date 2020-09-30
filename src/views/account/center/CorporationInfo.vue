@@ -114,7 +114,7 @@
           <a-form-model-item label="注册人:"   prop="EnterpriseRegistrant">
           <a-input v-model="form.enterpriseregistrant" disabled  placeholder="请输入注册人"></a-input>
           </a-form-model-item>
-          <a-form-model-item label="更换手机:"  prop="EnterprisePhone">
+          <a-form-model-item label="更换手机:" >
           <a-input v-model="form.enterprisephone" disabled style="width:90%;margin-right:10px"  placeholder="请输入新手机号"></a-input> <a @click="changePhone">更改</a>
           </a-form-model-item>
           <a-form-model-item label="注册时间:"  prop="EnterpriseRegistrationtime">
@@ -208,7 +208,7 @@
         </a-radio-group>
     </a-modal>
     <a-modal
-        title="更换电话号第一步"
+        title="更换电话号"
         :visible="changeTelVisible1"
         :confirm-loading="confirmLoading"
         @ok="changeTelhandleOk"
@@ -233,7 +233,7 @@
         </a-form-model>
     </a-modal>
     <a-modal
-        title="更换手机号第一步"
+        title="更换手机号"
         :visible="changePhoneVisible1"
         :confirm-loading="confirmLoading"
         @ok="changePhonehandleOk"
@@ -408,10 +408,6 @@ components: {
       rules: {
           //校验规则
           enterprisename: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
-          // EnterpriseAddress: [{ required: true, message: '请输入企业地址', trigger: 'blur' }],
-          // EnterpriseContact: [{ required: true, message: '请输入联系人', trigger: 'blur' }],
-          // EnterpriseTel: [{ required: true, message: '请输入电话', trigger: 'blur' },
-          //                 { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },],
           EnterprisePhone: [
               { required: true, message: '请输入手机号', trigger: 'blur' },
               { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },

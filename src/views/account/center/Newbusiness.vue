@@ -112,9 +112,11 @@
 </template>
 
 <script>
-import {  mapGetters } from 'vuex'
+
 import Countdown from '@/components/tools/Countdown'
 import {insertBaseenterprise} from '@/api/manage'
+import { logininfo } from '@/store/mutation-types'
+import Vue from 'vue'
 export default {
     components: {
     Countdown,
@@ -134,19 +136,16 @@ export default {
       enterprisename:''
     }
   },
-    computed: {
-    ...mapGetters(['baseenterprisePO'])
-  },
+
   methods: {
     handleSubmit(e) {
         this.loginBtn = true
         this.form.validateFields(err => {
             if (!err) {
                 setTimeout(() => {
-                    this.baseenterprisePO.enterpriseid = JSON.stringify(this.baseenterprisePO.enterpriseid)
-                    console.log('企业ID------------->',this.baseenterprisePO.enterpriseid);
+                  
                     const data = {}
-                    data.enterpriseid = this.baseenterprisePO.enterpriseid
+                    data.enterpriseid =  Vue.ls.get(logininfo).basepersonPO.enterpriseid
                     data.enterprisename = this.enterprisename
                     insertBaseenterprise(data)
                     .then((res)=>{

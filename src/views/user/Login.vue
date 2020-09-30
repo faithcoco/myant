@@ -53,6 +53,7 @@
         <a-tab-pane key="1" tab="验证码登录">
           <a-form-item>
             <a-input
+             @change="handleUserChange"
               size="large"
               type="text"
               placeholder="手机号"
@@ -89,7 +90,7 @@
       </a-tabs>
       <a-form-item v-show="enterpriseVisible">
         企业：
-        <a-select value="请选择" style="width: 150px" @change="handleChange">
+        <a-select  default-value="请选择" style="width: 150px" @change="handleChange">
           <a-select-option v-for="d in companyList" :key="d.enterpriseid">{{ d.enterprisename }}</a-select-option>
         </a-select>
       </a-form-item>
@@ -184,6 +185,7 @@ export default {
       if (loginParams.phone.length == 11) {
         getCompanyList(loginParams)
           .then((res) => {
+            console.log("getCompanyList-->",JSON.stringify(res))
             if (res.result.length == 1) {
               this.enterpriseid = res.result[0].enterpriseid
             } else {

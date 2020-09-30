@@ -188,6 +188,7 @@ export default {
             console.log("getCompanyList-->",JSON.stringify(res))
             if (res.result.length == 1) {
               this.enterpriseid = res.result[0].enterpriseid
+              this.enterpriseVisible=false
             } else {
               this.enterpriseVisible = true
              

@@ -3,7 +3,7 @@
 
     <div class="copyright">
       Copyright
-      <a-icon type="copyright" /> 2020 <span>上海砺学信息科技有限公司</span>
+      <a-icon type="copyright" /> 2020 <span>上海匠思网络科技有限公司</span>
     </div>
   </div>
 </template>

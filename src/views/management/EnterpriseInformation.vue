@@ -13,7 +13,7 @@
       </a-col>
       <a-col :md="24" :lg="16">
         <a-form layout="vertical">
-          <a-form-item label="上海砺学信息技术有限公司"></a-form-item>
+          <a-form-item label="上海匠思网络科技有限公司"></a-form-item>
           <a-form-item label :required="false">
             <a-icon type="cloud-upload-o" class="upload-icon" />田林路140号<a-icon type="edit" :style="{marginLeft: '8px', color: '#1890FF' }" />
           </a-form-item>

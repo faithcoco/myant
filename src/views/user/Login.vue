@@ -190,8 +190,9 @@ export default {
               this.enterpriseid = res.result[0].enterpriseid
             } else {
               this.enterpriseVisible = true
-              this.companyList = res.result
+             
             }
+             this.companyList = res.result
           })
           .catch(() => {
             this.requiredTwoStepCaptcha = false

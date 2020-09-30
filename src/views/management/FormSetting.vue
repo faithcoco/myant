@@ -111,6 +111,7 @@ export default {
        const updateParams = {}
        
       updateForm(this.formSettingList).then((res) => {
+         this.$message.success('更改成功');
          location.reload()
       })
     },

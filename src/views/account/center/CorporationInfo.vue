@@ -71,6 +71,7 @@
       :confirm-loading="confirmLoading"
       @ok="handleOk"
       @cancel="handleCancel"
+      okText="联系我们"
       >
       <p>
         注意事项：这个操作将会清除企业中所有成员的单据信息包括:
@@ -757,6 +758,7 @@ components: {
        this.$confirm({
         title: '确认将要解散企业？',
         content: '解散企业操作不可撤回，请慎重考虑',
+        okText:"联系我们",
         onOk: () => {
           if (this.enterprisename != []) {
             

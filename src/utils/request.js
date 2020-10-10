@@ -25,7 +25,7 @@ export {
 const service = axios.create({
   baseURL: url, // api base_url
   //baseURL: 'http://rap2api.taobao.org/app/mock/254479',
-  timeout: 6000 // 请求超时时间
+  timeout: 60000 // 请求超时时间
 })
 
 const err = (error) => {

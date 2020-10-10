@@ -10,6 +10,7 @@
       @close="drawerClose"
     >
       <side-menu
+       
         mode="inline"
         :menus="menus"
         :theme="navTheme"
@@ -18,8 +19,9 @@
         @menuSelect="menuSelect"
       ></side-menu>
     </a-drawer>
-
+ 
     <side-menu
+     
       v-else-if="isSideMenu()"
       mode="inline"
       :menus="menus"
@@ -27,7 +29,7 @@
       :collapsed="collapsed"
       :collapsible="true"
     ></side-menu>
-
+ 
     <a-layout :class="[layoutMode, `content-width-${contentWidth}`]" :style="{ paddingLeft: contentPaddingLeft, minHeight: '100vh' }">
       <!-- layout header -->
       <global-header

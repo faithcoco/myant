@@ -1,4 +1,5 @@
 <template>
+ <div  class="demo-infinite-container">
   <a-layout-sider
     :class="['sider', isDesktop() ? null : 'shadow', theme, fixSiderbar ? 'ant-fixed-sidemenu' : null ]"
     width="200px"
@@ -14,6 +15,7 @@
       @select="onSelect"
       style="padding: 16px 0px;"></s-menu>
   </a-layout-sider>
+</div>
 
 </template>
 
@@ -59,3 +61,6 @@ export default {
   }
 }
 </script>
+<style scoped>
+
+</style>

@@ -2,16 +2,21 @@
   <a-card :bordered="false" :style="{ height: '100%' }">
     <a-row :gutter="24">
       <a-col :md="4">
-        <a-list itemLayout="vertical" :dataSource="roles">
-          <a-list-item slot="renderItem" slot-scope="item, index" :key="index">
-            <a-list-item-meta :style="{ marginBottom: '0' }">
-              <span slot="description" style="text-align: center; display: block">{{ item.describe }}</span>
-              <a slot="title" style="text-align: center; display: block" @click="edit(item)">{{ item.name }}</a>
-            </a-list-item-meta>
-          </a-list-item>
-        </a-list>
+        <div  class="demo-infinite-container">
+         
+          <a-list itemLayout="vertical" :dataSource="roles">
+            <a-list-item slot="renderItem" slot-scope="item, index" :key="index">
+              <a-list-item-meta :style="{ marginBottom: '0' }">
+                <span slot="description" style="text-align: center; display: block">{{ item.describe }}</span>
+                <a slot="title" style="text-align: center; display: block" @click="edit(item)">{{ item.name }}</a>
+              </a-list-item-meta>
+            </a-list-item>
+          </a-list>
+        
+        </div>
       </a-col>
       <a-col :md="20">
+        <a-card>
         <div style="max-width: 1000px">
           <div v-if="mdl.id">
             <h3>角色：{{ mdl.name }}</h3>
@@ -32,7 +37,7 @@
               </a-select>
             </a-form-item>
 
-            <a-form-item label="备注说明">
+            <a-form-item label="备注说明" v-show="false">
               <a-textarea
                 :row="3"
                 @change="onDescribeChange"
@@ -74,6 +79,7 @@
             <a-button type @click="onBack">返回</a-button>
           </a-col>
         </a-row>
+        </a-card>
       </a-col>
     </a-row>
   </a-card>
@@ -263,4 +269,11 @@ export default {
 </script>
 
 <style scoped>
+.demo-infinite-container {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow: auto;
+  padding: 8px 2px;
+  height: 750px;
+}
 </style>

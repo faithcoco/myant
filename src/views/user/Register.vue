@@ -87,6 +87,7 @@
           v-decorator="['EnterpriseName', {rules: [{ required: true,  message: '请输入正确的企业名称' }], validateTrigger: ['change', 'blur']}]"
         ></a-input>
       </a-form-model-item>
+       <a-form :label-col="labelCol" :wrapper-col="wrapperCol">
       <a-form-model-item label="密码">
         <a-input
           size="large"
@@ -96,6 +97,7 @@
           v-decorator="['PersonPassword', {rules: [{ required: true, message: '请输入密码' }], validateTrigger: ['change', 'blur']}]"
         ></a-input>
       </a-form-model-item>
+       </a-form>
       <!-- <a-form-item>
         <a-checkbox/>
         <a-button type="link"  class="privacy" @click="privacy">同意《用户注册服务协议》</a-button>

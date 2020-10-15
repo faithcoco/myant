@@ -17,9 +17,14 @@
             固定审批流
             <a-switch default-checked @change="onChange" />
           </a-form-item>
-          <a-form-item label :required="false">开启后，将按照锁设置的审批流程进行，若需要自由审批，则关闭即可</a-form-item>
+          <a-form-item label :required="false"
+            >开启后，将按照锁设置的审批流程进行，若需要自由审批，则关闭即可</a-form-item
+          >
           <a-form-item label :required="false">
-            <a-icon type="plus" />添加审批流
+            <a-steps direction="vertical" size="small" :current="3" progress-dot>
+              <a-step v-for="(item,i) in list" :title="item.title" :description="item.description" />
+           
+            </a-steps>
           </a-form-item>
         </a-form>
       </a-col>
@@ -40,11 +45,16 @@ export default {
   components: {
     STable,
     STree,
-    OrgModal
+    OrgModal,
   },
   data() {
     return {
       openKeys: ['key-01'],
+      list: [
+        { title: '审批节点一', description: '张三' },
+        { title: '审批节点二', description: '张三' },
+        { title: '审批节点三', description: '张三' },
+      ],
 
       // 查询参数
       queryParam: {},
@@ -79,15 +89,15 @@ export default {
       // },
       approvalSettinTree: [],
       selectedRowKeys: [],
-      selectedRows: []
+      selectedRows: [],
     }
   },
   created() {
-    getapprovalSettinTree().then(res => {
+    getapprovalSettinTree().then((res) => {
       console.log(res.result)
       this.approvalSettinTree = res.result
     })
-    getapprovalSettinColumns().then(res => {
+    getapprovalSettinColumns().then((res) => {
       console.log(res.columns)
       this.columns = res.columns
     })
@@ -99,7 +109,7 @@ export default {
     handleClick(e) {
       console.log('handleClick', e)
       this.queryParam = {
-        key: e.key
+        key: e.key,
       }
     },
     handleAdd(item) {
@@ -119,8 +129,8 @@ export default {
     onSelectChange(selectedRowKeys, selectedRows) {
       this.selectedRowKeys = selectedRowKeys
       this.selectedRows = selectedRows
-    }
-  }
+    },
+  },
 }
 </script>
 

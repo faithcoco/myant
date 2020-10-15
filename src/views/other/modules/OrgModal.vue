@@ -1,6 +1,6 @@
 <template>
   <a-modal
-    title="操作"
+    title="新增"
     :width="600"
     :visible="visible"
     :confirmLoading="confirmLoading"
@@ -17,7 +17,7 @@
         </a-form-item>
 
         <a-form-item
-          label="机构名称"
+          label="名称"
         >
           <a-input v-decorator="['orgName', {}]" />
         </a-form-item>

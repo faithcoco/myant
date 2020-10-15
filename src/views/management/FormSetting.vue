@@ -1,7 +1,7 @@
 <template>
   <a-card :bordered="false">
     <a-row :gutter="8">
-      <a-col :span="5">
+      <a-col :span="4">
         <s-tree
           :dataSource="FormSettingTree"
           :openKeys.sync="openKeys"
@@ -11,7 +11,7 @@
           @titleClick="handleTitleClick"
         ></s-tree>
       </a-col>
-      <a-col :span="19">
+      <a-col :span="20">
         <s-table
           ref="table"
           size="default"
@@ -21,11 +21,19 @@
           :alert="false"
           bordered
         >
+          <a slot="fieldsort" slot-scope="text, record" @click="showSort(record)">{{ record.fieldsort }}</a>
           <span slot="fieldname" slot-scope="text, record">
-            <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fieldname"  />
+            <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fieldname" />
           </span>
-          <span slot="vdef2" slot-scope="text, record">
-            <a-input @change="(e) => vdef2Change(e.target.value, record)" :value="record.vdef2" style="width: 50px" />px
+          <span slot="fielddecription" slot-scope="text, record">
+            <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fielddecription" />
+          </span>
+          <span slot="fieldwidthlist" slot-scope="text, record">
+            <a-input
+              @change="(e) => vdef2Change(e.target.value, record)"
+              :value="record.fieldwidthlist"
+              style="width: 50px"
+            />px
           </span>
           <span slot="fielddisplay" style="margin: 0" slot-scope="text, record">
             <a-checkbox @change="(e) => fielddisplayChange(e.target.checked, record)" :checked="record.fielddisplay" />
@@ -55,7 +63,10 @@
         </a-row>
       </a-col>
     </a-row>
-
+    <a-modal title="提示" :visible="sortVisible" :confirm-loading="confirmLoading" @ok="sortOk" @cancel="sortCancel">
+      <p>请输入想要移动位置：</p>
+      <a-input type="number" :visible="sortAfter" :max="sortMax" />
+    </a-modal>
     <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" />
   </a-card>
 </template>
@@ -68,7 +79,7 @@ import { getFormSettingTree, getServiceList, getFormSettingList, getFormSettingC
 import { logininfo } from '@/store/mutation-types'
 import Vue from 'vue'
 const columns = []
-
+//表单设置
 export default {
   name: 'TreeList',
   components: {
@@ -78,7 +89,7 @@ export default {
   },
   data() {
     return {
-      openKeys: ['01-01'],
+      openKeys: ['01'],
       menuid: '',
       // 查询参数
       queryParam: {},
@@ -86,18 +97,30 @@ export default {
       columns,
       // 加载数据方法 必须为 Promise 对象
       loadData: (parameter) => {
+        console.log('parameter--->', parameter)
         parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         //parameter.enterpriseid = '23e34e91-d6c5-43af-886b-2327ade04bcc'
         return getFormSettingList(Object.assign(parameter, this.queryParam)).then((res) => {
           console.log('getFormSettingList-->', JSON.stringify(res))
-          this.formSettingList = res.result
-          return res.result
+          if (res.status == 'FAILED') {
+            this.$message.error(res.errorMsg)
+          } else {
+            this.formSettingList = res.result
+            this.sortMax = this.formSettingList.length
+          }
+
+          return this.formSettingList
         })
       },
       FormSettingTree: [],
       selectedRowKeys: [],
       selectedRows: [],
       formSettingList: {},
+      sortVisible: false,
+      sortAfter: '',
+      sortBfter: '',
+      sortMax: '',
+      currentId: '',
     }
   },
   created() {
@@ -107,9 +130,23 @@ export default {
     })
     getFormSettingTree().then((res) => {
       this.FormSettingTree = res.result
+      console.log('tree-->', JSON.stringify(res.result))
     })
   },
   methods: {
+    sortOk(e) {
+      const parameter = {}
+      parameter.enterpriseid = ''
+      this.loadData(parameter)
+    },
+    sortCancel(e) {
+      this.sortVisible = false
+    },
+    showSort(record) {
+      this.sortVisible = true
+      this.sortBfter = record.fieldsort
+      record.fieldwidthlist = 200
+    },
     onSubmit(e) {
       const updateParams = {}
 
@@ -118,7 +155,7 @@ export default {
         location.reload()
       })
     },
-    onBcak(e) {},
+
     vdef2Change(value, record) {
       for (const key in this.formSettingList.data) {
         if (record.id == this.formSettingList.data[key].id) {
@@ -162,6 +199,7 @@ export default {
       this.queryParam = {
         menuid: this.menuid,
       }
+
 
       this.$refs.table.refresh(true)
     },

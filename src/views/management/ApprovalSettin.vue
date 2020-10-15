@@ -20,10 +20,31 @@
           <a-form-item label :required="false"
             >开启后，将按照锁设置的审批流程进行，若需要自由审批，则关闭即可</a-form-item
           >
+
+          <a-form-item label="审批节点一:">
+            <a-select mode="multiple" style="width: 50%" placeholder="请选择审批人员" @change="handleChange1">
+              <a-select-option v-for="(item, i) in nameList" :key="item.name">
+                {{ item.name }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+                    <a-form-item label="审批节点二:">
+            <a-select mode="multiple" style="width: 50%" placeholder="请选择审批人员" @change="handleChange2">
+              <a-select-option v-for="(item, i) in nameList" :key="item.name">
+                {{ item.name }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
+                    <a-form-item label="审批节点三:">
+            <a-select mode="multiple" style="width: 50%" placeholder="请选择审批人员" @change="handleChange3">
+              <a-select-option v-for="(item, i) in nameList" :key="item.name">
+                {{ item.name }}
+              </a-select-option>
+            </a-select>
+          </a-form-item>
           <a-form-item label :required="false">
             <a-steps direction="vertical" size="small" :current="3" progress-dot>
-              <a-step v-for="(item,i) in list" :title="item.title" :description="item.description" />
-           
+              <a-step v-for="(item, i) in list" :title="item.title" :description="item.description" />
             </a-steps>
           </a-form-item>
         </a-form>
@@ -55,38 +76,17 @@ export default {
         { title: '审批节点二', description: '张三' },
         { title: '审批节点三', description: '张三' },
       ],
+      nameList: [
+        { key: 1, name: '张三 ' },
+        { key: 2, name: '李四 ' },
+        { key: 3, name: '王五' },
+      ],
 
       // 查询参数
       queryParam: {},
       // 表头
       columns,
-      // columns: [
-      //   {
-      //     title: '姓名',
-      //     dataIndex: 'name'
-      //   },
-      //   {
-      //     title: '当前角色',
-      //     dataIndex: 'role',
-      //     needTotal: true
-      //   },
-      //   {
-      //     title: '联系电话',
-      //     dataIndex: 'tellphone'
-      //   },
-      //   {
-      //     title: '操作',
-      //     dataIndex: 'action',
-      //     width: '150px',
-      //     scopedSlots: { customRender: 'action' }
-      //   }
-      // ],
-      // // 加载数据方法 必须为 Promise 对象
-      // loadData: parameter => {
-      //   return getapprovalSettinColumns(Object.assign(parameter, this.queryParam)).then(res => {
-      //     return res.result
-      //   })
-      // },
+
       approvalSettinTree: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -103,6 +103,15 @@ export default {
     })
   },
   methods: {
+    handleChange1(value) {
+      this.list[0].description = value.join(',')
+    },
+      handleChange2(value) {
+      this.list[1].description = value.join(',')
+    },
+      handleChange3(value) {
+      this.list[2].description = value.join(',')
+    },
     onChange(checked) {
       console.log(`a-switch to ${checked}`)
     },

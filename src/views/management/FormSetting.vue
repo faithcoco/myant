@@ -10,16 +10,22 @@
             @click="handleClick"
             @add="handleAdd"
             @titleClick="handleTitleClick"
+            v-model="selectedKeys"
           ></s-tree>
         </div>
       </a-col>
       <a-col :span="20">
-      
-        <a-table :columns="columns" :data-source="formSettingList.data" bordered :scroll="{ y: 600 }"  :pagination="{hideOnSinglePage:true  }" >
+        <a-table
+          :columns="columns"
+          :data-source="formSettingList.data"
+          bordered
+          :scroll="{ y: 600 }"
+          :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
+        >
           <a slot="fieldsort" slot-scope="text, record" @click="showSort(record)">{{ record.fieldsort }}</a>
-            
+
           <span slot="fieldname" slot-scope="text, record">
-            <a-input  @change="(e) => fieldname(e.target.value, record)" :value="record.fieldname" />
+            <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fieldname" />
           </span>
           <span slot="fielddecription" slot-scope="text, record">
             <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fielddecription" />
@@ -43,12 +49,11 @@
           <span slot="handle" slot-scope="text, record">
             <template>
               <a @click="handleEdit(record)">编辑</a>
-            
             </template>
           </span>
         </a-table>
 
-        <a-row :style="{ marginTop: '30px' }" >
+        <a-row :style="{ marginTop: '30px' }">
           <a-col :span="1" :offset="10">
             <a-button type="primary" @click="onSubmit">保存</a-button>
           </a-col>
@@ -86,6 +91,7 @@ export default {
   data() {
     return {
       openKeys: ['01'],
+      selectedKeys: ['01-01'],
       menuid: '',
       // 查询参数
       queryParam: {},
@@ -102,7 +108,7 @@ export default {
       sortBfter: '',
       sortMax: 100,
       currentItem: '',
-      editVisible:false
+      editVisible: false,
     }
   },
   created() {
@@ -112,10 +118,29 @@ export default {
     })
     getFormSettingTree().then((res) => {
       this.FormSettingTree = res.result
-      console.log('tree-->', JSON.stringify(res.result))
+      this.menuid=this.FormSettingTree[0].children[0].memuid
+      this.getlist()
     })
   },
   methods: {
+    getlist() {
+      const parameter = {
+        enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
+        menuid: this.menuid,
+        pageNo: 1,
+        pageSize: 10,
+      }
+
+      getFormSettingList(parameter).then((res) => {
+        console.log('getFormSettingList-->', JSON.stringify(res))
+        if (res.status == 'FAILED') {
+          this.$message.error(res.errorMsg)
+        } else {
+          this.formSettingList = res.result
+          this.sortMax = this.formSettingList.length
+        }
+      })
+    },
     sortOk(e) {
       this.formSettingList.data.splice(this.currentItem.fieldsort - 1, 1)
       this.formSettingList.data.splice(this.sortAfter - 1, 0, this.currentItem)
@@ -134,11 +159,11 @@ export default {
       console.log('currentitem--->', this.currentItem)
     },
     onSubmit(e) {
-      const updateParams = {}
+    
 
       updateForm(this.formSettingList).then((res) => {
         this.$message.success('更改成功')
-        location.reload()
+        this.getlist()
       })
     },
     onBack(e) {},
@@ -182,23 +207,7 @@ export default {
           }
         }
       }
-
-      const parameter = {
-        enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
-        menuid: this.menuid,
-        pageNo: 1,
-        pageSize: 10,
-      }
-
-      getFormSettingList(parameter).then((res) => {
-        console.log('getFormSettingList-->', JSON.stringify(res))
-        if (res.status == 'FAILED') {
-          this.$message.error(res.errorMsg)
-        } else {
-          this.formSettingList = res.result
-          this.sortMax = this.formSettingList.length
-        }
-      })
+      this.getlist()
     },
     handleAdd(item) {
       console.log('add button, item', item)

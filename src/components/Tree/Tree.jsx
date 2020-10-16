@@ -38,7 +38,7 @@ export default {
     renderSearch () {
       return (
         <Search
-          placeholder="input search text"
+          placeholder=""
           style="width: 100%; margin-bottom: 1rem"
         />
       )

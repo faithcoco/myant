@@ -3,18 +3,17 @@
     <a-row :gutter="8">
       <a-col :span="5">
         <span>部门结构</span>
-        <a-tree
-          :tree-data="treeData"
-          show-icon
-          @expand="onExpand"
-          :expanded-keys="expandedKeys"
-          :auto-expand-parent="autoExpandParent"
+        <a-divider></a-divider>
+        <s-tree
+          :dataSource="treeData"
+          :openKeys.sync="openKeys"
+          :search="true"
+          @click="handleClick"
+          @add="handleAdd"
+          @titleClick="handleTitleClick"
+          
         >
-          <a-icon slot="apartment" type="apartment" :style="{ color: '#1890FF' }" />
-          <template slot="custom" slot-scope="{ selected }">
-            <a-icon :type="selected ? 'frown' : 'frown-o'" />
-          </template>
-        </a-tree>
+        </s-tree>
       </a-col>
       <a-col :span="19">
         <s-table
@@ -23,7 +22,7 @@
           :columns="columns"
           :data="loadData"
           :alert="false"
-           :scroll="{ x: 1300 }"
+          :scroll="{ x: 1300 }"
           :rowSelection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
         >
           <span slot="action" slot-scope="text, record">
@@ -50,7 +49,6 @@
             </a-dropdown>
           </span>
         </s-table>
-        
       </a-col>
     </a-row>
 
@@ -65,7 +63,7 @@ import { STable } from '@/components'
 import { Tree } from 'ant-design-vue'
 Vue.use(Tree)
 import OrgModal from '../other/modules/OrgModal'
-import { getOrgTree, getServiceList, getPersonnelSettingList, getPersonnelSettingColumns} from '@/api/manage'
+import { getOrgTree, getServiceList, getPersonnelSettingList, getPersonnelSettingColumns } from '@/api/manage'
 import { getSector } from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
 
@@ -90,10 +88,10 @@ export default {
       columns,
       // 加载数据方法 必须为 Promise 对象
       loadData: (parameter) => {
-        parameter.menuid='03bf0fb1-e9fb-4014-92e7-7121f4f71005'
+        parameter.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71005'
         parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         return getPersonnelSettingList(Object.assign(parameter, this.queryParam)).then((res) => {
-          console.log("getPersonnelSettingList-->",JSON.stringify(res))
+          console.log('getPersonnelSettingList-->', JSON.stringify(res))
           return res.result
         })
       },
@@ -107,13 +105,13 @@ export default {
     columnsParams.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
     columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
     getPersonnelSettingColumns(columnsParams).then((res) => {
-      console.log("getPersonnelSettingColumns-->",JSON.stringify(res))
+      console.log('getPersonnelSettingColumns-->', JSON.stringify(res))
       this.columns = res.result.columns
     })
     const treeParams = {}
     treeParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
     getSector(treeParams).then((res) => {
-       console.log("getSector-->",JSON.stringify(res))
+      console.log('tree-->', JSON.stringify(res.result))
       this.treeData = res.result
       this.expandedKeys = ['0-0-0', '0-0-1']
     })

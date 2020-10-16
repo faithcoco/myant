@@ -37,7 +37,7 @@ const api = {
   updateBaseenterprise: '/bd/Baseenterprise/updateBaseenterprise',
   insertBaseenterprise: '/bd/Baseenterprise//insertBaseenterprise',
 
-  productList: '/productList',
+  productList: '/bd/product/productList',
   SupplierList: '/SupplierList',
   CustomerList: '/CustomerList',
   ContactList: '/ContactList',
@@ -61,7 +61,7 @@ const api = {
   PersonnelSettingList: '/bd/baseperson/PersonnelSettingList',
   FormSettingList: '/bd/FormSetting/FormSettingList',
 
-  productListColumns: '/productList/columns',
+  productListColumns: '/bd/product/productList/columns',
   SupplierListColumns: '/SupplierList/columns',
   CustomerListColumns: '/CustomerList/columns',
   ContactListColumns: '/ContactList/columns',

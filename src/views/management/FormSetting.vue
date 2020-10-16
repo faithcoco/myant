@@ -112,11 +112,13 @@ export default {
     }
   },
   created() {
+   
     getFormSettingColumns().then((res) => {
       console.log('columns-->', JSON.stringify(res))
       this.columns = res.result.columns
     })
     getFormSettingTree().then((res) => {
+       console.log('tree-->', JSON.stringify(res.result))
       this.FormSettingTree = res.result
       this.menuid=this.FormSettingTree[0].children[0].memuid
       this.getlist()

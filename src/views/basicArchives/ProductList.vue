@@ -16,57 +16,34 @@
         </a-col>
 
         <a-col :span="20">
-          <a-select default-value="全部" style="width:220px" @change="selectChange(value)">
+          <a-select default-value="全部" style="width: 220px" @change="selectChange(value)">
             <a-select-option v-for="SList in selectList" :key="SList.value" :value="SList.value">{{
               SList.value
             }}</a-select-option>
           </a-select>
-          <!-- 
-             default-value   默认值
-             style="width:220px"   样式设置   宽度为220像素
-             @change  监听事件变化 当value变化时触发change事件绑定的函数
-          -->
 
-          <a-input-search @search="onSearch" style="width:220px;margin-left:20px" placeholder="请输入搜索内容" />
-          <!-- @search  监听搜索事件 搜索框输入时触发onSearch函数 -->
-          <!-- 将显示区域的宽度分为24等份，用:span 来表示每一个内容占的分数、比例 -->
+          <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容" />
+
           <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
-            <!-- 
-              float: 'right',  向右浮动
-              overflow: 'hidden'   内容超出给定宽高值后会隐藏超出部分内容
-            -->
-
             <a-button style="margin-left: 5px" type="primary" @click="add()">新增</a-button>
-            <a-button style="margin-left: 5px" type="primary" @click="handleSetting()">设置</a-button>
+
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
-            <!--  @click 点击事件 绑定函数可以在点击按钮时触发 -->
           </span>
           <s-table
             ref="table"
             size="default"
-            :columns="targetTitle"
+            :columns="columns"
             :data="loadData"
             :alert="false"
             :scroll="{ x: 1500 }"
             bordered
-            style="margin-top:20px"
+            style="margin-top: 20px"
           >
-            <!--
-        ref="table"  ref给一个名称之后可以用this.$refs.table 来获取这个元素 比如下面刷新表格就是用这个方法获取的表格元素
-        size="default"   将表格尺寸设为默认   其他值： middle  中号 | small  小号
-        :columns="targetTitle"  表头绑定数据
-        :data="loadData"        表格内容数据绑定
-        -->
             <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
             <span slot="customTitle">
               {{ Operation }}
               <a-icon :type="isfold" :style="{ fontSize: '18px' }" @click="WidthChange()" />
-              <!--
-            :type="isfold"                  图标类型
-            :style="{ fontSize: '18px' }"   图标样式   fontsize  字体大小
-             @click="WidthChange()"         点击事件绑定函数    
-           -->
             </span>
             <span slot="action" v-show="Operat_visible" slot-scope="text, record">
               <a @click="handleDetail(record)">审批</a>
@@ -79,12 +56,7 @@
         </a-col>
       </a-row>
     </a-card>
-    <!--
-        调用自定义组件 approval 
-        :visible="approval_visible"  控制组件显隐
-        :product="product"           获取product对象      
-         @change="change"            绑定自定义事件      发生变化时触发
-     -->
+
     <approval :visible="approval_visible" :product="product" @change="change"></approval>
     <a-modal
       title="设置"
@@ -98,7 +70,7 @@
         :titles="['选择显示字段', '已选择字段']"
         :target-keys="targetKeys"
         :selected-keys="selectedKeys"
-        :render="item => item.title"
+        :render="(item) => item.title"
         :disabled="disabled"
         @change="handleChange"
         @selectChange="handleSelectChange"
@@ -126,7 +98,7 @@ import { STable } from '@/components'
 import { getProductList, getProductListColumns, getclassificationGoodsList } from '@/api/manage'
 import action from '../../core/directives/action'
 import Approval from '../Approval'
-
+import { logininfo } from '@/store/mutation-types'
 const columns = []
 const selectList = [
   { value: '全部' },
@@ -144,7 +116,7 @@ const selectList = [
   { value: '是否虚拟物品' },
   { value: '图片' },
   { value: '预发货日期' },
-  { value: '单位毛重' }
+  { value: '单位毛重' },
 ]
 
 const product = {}
@@ -154,7 +126,7 @@ export default {
   components: {
     STable,
     STree,
-    Approval
+    Approval,
   },
   data() {
     const oriTargetKeys = this.columns
@@ -177,274 +149,25 @@ export default {
       targetKeys: [],
       selectedKeys: [],
       disabled: false,
-      loadData: parameter => {
-        return getProductList(Object.assign(parameter, this.queryParam)).then(res => {
+      loadData: (parameter) => {
+        parameter.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71003'
+        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+        return getProductList(Object.assign(parameter, this.queryParam)).then((res) => {
+          console.log("list-->",JSON.stringify(res))
           return res.result
         })
       },
       ClassifyTree: [],
-      moment
+      moment,
     }
   },
   created() {
-    getProductListColumns().then(res => {
-      console.log('res------->', res)
-      this.columns = res.result
-      this.columns = [
-        {
-          key: '0',
-          title: '货品编码',
-          dataIndex: 'productCode',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: true,
-          isShow: true,
-          scopedSlots: {
-            customRender: 'name'
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '1',
-          title: '货品名称',
-          dataIndex: 'productName',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '2',
-          title: '规格型号',
-          dataIndex: 'SpecificationModel',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '3',
-          title: '存货编码',
-          dataIndex: 'InventoryCode',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '4',
-          title: '存货名称',
-          dataIndex: 'InventoryName',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '5',
-          title: '主计量单位',
-          dataIndex: 'MainUnit',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '6',
-          title: '电商销售单位',
-          dataIndex: 'SalesUnit',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '7',
-          title: '分销单位',
-          dataIndex: 'DistributionUnit',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '8',
-          title: '最低售价',
-          dataIndex: 'LowestPrice',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '9',
-          title: '商品描述',
-          dataIndex: 'description',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '10',
-          title: '默认发货仓库',
-          dataIndex: 'DefaultShippingWarehouse',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '11',
-          title: '是否虚拟物品',
-          dataIndex: 'VirtualItem',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '12',
-          title: '图片',
-          dataIndex: 'Image',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '13',
-          title: '预发货日期',
-          dataIndex: 'StorageDate',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '14',
-          title: '单位毛重',
-          dataIndex: 'UnitGrossWeight',
-          defaultSortOrder: 'descend',
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: null
-          },
-          fixed: null,
-          slots: {
-            title: null
-          }
-        },
-        {
-          key: '15',
-          slots: { title: 'customTitle' },
-          dataIndex: 'action',
-          defaultSortOrder: null,
-          width: 155,
-          sorter: null,
-          isShow: true,
-          scopedSlots: {
-            customRender: 'action'
-          },
-          fixed: 'right'
-        }
-      ]
+    const columnsParams = {}
+    columnsParams.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71003'
+    columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+    getProductListColumns(columnsParams).then((res) => {
+      console.log('columns------->', JSON.stringify(res))
+      this.columns = res.result.columns
 
       this.targetTitle = []
 
@@ -464,7 +187,7 @@ export default {
         }
       }
     }
-    getclassificationGoodsList().then(res => {
+    getclassificationGoodsList().then((res) => {
       this.ClassifyTree = res.result
     })
   },
@@ -475,15 +198,15 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
   methods: {
     onSearch(value) {
       console.log(value)
       this.queryParam = {
-        key: value
+        key: value,
       }
       this.$refs.table.refresh(true) //用refresh方法刷新表格
     },
@@ -514,9 +237,7 @@ export default {
     add() {
       this.$router.push({ name: 'ProductAdd' }) //编程式导航  修改 url，完成跳转
     },
-    handleSetting(record) {
-      console.log(record), (this.visible_transfer = true)
-    },
+
     handleEdit(record) {
       console.log(record), this.$router.push({ path: '/add' })
     },
@@ -525,7 +246,7 @@ export default {
     },
     onDelete(key) {
       const data = [...this.data]
-      this.data = data.filter(item => item.key !== key)
+      this.data = data.filter((item) => item.key !== key)
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
@@ -577,7 +298,7 @@ export default {
     handleClick(e) {
       console.log('handleClick', e)
       this.queryParam = {
-        key: e.key
+        key: e.key,
       }
       this.$refs.table.refresh(true)
     },
@@ -588,8 +309,8 @@ export default {
     },
     handleTitleClick(item) {
       console.log('handleTitleClick', item)
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang="less" scoped></style>

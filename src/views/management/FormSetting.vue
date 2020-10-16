@@ -2,28 +2,24 @@
   <a-card :bordered="false">
     <a-row :gutter="8">
       <a-col :span="4">
-        <s-tree
-          :dataSource="FormSettingTree"
-          :openKeys.sync="openKeys"
-          :search="true"
-          @click="handleClick"
-          @add="handleAdd"
-          @titleClick="handleTitleClick"
-        ></s-tree>
+        <div class="tree">
+          <s-tree
+            :dataSource="FormSettingTree"
+            :openKeys.sync="openKeys"
+            :search="true"
+            @click="handleClick"
+            @add="handleAdd"
+            @titleClick="handleTitleClick"
+          ></s-tree>
+        </div>
       </a-col>
       <a-col :span="20">
-        <s-table
-          ref="table"
-          size="default"
-          :columns="columns"
-          :data="loadData"
-          :scroll="{ x: 1300 }"
-          :alert="false"
-          bordered
-        >
+      
+        <a-table :columns="columns" :data-source="formSettingList.data" bordered :scroll="{ y: 600 }"  :pagination="{hideOnSinglePage:true  }" >
           <a slot="fieldsort" slot-scope="text, record" @click="showSort(record)">{{ record.fieldsort }}</a>
+            
           <span slot="fieldname" slot-scope="text, record">
-            <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fieldname" />
+            <a-input  @change="(e) => fieldname(e.target.value, record)" :value="record.fieldname" />
           </span>
           <span slot="fielddecription" slot-scope="text, record">
             <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fielddecription" />
@@ -47,12 +43,12 @@
           <span slot="handle" slot-scope="text, record">
             <template>
               <a @click="handleEdit(record)">编辑</a>
-              <a-divider type="vertical" />
-              <a @click="handleEdit(record)">删除</a>
+            
             </template>
           </span>
-        </s-table>
-        <a-row>
+        </a-table>
+
+        <a-row :style="{ marginTop: '30px' }" >
           <a-col :span="1" :offset="10">
             <a-button type="primary" @click="onSubmit">保存</a-button>
           </a-col>
@@ -63,9 +59,9 @@
         </a-row>
       </a-col>
     </a-row>
-    <a-modal title="提示" :visible="sortVisible" :confirm-loading="confirmLoading" @ok="sortOk" @cancel="sortCancel">
+    <a-modal title="提示" :visible="sortVisible" @ok="sortOk" @cancel="sortCancel">
       <p>请输入想要移动位置：</p>
-      <a-input type="number" :visible="sortAfter" :max="sortMax" />
+      <a-input v-model="sortAfter" />
     </a-modal>
     <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" />
   </a-card>
@@ -96,22 +92,7 @@ export default {
       // 表头
       columns,
       // 加载数据方法 必须为 Promise 对象
-      loadData: (parameter) => {
-        console.log('parameter--->', parameter)
-        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-        //parameter.enterpriseid = '23e34e91-d6c5-43af-886b-2327ade04bcc'
-        return getFormSettingList(Object.assign(parameter, this.queryParam)).then((res) => {
-          console.log('getFormSettingList-->', JSON.stringify(res))
-          if (res.status == 'FAILED') {
-            this.$message.error(res.errorMsg)
-          } else {
-            this.formSettingList = res.result
-            this.sortMax = this.formSettingList.length
-          }
 
-          return this.formSettingList
-        })
-      },
       FormSettingTree: [],
       selectedRowKeys: [],
       selectedRows: [],
@@ -119,8 +100,9 @@ export default {
       sortVisible: false,
       sortAfter: '',
       sortBfter: '',
-      sortMax: '',
-      currentId: '',
+      sortMax: 100,
+      currentItem: '',
+      editVisible:false
     }
   },
   created() {
@@ -135,9 +117,12 @@ export default {
   },
   methods: {
     sortOk(e) {
-      const parameter = {}
-      parameter.enterpriseid = ''
-      this.loadData(parameter)
+      this.formSettingList.data.splice(this.currentItem.fieldsort - 1, 1)
+      this.formSettingList.data.splice(this.sortAfter - 1, 0, this.currentItem)
+      this.sortVisible = false
+      for (var i = 0; i < this.formSettingList.data.length; i++) {
+        this.formSettingList.data[i].fieldsort = i + 1
+      }
     },
     sortCancel(e) {
       this.sortVisible = false
@@ -145,7 +130,8 @@ export default {
     showSort(record) {
       this.sortVisible = true
       this.sortBfter = record.fieldsort
-      record.fieldwidthlist = 200
+      this.currentItem = record
+      console.log('currentitem--->', this.currentItem)
     },
     onSubmit(e) {
       const updateParams = {}
@@ -155,6 +141,7 @@ export default {
         location.reload()
       })
     },
+    onBack(e) {},
 
     vdef2Change(value, record) {
       for (const key in this.formSettingList.data) {
@@ -196,12 +183,22 @@ export default {
         }
       }
 
-      this.queryParam = {
+      const parameter = {
+        enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
         menuid: this.menuid,
+        pageNo: 1,
+        pageSize: 10,
       }
 
-
-      this.$refs.table.refresh(true)
+      getFormSettingList(parameter).then((res) => {
+        console.log('getFormSettingList-->', JSON.stringify(res))
+        if (res.status == 'FAILED') {
+          this.$message.error(res.errorMsg)
+        } else {
+          this.formSettingList = res.result
+          this.sortMax = this.formSettingList.length
+        }
+      })
     },
     handleAdd(item) {
       console.log('add button, item', item)
@@ -221,6 +218,13 @@ export default {
 </script>
 
 <style lang="less">
+.tree {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow: auto;
+  padding: 8px 2px;
+  height: 680px;
+}
 .custom-tree {
   /deep/ .ant-menu-item-group-title {
     position: relative;

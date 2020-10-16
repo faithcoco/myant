@@ -16,7 +16,7 @@
           </template>
         </a-tree>
       </a-col>
-      
+
       <a-col :span="19">
         <s-table
           ref="table"

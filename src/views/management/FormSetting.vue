@@ -148,6 +148,7 @@ export default {
       for (var i = 0; i < this.formSettingList.data.length; i++) {
         this.formSettingList.data[i].fieldsort = i + 1
       }
+      this.sortAfter=""
     },
     sortCancel(e) {
       this.sortVisible = false

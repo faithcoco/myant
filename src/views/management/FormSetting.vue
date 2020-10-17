@@ -19,14 +19,12 @@
           :columns="columns"
           :data-source="formSettingList.data"
           bordered
-          :scroll="{ y: 600 }"
+          :scroll="{ x:2000,y: 600 }"
           :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
         >
           <a slot="fieldsort" slot-scope="text, record" @click="showSort(record)">{{ record.fieldsort }}</a>
 
-          <span slot="fieldname" slot-scope="text, record">
-            <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fieldname" />
-          </span>
+
           <span slot="fielddecription" slot-scope="text, record">
             <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fielddecription" />
           </span>
@@ -39,6 +37,17 @@
           </span>
           <span slot="fielddisplay" style="margin: 0" slot-scope="text, record">
             <a-checkbox @change="(e) => fielddisplayChange(e.target.checked, record)" :checked="record.fielddisplay" />
+          </span>
+          <span slot="fieldedit" style="margin: 0" slot-scope="text, record">
+            <a-checkbox @change="(e) => fieldeditChange(e.target.checked, record)" :checked="record.fieldedit" />
+          </span>
+                  
+          
+          <span slot="fielddisplaylist" style="margin: 0" slot-scope="text, record">
+            <a-checkbox
+              @change="(e) => fielddisplaylistChange(e.target.checked, record)"
+              :checked="record.fielddisplaylist"
+            />
           </span>
           <span slot="fieldmust" style="margin: 0" slot-scope="text, record">
             <a-checkbox @change="(e) => fieldmustChange(e.target.checked, record)" :checked="record.fieldmust" />
@@ -117,8 +126,9 @@ export default {
       this.columns = res.result.columns
     })
     getFormSettingTree().then((res) => {
+      console.log('tree-->', JSON.stringify(res.result))
       this.FormSettingTree = res.result
-      this.menuid=this.FormSettingTree[0].children[0].memuid
+      this.menuid = this.FormSettingTree[0].children[0].memuid
       this.getlist()
     })
   },
@@ -148,6 +158,7 @@ export default {
       for (var i = 0; i < this.formSettingList.data.length; i++) {
         this.formSettingList.data[i].fieldsort = i + 1
       }
+      this.sortAfter = ''
     },
     sortCancel(e) {
       this.sortVisible = false
@@ -159,8 +170,6 @@ export default {
       console.log('currentitem--->', this.currentItem)
     },
     onSubmit(e) {
-    
-
       updateForm(this.formSettingList).then((res) => {
         this.$message.success('更改成功')
         this.getlist()
@@ -176,25 +185,22 @@ export default {
       }
     },
     fieldname(value, record) {
-      for (const key in this.formSettingList.data) {
-        if (record.id == this.formSettingList.data[key].id) {
-          this.formSettingList.data[key].fieldname = value
-        }
-      }
+      record.fieldname=value
+    },
+    fieldeditChange(value, record) {
+      record.fieldedit=value
     },
     fielddisplayChange(value, record) {
-      for (const key in this.formSettingList.data) {
-        if (record.id == this.formSettingList.data[key].id) {
-          this.formSettingList.data[key].fielddisplay = value
-        }
-      }
+      record.fielddisplay=value
+
+    },
+    fielddisplaylistChange(value, record) {
+      record.fielddisplaylist=value
+
     },
     fieldmustChange(value, record) {
-      for (const key in this.formSettingList.data) {
-        if (record.id == this.formSettingList.data[key].id) {
-          this.formSettingList.data[key].fieldmust = value
-        }
-      }
+      record.fieldmust=value
+
     },
     onChange(e) {
       console.log(`checked = ${e.target.checked}`)

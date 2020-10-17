@@ -24,9 +24,7 @@
         >
           <a slot="fieldsort" slot-scope="text, record" @click="showSort(record)">{{ record.fieldsort }}</a>
 
-          <span slot="fieldname" slot-scope="text, record">
-            <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fieldname" />
-          </span>
+
           <span slot="fielddecription" slot-scope="text, record">
             <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fielddecription" />
           </span>

@@ -66,23 +66,17 @@
       </a-layout-content>
     </a-layout>
     <a-modal
-      title="单据数据初始化"
+      title="初始化"
       :visible="visible"
       :confirm-loading="confirmLoading"
       @ok="handleOk"
       @cancel="handleCancel"
-      okText="联系我们"
+      okText="确定"
       >
       <p>
-        注意事项：这个操作将会清除企业中所有成员的单据信息包括:
+       如需操作请联系匠思
       </p>
-      <P> -所有单据及费用明细 </P>
-      <P>-所有审批历史 </P>
-      <P>-所有借还款记录</P>
-      <P> -所有报表统计数据</P>
-      <P>-所有自定义扩展内录入的业务对象数据</P>
-      <P style="color:red"> -所有预算执行数据 该操作无法撤销或恢复，请慎重使用。</P>
-      <a-checkbox v-model="ok">我已了解该操作的风险</a-checkbox>
+    
     </a-modal>
 
     <a-modal
@@ -760,41 +754,25 @@ components: {
         content: '解散企业操作不可撤回，请慎重考虑',
         okText:"联系我们",
         onOk: () => {
-          if (this.enterprisename != []) {
-            
-            this.$router.push({ path: '/changeCorporation', })
-            return 
-          }
-          return this.Logout({})
-            .then(() => {
-              setTimeout(() => {
-                window.location.reload()
-              }, 3000)
-            })
-            .catch(err => {
-              this.$message.error({
-                title: '错误',
-                description: err.message
-              })
-            })
+        
         },
         onCancel() {}
       });
     },
 
     handleOk(e) {
-      console.log("ok--->",this.ok);
-      if (!this.ok) {
-        this.$message.info('请勾选“我已了解该操作的风险”');
-        return false
-      }
-      this.confirmLoading = true
-      setTimeout(() => {
-        this.visible = false
-        this.confirmLoading = false
-        this.confirmVisible = true
-        this.ok=false
-      }, 2000)
+        this.visible=false
+      // if (!this.ok) {
+      //   this.$message.info('请勾选“我已了解该操作的风险”');
+      //   return false
+      // }
+      // this.confirmLoading = true
+      // setTimeout(() => {
+      //   this.visible = false
+      //   this.confirmLoading = false
+      //   this.confirmVisible = true
+      //   this.ok=false
+      // }, 2000)
     },
     confirmOk(e) {
 

@@ -19,7 +19,7 @@
           :columns="columns"
           :data-source="formSettingList.data"
           bordered
-          :scroll="{ y: 600 }"
+          :scroll="{ x:2000,y: 600 }"
           :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
         >
           <a slot="fieldsort" slot-scope="text, record" @click="showSort(record)">{{ record.fieldsort }}</a>
@@ -41,11 +41,13 @@
             <a-checkbox @change="(e) => fielddisplayChange(e.target.checked, record)" :checked="record.fielddisplay" />
           </span>
           <span slot="fieldedit" style="margin: 0" slot-scope="text, record">
-            <a-checkbox @change="(e) => fielddisplayChange(e.target.checked, record)" :checked="record.fieldedit" />
+            <a-checkbox @change="(e) => fieldeditChange(e.target.checked, record)" :checked="record.fieldedit" />
           </span>
+                  
+          
           <span slot="fielddisplaylist" style="margin: 0" slot-scope="text, record">
             <a-checkbox
-              @change="(e) => fielddisplayChange(e.target.checked, record)"
+              @change="(e) => fielddisplaylistChange(e.target.checked, record)"
               :checked="record.fielddisplaylist"
             />
           </span>
@@ -185,25 +187,22 @@ export default {
       }
     },
     fieldname(value, record) {
-      for (const key in this.formSettingList.data) {
-        if (record.id == this.formSettingList.data[key].id) {
-          this.formSettingList.data[key].fieldname = value
-        }
-      }
+      record.fieldname=value
+    },
+    fieldeditChange(value, record) {
+      record.fieldedit=value
     },
     fielddisplayChange(value, record) {
-      for (const key in this.formSettingList.data) {
-        if (record.id == this.formSettingList.data[key].id) {
-          this.formSettingList.data[key].fielddisplay = value
-        }
-      }
+      record.fielddisplay=value
+
+    },
+    fielddisplaylistChange(value, record) {
+      record.fielddisplaylist=value
+
     },
     fieldmustChange(value, record) {
-      for (const key in this.formSettingList.data) {
-        if (record.id == this.formSettingList.data[key].id) {
-          this.formSettingList.data[key].fieldmust = value
-        }
-      }
+      record.fieldmust=value
+
     },
     onChange(e) {
       console.log(`checked = ${e.target.checked}`)

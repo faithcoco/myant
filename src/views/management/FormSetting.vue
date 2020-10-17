@@ -40,6 +40,15 @@
           <span slot="fielddisplay" style="margin: 0" slot-scope="text, record">
             <a-checkbox @change="(e) => fielddisplayChange(e.target.checked, record)" :checked="record.fielddisplay" />
           </span>
+          <span slot="fieldedit" style="margin: 0" slot-scope="text, record">
+            <a-checkbox @change="(e) => fielddisplayChange(e.target.checked, record)" :checked="record.fieldedit" />
+          </span>
+          <span slot="fielddisplaylist" style="margin: 0" slot-scope="text, record">
+            <a-checkbox
+              @change="(e) => fielddisplayChange(e.target.checked, record)"
+              :checked="record.fielddisplaylist"
+            />
+          </span>
           <span slot="fieldmust" style="margin: 0" slot-scope="text, record">
             <a-checkbox @change="(e) => fieldmustChange(e.target.checked, record)" :checked="record.fieldmust" />
           </span>
@@ -112,15 +121,14 @@ export default {
     }
   },
   created() {
-   
     getFormSettingColumns().then((res) => {
       console.log('columns-->', JSON.stringify(res))
       this.columns = res.result.columns
     })
     getFormSettingTree().then((res) => {
-       console.log('tree-->', JSON.stringify(res.result))
+      console.log('tree-->', JSON.stringify(res.result))
       this.FormSettingTree = res.result
-      this.menuid=this.FormSettingTree[0].children[0].memuid
+      this.menuid = this.FormSettingTree[0].children[0].memuid
       this.getlist()
     })
   },
@@ -150,7 +158,7 @@ export default {
       for (var i = 0; i < this.formSettingList.data.length; i++) {
         this.formSettingList.data[i].fieldsort = i + 1
       }
-      this.sortAfter=""
+      this.sortAfter = ''
     },
     sortCancel(e) {
       this.sortVisible = false
@@ -162,8 +170,6 @@ export default {
       console.log('currentitem--->', this.currentItem)
     },
     onSubmit(e) {
-    
-
       updateForm(this.formSettingList).then((res) => {
         this.$message.success('更改成功')
         this.getlist()

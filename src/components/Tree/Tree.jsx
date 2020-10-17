@@ -17,6 +17,10 @@ export default {
     search: {
       type: Boolean,
       default: false
+    },
+    selectedKeys:{
+      type:Array,
+      default:()=>['01-01']
     }
   },
   created () {
@@ -115,7 +119,7 @@ export default {
     return (
       <div class="tree-wrapper">
         { search ? this.renderSearch() : null }
-        <Menu mode="inline" class="custom-tree" {...{ on: { click: item => this.$emit('click', item), 'update:openKeys': val => { this.localOpenKeys = val } } }} openKeys={this.localOpenKeys}>
+        <Menu mode="inline" selectedKeys='[01-01]' class="custom-tree" {...{ on: { click: item => this.$emit('click', item), 'update:openKeys': val => { this.localOpenKeys = val } } }} openKeys={this.localOpenKeys}>
           { list }
         </Menu>
       </div>

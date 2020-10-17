@@ -19,15 +19,20 @@
           :columns="columns"
           :data-source="formSettingList.data"
           bordered
-          :scroll="{ x:2000,y: 600 }"
+          :scroll="{ x: 2000, y: 600 }"
           :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
         >
-          <a slot="fieldsort" slot-scope="text, record" @click="showSort(record)">{{ record.fieldsort }}</a>
-
+          <a slot="fieldsort" slot-scope="text, record" @click="showSort('fieldsort', record)">{{
+            record.fieldsort
+          }}</a>
+          <a slot="fieldsortlist" slot-scope="text, record" @click="showSort('fieldsortlist', record)">{{
+            record.fieldsortlist
+          }}</a>
 
           <span slot="fielddecription" slot-scope="text, record">
             <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fielddecription" />
           </span>
+
           <span slot="fieldwidthlist" slot-scope="text, record">
             <a-input
               @change="(e) => vdef2Change(e.target.value, record)"
@@ -41,8 +46,7 @@
           <span slot="fieldedit" style="margin: 0" slot-scope="text, record">
             <a-checkbox @change="(e) => fieldeditChange(e.target.checked, record)" :checked="record.fieldedit" />
           </span>
-                  
-          
+
           <span slot="fielddisplaylist" style="margin: 0" slot-scope="text, record">
             <a-checkbox
               @change="(e) => fielddisplaylistChange(e.target.checked, record)"
@@ -51,14 +55,6 @@
           </span>
           <span slot="fieldmust" style="margin: 0" slot-scope="text, record">
             <a-checkbox @change="(e) => fieldmustChange(e.target.checked, record)" :checked="record.fieldmust" />
-          </span>
-          <span slot="sort" style="margin: 0">
-            <a-icon type="unordered-list" />
-          </span>
-          <span slot="handle" slot-scope="text, record">
-            <template>
-              <a @click="handleEdit(record)">编辑</a>
-            </template>
           </span>
         </a-table>
 
@@ -114,10 +110,11 @@ export default {
       formSettingList: {},
       sortVisible: false,
       sortAfter: '',
-      sortBfter: '',
+
       sortMax: 100,
       currentItem: '',
       editVisible: false,
+      currentId: '',
     }
   },
   created() {
@@ -152,22 +149,41 @@ export default {
       })
     },
     sortOk(e) {
-      this.formSettingList.data.splice(this.currentItem.fieldsort - 1, 1)
-      this.formSettingList.data.splice(this.sortAfter - 1, 0, this.currentItem)
-      this.sortVisible = false
-      for (var i = 0; i < this.formSettingList.data.length; i++) {
-        this.formSettingList.data[i].fieldsort = i + 1
+
+      if (this.currentId == 'fieldsort') {
+        if (this.currentItem.fieldsort > this.sortAfter) {
+          for (var i = this.sortAfter - 1; i < this.currentItem.fieldsort; i++) {
+            this.formSettingList.data[i].fieldsort = parseInt(i) + 2
+          }
+        } else {
+          for (var i = this.currentItem.fieldsort; i < this.sortAfter; i++) {
+            this.formSettingList.data[i].fieldsort = i
+          }
+        }
+        this.currentItem.fieldsort = this.sortAfter
+      }else{
+        //fieldsortlist
+           if (this.currentItem.fieldsortlist > this.sortAfter) {
+          for (var i = this.sortAfter - 1; i < this.currentItem.fieldsortlist; i++) {
+            this.formSettingList.data[i].fieldsortlist = parseInt(i) + 2
+          }
+        } else {
+          for (var i = this.currentItem.fieldsortlist; i < this.sortAfter; i++) {
+            this.formSettingList.data[i].fieldsortlist = i
+          }
+        }
+        this.currentItem.fieldsortlist = this.sortAfter
       }
       this.sortAfter = ''
+      this.sortVisible = false
     },
     sortCancel(e) {
       this.sortVisible = false
     },
-    showSort(record) {
+    showSort(text, record) {
       this.sortVisible = true
-      this.sortBfter = record.fieldsort
+      this.currentId = text
       this.currentItem = record
-      console.log('currentitem--->', this.currentItem)
     },
     onSubmit(e) {
       updateForm(this.formSettingList).then((res) => {
@@ -185,22 +201,19 @@ export default {
       }
     },
     fieldname(value, record) {
-      record.fieldname=value
+      record.fieldname = value
     },
     fieldeditChange(value, record) {
-      record.fieldedit=value
+      record.fieldedit = value
     },
     fielddisplayChange(value, record) {
-      record.fielddisplay=value
-
+      record.fielddisplay = value
     },
     fielddisplaylistChange(value, record) {
-      record.fielddisplaylist=value
-
+      record.fielddisplaylist = value
     },
     fieldmustChange(value, record) {
-      record.fieldmust=value
-
+      record.fieldmust = value
     },
     onChange(e) {
       console.log(`checked = ${e.target.checked}`)

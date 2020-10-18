@@ -36,6 +36,7 @@
           </a-col>
         </a-row>
       </a-card>
+      
     </a-layout-footer>
   </a-layout>
 </template>

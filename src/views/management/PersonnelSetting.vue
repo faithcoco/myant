@@ -202,7 +202,6 @@
         }
       }
     }
-
     /deep/ .btn {
       display: none;
       position: absolute;

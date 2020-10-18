@@ -39,6 +39,7 @@
     </a-layout-footer>
   </a-layout>
 </template>
+
 <script>
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'

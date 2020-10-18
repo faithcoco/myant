@@ -180,6 +180,12 @@
         debugger;
         console.log(row);
       },
+      /**
+       * 跳转编辑页面
+       */
+      add(){
+        this.$router.push({ name: 'PersonSettingAdd' })
+      },
     },
   }
 </script>

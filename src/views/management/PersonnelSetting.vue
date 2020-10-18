@@ -62,7 +62,6 @@
           </span>
         </s-table>
       </a-col>
-
     </a-row>
 
     <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" />

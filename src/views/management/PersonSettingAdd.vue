@@ -3,7 +3,7 @@
  * @date 2020-10-18 14：29
  * 部门员工档案编辑页面
  */
-<template>
+<template v-loading="addLoading">
   <a-layout>
     <a-card>
 
@@ -11,24 +11,24 @@
         <!--动态加载表单设置-->
         <a-form-model-item v-for="(item,index) in colmuns" :key="index"
                            :ref="item.fieldname.toLowerCase()"
-                           :label="item.fielddecription"
-                           :prop="item.fieldmust == 1 ? item.fieldname.toLowerCase() : ''"
-                           v-if="item.fielddisplay == 1"
-                           >
-          <!--文本框-->
-          <a-input v-if="item.fieldentertype == '字符'" v-model="form[item.fieldname.toLowerCase()]" placeholder="" :disabled="item.fieldedit == 1 ? false : true"></a-input>
-          <!--时间-->
-          <a-date-picker v-if="item.fieldentertype == '时间'"  placeholder="请选择日期"  v-model="form[item.fieldname.toLowerCase()]" value-format="yyyy-MM-dd" :disabled="item.fieldedit == 1 ? false : true" style="width:100%"/>
-          <!--数值-->
-          <a-input v-if="item.fieldentertype == '数值'" type="number" v-model="form[item.fieldname.toLowerCase()]" placeholder="" :disabled="item.fieldedit == 1 ? false : true"></a-input>
-        </a-form-model-item>
+                             :label="item.fielddecription"
+                             :prop="item.fieldmust == 1 ? item.fieldname.toLowerCase() : ''"
+                             v-if="item.fielddisplay == 1"
+                             >
+            <!--文本框-->
+            <a-input v-if="item.fieldentertype == '字符'" v-model="form[item.fieldname.toLowerCase()]" placeholder="" :disabled="item.fieldedit == 1 ? false : true"></a-input>
+            <!--时间-->
+            <a-date-picker v-if="item.fieldentertype == '时间'"  placeholder="请选择日期"  v-model="form[item.fieldname.toLowerCase()]" :disabled="item.fieldedit == 1 ? false : true" style="width:100%"/>
+            <!--数值-->
+            <a-input v-if="item.fieldentertype == '数值'" type="number" v-model="form[item.fieldname.toLowerCase()]" placeholder="" :disabled="item.fieldedit == 1 ? false : true"></a-input>
+          </a-form-model-item>
 
-      </a-form-model>
+        </a-form-model>
 
-    </a-card>
-    <!--按钮处理-->
-    <a-layout-footer :style="{ position: 'fixed',width: '100%',bottom: '0px', marginLeft: '-25px'}">
-      <a-card>
+      </a-card>
+      <!--按钮处理-->
+      <a-layout-footer :style="{ position: 'fixed',width: '100%',bottom: '0px', marginLeft: '-25px'}">
+        <a-card>
         <a-row>
           <a-col :span='1' :offset="4">
             <a-button type="primary" @click="resetForm">重置表单</a-button>
@@ -51,9 +51,12 @@ Vue.use(formModel, Button)
 import { getEditSetting } from '@/api/formSetting'
 import { commonRules }  from  '@/utils/validate'
 import { logininfo } from '@/store/mutation-types'
+import { insertBaseperson } from '@/api/manage'
+
 export default {
   data() {
     return {
+      addLoading:false,
       visible: false,
       headers: {
         authorization: 'authorization-text',
@@ -66,6 +69,7 @@ export default {
         personid: null, // 员工ID
         enterpriseid: null, // 企业ID
         departmentid: null, //部门ID
+        departmentcode:null,// 部门编码
         personcode: null, //员工工号
         personname: null, //人员名称
         personphone: null, //人员手机号
@@ -140,7 +144,6 @@ export default {
         vdef14: [commonRules.required(" ")], // 标记
         vdef15: [commonRules.required(" ")], // 标记
       },
-
       // 表单设置模板信息
       colmuns:[],
     }
@@ -155,30 +158,34 @@ export default {
       this.$refs.ruleForm.validate((valid) => {
         console.log('name--->', this.form)
         if (valid) {
-//          postWarehouseAdd(this.form).then((res) => {
-//            console.log(res)
-//          })
-          alert('保存成功，点击确认回到档案界面!')
-          this.$router.push({ name: 'personnel-setting' })
+          this.addLoading = true;
+          insertBaseperson(this.form).then((res) => {
+            if (res.status == 'FAILED') {
+              this.addLoading = false;
+              this.$message.error(res.errorMsg);
+            } else {
+              // 返回列表
+              this.$router.push({ name: 'personnel-setting' })
+            }
+           })
         } else {
-          console.log('error submit!!')
-          alert('亲，您的填写内容不符合要求，请重新填写！！！')
           return false
         }
       })
     },
     // 返回列表界面
     Back() {
-      this.$router.push({ name: 'personnel-setting' })
+      this.$router.push({ name: 'personnel-setting' });
     },
     // 重置表单
     resetForm() {
-      this.$refs.ruleForm.resetFields()
+      this.$refs.ruleForm.resetFields();
     },
     // 获取单据号
     elect() {
       this.form.WarehouseCode = 'PT2020062200001'
     },
+
     showModal() {
       this.visible = true
     },
@@ -199,7 +206,7 @@ export default {
   created() {
     this.$nextTick(() => {
         // 加载模板设置信息
-        console.log("111");
+        this.form.departmentcode = this.$route.query.deptcode;
         this.initForm();
     })
   },

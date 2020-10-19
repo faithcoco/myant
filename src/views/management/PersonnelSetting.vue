@@ -1,26 +1,17 @@
 <template>
   <a-card :bordered="false">
-    <a-row :gutter="8">
-      <a-col :span="8">
-      </a-col>
-      <a-col :span="16">
-          <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
-            <a-button style="margin-left: 5px" type="primary" @click="add()">新增</a-button>
-            <a-button style="margin-left: 5px" type="primary" @click="handleSetting()">设置</a-button>
-            <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
-            <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
-          </span>
-      </a-col>
-    </a-row>
-    <a-row :gutter="8">
-      <a-col :span="5">
+    <a-row :gutter="10">
+      <a-col :span="4">
         <span>部门结构</span>
+        <a-button style="margin-left: 40px" type="primary" @click="Classify()">部门设置</a-button>
+        <a-divider type="horizontal" />
         <a-tree
           :tree-data="treeData"
           show-icon
           @expand="onExpand"
           :expanded-keys="expandedKeys"
           :auto-expand-parent="autoExpandParent"
+          @select="onSelect"
         >
           <a-icon slot="apartment" type="apartment" :style="{ color: '#1890FF' }" />
           <template slot="custom" slot-scope="{ selected }">
@@ -28,7 +19,22 @@
           </template>
         </a-tree>
       </a-col>
-      <a-col :span="19">
+
+      <a-col :span="20">
+
+        <a-select default-value="全部" style="width: 220px" @change="selectChange(value)">
+          <a-select-option v-for="SList in selectList" :key="SList.value" :value="SList.value">{{
+            SList.value
+            }}</a-select-option>
+        </a-select>
+
+        <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容" />
+        <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
+            <a-button style="margin-left: 5px" type="primary" @click="add()">新增</a-button>
+
+            <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
+            <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
+          </span>
         <s-table
           ref="table"
           size="default"
@@ -40,6 +46,8 @@
         >
           <span slot="action" slot-scope="text, record">
             <template>
+              <a v-show="record.personadministrator == 0" @click="handleRole(record)">分配角色</a>
+               <a-divider type="vertical" />
               <a @click="handleEdit(record)">编辑</a>
               <a-divider type="vertical" />
             </template>
@@ -63,8 +71,26 @@
         </s-table>
       </a-col>
     </a-row>
+    <!--角色选择弹出框-->
+    <a-modal
+      title="角色"
+      :visible="visibleRole"
+      :confirm-loading="changeConfirmLoading"
+      @ok="changeHandleOk"
+      @cancel="changeHandleCancel"
+    >
+      <p>请从下面选择一个角色</p>
+      <a-radio-group :default-value="1" @change="onChange">
+        <a-radio v-for="item in roleData" :key="item.roleid" :style="radioStyle" :value="item.roleid">
+          {{item.rolename}}
+        </a-radio>
+      </a-radio-group>
+    </a-modal>
+
+
 
     <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" />
+
   </a-card>
 </template>
 
@@ -75,7 +101,7 @@
   import { Tree } from 'ant-design-vue'
   Vue.use(Tree)
   import OrgModal from '../other/modules/OrgModal'
-  import { getOrgTree, getServiceList, getPersonnelSettingList, getPersonnelSettingColumns} from '@/api/manage'
+  import { getOrgTree, getServiceList, getPersonnelSettingList, getPersonnelSettingColumns, getRoleData, updatePsndocRole} from '@/api/manage'
   import { getSector } from '@/api/manage'
   import { logininfo } from '@/store/mutation-types'
 
@@ -90,6 +116,9 @@
     },
     data() {
       return {
+        // 角色选择弹出框
+        visibleRole:false,
+        changeConfirmLoading: false,
         openKeys: ['key-01'],
         treeData: [],
         expandedKeys: [],
@@ -110,6 +139,20 @@
         orgTree: [],
         selectedRowKeys: [],
         selectedRows: [],
+        // 选中的树值
+        selectedKeys:'',
+        // 角色集合
+        roleData:[],
+        // 角色弹出框样式
+        radioStyle: {
+          display: 'block',
+          height: '30px',
+          lineHeight: '30px',
+        },
+        // 选中的角色ID
+        roleId:null,
+        // 当前行的员工ID
+        personid:null,
       }
     },
     created() {
@@ -134,6 +177,7 @@
     methods: {
       onSelect(selectedKeys, info) {
         console.log('selected', selectedKeys, info)
+        this.selectedKeys = selectedKeys;
       },
       onCheck(checkedKeys, info) {
         console.log('onCheck', checkedKeys, info)
@@ -164,7 +208,6 @@
       },
       handleSaveOk() {},
       handleSaveClose() {},
-
       onSelectChange(selectedRowKeys, selectedRows) {
         this.selectedRowKeys = selectedRowKeys
         this.selectedRows = selectedRows
@@ -179,11 +222,64 @@
         debugger;
         console.log(row);
       },
+      // 角色分配
+      handleRole(row){
+        this.personid = row.personid;
+        // 弹出角色选择框
+        this.visibleRole = true;
+        const params={}
+        params.enterpriseid= Vue.ls.get(logininfo).basepersonPO.enterpriseid,
+          getRoleData(params).then((res) => {
+              console.log("getRoleList-->",JSON.stringify(res))
+              this.roleData=res.result
+            }).catch(() => {})
+      },
       /**
        * 跳转编辑页面
        */
       add(){
-        this.$router.push({ name: 'PersonSettingAdd' })
+        this.$router.push({ name: 'PersonSettingAdd',query:{deptcode:this.selectedKeys}})
+      },
+
+      /**
+       * 部门设置
+       * @constructor
+       */
+      Classify() {
+        this.$router.push({ name: 'ClassificationGoods' }) //编程式导航  修改 url，完成跳转
+      },
+
+      onChange(e) {
+        this.roleId = e.target.value
+      },
+      /**
+       * 选择角色确定
+       * @param e
+       */
+      changeHandleOk(e) {
+        debugger;
+        this.changeConfirmLoading = true;
+        // 更新人员角色
+        const params={}
+          params.personid= this.personid,
+          params.roleid= this.roleId,
+          updatePsndocRole(params).then((res) => {
+            if (res.status == 'FAILED') {
+              this.changeConfirmLoading = false;
+              this.$message.error(res.errorMsg);
+            } else {
+              this.visibleRole = false;
+              this.changeConfirmLoading = false;
+              this.$message.success("分配角色成功");
+            }
+          }).catch(() => {})
+      },
+      /**
+       * 角色取消
+       * @param e
+       */
+      changeHandleCancel(e) {
+        this.visibleRole = false;
       },
     },
   }

@@ -29,14 +29,14 @@ export const asyncRouterMap = [
             name: 'personnel-setting',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/PersonnelSetting.vue'),
             meta: { title: '部门人员档案', icon: 'user', permission: ['01-01'] },
-            
+
           },
           {
             path: 'PersonSettingAdd',
             name: 'PersonSettingAdd',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/PersonSettingAdd.vue'),
-            meta: { title: '部门人员档案新增', icon: 'user'},
-
+            meta: { title: '部门人员档案新增'},
+            hidden: true
           },
           {
             path: 'product-list',

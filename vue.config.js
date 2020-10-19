@@ -90,7 +90,7 @@ const vueConfig = {
   
     proxy: {
       '/api': {
-        target: 'http://47.102.103.27:8080/wms-web/pc',
+        target: 'http://127.0.0.1:8018/wms-web/pc',
         changeOrigin: true,
         pathRewrite: {
           '^/api': '/'

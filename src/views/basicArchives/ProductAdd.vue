@@ -1,159 +1,18 @@
 <template>
   <a-layout>
     <a-card>
-      <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-form-model-item v-for="item in setform" :label="item.title">
-           <a-input v-model="item.value" placeholder="请输入货品名称" @blur="() => {}"></a-input>
-        </a-form-model-item>
-        <a-form-model-item label="货品编码" required prop="productCode">
-          <a-input v-model="form.productCode" placeholder="请输入货品编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
+      <a-form-model ref="ruleForm" :model="{ setform }" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-form-model-item v-for="item in setform" :label="item.title"  :prop="item.key"  >
+          <a-input v-show="item.inputVisible" v-model="item.value" :placeholder="item.placeholder" @blur="() => {}">
+            <a-button v-show="item.buttonVisible" slot="suffix" type="link" @click="elect">自动获取</a-button>
           </a-input>
-        </a-form-model-item>
-        <a-form-model-item ref="ProductName" label="货品名称" prop="ProductName">
-          <a-input v-model="form.ProductName" placeholder="请输入货品名称" @blur="() => {}"></a-input>
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="规格型号" prop="SpecificationModel">
-          <a-input v-model="form.SpecificationModel" placeholder="请输入规格型号" @blur="() => {}" />
-        </a-form-model-item>
-        <a-form-model-item label="货品条码" prop="Barcode">
-          <a-input v-model="form.Barcode" placeholder="请输入货品条码" />
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="计量单位" prop="MeasurementUnit">
-          <a-input v-model="form.MeasurementUnit" placeholder="请输入计量单位" @blur="() => {}" />
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="包装单位" prop="PackingUnit">
-          <a-input v-model="form.PackingUnit" placeholder="请输入包装单位" @blur="() => {}" />
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="换算关系" prop="ConversionRelationship">
-          <a-input v-model="form.ConversionRelationship" placeholder="请输入换算关系" @blur="() => {}" />
-        </a-form-model-item>
-        <a-form-model-item label="货品分类">
-          <a-select
-            show-search
-            default-value="1"
-            placeholder="请选择货品分类"
-            option-filter-prop="children"
-            :filter-option="filterOption"
-            @focus="handleFocus"
-            @blur="handleBlur"
-            @change="handleSearchChange"
-          >
-            <a-select-option value="1">专用设备</a-select-option>
-            <a-select-option value="2">芯片</a-select-option>
-            <a-select-option value="3">汽车零部件</a-select-option>
+          <a-input v-show="item.textareaVisible" v-model="item.value" type="textarea" placeholder="30字以内货品说明" />
+          <a-select v-show="item.selectVisible" v-model="item.value" placeholder="please select your zone">
+            <a-select-option v-for="s in item.selectList" value="s.key"> {{ s.value }} </a-select-option>
           </a-select>
         </a-form-model-item>
-        <a-form-model-item label="货品说明" prop="desc">
-          <a-input v-model="form.desc" type="textarea" placeholder="30字以内货品说明" />
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="批次管理">
-          <a-select
-            show-search
-            default-value="1"
-            placeholder="请选择批次管理"
-            option-filter-prop="children"
-            :filter-option="filterOption"
-            @focus="handleFocus"
-            @blur="handleBlur"
-            @change="handleSearchChange"
-          >
-            <a-select-option value="1">做批次管理</a-select-option>
-            <a-select-option value="2">不做批次管理</a-select-option>
-          </a-select>
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="生成批次结存帐">
-          <a-select
-            show-search
-            default-value="1"
-            placeholder="请选择生成批次结存帐"
-            option-filter-prop="children"
-            :filter-option="filterOption"
-            @focus="handleFocus"
-            @blur="handleBlur"
-            @change="handleSearchChange"
-          >
-            <a-select-option value="1">严格控制批次出库</a-select-option>
-            <a-select-option value="2">不严格控制批次出库</a-select-option>
-          </a-select>
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="安全库存" prop="SafetyStock">
-          <a-input
-            v-model="form.SafetyStock"
-            placeholder="请输入安全库存"
-            @blur="
-              () => {
-                $refs.name.onFieldBlur()
-              }
-            "
-          />
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="起订量" prop="MOQ">
-          <a-input
-            v-model="form.MOQ"
-            placeholder="请输入起订量"
-            @blur="
-              () => {
-                $refs.name.onFieldBlur()
-              }
-            "
-          />
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="采购批量" prop="PurchaseLot">
-          <a-input
-            v-model="form.PurchaseLot"
-            placeholder="请输入采购批量"
-            @blur="
-              () => {
-                $refs.name.onFieldBlur()
-              }
-            "
-          />
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="自定义追加项" prop="name">
-          <a-input
-            v-model="form.name"
-            placeholder="请输入自定义追加项"
-            @blur="
-              () => {
-                $refs.name.onFieldBlur()
-              }
-            "
-          />
-          <a-input
-            v-model="form.content"
-            placeholder="请输入自定义追加项"
-            @blur="
-              () => {
-                $refs.name.onFieldBlur()
-              }
-            "
-          />
-        </a-form-model-item>
-        <a-form-model-item label="附件">
-          <a-upload
-            name="file"
-            :multiple="true"
-            action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-            :headers="headers"
-            @change="handleChange"
-          >
-            <a-button type="link" :size="size">添加附件</a-button>
-          </a-upload>
-        </a-form-model-item>
-        <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
-          <a-input-search placeholder="请输入搜索内容" @search="onSearch" />
-          <br />
-          <br />
-
-          <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
-            <span slot="checked" style="margin: 0" slot-scope="text, record">
-              <a-checkbox v-model="record.checked" @change="onChange(record)" />
-            </span>
-            <a slot="name" slot-scope="text">{{ text }}</a>
-          </a-table>
-        </a-modal>
       </a-form-model>
+     
     </a-card>
 
     <a-layout-footer :style="{ position: 'fixed', width: '100%', bottom: '0px', marginLeft: '-25px', zIndex: '999' }">
@@ -292,27 +151,55 @@ export default {
       other: '',
       setform: [
         {
-          title: '字段名称',
-          dataIndex: 'fieldname',
-          width: 90,
-          needTotal: '',
-          hegiht: 200,
-          scopedSlots: {
-            customRender: 'fieldname',
-          },
-          value:'form.fieldname'
+          key:'key1',
+          title: '显示名称',
+          value: 'two',
+          buttonVisible: false,
+          inputVisible: false,
+          selectList: [
+            { key: 1, value: 'one' },
+            { key: 2, value: 'two' },
+          ],
+          selectVisible: true,
+          textareaVisible: false,
+          placeholder: '请输入',
         },
         {
-          title: '显示名称',
-          dataIndex: 'fielddecription',
-          width: 90,
-          needTotal: '',
-          hegiht: 200,
-          scopedSlots: {
-            customRender: 'fielddecription',
-          },
+          key:'key2',
+          title: '输入框',
+          value: '',
+          inputVisible: true,
+          selectVisible: false,
+          buttonVisible: false,
+          textareaVisible: false,
+          selectList: [],
+          placeholder: '请输入',
+        },
+        {
+          key:'key3',
+          title: '字段名称',
+          value: '',
+          inputVisible: true,
+          selectVisible: false,
+          buttonVisible: true,
+          textareaVisible: false,
+          selectList: [],
+          placeholder: '请输入',
+        },
+
+        {
+          key:'key4',
+          title: '多行',
+          value: '',
+          buttonVisible: false,
+          inputVisible: false,
+          selectList: [],
+          selectVisible: false,
+          textareaVisible: true,
+          placeholder: '请输入',
         },
       ],
+
       form: {
         productCode: '', //货品编码
         ProductName: '', //货品名称
@@ -333,6 +220,7 @@ export default {
         ProductName: [{ required: true, message: '请输入货品名称', trigger: 'blur' }],
         productCode: [{ required: true, message: '请输入产品编码', trigger: 'change' }],
         Barcode: [{ required: true, message: '请输入产品条码', trigger: 'change' }],
+        key1: [{ required: true, message: '请输入产品条码', trigger: 'change' }],
       },
     }
   },
@@ -365,18 +253,20 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
+      console.log('---->', this.setform)
       this.$refs.ruleForm.validate((valid) => {
         //    this.$refs.ruleForm   获取整个表单
         //validate   对整个表单进行校验的方法
         if (valid) {
+          console.log(valid)
           //判断valid是否等于true
-          postProductAdd(this.form).then((res) => {
-            //   将数据发送到服务器
-            console.log('res------->', res)
-          })
-          alert('保存成功，点击确认回到档案界面！')
-          //   提示用户信息
-          this.$router.push({ name: 'ProductList' })
+          // postProductAdd(this.form).then((res) => {
+          //   //   将数据发送到服务器
+          //   console.log('res------->', res)
+          // })
+          // alert('保存成功，点击确认回到档案界面！')
+          // //   提示用户信息
+          // this.$router.push({ name: 'ProductList' })
           //   路由跳转
         } else {
           // 等于false

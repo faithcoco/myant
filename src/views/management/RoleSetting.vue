@@ -140,6 +140,7 @@ export default {
     },
     onSubmit() {
       this.mdl.permissions = []
+      this.mdl. describe=""
       for (const key in this.permissions) {
         this.mdl.permissions.push({ permissionId: this.permissions[key].action, actionEntitySet: [] })
 

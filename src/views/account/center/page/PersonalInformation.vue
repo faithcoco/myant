@@ -10,9 +10,8 @@
             <a-form ref="ruleForm" :model="form" :rules="rules">
               <a-form-item>
                 <a-icon style="margin-right:10px" type="apartment" />
-                所在部门: {{ form.departmentid }}
-                <!-- <a-tag :color="departmentColor" style="margin-left:10px">{{departmentStatus}}</a-tag><br> -->
-                <!-- {{departments}} -->
+                所在部门: {{ form.departmentname }}
+
               </a-form-item>
               <a-form-item>
                 <a-icon style="margin-right:10px" type="idcard" />

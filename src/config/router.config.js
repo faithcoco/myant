@@ -32,6 +32,13 @@ export const asyncRouterMap = [
             
           },
           {
+            path: 'PersonSettingAdd',
+            name: 'PersonSettingAdd',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/management/PersonSettingAdd.vue'),
+            meta: { title: '部门人员档案新增', icon: 'user'},
+
+          },
+          {
             path: 'product-list',
             name: 'ProductList',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductList.vue'),

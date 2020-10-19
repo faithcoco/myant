@@ -55,9 +55,7 @@
                   剩余试用时间:
                   {{ form.enterprisetrialdays }}天
                 </a-form-item>
-                <!-- <a-form-item>
-                  <a-icon style="margin-right:10px" type="contacts" class="upload-icon" />到期日: {{ baseenterprisePO.time }}
-                </a-form-item> -->
+
               </a-form>
             </a-col>
           </a-row>
@@ -197,8 +195,8 @@
     >
       <p>请从下面选择一个企业进行切换</p>
         <a-radio-group :default-value="1" @change="onChange">
-            <a-radio v-for="defaultEnterpriseName in enterprisename" :key="defaultEnterpriseName" :style="radioStyle" :value="defaultEnterpriseName">
-                {{defaultEnterpriseName}}
+            <a-radio v-for="item in enterprisename" :key="item.enterpriseid" :style="radioStyle" :value="item.enterpriseid">
+                {{item.enterprisename}}
             </a-radio>
         </a-radio-group>
     </a-modal>
@@ -328,6 +326,7 @@ import {getBaseenterpriseInfo,updateBaseenterprise} from '@/api/manage'
 import {  mapGetters } from 'vuex'
 import { retrievePsdSendSMSregister } from '@/api/register'
 import {  logininfo } from '@/store/mutation-types'
+import {  getCompanyList } from '@/api/login'
 export default {
 components: {
     AvatarModal
@@ -372,28 +371,28 @@ components: {
       changeNewVisible: false,  
       changeNewPhoneVisible: false,  
       name:'',   
-      enterprisename : ['上古', '下海'],
+      enterprisename : [],
       Form:Object,
       form:{
-        EnterpriseAddress: '上海',
-        enterprisename: '上古',
-        EnterpriseContact: 'curry',
-        EnterpriseTel: '无',
-        EnterpriseRegistrant: 'curry',
+        EnterpriseAddress: '',
+        enterprisename: '',
+        EnterpriseContact: '',
+        EnterpriseTel: '',
+        EnterpriseRegistrant: '',
         enterprisename:'',
-        EnterprisePhone: '无',
+        EnterprisePhone: '',
         enterprisephone: '',
         NewTel: '',
         Newphone: '',
         PersonPhone: '',
         enterpriseregistrationtime: '',
-        EnterpriseStatus: '试用中',
-        enterprisetrialdays: '7',
-        mail:'无',
-        userCount: '无',
-        LOGO: '/avatar2.jpg',
-        expiryDate: '2020-09-01',
-        time: '2020-09-01',
+        EnterpriseStatus: '',
+        enterprisetrialdays: '',
+        mail:'',
+        userCount: '',
+        LOGO: '',
+        expiryDate: '',
+        time: '',
         cName:'',
         VerificationCode:'',
       },
@@ -692,9 +691,26 @@ components: {
     edit(){
       this.companyVisible = true
     },
-    change(){
-     
+    change(){    
       this.changeVisible = true;
+      const params={}
+      params.phone= Vue.ls.get(logininfo).basepersonPO.personphone,
+       getCompanyList(params)
+          .then((res) => {
+            console.log("getCompanyList-->",JSON.stringify(res))
+            this.enterprisename=res.result
+            // if (res.result.length == 1) {
+            //   this.enterpriseid = res.result[0].enterpriseid
+            //   this.enterpriseVisible=false
+            // } else {
+            //   this.enterpriseVisible = true
+             
+            // }
+            //  this.companyList = res.result
+          })
+          .catch(() => {
+            
+          })
     },
     companyOk(e) {
       this.confirmLoading = true
@@ -762,17 +778,7 @@ components: {
 
     handleOk(e) {
         this.visible=false
-      // if (!this.ok) {
-      //   this.$message.info('请勾选“我已了解该操作的风险”');
-      //   return false
-      // }
-      // this.confirmLoading = true
-      // setTimeout(() => {
-      //   this.visible = false
-      //   this.confirmLoading = false
-      //   this.confirmVisible = true
-      //   this.ok=false
-      // }, 2000)
+
     },
     confirmOk(e) {
 
@@ -936,15 +942,7 @@ components: {
             }, 1000)
             console.log("获取验证码");
     },
-    // Newphonechange(){
-    //   this.$refs.PruleForm.validate((valid) => {
-    //     if (valid) {  
-    //         var oBtn = document.getElementsByClassName('GVbtn')[0];
-    //         oBtn.removeAttribute('disabled'); //移除禁用效果
-    //     }
-    //     return false    
-    //   })
-    // },
+
     getMailVerificationCode(){
             var pBtn = document.getElementsByClassName('phoneBtn')[0];
             console.log("pBtn_________>",pBtn);

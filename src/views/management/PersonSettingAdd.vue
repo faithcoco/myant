@@ -15,28 +15,13 @@
                            :prop="item.fieldmust == 1 ? item.fieldname.toLowerCase() : ''"
                            v-if="item.fielddisplay == 1"
                            >
-          <a-input v-model="form[item.fieldname.toLowerCase()]" placeholder="" :disabled="item.fieldedit == 1 ? false : true"></a-input>
+          <!--文本框-->
+          <a-input v-if="item.fieldentertype == '字符'" v-model="form[item.fieldname.toLowerCase()]" placeholder="" :disabled="item.fieldedit == 1 ? false : true"></a-input>
+          <!--时间-->
+          <a-date-picker v-if="item.fieldentertype == '时间'"  placeholder="请选择日期"  v-model="form[item.fieldname.toLowerCase()]" value-format="yyyy-MM-dd" :disabled="item.fieldedit == 1 ? false : true" style="width:100%"/>
+          <!--数值-->
+          <a-input v-if="item.fieldentertype == '数值'" type="number" v-model="form[item.fieldname.toLowerCase()]" placeholder="" :disabled="item.fieldedit == 1 ? false : true"></a-input>
         </a-form-model-item>
-
-        <!--<a-form-model-item  ref="personbegintime" label="时间" >-->
-          <!--<a-date-picker-->
-            <!--placeholder="请选择年份"-->
-            <!--v-model="form.personbegintime"-->
-            <!--style="width:100%"/>-->
-        <!--</a-form-model-item>-->
-
-        <!--<a-form-model-item  ref="enablestatus" label="下拉" prop="enablestatus">-->
-          <!--&lt;!&ndash;省市区&ndash;&gt;-->
-          <!--<a-select v-model="form.enablestatus" allowClear>-->
-            <!--<a-select-option value="1" key="1">-->
-             <!--1-->
-            <!--</a-select-option>-->
-            <!--<a-select-option value="2" key="2">-->
-              <!--2-->
-            <!--</a-select-option>-->
-          <!--</a-select>-->
-        <!--</a-form-model-item>-->
-
 
       </a-form-model>
 

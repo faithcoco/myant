@@ -118,7 +118,7 @@ export default {
           personid: Vue.ls.get(logininfo).basepersonPO.personid,
           enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
           name: '新增角色',
-          describe: '新增一个角色',
+          describe: '新增角色',
           status: '',
           permissions: [
             {
@@ -201,7 +201,7 @@ export default {
       this.mdl = Object.assign({}, record)
       console.log('mdl-->', this.mdl)
 
-      if (this.mdl.name == '新增角色') {
+      if (this.mdl. describe == '新增角色') {
         this.state = 0
       }
       // 有权限表，处理勾选

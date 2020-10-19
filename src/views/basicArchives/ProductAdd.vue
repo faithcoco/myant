@@ -1,25 +1,13 @@
 <template>
   <a-layout>
     <a-card>
-      <a-form-model
-        ref="ruleForm"
-        :model="form"
-        :rules="rules"
-        :label-col="labelCol"
-        :wrapper-col="wrapperCol"
-      >
-        <!--  label="货品编码"    标签、标题
-            required            必填项
-        prop="code"         有验证规则和重置表单功能时必填属性-->
+      <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-form-model-item v-for="item in setform" :label="item.title">
+           <a-input v-model="item.value" placeholder="请输入货品名称" @blur="() => {}"></a-input>
+        </a-form-model-item>
         <a-form-model-item label="货品编码" required prop="productCode">
-          <!-- v-model="form.code"            数据绑定
-          placeholder="请输入货品编码"      输入提示-->
           <a-input v-model="form.productCode" placeholder="请输入货品编码" @blur="() => {}">
             <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
-            <!-- slot="suffix"        属性配置  按钮处于右侧
-                type="link"         类型设置  链接类型
-                @click="elect"      点击事件监听器  发生点击事件后出发函数elect
-            -->
           </a-input>
         </a-form-model-item>
         <a-form-model-item ref="ProductName" label="货品名称" prop="ProductName">
@@ -41,16 +29,6 @@
           <a-input v-model="form.ConversionRelationship" placeholder="请输入换算关系" @blur="() => {}" />
         </a-form-model-item>
         <a-form-model-item label="货品分类">
-          <!-- 下拉菜单 
-          show-search                           展示搜索功能
-          default-value="1"                     默认值
-          placeholder="请选择货品分类"           选择提示
-          option-filter-prop="children"         设置为 children 表示对内嵌内容进行搜索
-          :filter-option="filterOption"         根据输入项进行筛选
-          @focus="handleFocus"                  获得焦点时回调函数
-          @blur="handleBlur"                    失去焦点时回调函数
-          @change="handleSearchChange"          选中选项时触发的函数
-          -->
           <a-select
             show-search
             default-value="1"
@@ -104,10 +82,10 @@
             v-model="form.SafetyStock"
             placeholder="请输入安全库存"
             @blur="
-            () => {
-              $refs.name.onFieldBlur()
-            }
-          "
+              () => {
+                $refs.name.onFieldBlur()
+              }
+            "
           />
         </a-form-model-item>
         <a-form-model-item ref="name" label="起订量" prop="MOQ">
@@ -115,10 +93,10 @@
             v-model="form.MOQ"
             placeholder="请输入起订量"
             @blur="
-            () => {
-              $refs.name.onFieldBlur()
-            }
-          "
+              () => {
+                $refs.name.onFieldBlur()
+              }
+            "
           />
         </a-form-model-item>
         <a-form-model-item ref="name" label="采购批量" prop="PurchaseLot">
@@ -126,10 +104,10 @@
             v-model="form.PurchaseLot"
             placeholder="请输入采购批量"
             @blur="
-            () => {
-              $refs.name.onFieldBlur()
-            }
-          "
+              () => {
+                $refs.name.onFieldBlur()
+              }
+            "
           />
         </a-form-model-item>
         <a-form-model-item ref="name" label="自定义追加项" prop="name">
@@ -137,19 +115,19 @@
             v-model="form.name"
             placeholder="请输入自定义追加项"
             @blur="
-            () => {
-              $refs.name.onFieldBlur()
-            }
-          "
+              () => {
+                $refs.name.onFieldBlur()
+              }
+            "
           />
           <a-input
             v-model="form.content"
             placeholder="请输入自定义追加项"
             @blur="
-            () => {
-              $refs.name.onFieldBlur()
-            }
-          "
+              () => {
+                $refs.name.onFieldBlur()
+              }
+            "
           />
         </a-form-model-item>
         <a-form-model-item label="附件">
@@ -167,12 +145,7 @@
           <a-input-search placeholder="请输入搜索内容" @search="onSearch" />
           <br />
           <br />
-          <!-- 
-        :columns="columns"      表头数据
-        :data-source="data"     表体数据
-        :pagination="false"     页码展示
-        bordered                表格线加粗
-          -->
+
           <a-table :columns="columns" :data-source="data" :pagination="false" bordered>
             <span slot="checked" style="margin: 0" slot-scope="text, record">
               <a-checkbox v-model="record.checked" @change="onChange(record)" />
@@ -180,13 +153,10 @@
             <a slot="name" slot-scope="text">{{ text }}</a>
           </a-table>
         </a-modal>
-        <!-- wrapper-col="{ span: 14, offset: 4 }   输入控件设置布局样式
-            span: 14    控件宽度比重
-        offset: 4   控件左边距-->
       </a-form-model>
     </a-card>
 
-    <a-layout-footer :style="{ position: 'fixed',width:'100%',bottom:'0px',marginLeft:'-25px',zIndex:'999'}">
+    <a-layout-footer :style="{ position: 'fixed', width: '100%', bottom: '0px', marginLeft: '-25px', zIndex: '999' }">
       <a-card>
         <a-row>
           <a-col :span="1" :offset="4">
@@ -196,17 +166,12 @@
             <a-button type="primary" @click="onSubmit">保存</a-button>
           </a-col>
           <a-col :span="1" :offset="1">
-            <a-button type  @click="Back">返回</a-button>
+            <a-button type @click="Back">返回</a-button>
           </a-col>
         </a-row>
       </a-card>
     </a-layout-footer>
   </a-layout>
-  <!-- ref="ruleForm"     绑定ref方便后面获取组件的属性和方法
-    :model="form"           数据绑定
-    :rules="rules"          绑定验证规则
-    :label-col="labelCol"   label 标签的布局样式
-  :wrapper-col="wrapperCol"  输入控件的布局样式-->
 </template>
 <style>
 #components-layout-demo-fixed .logo {
@@ -325,6 +290,29 @@ export default {
       labelCol: { span: 2 },
       wrapperCol: { span: 22 },
       other: '',
+      setform: [
+        {
+          title: '字段名称',
+          dataIndex: 'fieldname',
+          width: 90,
+          needTotal: '',
+          hegiht: 200,
+          scopedSlots: {
+            customRender: 'fieldname',
+          },
+          value:'form.fieldname'
+        },
+        {
+          title: '显示名称',
+          dataIndex: 'fielddecription',
+          width: 90,
+          needTotal: '',
+          hegiht: 200,
+          scopedSlots: {
+            customRender: 'fielddecription',
+          },
+        },
+      ],
       form: {
         productCode: '', //货品编码
         ProductName: '', //货品名称

@@ -3,45 +3,83 @@
  * @date 2020-10-18 14：29
  * 部门员工档案编辑页面
  */
-<template v-loading="addLoading">
+<template>
   <a-layout>
-    <a-card>
-
-      <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-        <!--动态加载表单设置-->
-        <a-form-model-item v-for="(item,index) in colmuns" :key="index"
-                           :ref="item.fieldname.toLowerCase()"
+    <div v-show="infoVisible">
+        <a-card>
+          <a-col :span="24">
+              <a-form  :model="form"  :label-col="labelCol" :wrapper-col="wrapperCol">
+                <!--动态加载表单设置-->
+                <a-form-item v-for="(item,index) in colmuns" :key="index"
+                                   :ref="item.fieldname.toLowerCase()"
+                                     :label="item.fielddecription"
+                                     v-if="item.fielddisplay == 1"
+                                     >
+                    <!--文本框,数值-->
+                    <i v-show="item.fieldentertype == '字符' || item.fieldentertype == '数值'">
+                        {{form[item.fieldname.toLowerCase()]}}
+                    </i>
+                    <!--时间-->
+                    <i v-show="item.fieldentertype == '时间'">
+                      {{ longToDate(form[item.fieldname.toLowerCase()])}}
+                    </i>
+                  </a-form-item>
+              </a-form>
+          </a-col>
+        </a-card>
+        <!--按钮处理-->
+        <a-layout-footer :style="{ position: 'fixed',width: '100%',bottom: '0px', marginLeft: '-25px'}">
+        <a-card>
+          <a-row>
+            <a-col :span='1' :offset="4">
+              <a-button type="primary"  @click="handleEdit">编辑</a-button>
+            </a-col>
+            <a-col :span='1' :offset="1">
+              <a-button type  @click="Back">返回</a-button>
+            </a-col>
+          </a-row>
+        </a-card>
+      </a-layout-footer>
+    </div>
+    <div v-show="editVisible">
+        <a-card>
+           <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+          <!--动态加载表单设置-->
+          <a-form-model-item v-for="(item,index) in colmuns" :key="index"
+                             :ref="item.fieldname.toLowerCase()"
                              :label="item.fielddecription"
                              :prop="item.fieldmust == 1 ? item.fieldname.toLowerCase() : ''"
                              v-if="item.fielddisplay == 1"
-                             >
+          >
             <!--文本框-->
             <a-input v-if="item.fieldentertype == '字符'" v-model="form[item.fieldname.toLowerCase()]" placeholder="" :disabled="item.fieldedit == 1 ? false : true"></a-input>
             <!--时间-->
             <a-date-picker v-if="item.fieldentertype == '时间'"  placeholder="请选择日期"  v-model="form[item.fieldname.toLowerCase()]" :disabled="item.fieldedit == 1 ? false : true" style="width:100%"/>
             <!--数值-->
             <a-input v-if="item.fieldentertype == '数值'" type="number" v-model="form[item.fieldname.toLowerCase()]" placeholder="" :disabled="item.fieldedit == 1 ? false : true"></a-input>
+
           </a-form-model-item>
 
         </a-form-model>
-
-      </a-card>
-      <!--按钮处理-->
-      <a-layout-footer :style="{ position: 'fixed',width: '100%',bottom: '0px', marginLeft: '-25px'}">
+        </a-card>
+        <!--按钮处理-->
+        <a-layout-footer :style="{ position: 'fixed',width: '100%',bottom: '0px', marginLeft: '-25px'}">
         <a-card>
-        <a-row>
-          <a-col :span='1' :offset="4">
-            <a-button type="primary" @click="resetForm">重置表单</a-button>
-          </a-col>
-          <a-col :span='1' :offset="1">
-            <a-button type="primary"  @click="onSubmit">保存</a-button>
-          </a-col>
-          <a-col :span='1' :offset="1">
-            <a-button type  @click="Back">返回</a-button>
-          </a-col>
-        </a-row>
-      </a-card>
-    </a-layout-footer>
+          <a-row>
+            <a-col :span='1' :offset="4">
+              <a-button type="primary"  @click="resetForm">重置表单</a-button>
+            </a-col>
+            <a-col :span='1' :offset="1">
+              <a-button type="primary"   @click="onSubmit">保存</a-button>
+            </a-col>
+            <a-col :span='1' :offset="1">
+              <a-button type   @click="Back">返回</a-button>
+            </a-col>
+          </a-row>
+        </a-card>
+      </a-layout-footer>
+    </div>
+
   </a-layout>
 </template>
 <script>
@@ -51,13 +89,15 @@ Vue.use(formModel, Button)
 import { getEditSetting } from '@/api/formSetting'
 import { commonRules }  from  '@/utils/validate'
 import { logininfo } from '@/store/mutation-types'
-import { insertBaseperson } from '@/api/manage'
+import { insertBaseperson,getBasepersonInfo,updateBaseperson } from '@/api/manage'
+
 
 export default {
   data() {
     return {
-      addLoading:false,
       visible: false,
+      infoVisible: false,
+      editVisible: true,
       headers: {
         authorization: 'authorization-text',
       },
@@ -74,7 +114,7 @@ export default {
         personname: null, //人员名称
         personphone: null, //人员手机号
         personadministrator: null, //人员类型
-        personbegintime: null, //人员入职时间
+        personbegintime:null, //人员入职时间
         personendtime: null, //人员离职时间
         personcreationdate: null, //人员建立时间
         personfounder: null, //人员建立人员
@@ -153,26 +193,6 @@ export default {
   },
   methods: {
 
-    // 保存
-    onSubmit() {
-      this.$refs.ruleForm.validate((valid) => {
-        console.log('name--->', this.form)
-        if (valid) {
-          this.addLoading = true;
-          insertBaseperson(this.form).then((res) => {
-            if (res.status == 'FAILED') {
-              this.addLoading = false;
-              this.$message.error(res.errorMsg);
-            } else {
-              // 返回列表
-              this.$router.push({ name: 'personnel-setting' })
-            }
-           })
-        } else {
-          return false
-        }
-      })
-    },
     // 返回列表界面
     Back() {
       this.$router.push({ name: 'personnel-setting' });
@@ -181,16 +201,53 @@ export default {
     resetForm() {
       this.$refs.ruleForm.resetFields();
     },
-    // 获取单据号
-    elect() {
-      this.form.WarehouseCode = 'PT2020062200001'
-    },
 
     showModal() {
       this.visible = true
     },
+
+    // 保存
+    onSubmit() {
+      this.$refs.ruleForm.validate((valid) => {
+        console.log('name--->', this.form)
+        if (valid) {
+          console.log(this.form.personid);
+          if (this.form.personid != null) {
+            updateBaseperson(this.form).then((res) => {
+              if (res.status == 'FAILED') {
+                this.$message.error(res.errorMsg);
+              } else {
+                this.$message.success("保存成功");
+                this.editVisible = false
+                this.infoVisible = true
+              }
+            })
+          } else {
+            this.form.departmentid = this.$route.query.departmentid;
+            insertBaseperson(this.form).then((res) => {
+              if (res.status == 'FAILED') {
+                this.$message.error(res.errorMsg);
+              } else {
+                this.$message.success("保存成功");
+                this.editVisible = false
+                this.infoVisible = true
+              }
+            })
+          }
+        } else {
+          return false
+        }
+      })
+    },
+
+    // 编辑
+    handleEdit(){
+      this.editVisible = true;
+      this.infoVisible = false;
+    },
+
     /**
-     * 初始化表单设置查询
+     * 初始化表单
      */
     initForm(){
         const columnsParams = {}
@@ -200,15 +257,44 @@ export default {
           console.log(res);
           this.colmuns = res.result;
         })
+      if (this.$route.query.personid != null && this.$route.query.personid != "" && this.$route.query.personid != undefined) {
+        const params = {}
+        params.id = this.$route.query.personid;
+        getBasepersonInfo(params)
+          .then((res) => {
+            console.log('员工信息返回值--getBasepersonInfo----->', JSON.stringify(res))
+            this.form = res.result
+          }).catch((err) => {
+        })
+      } else {
+        this.resetForm();
+      }
+    },
+
+    /**
+     * 格式化日期方法
+     * @param row
+     * @returns {string}
+     */
+    longToDate(row){
+      if (row != null && row != "") {
+        let date = new Date(row);
+        return date.toLocaleDateString();
+      }
+      return "";
     },
   },
   // 初始化加载
-  created() {
-    this.$nextTick(() => {
-        // 加载模板设置信息
-        this.form.departmentcode = this.$route.query.deptcode;
-        this.initForm();
-    })
+  activated() {
+      if (this.$route.query.operation == 'info') {
+        this.editVisible = false;
+        this.infoVisible = true;
+      } else {
+        this.editVisible = true;
+        this.infoVisible = false;
+      }
+      // 加载模板设置信息
+      this.initForm();
   },
 }
 </script>

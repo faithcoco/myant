@@ -22,6 +22,7 @@ const api = {
 
   user: '/user',
   role: '/bd/role/getRole',
+  roleList: '/bd/role/queryAll',
   service: '/service',
   permission: '/permission',
   permissionNoPager: '/permission/no-pager',
@@ -34,6 +35,12 @@ const api = {
   BasepersonInfo: '/bd/baseperson/getBasepersonInfo',
   BaseenterpriseInfo: '/bd/Baseenterprise/getBaseenterpriseInfo',
   updateBaseperson: '/bd/baseperson/updateBaseperson',
+
+  // 部门员工档案保存
+  insertBaseperson: '/bd/baseperson/insertBaseperson',
+  // 角色分配保存
+  updatePsndocRole:'/bd/basepersonrole/updatePsndocRole',
+
   updateBaseenterprise: '/bd/Baseenterprise/updateBaseenterprise',
   insertBaseenterprise: '/bd/Baseenterprise//insertBaseenterprise',
 
@@ -88,6 +95,24 @@ const api = {
 
 export default api
 
+// 部门员工档案保存
+export function insertBaseperson(parameter) {
+  console.log('/insertBaseperson-->', JSON.stringify(parameter))
+  return axios({
+    url: api.insertBaseperson,
+    method: 'post',
+    data: parameter
+  })
+}
+// 角儿分配保存
+export function updatePsndocRole(parameter) {
+  console.log('/updatePsndocRole-->', JSON.stringify(parameter))
+  return axios({
+    url: api.updatePsndocRole,
+    method: 'post',
+    data: parameter
+  })
+}
 export function postProductAdd(parameter) {
   console.log('/postProductAdd-->', JSON.stringify(parameter))
   return axios({
@@ -235,6 +260,13 @@ export function postOpeningInventoryAdd(parameter) {
 export function getUserList(parameter) {
   return axios({
     url: api.user,
+    method: 'get',
+    params: parameter
+  })
+}
+export function getRoleData(parameter) {
+  return axios({
+    url: api.roleList,
     method: 'get',
     params: parameter
   })

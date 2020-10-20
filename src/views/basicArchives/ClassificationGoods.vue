@@ -3,12 +3,9 @@
     <a-row>
       <a-col :span="19"></a-col>
       <a-col :span="5">
-        <span
-          class="table-page-search-submitButtons"
-          :style="{ float: 'right', overflow: 'hidden' } || {} "
-        >
+        <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
           <a-button style="margin-left: 5px" type="primary" @click="handleAdd">新增</a-button>
-          <a-button style="margin-left: 5px" type="primary" @click='back'>返回</a-button>
+          <a-button style="margin-left: 5px" type="primary" @click="back">返回</a-button>
         </span>
       </a-col>
     </a-row>
@@ -32,43 +29,99 @@
     <a-modal v-model="visible" title="新增类别" @ok="handleOk">
       <p>请输入类别名称：</p>
       <a-input ref="userNameInput" v-model="typeName" placeholder />
+          <p>请输入类别编码：</p>
+      <a-input ref="userNameInput" v-model="typeCode" placeholder />
     </a-modal>
   </a-card>
 </template>
 <script>
-import { getclassificationGoodsColumns, getclassificationGoodsList } from '@/api/manage'
-
+import { getclassificationGoodsColumns, getclassificationGoodsList, insertmaterialClass } from '@/api/manage'
+import { logininfo } from '@/store/mutation-types'
+import Vue from 'vue'
 export default {
   data() {
     return {
       list: [],
-      columns: [],
+      columns: [
+        {
+          title: '类别名称',
+          dataIndex: 'title',
+          key: 'name',
+          scopedSlots: {
+            customRender: '',
+          },
+        },
+        {
+          title: '类别编号',
+          dataIndex: 'materialclasscode',
+          key: 'age',
+          scopedSlots: {
+            customRender: '',
+          },
+        },
+,
+        {
+          title: '操作',
+          dataIndex: '',
+          key: 'x',
+          scopedSlots: {
+            customRender: 'action',
+          },
+        },
+      ],
       visible: false,
       typeName: '',
+      typeCode:'',
       currentRecord: '',
       tag: -1,
-     
+      materialclasscode: '',
+      materialclassname: '',
+      fatherid: '',
     }
   },
   created() {
-    getclassificationGoodsColumns().then((res) => {
-      this.columns = res.columns
-      console.log('columns-->', JSON.stringify(res.columns))
-    })
-    getclassificationGoodsList().then((res) => {
-      this.list = res.result
-      console.log('data-->', JSON.stringify(res.result))
-    
-    })
+    // getclassificationGoodsColumns().then((res) => {
+    //   this.columns = res.columns
+
+    //   console.log('columns-->', JSON.stringify(res.columns))
+    // })
+    this.getList()
   },
   methods: {
+    getList() {
+      const parameter = {}
+      parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      getclassificationGoodsList(parameter).then((res) => {
+        this.list = res.result
+
+        console.log('data-->', JSON.stringify(res.result))
+      })
+    },
+    insertmaterialClass() {
+      const parameter = {}
+      parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      parameter.materialclasscode = this.materialclasscode
+      parameter.materialclassname = this.materialclassname
+      parameter.materialclassgrade = ''
+      parameter.fatherid = this.fatherid
+      insertmaterialClass(parameter).then((res) => {
+        console.log('columns-->', JSON.stringify(res))
+        if (res.status == 'SUCCESS') {
+          this.getList()
+        }else{
+            this.$message.warning(res.status);
+        }
+      })
+    },
     onChange(e) {
       console.log(`checked = ${e.target.checked}`)
     },
     handleAddItem(record) {
+     
       this.currentRecord = record
       this.tag = 2
-      this.visible=true
+      this.visible = true
+      this.fatherid=record.key
     },
     handleEdit(record) {
       console.log(record)
@@ -85,23 +138,10 @@ export default {
     },
     handleOk(e) {
       this.visible = false
-      if (this.tag == 1) {
-        this.list.push({
-          key: this.list.length + 1,
-          name: this.typeName,
-        })
-      } else if (this.tag == 2) {
-        for (const key in this.list) {
-          if (this.list[key] == this.currentRecord) {
-            this.currentRecord.children.push({
-              key: this.list[key].key + '' + (this.currentRecord.children.length + 1),
-              name: this.typeName,
-            })
-            console.log(JSON.stringify(this.currentRecord))
-          }
-        }
-      }
 
+      this.materialclassname = this.typeName
+      this.materialclasscode=this.typeCode
+      this.insertmaterialClass()
       this.typeName = ''
     },
     onDelete(key) {

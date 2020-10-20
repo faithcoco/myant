@@ -57,7 +57,7 @@ const api = {
   OpeningInventoryList: '/OpeningInventoryList',
   personnelList: '/personnel-list',
   MessageSettinList: '/MessageSettinList',
-  classificationGoodsList: '/classification_goods',
+  classificationGoodsList: '/bd/product/materialClassTree',
   PersonnelSettingList: '/bd/baseperson/PersonnelSettingList',
   FormSettingList: '/bd/FormSetting/FormSettingList',
 
@@ -460,8 +460,16 @@ export function getclassificationGoodsList(parameter) {
   console.log('/getclassificationGoodsList req-->', JSON.stringify(parameter))
   return axios({
     url: api.classificationGoodsList,
-    method: 'get',
-    params: parameter
+    method: 'post',
+    data: parameter
+  })
+}
+export function insertmaterialClass(parameter) {
+  console.log('insertmaterialClass req-->', JSON.stringify(parameter))
+  return axios({
+    url: '/bd/product/insertmaterialClass',
+    method: 'post',
+    data: parameter
   })
 }
 export function getRoleList(parameter) {

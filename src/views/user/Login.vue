@@ -1,25 +1,13 @@
 <template>
   <div class="main">
-    <a-form
-      id="formLogin"
-      class="user-layout-login"
-      ref="formLogin"
-      :form="form"
-      @submit="handleSubmit"
-    >
+    <a-form id="formLogin" class="user-layout-login" ref="formLogin" :form="form" @submit="handleSubmit">
       <a-tabs
         :activeKey="customActiveKey"
         :tabBarStyle="{ textAlign: 'center', borderBottom: 'unset' }"
         @change="handleTabClick"
       >
         <a-tab-pane key="2" tab="账号密码登录">
-          <a-alert
-            v-if="isLoginError"
-            type="error"
-            showIcon
-            style="margin-bottom: 24px;"
-            message="账户或密码错误"
-          />
+          <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px" message="账户或密码错误" />
           <a-form-item>
             <a-input
               @change="handleUserChange"
@@ -28,7 +16,10 @@
               placeholder="请输入账号"
               v-decorator="[
                 'enterprisephone',
-                {rules: [{ required: true, message: '请输入帐户名或邮箱地址' }, { validator: handleUsernameOrEmail }], validateTrigger: 'change'}
+                {
+                  rules: [{ required: true, message: '请输入帐户名或邮箱地址' }, { validator: handleUsernameOrEmail }],
+                  validateTrigger: 'change',
+                },
               ]"
             >
               <a-icon slot="prefix" type="user" :style="{ color: 'rgba(0,0,0,.25)' }" />
@@ -43,7 +34,7 @@
               placeholder="请输入密码"
               v-decorator="[
                 'password',
-                {rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur'}
+                { rules: [{ required: true, message: '请输入密码' }], validateTrigger: 'blur' },
               ]"
             >
               <a-icon slot="prefix" type="lock" :style="{ color: 'rgba(0,0,0,.25)' }" />
@@ -53,11 +44,17 @@
         <a-tab-pane key="1" tab="验证码登录">
           <a-form-item>
             <a-input
-             @change="handleUserChange"
+              @change="handleUserChange"
               size="large"
               type="text"
               placeholder="手机号"
-              v-decorator="['enterprisephone', {rules: [{ required: true, pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号' }], validateTrigger: 'change'}]"
+              v-decorator="[
+                'enterprisephone',
+                {
+                  rules: [{ required: true, pattern: /^1[3456789]\d{9}$/, message: '请输入正确的手机号' }],
+                  validateTrigger: 'change',
+                },
+              ]"
             >
               <a-icon slot="prefix" type="mobile" :style="{ color: 'rgba(0,0,0,.25)' }" />
             </a-input>
@@ -70,7 +67,14 @@
                   size="large"
                   type="text"
                   placeholder="验证码"
-                  v-decorator="['phoneCode', { initialValue:'',rules: [{ required: false,len:4, message: '请输入验证码' }], validateTrigger: 'change'}]"
+                  v-decorator="[
+                    'phoneCode',
+                    {
+                      initialValue: '',
+                      rules: [{ required: false, len: 4, message: '请输入验证码' }],
+                      validateTrigger: 'change',
+                    },
+                  ]"
                 >
                   <a-icon slot="prefix" type="mail" :style="{ color: 'rgba(0,0,0,.25)' }" />
                 </a-input>
@@ -82,7 +86,7 @@
                 tabindex="-1"
                 :disabled="state.smsSendBtn"
                 @click.stop.prevent="getCaptcha"
-                v-text="!state.smsSendBtn && '获取验证码' || (state.time+' s')"
+                v-text="(!state.smsSendBtn && '获取验证码') || state.time + ' s'"
               ></a-button>
             </a-col>
           </a-row>
@@ -90,20 +94,18 @@
       </a-tabs>
       <a-form-item v-show="enterpriseVisible">
         企业：
-        <a-select  default-value="请选择" style="width: 150px" @change="handleChange">
+        <a-select default-value="请选择" style="width: 150px" @change="handleChange">
           <a-select-option v-for="d in companyList" :key="d.enterpriseid">{{ d.enterprisename }}</a-select-option>
         </a-select>
       </a-form-item>
       <a-form-item>
         <a-checkbox v-decorator="['rememberMe', { valuePropName: 'checked' }]">自动登录</a-checkbox>
-        <router-link
-          :to="{ name: 'Recover', params: { user: 'aaa'} }"
-          class="forge-password"
-          style="float: right;"
-        >忘记密码</router-link>
+        <router-link :to="{ name: 'Recover', params: { user: 'aaa' } }" class="forge-password" style="float: right"
+          >忘记密码</router-link
+        >
       </a-form-item>
 
-      <a-form-item style="margin-top:24px">
+      <a-form-item style="margin-top: 24px">
         <a-button
           size="large"
           type="primary"
@@ -111,7 +113,8 @@
           class="login-button"
           :loading="state.loginBtn"
           :disabled="state.loginBtn"
-        >确定</a-button>
+          >确定</a-button
+        >
       </a-form-item>
 
       <router-link class="register" :to="{ name: 'register' }">还没有账号？注册账户</router-link>
@@ -167,6 +170,8 @@ export default {
     get2step({})
       .then((res) => {
         console.log('2step-code-->', JSON.stringify(res))
+
+      
         this.requiredTwoStepCaptcha = res.result.stepCode
       })
       .catch(() => {
@@ -185,15 +190,14 @@ export default {
       if (loginParams.phone.length == 11) {
         getCompanyList(loginParams)
           .then((res) => {
-            console.log("getCompanyList-->",JSON.stringify(res))
+            console.log('getCompanyList-->', JSON.stringify(res))
             if (res.result.length == 1) {
               this.enterpriseid = res.result[0].enterpriseid
-              this.enterpriseVisible=false
+              this.enterpriseVisible = false
             } else {
               this.enterpriseVisible = true
-             
             }
-             this.companyList = res.result
+            this.companyList = res.result
           })
           .catch(() => {
             this.requiredTwoStepCaptcha = false

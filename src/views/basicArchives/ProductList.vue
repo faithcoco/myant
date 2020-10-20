@@ -6,13 +6,17 @@
           <span>货品分类</span>
           <a-button style="margin-left: 40px" type="primary" @click="Classify()">分类设置</a-button>
           <a-divider type="horizontal" />
-          <s-tree
-            :dataSource="ClassifyTree"
-            :openKeys.sync="openKeys"
-            @click="handleClick"
-            @add="handleAdd"
-            @titleClick="handleTitleClick"
-          ></s-tree>
+          <a-tree
+            showLine
+            v-model="checkedKeys"
+            :expanded-keys="expandedKeys"
+            :auto-expand-parent="autoExpandParent"
+            :selected-keys="selectedKeys"
+            :tree-data="classifyTree"
+            @expand="onExpand"
+            @select="onSelect"
+          >
+          </a-tree>
         </a-col>
 
         <a-col :span="20">
@@ -30,11 +34,11 @@
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
           </span>
-          <s-table
+          <a-table
             ref="table"
             size="default"
             :columns="columns"
-            :data="loadData"
+            :data-source="listdata"
             :alert="false"
             :scroll="{ x: 1500 }"
             bordered
@@ -52,7 +56,7 @@
               <a-divider type="vertical" />
               <a @click="handleEdit(record)">删除</a>
             </span>
-          </s-table>
+          </a-table>
         </a-col>
       </a-row>
     </a-card>
@@ -89,6 +93,8 @@ import { Comment } from 'ant-design-vue'
 Vue.use(Descriptions)
 Vue.use(Transfer)
 Vue.use(Comment)
+import { Tree } from 'ant-design-vue'
+Vue.use(Tree)
 import { Timeline } from 'ant-design-vue'
 Vue.use(Timeline)
 import { Mentions } from 'ant-design-vue'
@@ -149,24 +155,21 @@ export default {
       targetKeys: [],
       selectedKeys: [],
       disabled: false,
-      loadData: (parameter) => {
-        parameter.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71003'
-        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-        return getProductList(Object.assign(parameter, this.queryParam)).then((res) => {
-          console.log("list-->",JSON.stringify(res))
-          return res.result
-        })
-      },
-      ClassifyTree: [],
+      listdata: [],
+
+      classifyTree: [],
       moment,
+      menuid: '',
+      expandedKeys: [],
+      autoExpandParent: true,
+      checkedKeys: [],
     }
   },
-  created() {
+  mounted() {
     const columnsParams = {}
     columnsParams.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71003'
     columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
     getProductListColumns(columnsParams).then((res) => {
-      console.log('columns------->', JSON.stringify(res))
       this.columns = res.result.columns
 
       this.targetTitle = []
@@ -187,10 +190,15 @@ export default {
         }
       }
     }
-    getclassificationGoodsList().then((res) => {
-      this.ClassifyTree = res.result
+    const parameter = {}
+    parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+    getclassificationGoodsList(parameter).then((res) => {
+      console.log('tree-->', JSON.stringify(res))
+      this.classifyTree = res.result
     })
+    console.log('name---->', this.$route.name)
   },
+  created() {},
   computed: {
     rowSelection() {
       const { selectedRowKeys } = this
@@ -203,6 +211,30 @@ export default {
     },
   },
   methods: {
+    onExpand(expandedKeys) {
+      console.log('onExpand', expandedKeys)
+      this.expandedKeys = expandedKeys
+      this.autoExpandParent = false
+    },
+
+    onSelect(selectedKeys, info) {
+      console.log('onSelect', selectedKeys[selectedKeys.length - 1])
+      this.selectedKeys = selectedKeys
+      this.menuid = selectedKeys[selectedKeys.length - 1]
+      this.getList()
+    },
+    getList() {
+      const parameter = {}
+
+      parameter.materialclassid = this.menuid
+      parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      parameter.pageNo = '1'
+      parameter.pageSize = '10'
+      getProductList(parameter).then((res) => {
+        console.log('list-->', JSON.stringify(res))
+        this.listdata = res.result.data
+      })
+    },
     onSearch(value) {
       console.log(value)
       this.queryParam = {
@@ -297,10 +329,9 @@ export default {
     },
     handleClick(e) {
       console.log('handleClick', e)
-      this.queryParam = {
-        key: e.key,
-      }
-      this.$refs.table.refresh(true)
+
+      // this.menuid=e.materialclassid
+      // this.getList()
     },
     handleAdd(item) {
       console.log('add button, item', item)

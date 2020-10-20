@@ -6,7 +6,7 @@
           <a-input v-show="item.inputVisible" v-model="item.value" :placeholder="item.placeholder" @blur="() => {}">
             <a-button v-show="item.buttonVisible" slot="suffix" type="link" @click="elect">自动获取</a-button>
           </a-input>
-          <a-input v-show="item.textareaVisible" v-model="item.value" type="textarea" placeholder="30字以内货品说明" />
+          <a-input v-show="item.textareaVisible" v-model="item.value" type="textarea" :placeholder="item.placeholder" />
           <a-select v-show="item.selectVisible" v-model="item.value" placeholder="please select your zone">
             <a-select-option v-for="s in item.selectList" value="s.key"> {{ s.value }} </a-select-option>
           </a-select>
@@ -149,10 +149,10 @@ export default {
       labelCol: { span: 2 },
       wrapperCol: { span: 22 },
       other: '',
-      setform: [
+      setform:  [
         {
           key:'key1',
-          title: '显示名称',
+          title: '人员名称',
           value: 'two',
           buttonVisible: false,
           inputVisible: false,
@@ -166,7 +166,7 @@ export default {
         },
         {
           key:'key2',
-          title: '输入框',
+          title: '人员手机号',
           value: '',
           inputVisible: true,
           selectVisible: false,
@@ -175,30 +175,8 @@ export default {
           selectList: [],
           placeholder: '请输入',
         },
-        {
-          key:'key3',
-          title: '字段名称',
-          value: '',
-          inputVisible: true,
-          selectVisible: false,
-          buttonVisible: true,
-          textareaVisible: false,
-          selectList: [],
-          placeholder: '请输入',
-        },
-
-        {
-          key:'key4',
-          title: '多行',
-          value: '',
-          buttonVisible: false,
-          inputVisible: false,
-          selectList: [],
-          selectVisible: false,
-          textareaVisible: true,
-          placeholder: '请输入',
-        },
-      ],
+        ]
+,
 
       form: {
         productCode: '', //货品编码
@@ -253,21 +231,12 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
-      console.log('---->', this.setform)
+
       this.$refs.ruleForm.validate((valid) => {
-        //    this.$refs.ruleForm   获取整个表单
-        //validate   对整个表单进行校验的方法
+
         if (valid) {
           console.log(valid)
-          //判断valid是否等于true
-          // postProductAdd(this.form).then((res) => {
-          //   //   将数据发送到服务器
-          //   console.log('res------->', res)
-          // })
-          // alert('保存成功，点击确认回到档案界面！')
-          // //   提示用户信息
-          // this.$router.push({ name: 'ProductList' })
-          //   路由跳转
+
         } else {
           // 等于false
           console.log('error submit!!')

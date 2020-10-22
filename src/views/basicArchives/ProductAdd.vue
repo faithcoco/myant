@@ -1,18 +1,17 @@
 <template>
   <a-layout>
     <a-card>
-      <a-form-model ref="ruleForm" :model="{ setform }" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-form-model-item v-for="item in setform" :label="item.title"  :prop="item.key"  >
+      <a-form-model ref="ruleForm" :model="{ data }" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-form-model-item v-for="item in data" :label="item.title" :prop="item.key">
           <a-input v-show="item.inputVisible" v-model="item.value" :placeholder="item.placeholder" @blur="() => {}">
             <a-button v-show="item.buttonVisible" slot="suffix" type="link" @click="elect">自动获取</a-button>
           </a-input>
           <a-input v-show="item.textareaVisible" v-model="item.value" type="textarea" :placeholder="item.placeholder" />
           <a-select v-show="item.selectVisible" v-model="item.value" placeholder="please select your zone">
-            <a-select-option v-for="s in item.selectList" value="s.key"> {{ s.value }} </a-select-option>
+            <a-select-option v-for="s in item.selectList" :key="s.key"> {{ s.value }} </a-select-option>
           </a-select>
         </a-form-model-item>
       </a-form-model>
-     
     </a-card>
 
     <a-layout-footer :style="{ position: 'fixed', width: '100%', bottom: '0px', marginLeft: '-25px', zIndex: '999' }">
@@ -46,7 +45,8 @@ import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
 import { postProductAdd } from '@/api/manage'
-
+import { logininfo } from '@/store/mutation-types'
+import { getForm, submitForm } from '@/api/manage'
 const columns = [
   {
     title: '选择',
@@ -108,29 +108,7 @@ const selectcolumns = [
     width: 100,
   },
 ]
-const data = [
-  {
-    key: '1',
-    code: 'Y1001',
-    ProductName: '自动炒菜机',
-    Barcode: '101010101010',
-    SpecificationModel: 'Y001',
-  },
-  {
-    key: '2',
-    code: 'Y1002',
-    ProductName: '自动炒菜机',
-    Barcode: '101010101010',
-    SpecificationModel: 'Y001',
-  },
-  {
-    key: '3',
-    code: 'Y1003',
-    ProductName: '自动炒菜机',
-    Barcode: '101010101010',
-    SpecificationModel: 'Y001',
-  },
-]
+
 const numberRow = []
 export default {
   data() {
@@ -139,7 +117,7 @@ export default {
       selectedRow: [],
       selectcolumns,
       visible: false,
-      data,
+
       columns,
       selectedRowKeys: [],
       headers: {
@@ -149,35 +127,7 @@ export default {
       labelCol: { span: 2 },
       wrapperCol: { span: 22 },
       other: '',
-      setform:  [
-        {
-          key:'key1',
-          title: '人员名称',
-          value: 'two',
-          buttonVisible: false,
-          inputVisible: false,
-          selectList: [
-            { key: 1, value: 'one' },
-            { key: 2, value: 'two' },
-          ],
-          selectVisible: true,
-          textareaVisible: false,
-          placeholder: '请输入',
-        },
-        {
-          key:'key2',
-          title: '人员手机号',
-          value: '',
-          inputVisible: true,
-          selectVisible: false,
-          buttonVisible: false,
-          textareaVisible: false,
-          selectList: [],
-          placeholder: '请输入',
-        },
-        ]
-,
-
+      data: [],
       form: {
         productCode: '', //货品编码
         ProductName: '', //货品名称
@@ -195,12 +145,14 @@ export default {
       },
       rules: {
         //校验规则
-        ProductName: [{ required: true, message: '请输入货品名称', trigger: 'blur' }],
-        productCode: [{ required: true, message: '请输入产品编码', trigger: 'change' }],
-        Barcode: [{ required: true, message: '请输入产品条码', trigger: 'change' }],
-        key1: [{ required: true, message: '请输入产品条码', trigger: 'change' }],
+        EnterpriseID: [{ required: true, message: '请输入产品条码', trigger: 'change' }],
       },
+      menuid: '03bf0fb1-e9fb-4014-92e7-7121f4f71003',
+      urlForm: '/bd/product/materialList',
     }
+  },
+  created() {
+    this.getForm()
   },
   computed: {
     rowSelection() {
@@ -214,6 +166,17 @@ export default {
     },
   },
   methods: {
+    getForm() {
+      const columnsParams = {}
+      columnsParams.memuid = this.menuid
+      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+
+      console.log('columns url--->', this.urlForm)
+      getForm(columnsParams, this.urlForm).then((res) => {
+        this.data = res.result
+     
+      })
+    },
     handleChange(info) {
       if (info.file.status !== 'uploading') {
         //判断如果不处于上传中的状态，就log打印上传文件的信息和文件列表
@@ -231,21 +194,36 @@ export default {
       console.log(`selected ${value}`)
     },
     onSubmit() {
+      var submitUrl = '/bd/product/insterMaterial'
 
-      this.$refs.ruleForm.validate((valid) => {
+      
+      const params = {}
+      params.data = this.data
+      params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      submitForm(params, submitUrl)
+        .then((res) => {
+          console.log('form--->', res)
+          if(res.status=="SUCCESS"){
+              this.getForm()
+          }
+          this.$message.info(res.status)
+        })
+        .catch(() => {
+        
+        })
 
-        if (valid) {
-          console.log(valid)
-
-        } else {
-          // 等于false
-          console.log('error submit!!')
-          //   提示提交失败
-          alert('亲，您的填写内容不符合要求，请重新填写！！！')
-          return false
-          //   结束函数
-        }
-      })
+      // this.$refs.ruleForm.validate((valid) => {
+      //   if (valid) {
+      //     console.log(valid)
+      //   } else {
+      //     // 等于false
+      //     console.log('error submit!!')
+      //     //   提示提交失败
+      //     alert('亲，您的填写内容不符合要求，请重新填写！！！')
+      //     return false
+      //     //   结束函数
+      //   }
+      // })
     },
     // 返回到清单页面
     Back() {
@@ -255,7 +233,7 @@ export default {
     // 重置表单
     resetForm() {
       // 获取整个表单之后，用resetFieldes方法重置表单，使用这个方法时，表单项必须要绑定prop才有效
-      this.$refs.ruleForm.resetFields()
+      this.getForm()
     },
     handleBlur() {
       console.log('blur')

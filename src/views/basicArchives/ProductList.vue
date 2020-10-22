@@ -3,7 +3,7 @@
     <a-card>
       <a-row :gutter="10">
         <a-col :span="4">
-          <span>货品分类</span>
+          <span>{{ titleTree }}</span>
           <a-button style="margin-left: 40px" type="primary" @click="Classify()">分类设置</a-button>
           <a-divider type="horizontal" />
           <a-tree
@@ -105,6 +105,7 @@ import { getProductList, getProductListColumns, getclassificationGoodsList } fro
 import action from '../../core/directives/action'
 import Approval from '../Approval'
 import { logininfo } from '@/store/mutation-types'
+
 const columns = []
 const selectList = [
   { value: '全部' },
@@ -163,42 +164,28 @@ export default {
       expandedKeys: [],
       autoExpandParent: true,
       checkedKeys: [],
+      titleTree: '',
+      name: '',
+      urlTree: '',
+      urlColumns: '',
+      menuid: '',
     }
   },
   mounted() {
-    const columnsParams = {}
-    columnsParams.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71003'
-    columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-    getProductListColumns(columnsParams).then((res) => {
-      this.columns = res.result.columns
-
-      this.targetTitle = []
-
-      for (const key in this.columns) {
-        if (this.columns[key].isShow == true) {
-          this.targetKeys.push(this.columns[key].key)
-          this.targetTitle.push(this.columns[key])
-        }
-      }
-    })
-    for (const key in this.columns) {
-      if (this.columns[key].dataIndex == 'action') {
-        if (this.columns[key].width == 35) {
-          this.Operat_visible = false
-          this.Operation = ''
-          this.isfold = 'menu-fold'
-        }
-      }
-    }
-    const parameter = {}
-    parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-    getclassificationGoodsList(parameter).then((res) => {
-      console.log('tree-->', JSON.stringify(res))
-      this.classifyTree = res.result
-    })
-    console.log('name---->', this.$route.name)
+    this.initData(this.$route.name)
+    this.getTree()
+    this.getColumns()
   },
-  created() {},
+  watch: {
+    $route: {
+      handler: function (val, oldVal) {
+        this.initData(val.name)
+        this.getTree()
+        this.getColumns()
+      },
+      // 深度观察监听
+    },
+  },
   computed: {
     rowSelection() {
       const { selectedRowKeys } = this
@@ -211,6 +198,36 @@ export default {
     },
   },
   methods: {
+    initData(name) {
+      if (name == 'productlist') {
+        this.titleTree = '货品分类'
+        this.urlTree = '/bd/product/materialClassTree'
+        this.urlColumns = '/bd/product/productList/columns'
+        this.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71003'
+      } else {
+        this.titleTree = '部门结构'
+        this.urlTree = '/bd/Sector'
+        this.urlColumns = '/bd/product/productList/columns'
+        this.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
+      }
+    },
+    getColumns() {
+      const columnsParams = {}
+      columnsParams.menuid = this.menuid
+      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      console.log('columns url--->', this.urlColumns)
+      getProductListColumns(columnsParams, this.urlColumns).then((res) => {
+        this.columns = res.result.columns
+      })
+    },
+    getTree() {
+      const parameter = {}
+      parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      getclassificationGoodsList(parameter, this.urlTree).then((res) => {
+        console.log('tree res-->', JSON.stringify(res))
+        this.classifyTree = res.result
+      })
+    },
     onExpand(expandedKeys) {
       console.log('onExpand', expandedKeys)
       this.expandedKeys = expandedKeys
@@ -264,10 +281,20 @@ export default {
       }
     },
     Classify() {
-      this.$router.push({ name: 'ClassificationGoods' }) //编程式导航  修改 url，完成跳转
+      this.$router.push({
+        name: 'ClassificationGoods',
+        params: {
+          menu: this.$route.name,
+        },
+      }) //编程式导航  修改 url，完成跳转
     },
     add() {
-      this.$router.push({ name: 'ProductAdd' }) //编程式导航  修改 url，完成跳转
+      this.$router.push({
+        name: 'ProductAdd',
+        params: {
+          menu: this.$route.name,
+        },
+      }) //编程式导航  修改 url，完成跳转
     },
 
     handleEdit(record) {

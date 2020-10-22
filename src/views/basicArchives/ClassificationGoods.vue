@@ -29,7 +29,7 @@
     <a-modal v-model="visible" title="新增类别" @ok="handleOk">
       <p>请输入类别名称：</p>
       <a-input ref="userNameInput" v-model="typeName" placeholder />
-          <p>请输入类别编码：</p>
+      <p>请输入类别编码：</p>
       <a-input ref="userNameInput" v-model="typeCode" placeholder />
     </a-modal>
   </a-card>
@@ -59,7 +59,7 @@ export default {
             customRender: '',
           },
         },
-,
+        ,
         {
           title: '操作',
           dataIndex: '',
@@ -71,12 +71,15 @@ export default {
       ],
       visible: false,
       typeName: '',
-      typeCode:'',
+      typeCode: '',
       currentRecord: '',
       tag: -1,
       materialclasscode: '',
       materialclassname: '',
       fatherid: '',
+      url: '',
+      urlAdd: '',
+      name: '',
     }
   },
   created() {
@@ -85,31 +88,61 @@ export default {
 
     //   console.log('columns-->', JSON.stringify(res.columns))
     // })
-    this.getList()
+    console.log('route-->', this.$route.params.menu)
+
+    this.initData(this.$route.params.menu)
+  },
+  watch: {
+    $route: {
+      handler: function (val, oldVal) {
+        console.log('watch--->', val.params.menu)
+        this.initData(val.params.menu)
+      },
+      // 深度观察监听
+    },
   },
   methods: {
+    initData(name) {
+      this.name = name
+      if (name == 'productlist') {
+        this.url = '/bd/product/materialClassTree'
+        this.urlAdd = '/bd/product/insertmaterialClass'
+      } else {
+        this.url = '/bd/Sector'
+        this.urlAdd = '/bd/insertDepartment'
+      }
+      this.getList()
+    },
     getList() {
       const parameter = {}
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      getclassificationGoodsList(parameter).then((res) => {
+      getclassificationGoodsList(parameter, this.url).then((res) => {
+        console.log('list-->', JSON.stringify(res))
         this.list = res.result
-
-        console.log('data-->', JSON.stringify(res.result))
       })
     },
     insertmaterialClass() {
       const parameter = {}
-      parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      parameter.materialclasscode = this.materialclasscode
-      parameter.materialclassname = this.materialclassname
-      parameter.materialclassgrade = ''
-      parameter.fatherid = this.fatherid
-      insertmaterialClass(parameter).then((res) => {
-        console.log('columns-->', JSON.stringify(res))
+      if (this.name == 'productlist') {
+        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+        parameter.materialclasscode = this.materialclasscode
+        parameter.materialclassname = this.materialclassname
+        parameter.materialclassgrade = ''
+        parameter.fatherid = this.fatherid
+      } else {
+        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+        parameter.fatherid = this.fatherid
+        parameter.departmentname = this.materialclassname
+       // parameter.departmentcode = this.materialclasscode
+      }
+
+      console.log('add url-->', this.urlAdd)
+      insertmaterialClass(parameter, this.urlAdd).then((res) => {
+        console.log('add-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.getList()
-        }else{
-            this.$message.warning(res.status);
+        } else {
+          this.$message.warning(res.status)
         }
       })
     },
@@ -117,11 +150,10 @@ export default {
       console.log(`checked = ${e.target.checked}`)
     },
     handleAddItem(record) {
-     
       this.currentRecord = record
       this.tag = 2
       this.visible = true
-      this.fatherid=record.key
+      this.fatherid = record.key
     },
     handleEdit(record) {
       console.log(record)
@@ -140,7 +172,7 @@ export default {
       this.visible = false
 
       this.materialclassname = this.typeName
-      this.materialclasscode=this.typeCode
+      this.materialclasscode = this.typeCode
       this.insertmaterialClass()
       this.typeName = ''
     },

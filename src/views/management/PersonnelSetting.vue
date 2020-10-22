@@ -123,13 +123,11 @@
       const treeParams = {}
       treeParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getSector(treeParams).then((res) => {
-        console.log("getSector-->",JSON.stringify(res))
+        console.log("tree res-->",JSON.stringify(res))
         this.treeData = res.result
         this.expandedKeys = ['0-0-0', '0-0-1']
       })
-      getOrgTree().then((res) => {
-        this.orgTree = res.result
-      })
+
     },
     methods: {
       onSelect(selectedKeys, info) {

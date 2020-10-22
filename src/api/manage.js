@@ -39,7 +39,7 @@ const api = {
   // 部门员工档案保存
   insertBaseperson: '/bd/baseperson/insertBaseperson',
   // 角色分配保存
-  updatePsndocRole:'/bd/basepersonrole/updatePsndocRole',
+  updatePsndocRole: '/bd/basepersonrole/updatePsndocRole',
 
   updateBaseenterprise: '/bd/Baseenterprise/updateBaseenterprise',
   insertBaseenterprise: '/bd/Baseenterprise//insertBaseenterprise',
@@ -287,12 +287,29 @@ export function getSector(parameter) {
     params: parameter
   })
 }
-export function getProductListColumns(parameter) {
+export function getProductListColumns(parameter, url) {
   console.log('/getProductListColumns req-->', JSON.stringify(parameter))
   return axios({
-    url: api.productListColumns,
+    url: url,
     method: 'get',
     params: parameter
+  })
+}
+export function getForm(parameter, url) {
+  console.log('getform req-->', JSON.stringify(parameter))
+  return axios({
+    url: url,
+    method: 'get',
+    params: parameter
+  })
+}
+
+export function submitForm(parameter, url) {
+  console.log('submitForm req-->', JSON.stringify(parameter))
+  return axios({
+    url: url,
+    method: 'post',
+    data: parameter
   })
 }
 export function getSupplierListColumns(parameter) {
@@ -488,18 +505,19 @@ export function getMessageSettinList(parameter) {
     params: parameter
   })
 }
-export function getclassificationGoodsList(parameter) {
-  console.log('/getclassificationGoodsList req-->', JSON.stringify(parameter))
+export function getclassificationGoodsList(parameter, url) {
+
   return axios({
-    url: api.classificationGoodsList,
-    method: 'post',
-    data: parameter
+    //url: api.classificationGoodsList,
+    url: url,
+    method: 'get',
+    params: parameter
   })
 }
-export function insertmaterialClass(parameter) {
+export function insertmaterialClass(parameter,url) {
   console.log('insertmaterialClass req-->', JSON.stringify(parameter))
   return axios({
-    url: '/bd/product/insertmaterialClass',
+    url: url,
     method: 'post',
     data: parameter
   })
@@ -512,7 +530,7 @@ export function getRoleList(parameter) {
   })
 }
 export function insertRole(parameter) {
-  console.log(' insertRole(parameter)--->',JSON.stringify(parameter))
+  console.log(' insertRole(parameter)--->', JSON.stringify(parameter))
   return axios({
     url: '/bd/role/insertRole',
     method: 'post',
@@ -520,7 +538,7 @@ export function insertRole(parameter) {
   })
 }
 export function updateForm(parameter) {
-  console.log(' updateForm--->',JSON.stringify(parameter))
+  console.log(' updateForm--->', JSON.stringify(parameter))
   return axios({
     url: '/bd/FormSetting/updateForm',
     method: 'post',
@@ -528,7 +546,7 @@ export function updateForm(parameter) {
   })
 }
 export function updateRole(parameter) {
-  console.log('updateRole(parameter) --->',JSON.stringify(parameter))
+  console.log('updateRole(parameter) --->', JSON.stringify(parameter))
   return axios({
     url: '/bd/role/updateRole',
     method: 'post',

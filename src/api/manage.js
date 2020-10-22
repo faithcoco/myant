@@ -34,10 +34,17 @@ const api = {
   Sector: '/bd/Sector',
   BasepersonInfo: '/bd/baseperson/getBasepersonInfo',
   BaseenterpriseInfo: '/bd/Baseenterprise/getBaseenterpriseInfo',
-  updateBaseperson: '/bd/baseperson/updateBaseperson',
 
-  // 部门员工档案保存
+
+  //**************************************************************************部门员工档案begin
+  // 新增保存
   insertBaseperson: '/bd/baseperson/insertBaseperson',
+  // 修改保存
+  updateBaseperson: '/bd/baseperson/updateBaseperson',
+  // 删除
+  deletePerson: '/bd/baseperson/deletePerson',
+  // 禁用启用
+  enablePerson: '/bd/baseperson/enablePerson',
   // 角色分配保存
   updatePsndocRole: '/bd/basepersonrole/updatePsndocRole',
 
@@ -66,6 +73,7 @@ const api = {
   MessageSettinList: '/MessageSettinList',
   classificationGoodsList: '/bd/product/materialClassTree',
   PersonnelSettingList: '/bd/baseperson/PersonnelSettingList',
+
   FormSettingList: '/bd/FormSetting/FormSettingList',
 
   productListColumns: '/bd/product/productList/columns',
@@ -782,6 +790,20 @@ export function getBaseenterpriseInfo(parameter) {
 export function updateBaseperson(parameter) {
   return axios({
     url: api.updateBaseperson,
+    method: 'post',
+    data: parameter
+  })
+}
+export function deletePerson(parameter) {
+  return axios({
+    url: api.deletePerson,
+    method: 'post',
+    data: parameter
+  })
+}
+export function enablePerson(parameter) {
+  return axios({
+    url: api.enablePerson,
     method: 'post',
     data: parameter
   })

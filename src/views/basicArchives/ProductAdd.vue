@@ -14,7 +14,7 @@
               :placeholder="item.placeholder"
             />
             <a-cascader
-              :value="item.value"
+              v-model="item.value"
               v-show="item.selectVisible"
               :field-names="{ label: 'title', value: 'key', children: 'children' }"
               :options="item.selectList"
@@ -60,7 +60,7 @@ Vue.use(Cascader)
 Vue.use(formModel, Button)
 import { postProductAdd } from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
-import { getForm, submitForm } from '@/api/manage'
+import { getForm, submitForm, postData } from '@/api/manage'
 const columns = [
   {
     title: '选择',
@@ -157,22 +157,17 @@ export default {
         name: '', //自定义追加项
         content: '', //自定义追加项内容
       },
-      rules:{
-
-	"materialid": [{
-		"required": true,
-		"message": "请输入",
-		"trigger": "change"
-	}]
-
-},
+      rules: {},
       menuid: '03bf0fb1-e9fb-4014-92e7-7121f4f71003',
       urlForm: '/bd/product/materialList',
       materialclassid: '',
+      test:"",
     }
   },
   created() {
+    this.materialclassid = this.$route.params.materialclassid
     this.getForm()
+    this.getRules()
   },
   computed: {
     rowSelection() {
@@ -190,13 +185,24 @@ export default {
       handler: function (val, oldVal) {
         this.materialclassid = this.$route.params.materialclassid
         this.getForm()
+        this.getRules()
       },
       // 深度观察监听
     },
   },
   methods: {
+    getRules() {
+      const columnsParams = {}
+      columnsParams.memuid = this.menuid
+      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      this.urlForm = '/bd/product/FormValidation'
+      console.log('columns url--->', this.urlForm)
+      postData(columnsParams, this.urlForm).then((res) => {
+        this.rules = res.result
+      })
+    },
     onCascaderChange(value) {
-      console.log(value)
+      console.log(this.test)
     },
     getForm() {
       const columnsParams = {}

@@ -312,6 +312,15 @@ export function getForm(parameter, url) {
   })
 }
 
+export function postData(parameter, url) {
+  console.log('post req-->', JSON.stringify(parameter))
+  return axios({
+    url: url,
+    method: 'post',
+    data: parameter
+  })
+}
+
 export function submitForm(parameter, url) {
   console.log('submitForm req-->', JSON.stringify(parameter))
   return axios({

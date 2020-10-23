@@ -62,25 +62,6 @@
     </a-card>
 
     <approval :visible="approval_visible" :product="product" @change="change"></approval>
-    <a-modal
-      title="设置"
-      :visible="visible_transfer"
-      :confirm-loading="confirmLoading"
-      @ok="handleOk"
-      @cancel="handleCancel"
-    >
-      <a-transfer
-        :data-source="columns"
-        :titles="['选择显示字段', '已选择字段']"
-        :target-keys="targetKeys"
-        :selected-keys="selectedKeys"
-        :render="(item) => item.title"
-        :disabled="disabled"
-        @change="handleChange"
-        @selectChange="handleSelectChange"
-        @scroll="handleScroll"
-      />
-    </a-modal>
   </div>
 </template>
 
@@ -165,10 +146,10 @@ export default {
       autoExpandParent: true,
       checkedKeys: [],
       titleTree: '',
-      name: '',
       urlTree: '',
       urlColumns: '',
-      menuid: '',
+      materialclassid: '',
+      menuname: '',
     }
   },
   mounted() {
@@ -181,6 +162,7 @@ export default {
       handler: function (val, oldVal) {
         this.initData(val.name)
         this.getTree()
+      
         this.getColumns()
       },
       // 深度观察监听
@@ -199,6 +181,7 @@ export default {
   },
   methods: {
     initData(name) {
+      this.menuname = name
       if (name == 'productlist') {
         this.titleTree = '货品分类'
         this.urlTree = '/bd/product/materialClassTree'
@@ -235,20 +218,20 @@ export default {
     },
 
     onSelect(selectedKeys, info) {
-      console.log('onSelect', selectedKeys[selectedKeys.length - 1])
+      console.log('onSelect', info)
       this.selectedKeys = selectedKeys
-      this.menuid = selectedKeys[selectedKeys.length - 1]
+      this.materialclassid = selectedKeys[selectedKeys.length - 1]
       this.getList()
     },
     getList() {
       const parameter = {}
 
-      parameter.materialclassid = this.menuid
+      parameter.materialclassid = this.materialclassid
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = '1'
       parameter.pageSize = '10'
       getProductList(parameter).then((res) => {
-        console.log('list-->', JSON.stringify(res))
+       
         this.listdata = res.result.data
       })
     },
@@ -289,12 +272,18 @@ export default {
       }) //编程式导航  修改 url，完成跳转
     },
     add() {
-      this.$router.push({
-        name: 'ProductAdd',
-        params: {
-          menu: this.$route.name,
-        },
-      }) //编程式导航  修改 url，完成跳转
+      console.log('current--->', this.materialclassid)
+      if (this.menuname == 'productlist') {
+        this.$router.push({
+          name: 'ProductAdd',
+          params: {
+            menu: this.$route.name,
+            materialclassid: this.materialclassid,
+          },
+        }) //编程式导航  修改 url，完成跳转
+      } else {
+        this.$router.push({ name: 'PersonSettingAdd', query: { departmentid: this.materialclassid, operation: 'add' } })
+      }
     },
 
     handleEdit(record) {
@@ -302,53 +291,6 @@ export default {
     },
     handleSub(record) {
       console.log(record)
-    },
-    onDelete(key) {
-      const data = [...this.data]
-      this.data = data.filter((item) => item.key !== key)
-    },
-    onSelectChange(selectedRowKeys) {
-      this.selectedRowKeys = selectedRowKeys
-    },
-
-    handleChange(nextTargetKeys, direction, moveKeys) {
-      console.log(nextTargetKeys)
-      for (const key in moveKeys) {
-        if (direction == 'right') {
-          this.targetKeys.push(moveKeys[key])
-        } else {
-          for (const item in this.targetKeys) {
-            // console.log(this.targetKeys[item])
-            if (this.targetKeys[item] == moveKeys[key]) {
-              this.targetKeys.splice(item, 1)
-            }
-          }
-          //
-        }
-      }
-    },
-
-    handleScroll(direction, e) {},
-    handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
-      this.selectedKeys = [...sourceSelectedKeys, ...targetSelectedKeys]
-    },
-    handleCancel(e) {
-      this.visible_transfer = false
-    },
-    handleOk(e) {
-      this.visible_transfer = false
-      this.confirmLoading = false
-      const columns = [...this.columns]
-
-      this.targetTitle = []
-      for (let i = 0; i < this.targetKeys.length; i++) {
-        for (let j = 0; j < columns.length; j++) {
-          if (columns[j].key == this.targetKeys[i]) {
-            columns[j].isShow = true
-            this.targetTitle.push(columns[j])
-          }
-        }
-      }
     },
 
     change(visible) {

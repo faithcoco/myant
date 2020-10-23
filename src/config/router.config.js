@@ -33,6 +33,7 @@ export const asyncRouterMap = [
             
           },
           {
+            hidden: true,
             path: 'PersonSettingAdd',
             name: 'PersonSettingAdd',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/PersonSettingAdd.vue'),

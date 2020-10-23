@@ -1,20 +1,42 @@
 <template>
   <a-layout>
-    <a-card>
-      <a-form-model ref="ruleForm" :model="{ data }" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-form-model-item v-for="item in data" :label="item.title" :prop="item.key">
-          <a-input v-show="item.inputVisible" v-model="item.value" :placeholder="item.placeholder" @blur="() => {}">
-            <a-button v-show="item.buttonVisible" slot="suffix" type="link" @click="elect">自动获取</a-button>
-          </a-input>
-          <a-input v-show="item.textareaVisible" v-model="item.value" type="textarea" :placeholder="item.placeholder" />
-          <a-select v-show="item.selectVisible" v-model="item.value" placeholder="please select your zone">
-            <a-select-option v-for="s in item.selectList" :key="s.key"> {{ s.value }} </a-select-option>
-          </a-select>
-        </a-form-model-item>
-      </a-form-model>
-    </a-card>
-
-    <a-layout-footer :style="{ position: 'fixed', width: '100%', bottom: '0px', marginLeft: '-25px', zIndex: '999' }">
+    <div class="form">
+      <a-card>
+        <a-form-model ref="ruleForm" :model="{ data }" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+          <a-form-model-item v-for="item in data" :label="item.title" :prop="item.key">
+            <a-input v-show="item.inputVisible" v-model="item.value" :placeholder="item.placeholder" @blur="() => {}">
+              <a-button v-show="item.buttonVisible" slot="suffix" type="link" @click="elect">自动获取</a-button>
+            </a-input>
+            <a-input
+              v-show="item.textareaVisible"
+              v-model="item.value"
+              type="textarea"
+              :placeholder="item.placeholder"
+            />
+            <a-cascader
+              :value="item.value"
+              v-show="item.selectVisible"
+              :field-names="{ label: 'title', value: 'key', children: 'children' }"
+              :options="item.selectList"
+              placeholder="请选择"
+              @change="onCascaderChange"
+            />
+            <a-date-picker
+              v-show="item.timepickerVisible"
+              v-model="item.value"
+             
+              show-time
+              format="YYYY-MM-DD HH:mm:ss"
+              placeholder="选择日期"
+              
+            />
+          </a-form-model-item>
+        </a-form-model>
+      </a-card>
+    </div>
+    <a-layout-footer
+      :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-25px', zIndex: '999' }"
+    >
       <a-card>
         <a-row>
           <a-col :span="1" :offset="4">
@@ -31,18 +53,12 @@
     </a-layout-footer>
   </a-layout>
 </template>
-<style>
-#components-layout-demo-fixed .logo {
-  width: 120px;
-  height: 31px;
-  background: rgba(255, 255, 255, 0.2);
-  margin: 16px 24px 16px 0;
-  float: left;
-}
-</style>
+
 <script>
 import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
+import { Cascader } from 'ant-design-vue'
+Vue.use(Cascader)
 Vue.use(formModel, Button)
 import { postProductAdd } from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
@@ -145,10 +161,11 @@ export default {
       },
       rules: {
         //校验规则
-        EnterpriseID: [{ required: true, message: '请输入产品条码', trigger: 'change' }],
+        EnterpriseID: [{ required: true, message: '请输入', trigger: 'change' }],
       },
       menuid: '03bf0fb1-e9fb-4014-92e7-7121f4f71003',
       urlForm: '/bd/product/materialList',
+      materialclassid: '',
     }
   },
   created() {
@@ -165,16 +182,30 @@ export default {
       }
     },
   },
+  watch: {
+    $route: {
+      handler: function (val, oldVal) {
+        this.materialclassid = this.$route.params.materialclassid
+        this.getForm()
+      },
+      // 深度观察监听
+    },
+  },
   methods: {
+
+    onCascaderChange(value) {
+      console.log(value)
+    },
     getForm() {
       const columnsParams = {}
       columnsParams.memuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      columnsParams.materialclassid = this.materialclassid
 
       console.log('columns url--->', this.urlForm)
       getForm(columnsParams, this.urlForm).then((res) => {
+        console.log('form-->', JSON.stringify(res.result))
         this.data = res.result
-     
       })
     },
     handleChange(info) {
@@ -196,21 +227,18 @@ export default {
     onSubmit() {
       var submitUrl = '/bd/product/insterMaterial'
 
-      
       const params = {}
       params.data = this.data
       params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       submitForm(params, submitUrl)
         .then((res) => {
           console.log('form--->', res)
-          if(res.status=="SUCCESS"){
-              this.getForm()
+          if (res.status == 'SUCCESS') {
+            this.getForm()
           }
           this.$message.info(res.status)
         })
-        .catch(() => {
-        
-        })
+        .catch(() => {})
 
       // this.$refs.ruleForm.validate((valid) => {
       //   if (valid) {
@@ -282,3 +310,12 @@ export default {
   },
 }
 </script>
+<style lang="less">
+.form {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow: auto;
+
+  height: 750px;
+}
+</style>

@@ -530,6 +530,15 @@ export function insertmaterialClass(parameter,url) {
     data: parameter
   })
 }
+export function getData(parameter,url) {
+  console.log('getdata req-->', JSON.stringify(parameter))
+  return axios({
+    url: url,
+    method: 'get',
+    params: parameter
+  })
+}
+
 export function getRoleList(parameter) {
   return axios({
     url: api.role,

@@ -17,9 +17,7 @@
           <a-divider type="vertical" />
           <a @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical" />
-          <a-popconfirm v-if="list.length" title="确定要删除吗?" @confirm="() => onDelete(record.key)">
-            <a href="javascript:;">删除</a>
-          </a-popconfirm>
+          <a @click="handleDelete(record)">删除</a>
         </template>
       </span>
       <span slot="use" style="margin: 0">
@@ -35,7 +33,7 @@
   </a-card>
 </template>
 <script>
-import { getclassificationGoodsColumns, getclassificationGoodsList, insertmaterialClass } from '@/api/manage'
+import { getclassificationGoodsColumns, getclassificationGoodsList, insertmaterialClass,getData } from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
 import Vue from 'vue'
 export default {
@@ -74,12 +72,13 @@ export default {
       typeCode: '',
       currentRecord: '',
       tag: -1,
-      materialclasscode: '',
-      materialclassname: '',
+      materialclasscode: '001',
+      materialclassname: 'hello',
       fatherid: '',
       url: '',
       urlAdd: '',
       name: '',
+      departmentid: '',
     }
   },
   created() {
@@ -133,11 +132,47 @@ export default {
         parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         parameter.fatherid = this.fatherid
         parameter.departmentname = this.materialclassname
-       // parameter.departmentcode = this.materialclasscode
+        parameter.departmentcode = this.materialclasscode
       }
 
       console.log('add url-->', this.urlAdd)
       insertmaterialClass(parameter, this.urlAdd).then((res) => {
+        console.log('add-->', JSON.stringify(res))
+        if (res.status == 'SUCCESS') {
+          this.getList()
+        } else {
+          this.$message.warning(res.status)
+        }
+      })
+    },
+    update() {
+      const parameter = {}
+      if (this.name == 'productlist') {
+      } else {
+        parameter.departmentid = this.departmentid
+        parameter.departmentname = this.materialclassname
+        parameter.departmentcode = this.materialclasscode
+        this.urlAdd = '/bd/updateDepartment'
+      }
+
+      insertmaterialClass(parameter, this.urlAdd).then((res) => {
+        console.log('add-->', JSON.stringify(res))
+        if (res.status == 'SUCCESS') {
+          this.getList()
+        } else {
+          this.$message.warning(res.status)
+        }
+      })
+    },
+    delete() {
+      const parameter = {}
+      if (this.name == 'productlist') {
+      } else {
+        parameter.departmentid = this.departmentid
+        this.urlAdd = '/bd/deleteDepartment'
+      }
+
+      getData(parameter, this.urlAdd).then((res) => {
         console.log('add-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.getList()
@@ -156,7 +191,14 @@ export default {
       this.fatherid = record.key
     },
     handleEdit(record) {
-      console.log(record)
+      console.log('edit-->', record)
+      this.departmentid = record.key
+      this.update()
+    },
+    handleDelete(record) {
+      console.log('edit-->', record)
+      this.departmentid = record.key
+      this.delete()
     },
     handleSub(record) {
       console.log(record)

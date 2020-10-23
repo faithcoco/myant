@@ -24,11 +24,9 @@
             <a-date-picker
               v-show="item.timepickerVisible"
               v-model="item.value"
-             
               show-time
               format="YYYY-MM-DD HH:mm:ss"
               placeholder="选择日期"
-              
             />
           </a-form-model-item>
         </a-form-model>
@@ -159,10 +157,15 @@ export default {
         name: '', //自定义追加项
         content: '', //自定义追加项内容
       },
-      rules: {
-        //校验规则
-        EnterpriseID: [{ required: true, message: '请输入', trigger: 'change' }],
-      },
+      rules:{
+
+	"materialid": [{
+		"required": true,
+		"message": "请输入",
+		"trigger": "change"
+	}]
+
+},
       menuid: '03bf0fb1-e9fb-4014-92e7-7121f4f71003',
       urlForm: '/bd/product/materialList',
       materialclassid: '',
@@ -192,7 +195,6 @@ export default {
     },
   },
   methods: {
-
     onCascaderChange(value) {
       console.log(value)
     },

@@ -207,7 +207,7 @@ export default {
     handleDelete(record) {
       //删除
       console.log('edit-->', record)
-      this.departmentid = record.key
+      this.id = record.key
       this.delete()
     },
     handleSub(record) {

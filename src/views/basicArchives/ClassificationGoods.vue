@@ -24,7 +24,7 @@
         <a-checkbox @change="onChange" />
       </span>
     </a-table>
-    <a-modal v-model="visible" title="新增类别" @ok="handleOk">
+    <a-modal v-model="visible" title="类别" @ok="handleOk">
       <p>请输入类别名称：</p>
       <a-input ref="userNameInput" v-model="typeName" placeholder />
       <p>请输入类别编码：</p>
@@ -33,7 +33,7 @@
   </a-card>
 </template>
 <script>
-import { getclassificationGoodsColumns, getclassificationGoodsList, insertmaterialClass,getData } from '@/api/manage'
+import { getclassificationGoodsColumns, getclassificationGoodsList, insertmaterialClass, getData } from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
 import Vue from 'vue'
 export default {
@@ -71,14 +71,13 @@ export default {
       typeName: '',
       typeCode: '',
       currentRecord: '',
-      tag: -1,
-      materialclasscode: '001',
-      materialclassname: 'hello',
-      fatherid: '',
+      materialclasscode: '',
+      materialclassname: '',
+      id: '',
       url: '',
       urlAdd: '',
       name: '',
-      departmentid: '',
+      tag: 0, //1新增 2编辑
     }
   },
   created() {
@@ -127,17 +126,17 @@ export default {
         parameter.materialclasscode = this.materialclasscode
         parameter.materialclassname = this.materialclassname
         parameter.materialclassgrade = ''
-        parameter.fatherid = this.fatherid
+        parameter.fatherid = this.id
       } else {
         parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-        parameter.fatherid = this.fatherid
+        parameter.fatherid = this.id
         parameter.departmentname = this.materialclassname
         parameter.departmentcode = this.materialclasscode
       }
 
       console.log('add url-->', this.urlAdd)
       insertmaterialClass(parameter, this.urlAdd).then((res) => {
-        console.log('add-->', JSON.stringify(res))
+        console.log('add res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.getList()
         } else {
@@ -148,15 +147,19 @@ export default {
     update() {
       const parameter = {}
       if (this.name == 'productlist') {
+        parameter.materialclasscode = this.typeCode
+        parameter.materialclassname = this.typeName
+        parameter.materialclassid = this.id
+        this.urlAdd = '/bd/product/updatematerialClass'
       } else {
-        parameter.departmentid = this.departmentid
-        parameter.departmentname = this.materialclassname
-        parameter.departmentcode = this.materialclasscode
+        parameter.departmentid = this.id
+        parameter.departmentname = this.typeName
+        parameter.departmentcode = this.typeCode
         this.urlAdd = '/bd/updateDepartment'
       }
 
       insertmaterialClass(parameter, this.urlAdd).then((res) => {
-        console.log('add-->', JSON.stringify(res))
+        console.log('update res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.getList()
         } else {
@@ -167,8 +170,10 @@ export default {
     delete() {
       const parameter = {}
       if (this.name == 'productlist') {
+        parameter.materialclassid = this.id
+        this.urlAdd = '/bd/product/delmaterialClassById'
       } else {
-        parameter.departmentid = this.departmentid
+        parameter.departmentid = this.id
         this.urlAdd = '/bd/deleteDepartment'
       }
 
@@ -185,17 +190,22 @@ export default {
       console.log(`checked = ${e.target.checked}`)
     },
     handleAddItem(record) {
+      //添加子类
+
       this.currentRecord = record
-      this.tag = 2
+
       this.visible = true
-      this.fatherid = record.key
+      this.id = record.key
     },
     handleEdit(record) {
+      //编辑
       console.log('edit-->', record)
-      this.departmentid = record.key
-      this.update()
+      this.id = record.key
+      this.tag = 2
+      this.visible = true
     },
     handleDelete(record) {
+      //删除
       console.log('edit-->', record)
       this.departmentid = record.key
       this.delete()
@@ -204,6 +214,7 @@ export default {
       console.log(record)
     },
     handleAdd() {
+      //新增类别
       this.tag = 1
       this.visible = true
     },
@@ -215,8 +226,14 @@ export default {
 
       this.materialclassname = this.typeName
       this.materialclasscode = this.typeCode
-      this.insertmaterialClass()
+      if (this.tag == 1) {
+        this.insertmaterialClass()
+      } else if (this.tag == 2) {
+        this.update()
+      }
+
       this.typeName = ''
+      this.typeCode=''
     },
     onDelete(key) {
       const list = [...this.list]

@@ -523,7 +523,7 @@ export function getclassificationGoodsList(parameter, url) {
   })
 }
 export function insertmaterialClass(parameter,url) {
-  console.log('insertmaterialClass req-->', JSON.stringify(parameter))
+  console.log(' req-->', JSON.stringify(parameter))
   return axios({
     url: url,
     method: 'post',

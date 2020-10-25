@@ -156,13 +156,14 @@ export default {
     this.initData(this.$route.name)
     this.getTree()
     this.getColumns()
+    this.getList()
   },
   watch: {
     $route: {
       handler: function (val, oldVal) {
         this.initData(val.name)
         this.getTree()
-      
+      this.getList()
         this.getColumns()
       },
       // 深度观察监听

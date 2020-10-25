@@ -94,6 +94,7 @@ export default {
     $route: {
       handler: function (val, oldVal) {
         console.log('watch--->', val.params.menu)
+
         this.initData(val.params.menu)
       },
       // 深度观察监听
@@ -191,7 +192,7 @@ export default {
     },
     handleAddItem(record) {
       //添加子类
-
+      this.tag = 1
       this.currentRecord = record
 
       this.visible = true
@@ -233,7 +234,7 @@ export default {
       }
 
       this.typeName = ''
-      this.typeCode=''
+      this.typeCode = ''
     },
     onDelete(key) {
       const list = [...this.list]

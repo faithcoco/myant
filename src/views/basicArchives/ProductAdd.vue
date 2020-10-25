@@ -2,7 +2,7 @@
   <a-layout>
     <div class="form">
       <a-card>
-        <a-form-model ref="ruleForm" :model="{ data }" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
+        <a-form-model ref="ruleForm" :model="{ data }"  :label-col="labelCol" :wrapper-col="wrapperCol">
           <a-form-model-item v-for="item in data" :label="item.title" :prop="item.key">
             <a-input v-show="item.inputVisible" v-model="item.value" :placeholder="item.placeholder" @blur="() => {}">
               <a-button v-show="item.buttonVisible" slot="suffix" type="link" @click="elect">自动获取</a-button>
@@ -209,8 +209,8 @@ export default {
       columnsParams.memuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       columnsParams.materialclassid = this.materialclassid
-
-      console.log('columns url--->', this.urlForm)
+      this.urlForm='/bd/product/materialList'
+      console.log('url--->', this.urlForm)
       getForm(columnsParams, this.urlForm).then((res) => {
         console.log('form-->', JSON.stringify(res.result))
         this.data = res.result
@@ -240,7 +240,7 @@ export default {
       params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       submitForm(params, submitUrl)
         .then((res) => {
-          console.log('form--->', res)
+          console.log('submit--->', res)
           if (res.status == 'SUCCESS') {
             this.getForm()
           }

@@ -136,6 +136,7 @@
         loadData: (parameter) => {
           parameter.menuid='03bf0fb1-e9fb-4014-92e7-7121f4f71005'
           parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+          parameter.departmentid = this.departmentid;
           return getPersonnelSettingList(Object.assign(parameter, this.queryParam)).then((res) => {
             console.log("getPersonnelSettingList-->",JSON.stringify(res))
             return res.result
@@ -162,30 +163,15 @@
         departmentid:null,
       }
     },
-    created() {
-      const columnsParams = {}
-      columnsParams.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
-      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      getPersonnelSettingColumns(columnsParams).then((res) => {
-        console.log("getPersonnelSettingColumns-->",JSON.stringify(res))
-        this.columns = res.result.columns
-      })
-      const treeParams = {}
-      treeParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      getSector(treeParams).then((res) => {
-        console.log("tree res-->",JSON.stringify(res))
-        this.treeData = res.result
-        this.expandedKeys = ['0-0-0', '0-0-1']
-      })
-
-    },
     methods: {
       /**
        * 树选中事件
        */
       onSelect(selectedKeys, info) {
         console.log('selected', selectedKeys, info)
-        this.selectedKeys = selectedKeys;
+        this.departmentid = selectedKeys[0];
+        // 刷新右边的数据
+        this.onSearch();
       },
       onCheck(checkedKeys, info) {
         console.log('onCheck', checkedKeys, info)
@@ -335,32 +321,50 @@
         parameter.menuid='03bf0fb1-e9fb-4014-92e7-7121f4f71005'
         parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         parameter.personname = this.queryParam.personname
+        parameter.departmentid = this.departmentid;
         this.loadData(parameter);
         this.$refs.table.refresh(true) //用refresh方法刷新表格
+      },
+      // 表单列名查询
+      getColumn() {
+        const columnsParams = {}
+        columnsParams.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
+        columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+        getPersonnelSettingColumns(columnsParams).then((res) => {
+          console.log("getPersonnelSettingColumns-->",JSON.stringify(res))
+          this.columns = res.result.columns
+        })
+      },
+      // 部门树查询
+      getDeptTree(){
+        const treeParams = {}
+        treeParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+        getSector(treeParams).then((res) => {
+          console.log("getSector-->",JSON.stringify(res))
+          // 默认第一个部门主键
+          this.departmentid = res.result[0].key;
+          console.log("departmentid-->",JSON.stringify(this.departmentid))
+          this.treeData = res.result
+          this.expandedKeys = ['0-0-0', '0-0-1']
+        })
+        getOrgTree().then((res) => {
+          this.orgTree = res.result
+        })
       }
     },
-
-    created() {
-      const columnsParams = {}
-      columnsParams.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
-      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      getPersonnelSettingColumns(columnsParams).then((res) => {
-        console.log("getPersonnelSettingColumns-->",JSON.stringify(res))
-        this.columns = res.result.columns
-      })
-      const treeParams = {}
-      treeParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      getSector(treeParams).then((res) => {
-        console.log("getSector-->",JSON.stringify(res))
-        // 默认第一个部门主键
-        this.departmentid = res.result[0].departmentid;
-        console.log("departmentid-->",JSON.stringify(this.departmentid))
-        this.treeData = res.result
-        this.expandedKeys = ['0-0-0', '0-0-1']
-      })
-      getOrgTree().then((res) => {
-        this.orgTree = res.result
-      })
+    mounted() {
+      this.getColumn()
+      this.getDeptTree()
+    },
+    watch: {
+      $route: {
+        handler: function (val, oldVal) {
+          this.getColumn()
+          this.getDeptTree()
+          this.onSearch();
+        },
+        // 深度观察监听
+      },
     },
   }
 </script>

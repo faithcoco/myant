@@ -212,12 +212,12 @@
           console.log('name--->', this.form)
           if (valid) {
             console.log(this.form.personid);
-            if (this.form.personid != null) {
+            if (this.form.personid != null && this.form.personid != "" && this.form.personid != undefined) {
               updateBaseperson(this.form).then((res) => {
                 if (res.status == 'FAILED') {
                   this.$message.error(res.errorMsg);
                 } else {
-                  this.$message.success("保存成功");
+                  this.$message.success("修改保存成功");
                   this.editVisible = false
                   this.infoVisible = true
                 }
@@ -228,7 +228,7 @@
                 if (res.status == 'FAILED') {
                   this.$message.error(res.errorMsg);
                 } else {
-                  this.$message.success("保存成功");
+                  this.$message.success("新增保存成功");
                   this.editVisible = false
                   this.infoVisible = true
                 }

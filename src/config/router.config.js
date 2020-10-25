@@ -26,23 +26,21 @@ export const asyncRouterMap = [
           
           {
             path: 'PersonnelSetting',
-            name: 'personnellist',
-          // component: () => import(/* webpackChunkName: "fail" */ '@/views/management/PersonnelSetting.vue'),
-           component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductList.vue'),
+            name: 'personnel-setting',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/management/PersonnelSetting.vue'),
             meta: { title: '部门人员档案', icon: 'user', permission: ['01-01'] },
             
           },
           {
-            hidden: true,
             path: 'PersonSettingAdd',
             name: 'PersonSettingAdd',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/PersonSettingAdd.vue'),
             meta: { title: '部门人员档案新增', icon: 'user'},
-
+            hidden: true
           },
           {
             path: 'product-list',
-            name: 'productlist',
+            name: 'ProductList',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductList.vue'),
             meta: { title: '料品档案', icon: 'user', permission: ['01-02'] }
           },

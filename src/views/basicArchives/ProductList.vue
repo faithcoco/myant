@@ -34,13 +34,14 @@
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
           </span>
+       
           <a-table
             ref="table"
             size="default"
             :columns="columns"
             :data-source="listdata"
             :alert="false"
-            :scroll="{ x: 1500 }"
+            :scroll="{ x: 1500 ,y:675 }"
             bordered
             style="margin-top: 20px"
           >
@@ -57,6 +58,7 @@
               <a @click="handleEdit(record)">删除</a>
             </span>
           </a-table>
+        
         </a-col>
       </a-row>
     </a-card>
@@ -314,4 +316,12 @@ export default {
   },
 }
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+.list {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow: auto;
+
+  height: 725px;
+}
+</style>

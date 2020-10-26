@@ -2,34 +2,26 @@
   <a-layout>
     <div class="form">
       <a-card>
-        <a-form-model ref="ruleForm" :model="{ data }"  :label-col="labelCol" :wrapper-col="wrapperCol">
-          <a-form-model-item v-for="item in data" :label="item.title" :prop="item.key">
-            <a-input v-show="item.inputVisible" v-model="item.value" :placeholder="item.placeholder" @blur="() => {}">
-              <a-button v-show="item.buttonVisible" slot="suffix" type="link" @click="elect">自动获取</a-button>
-            </a-input>
-            <a-input
-              v-show="item.textareaVisible"
-              v-model="item.value"
-              type="textarea"
-              :placeholder="item.placeholder"
-            />
+        <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
+          <a-form-item v-for="item in data" :label="item.title">
+            <a-input v-decorator="item.decorator" v-show="item.inputVisible" />
             <a-cascader
               v-model="item.value"
+              v-decorator="item.decorator"
               v-show="item.selectVisible"
               :field-names="{ label: 'title', value: 'key', children: 'children' }"
               :options="item.selectList"
               placeholder="请选择"
-              @change="onCascaderChange"
             />
             <a-date-picker
               v-show="item.timepickerVisible"
-              v-model="item.value"
               show-time
               format="YYYY-MM-DD HH:mm:ss"
               placeholder="选择日期"
+              v-decorator="item.decorator"
             />
-          </a-form-model-item>
-        </a-form-model>
+          </a-form-item>
+        </a-form>
       </a-card>
     </div>
     <a-layout-footer
@@ -41,7 +33,7 @@
             <a-button type="primary" @click="resetForm">重置表单</a-button>
           </a-col>
           <a-col :span="1" :offset="1">
-            <a-button type="primary" @click="onSubmit">保存</a-button>
+            <a-button type="primary" @click="handleSubmit">保存</a-button>
           </a-col>
           <a-col :span="1" :offset="1">
             <a-button type @click="Back">返回</a-button>
@@ -142,26 +134,13 @@ export default {
       wrapperCol: { span: 22 },
       other: '',
       data: [],
-      form: {
-        productCode: '', //货品编码
-        ProductName: '', //货品名称
-        SpecificationModel: '', //规格型号
-        Barcode: '', //货品条码
-        PackingUnit: '', //包装单位
-        MeasurementUnit: '', //计量单位
-        ConversionRelationship: '', //换算关系
-        desc: '', //货品说明
-        SafetyStock: '', //安全库存
-        MOQ: '', //起订量
-        PurchaseLot: '', //采购批量
-        name: '', //自定义追加项
-        content: '', //自定义追加项内容
-      },
-      rules: {},
+      form: this.$form.createForm(this, { name: 'coordinated' }),
+      rules: ['note', { rules: [{ required: true, message: 'Please input your note!' }] }],
+
       menuid: '03bf0fb1-e9fb-4014-92e7-7121f4f71003',
       urlForm: '/bd/product/materialList',
       materialclassid: '',
-      test:"",
+      test: '',
     }
   },
   created() {
@@ -191,6 +170,25 @@ export default {
     },
   },
   methods: {
+    handleSubmit(e) {
+      e.preventDefault()
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          console.log('Received values of form: ', JSON.stringify(values))
+          var submitUrl = '/bd/product/insterMaterial'
+          
+          submitForm(values, submitUrl)
+            .then((res) => {
+              console.log('submit--->', res)
+              if (res.status == 'SUCCESS') {
+                this.getForm()
+              }
+              this.$message.info(res.status)
+            })
+            .catch(() => {})
+        }
+      })
+    },
     getRules() {
       const columnsParams = {}
       columnsParams.memuid = this.menuid
@@ -209,7 +207,7 @@ export default {
       columnsParams.memuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       columnsParams.materialclassid = this.materialclassid
-      this.urlForm='/bd/product/materialList'
+      this.urlForm = '/bd/product/materialList'
       console.log('url--->', this.urlForm)
       getForm(columnsParams, this.urlForm).then((res) => {
         console.log('form-->', JSON.stringify(res.result))
@@ -232,35 +230,7 @@ export default {
     handleSearchChange(value) {
       console.log(`selected ${value}`)
     },
-    onSubmit() {
-      var submitUrl = '/bd/product/insterMaterial'
 
-      const params = {}
-      params.data = this.data
-      params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      submitForm(params, submitUrl)
-        .then((res) => {
-          console.log('submit--->', res)
-          if (res.status == 'SUCCESS') {
-            this.getForm()
-          }
-          this.$message.info(res.status)
-        })
-        .catch(() => {})
-
-      // this.$refs.ruleForm.validate((valid) => {
-      //   if (valid) {
-      //     console.log(valid)
-      //   } else {
-      //     // 等于false
-      //     console.log('error submit!!')
-      //     //   提示提交失败
-      //     alert('亲，您的填写内容不符合要求，请重新填写！！！')
-      //     return false
-      //     //   结束函数
-      //   }
-      // })
-    },
     // 返回到清单页面
     Back() {
       // 路由跳转
@@ -269,7 +239,7 @@ export default {
     // 重置表单
     resetForm() {
       // 获取整个表单之后，用resetFieldes方法重置表单，使用这个方法时，表单项必须要绑定prop才有效
-      this.getForm()
+       this.form.resetFields();
     },
     handleBlur() {
       console.log('blur')

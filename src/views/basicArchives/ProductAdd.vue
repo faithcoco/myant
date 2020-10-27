@@ -135,7 +135,7 @@ export default {
       other: '',
       data: [],
       form: this.$form.createForm(this, { name: 'coordinated' }),
-      rules: ['note', { rules: [{ required: true, message: 'Please input your note!' }] }],
+     
 
       menuid: '03bf0fb1-e9fb-4014-92e7-7121f4f71003',
       urlForm: '/bd/product/materialList',
@@ -174,9 +174,9 @@ export default {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
-          console.log('Received values of form: ', JSON.stringify(values))
+         
           var submitUrl = '/bd/product/insterMaterial'
-          
+          values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           submitForm(values, submitUrl)
             .then((res) => {
               console.log('submit--->', res)
@@ -294,6 +294,6 @@ export default {
   border-radius: 4px;
   overflow: auto;
 
-  height: 750px;
+  height: 775px;
 }
 </style>

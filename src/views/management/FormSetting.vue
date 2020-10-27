@@ -59,12 +59,16 @@
         </a-table>
 
         <a-row :style="{ marginTop: '30px' }">
-          <a-col :span="1" :offset="10">
+          <a-col :span="1" :offset="8">
+            <a-button type="primary" @click="resetForm">初始化</a-button>
+          </a-col>
+
+          <a-col :span="1" :offset="1">
             <a-button type="primary" @click="onSubmit">保存</a-button>
           </a-col>
 
           <a-col :span="1" :offset="1">
-            <a-button type @click="onBack">返回</a-button>
+            <a-button type @click="onBack">取消</a-button>
           </a-col>
         </a-row>
       </a-col>
@@ -81,7 +85,14 @@
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import OrgModal from '../other/modules/OrgModal'
-import { getFormSettingTree, getServiceList, getFormSettingList, getFormSettingColumns, updateForm } from '@/api/manage'
+import {
+  getFormSettingTree,
+  getServiceList,
+  getFormSettingList,
+  getFormSettingColumns,
+  updateForm,
+  postData,
+} from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
 import Vue from 'vue'
 const columns = []
@@ -149,7 +160,6 @@ export default {
       })
     },
     sortOk(e) {
-
       if (this.currentId == 'fieldsort') {
         if (this.currentItem.fieldsort > this.sortAfter) {
           for (var i = this.sortAfter - 1; i < this.currentItem.fieldsort; i++) {
@@ -161,9 +171,9 @@ export default {
           }
         }
         this.currentItem.fieldsort = this.sortAfter
-      }else{
+      } else {
         //fieldsortlist
-           if (this.currentItem.fieldsortlist > this.sortAfter) {
+        if (this.currentItem.fieldsortlist > this.sortAfter) {
           for (var i = this.sortAfter - 1; i < this.currentItem.fieldsortlist; i++) {
             this.formSettingList.data[i].fieldsortlist = parseInt(i) + 2
           }
@@ -191,7 +201,25 @@ export default {
         this.getlist()
       })
     },
-    onBack(e) {},
+    resetForm(e) {
+      const parameter = {
+        enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
+        memuid: this.menuid,
+    
+      }
+      var url='/bd/FormSetting/initdefault'
+      postData(parameter,url).then((res) => {
+        console.log('init form-->', JSON.stringify(res))
+        if (res.status == 'FAILED') {
+          this.$message.error(res.errorMsg)
+        } else {
+         this.getlist()
+        }
+      })
+    },
+    onBack(e) {
+      this.getlist()
+    },
 
     vdef2Change(value, record) {
       for (const key in this.formSettingList.data) {

@@ -181,9 +181,9 @@ export default {
             .then((res) => {
               console.log('submit--->', res)
               if (res.status == 'SUCCESS') {
-                this.getForm()
+                this.form.resetFields();
               }
-              this.$message.info(res.status)
+              this.$message.info(res.result)
             })
             .catch(() => {})
         }

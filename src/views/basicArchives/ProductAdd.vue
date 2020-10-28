@@ -33,7 +33,7 @@
             <a-button type="primary" @click="resetForm">重置表单</a-button>
           </a-col>
           <a-col :span="1" :offset="1">
-            <a-button type="primary" @click="handleSubmit">保存</a-button>
+            <a-button type="primary" ref="submit" @click="handleSubmit">保存</a-button>
           </a-col>
           <a-col :span="1" :offset="1">
             <a-button type @click="Back">返回</a-button>
@@ -49,6 +49,8 @@ import Vue from 'vue'
 import { formModel, Button } from 'ant-design-vue'
 import { Cascader } from 'ant-design-vue'
 Vue.use(Cascader)
+import { PageHeader } from 'ant-design-vue'
+Vue.use(PageHeader)
 Vue.use(formModel, Button)
 import { postProductAdd } from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
@@ -134,7 +136,6 @@ export default {
       wrapperCol: { span: 22 },
       other: '',
       data: [],
-      form: this.$form.createForm(this, { name: 'coordinated' }),
 
       menuid: '03bf0fb1-e9fb-4014-92e7-7121f4f71003',
       urlForm: '/bd/product/materialList',
@@ -145,6 +146,7 @@ export default {
     this.materialclassid = this.$route.params.materialclassid
     this.getForm()
   },
+
   computed: {
     rowSelection() {
       const { selectedRowKeys } = this
@@ -165,8 +167,13 @@ export default {
       // 深度观察监听
     },
   },
+  beforeCreate() {
+    this.form = this.$form.createForm(this, { name: 'dynamic_form_item' })
+  },
   methods: {
     handleSubmit(e) {
+      const key = this.form.getFieldValue('materialclassid')
+
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
@@ -200,11 +207,13 @@ export default {
         console.log('form-->', JSON.stringify(res.result))
         this.data = res.result
 
-        for (const i in this.data) {
-          this.form.setFieldsValue({
-            [this.data[i].key]: this.data[i].value,
-          })
-        }
+        setTimeout(() => {
+          for (const i in this.data) {
+            this.form.setFieldsValue({
+              [this.data[i].key]: this.data[i].value,
+            })
+          }
+        }, 1000)
       })
     },
     handleChange(info) {
@@ -227,7 +236,7 @@ export default {
     // 返回到清单页面
     Back() {
       // 路由跳转
-      this.$router.push({ name: 'ProductList' })
+      this.$router.push({ name: 'productlist' })
     },
     // 重置表单
     resetForm() {

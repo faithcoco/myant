@@ -22,45 +22,63 @@
           :scroll="{ x: 2000, y: 600 }"
           :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
         >
-          <a slot="fieldsort" slot-scope="text, record" @click="showSort('fieldsort', record)">{{
+          <span slot="fielddecription" slot-scope="text, record">
+            <a-input
+              :disabled="record.fielddisabled"
+              @change="(e) => fieldname(e.target.value, record)"
+              :value="record.fielddecription"
+            />
+          </span>
+          <span slot="fielddisplay" style="margin: 0" slot-scope="text, record">
+            <a-checkbox
+              :disabled="record.fielddisabled"
+              @change="(e) => fielddisplayChange(e.target.checked, record)"
+              :checked="record.fielddisplay"
+            />
+          </span>
+          <a slot="fieldsort"  :disabled="record.fielddisabled" slot-scope="text, record" @click="showSort('fieldsort', record)">{{
             record.fieldsort
           }}</a>
-          <a slot="fieldsortlist" slot-scope="text, record" @click="showSort('fieldsortlist', record)">{{
+          <a slot="fieldsortlist"  :disabled="record.fielddisabled" slot-scope="text, record" @click="showSort('fieldsortlist', record)">{{
             record.fieldsortlist
           }}</a>
 
-          <span slot="fielddecription" slot-scope="text, record">
-            <a-input @change="(e) => fieldname(e.target.value, record)" :value="record.fielddecription" />
-          </span>
-
           <span slot="fieldwidthlist" slot-scope="text, record">
             <a-input
+              :disabled="record.fielddisabled"
               @change="(e) => vdef2Change(e.target.value, record)"
               :value="record.fieldwidthlist"
               style="width: 50px"
             />px
           </span>
-          <span slot="fielddisplay" style="margin: 0" slot-scope="text, record">
-            <a-checkbox @change="(e) => fielddisplayChange(e.target.checked, record)" :checked="record.fielddisplay" />
-          </span>
+
           <span slot="fieldedit" style="margin: 0" slot-scope="text, record">
-            <a-checkbox @change="(e) => fieldeditChange(e.target.checked, record)" :checked="record.fieldedit" />
+            <a-checkbox
+              :disabled="record.fielddisabled"
+              @change="(e) => fieldeditChange(e.target.checked, record)"
+              :checked="record.fieldedit"
+            />
           </span>
 
           <span slot="fielddisplaylist" style="margin: 0" slot-scope="text, record">
             <a-checkbox
               @change="(e) => fielddisplaylistChange(e.target.checked, record)"
               :checked="record.fielddisplaylist"
+              :disabled="record.fielddisabled"
             />
           </span>
           <span slot="fieldmust" style="margin: 0" slot-scope="text, record">
-            <a-checkbox @change="(e) => fieldmustChange(e.target.checked, record)" :checked="record.fieldmust" />
+            <a-checkbox
+              @change="(e) => fieldmustChange(e.target.checked, record)"
+              :checked="record.fieldmust"
+              :disabled="record.fielddisabled"
+            />
           </span>
         </a-table>
 
         <a-row :style="{ marginTop: '30px' }">
-          <a-col :span="1" :offset="8">
-            <a-button type="primary" @click="resetForm">初始化</a-button>
+          <a-col :span="2" :offset="8">
+            <a-button type="primary" @click="resetForm">恢复默认值</a-button>
           </a-col>
 
           <a-col :span="1" :offset="1">
@@ -126,6 +144,7 @@ export default {
       currentItem: '',
       editVisible: false,
       currentId: '',
+      disabled: true,
     }
   },
   created() {
@@ -205,15 +224,14 @@ export default {
       const parameter = {
         enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
         memuid: this.menuid,
-    
       }
-      var url='/bd/FormSetting/initdefault'
-      postData(parameter,url).then((res) => {
+      var url = '/bd/FormSetting/initdefault'
+      postData(parameter, url).then((res) => {
         console.log('init form-->', JSON.stringify(res))
         if (res.status == 'FAILED') {
           this.$message.error(res.errorMsg)
         } else {
-         this.getlist()
+          this.getlist()
         }
       })
     },

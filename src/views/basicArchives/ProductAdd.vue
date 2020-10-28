@@ -6,13 +6,13 @@
           <a-form-item v-for="item in data" :label="item.title">
             <a-input v-decorator="item.decorator" v-show="item.inputVisible" />
             <a-cascader
-              v-model="item.value"
               v-decorator="item.decorator"
               v-show="item.selectVisible"
               :field-names="{ label: 'title', value: 'key', children: 'children' }"
               :options="item.selectList"
               placeholder="请选择"
             />
+
             <a-date-picker
               v-show="item.timepickerVisible"
               show-time
@@ -135,18 +135,15 @@ export default {
       other: '',
       data: [],
       form: this.$form.createForm(this, { name: 'coordinated' }),
-     
 
       menuid: '03bf0fb1-e9fb-4014-92e7-7121f4f71003',
       urlForm: '/bd/product/materialList',
       materialclassid: '',
-      test: '',
     }
   },
   created() {
     this.materialclassid = this.$route.params.materialclassid
     this.getForm()
-    this.getRules()
   },
   computed: {
     rowSelection() {
@@ -164,7 +161,6 @@ export default {
       handler: function (val, oldVal) {
         this.materialclassid = this.$route.params.materialclassid
         this.getForm()
-        this.getRules()
       },
       // 深度观察监听
     },
@@ -174,14 +170,14 @@ export default {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
-         
           var submitUrl = '/bd/product/insterMaterial'
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+          console.log('values', JSON.stringify(values))
           submitForm(values, submitUrl)
             .then((res) => {
-              console.log('submit--->', res)
+              console.log('submit--->', JSON.stringify(res))
               if (res.status == 'SUCCESS') {
-                this.form.resetFields();
+                this.form.resetFields()
               }
               this.$message.info(res.result)
             })
@@ -189,16 +185,7 @@ export default {
         }
       })
     },
-    getRules() {
-      const columnsParams = {}
-      columnsParams.memuid = this.menuid
-      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      this.urlForm = '/bd/product/FormValidation'
-      console.log('columns url--->', this.urlForm)
-      postData(columnsParams, this.urlForm).then((res) => {
-        this.rules = res.result
-      })
-    },
+
     onCascaderChange(value) {
       console.log(this.test)
     },
@@ -212,6 +199,12 @@ export default {
       getForm(columnsParams, this.urlForm).then((res) => {
         console.log('form-->', JSON.stringify(res.result))
         this.data = res.result
+
+        for (const i in this.data) {
+          this.form.setFieldsValue({
+            [this.data[i].key]: this.data[i].value,
+          })
+        }
       })
     },
     handleChange(info) {
@@ -239,7 +232,7 @@ export default {
     // 重置表单
     resetForm() {
       // 获取整个表单之后，用resetFieldes方法重置表单，使用这个方法时，表单项必须要绑定prop才有效
-       this.form.resetFields();
+      this.form.resetFields()
     },
     handleBlur() {
       console.log('blur')

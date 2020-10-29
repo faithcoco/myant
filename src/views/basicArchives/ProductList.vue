@@ -34,31 +34,28 @@
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
           </span>
-       
+
           <a-table
             ref="table"
             size="default"
             :columns="columns"
             :data-source="listdata"
             :alert="false"
-            :scroll="{ x: 1500 ,y:675 }"
+            :scroll="{ x: 1500, y: 675 }"
             bordered
             style="margin-top: 20px"
           >
-            <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
             <span slot="customTitle">
               {{ Operation }}
               <a-icon :type="isfold" :style="{ fontSize: '18px' }" @click="WidthChange()" />
             </span>
             <span slot="action" v-show="Operat_visible" slot-scope="text, record">
-              <a @click="handleDetail(record)">审批</a>
-              <a-divider type="vertical" />
+             
               <a @click="handleEdit(record)">编辑</a>
               <a-divider type="vertical" />
               <a @click="handleEdit(record)">删除</a>
             </span>
           </a-table>
-        
         </a-col>
       </a-row>
     </a-card>
@@ -165,7 +162,7 @@ export default {
       handler: function (val, oldVal) {
         this.initData(val.name)
         this.getTree()
-      this.getList()
+        this.getList()
         this.getColumns()
       },
       // 深度观察监听
@@ -204,6 +201,7 @@ export default {
       console.log('columns url--->', this.urlColumns)
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
+        console.log('columns--->', JSON.stringify(this.columns))
       })
     },
     getTree() {
@@ -234,7 +232,6 @@ export default {
       parameter.pageNo = '1'
       parameter.pageSize = '10'
       getProductList(parameter).then((res) => {
-       
         this.listdata = res.result.data
       })
     },
@@ -282,6 +279,7 @@ export default {
           params: {
             menu: this.$route.name,
             materialclassid: this.materialclassid,
+            tag: 1,
           },
         }) //编程式导航  修改 url，完成跳转
       } else {
@@ -290,7 +288,15 @@ export default {
     },
 
     handleEdit(record) {
-      console.log(record), this.$router.push({ path: '/add' })
+      console.log(record)
+      this.$router.push({
+        name: 'ProductAdd',
+        params: {
+          menu: this.$route.name,
+          materialid: record.materialid,
+          tag: 2,
+        },
+      })
     },
     handleSub(record) {
       console.log(record)

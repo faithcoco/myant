@@ -140,10 +140,12 @@ export default {
       menuid: '03bf0fb1-e9fb-4014-92e7-7121f4f71003',
       urlForm: '/bd/product/materialList',
       materialclassid: '',
+      materialid: '',
+      tag: 0, //1 add 2update
     }
   },
   created() {
-    this.materialclassid = this.$route.params.materialclassid
+    console.log('url---->', this.urlForm)
     this.getForm()
   },
 
@@ -161,7 +163,8 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-        this.materialclassid = this.$route.params.materialclassid
+
+        
         this.getForm()
       },
       // 深度观察监听
@@ -173,11 +176,9 @@ export default {
   methods: {
     handleSubmit(e) {
       const key = this.form.getFieldValue('materialclassid')
-
-      e.preventDefault()
+      var submitUrl = '/bd/product/insterMaterial'
       this.form.validateFields((err, values) => {
         if (!err) {
-          var submitUrl = '/bd/product/insterMaterial'
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           console.log('values', JSON.stringify(values))
           submitForm(values, submitUrl)
@@ -200,11 +201,20 @@ export default {
       const columnsParams = {}
       columnsParams.memuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      columnsParams.materialclassid = this.materialclassid
-      this.urlForm = '/bd/product/materialList'
+
+      if (this.$route.params.tag == 1) {
+        this.materialclassid = this.$route.params.materialclassid
+        columnsParams.materialclassid = this.materialclassid
+        this.urlForm = '/bd/product/materialList'
+      } else if (this.$route.params.tag == 2) {
+        this.materialid = this.$route.params.materialid
+        this.urlForm = '/bd/product/updateform'
+        columnsParams.materialid = this.materialid
+      }
+
       console.log('url--->', this.urlForm)
       getForm(columnsParams, this.urlForm).then((res) => {
-        console.log('form-->', JSON.stringify(res.result))
+        console.log('form-->', JSON.stringify(res))
         this.data = res.result
 
         setTimeout(() => {

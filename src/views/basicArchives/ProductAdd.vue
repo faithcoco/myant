@@ -3,8 +3,14 @@
     <div class="form">
       <a-card>
         <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
-          <a-form-item v-for="item in data" :label="item.title">
-            <a-input v-decorator="item.decorator" v-show="item.inputVisible" />
+          <a-form-item v-for="item in data" :label="item.title" :key="item.key">
+            <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
+            <a-input-number
+              v-decorator="item.decorator"
+              v-show="item.inputnumberVisible"
+              :max="item.fieldmax"
+              :precision="item.fieldprecision"
+            />
             <a-cascader
               v-decorator="item.decorator"
               v-show="item.selectVisible"
@@ -55,67 +61,8 @@ Vue.use(formModel, Button)
 import { postProductAdd } from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
 import { getForm, submitForm, postData } from '@/api/manage'
-const columns = [
-  {
-    title: '选择',
-    dataIndex: 'checked',
-    key: 'checked',
-    width: 80,
-    scopedSlots: { customRender: 'checked' },
-  },
-  {
-    title: '编码',
-    dataIndex: 'code',
-    key: '1',
-    width: 80,
-    scopedSlots: { customRender: 'code' },
-  },
-  {
-    title: '产品名称',
-    dataIndex: 'ProductName',
-    key: '2',
-    width: 100,
-  },
-  {
-    title: '产品条码',
-    dataIndex: 'Barcode',
-    key: '3',
-    width: 100,
-  },
-  {
-    title: '规格型号',
-    dataIndex: 'SpecificationModel',
-    key: '4',
-    width: 100,
-  },
-]
-const selectcolumns = [
-  {
-    title: '编码',
-    dataIndex: 'code',
-    key: '1',
-    width: 80,
-    scopedSlots: { customRender: 'code' },
-  },
-  {
-    title: '产品名称',
-    dataIndex: 'ProductName',
-    key: '2',
-    width: 100,
-  },
-  {
-    title: '产品条码',
-    dataIndex: 'Barcode',
-    key: '3',
-    width: 100,
-  },
-  {
-    title: '规格型号',
-    dataIndex: 'SpecificationModel',
-    key: '4',
-    width: 100,
-  },
-]
+import {Form} from 'ant-design-vue'
+Vue.use(Form)
 
 const numberRow = []
 export default {
@@ -123,10 +70,7 @@ export default {
     return {
       numberRow,
       selectedRow: [],
-      selectcolumns,
-      visible: false,
 
-      columns,
       selectedRowKeys: [],
       headers: {
         authorization: 'authorization-text',
@@ -163,15 +107,13 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-
-        
         this.getForm()
       },
       // 深度观察监听
     },
   },
   beforeCreate() {
-    this.form = this.$form.createForm(this, { name: 'dynamic_form_item' })
+    this.form = this.$form.createForm(this, { name: 'form' })
   },
   methods: {
     handleSubmit(e) {
@@ -219,9 +161,14 @@ export default {
 
         setTimeout(() => {
           for (const i in this.data) {
-            this.form.setFieldsValue({
-              [this.data[i].key]: this.data[i].value,
-            })
+            if (this.data[i].timepickerVisible == true) {
+              this.data[i].value = '2020-11-02 17:30:30'
+            }
+            if (this.data[i].value != '') {
+              this.form.setFieldsValue({
+                [this.data[i].key]: this.data[i].value,
+              })
+            }
           }
         }, 1000)
       })

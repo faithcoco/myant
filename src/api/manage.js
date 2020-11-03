@@ -304,7 +304,8 @@ export function getProductListColumns(parameter, url) {
   })
 }
 export function getForm(parameter, url) {
-  console.log('getform req-->', JSON.stringify(parameter))
+  console.log('form-->', JSON.stringify(parameter))
+  console.log('form url-->', url)
   return axios({
     url: url,
     method: 'get',

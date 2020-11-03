@@ -253,6 +253,6 @@ export default {
   border-radius: 4px;
   overflow: auto;
 
-  height: 775px;
+  height: 725px;
 }
 </style>

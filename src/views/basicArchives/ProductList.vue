@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="list-layout">
     <a-card>
       <a-row :gutter="10">
         <a-col :span="4">
@@ -41,7 +41,7 @@
             :columns="columns"
             :data-source="listdata"
             :alert="false"
-            :scroll="{ x: 1500, y: 675 }"
+            :scroll="{ x: 1500, y: 500 }"
             bordered
             style="margin-top: 20px"
           >
@@ -134,7 +134,7 @@ export default {
       isfold: 'menu-unfold',
       size: 'small',
       targetKeys: [],
-      selectedKeys: [],
+      selectedKeys: ['f5728e20-ca54-4549-bd9f-e178a94b13a2'],
       disabled: false,
       listdata: [],
 
@@ -210,6 +210,9 @@ export default {
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
         console.log('tree res-->', JSON.stringify(res))
         this.classifyTree = res.result
+        this.expandedKeys=['2512774b-0049-4337-8150-71e4c1397813']
+        this.materialclassid=res.result[0].children[0].key
+        this.getList()
       })
     },
     onExpand(expandedKeys) {
@@ -323,11 +326,14 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-.list {
+
+
+.list-layout {
   border: 1px solid #e8e8e8;
   border-radius: 4px;
   overflow: auto;
 
   height: 725px;
 }
+
 </style>

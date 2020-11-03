@@ -1,4 +1,5 @@
 <template>
+<div class="list-layout">
   <a-card :bordered="false">
     <a-row :gutter="8">
       <a-col :span="4">
@@ -19,7 +20,7 @@
           :columns="columns"
           :data-source="formSettingList.data"
           bordered
-          :scroll="{ x: 2000, y: 600 }"
+          :scroll="{ x: 2000, y: 550 }"
           :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
         >
           <span slot="fielddecription" slot-scope="text, record">
@@ -97,6 +98,7 @@
     </a-modal>
     <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" />
   </a-card>
+</div>
 </template>
 
 <script>
@@ -292,12 +294,20 @@ export default {
 </script>
 
 <style lang="less">
+.list-layout {
+  border: 1px solid #e8e8e8;
+  border-radius: 4px;
+  overflow: auto;
+
+  height: 725px;
+}
+
 .tree {
   border: 1px solid #e8e8e8;
   border-radius: 4px;
   overflow: auto;
   padding: 8px 2px;
-  height: 680px;
+  height: 600px;
 }
 .custom-tree {
   /deep/ .ant-menu-item-group-title {

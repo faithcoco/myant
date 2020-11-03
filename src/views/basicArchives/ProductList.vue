@@ -1,5 +1,5 @@
 <template>
-  <div class="list-layout">
+  <div >
     <a-card>
       <a-row :gutter="10">
         <a-col :span="4">
@@ -41,7 +41,7 @@
             :columns="columns"
             :data-source="listdata"
             :alert="false"
-            :scroll="{ x: 1500, y: 500 }"
+            :scroll="{ x: 1500, y: 525 }"
             bordered
             style="margin-top: 20px"
           >
@@ -327,13 +327,5 @@ export default {
 </script>
 <style lang="less" scoped>
 
-
-.list-layout {
-  border: 1px solid #e8e8e8;
-  border-radius: 4px;
-  overflow: auto;
-
-  height: 725px;
-}
 
 </style>

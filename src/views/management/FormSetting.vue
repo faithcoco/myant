@@ -1,5 +1,5 @@
 <template>
-<div class="list-layout">
+<div >
   <a-card :bordered="false">
     <a-row :gutter="8">
       <a-col :span="4">
@@ -20,7 +20,7 @@
           :columns="columns"
           :data-source="formSettingList.data"
           bordered
-          :scroll="{ x: 2000, y: 550 }"
+          :scroll="{ x: 2000, y: 575 }"
           :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
         >
           <span slot="fielddecription" slot-scope="text, record">
@@ -294,13 +294,6 @@ export default {
 </script>
 
 <style lang="less">
-.list-layout {
-  border: 1px solid #e8e8e8;
-  border-radius: 4px;
-  overflow: auto;
-
-  height: 725px;
-}
 
 .tree {
   border: 1px solid #e8e8e8;
@@ -309,38 +302,5 @@ export default {
   padding: 8px 2px;
   height: 600px;
 }
-.custom-tree {
-  /deep/ .ant-menu-item-group-title {
-    position: relative;
-    &:hover {
-      .btn {
-        display: block;
-      }
-    }
-  }
 
-  /deep/ .ant-menu-item {
-    &:hover {
-      .btn {
-        display: block;
-      }
-    }
-  }
-
-  /deep/ .btn {
-    display: none;
-    position: absolute;
-    top: 0;
-    right: 10px;
-    width: 20px;
-    height: 40px;
-    line-height: 40px;
-    z-index: 1050;
-
-    &:hover {
-      transform: scale(1.2);
-      transition: 0.5s all;
-    }
-  }
-}
 </style>

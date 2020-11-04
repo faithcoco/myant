@@ -80,7 +80,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getProductList, getProductListColumns, getclassificationGoodsList, postData } from '@/api/manage'
+import { getProductList, getProductListColumns, getclassificationGoodsList, postData, getData } from '@/api/manage'
 import action from '../../core/directives/action'
 import Approval from '../Approval'
 import { logininfo, menuname } from '@/store/mutation-types'
@@ -146,7 +146,7 @@ export default {
       titleTree: '',
       urlTree: '',
       urlColumns: '',
-      urlList:'',
+      urlList: '',
       materialclassid: '',
       menuname: '',
       materialid: '',
@@ -154,17 +154,11 @@ export default {
   },
   mounted() {
     this.initData(this.$route.name)
-    this.getTree()
-    this.getColumns()
-    this.getList()
   },
   watch: {
     $route: {
       handler: function (val, oldVal) {
         this.initData(val.name)
-        this.getTree()
-        this.getList()
-        this.getColumns()
       },
       // 深度观察监听
     },
@@ -193,32 +187,46 @@ export default {
     },
     initData(name) {
       this.menuname = name
-      console.log("menu name-->",name)
+      console.log('menu name-->', name)
       if (name == 'ProductList') {
         this.titleTree = '货品分类'
         this.urlTree = '/bd/product/materialClassTree'
         this.urlColumns = '/bd/product/productList/columns'
-        this.urlList='/bd/product/productList'
+        this.urlList = '/bd/product/productList'
+        this.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71003'
       } else if (name == 'PersonnelSetting') {
         this.titleTree = '部门结构'
         this.urlTree = '/bd/Sector'
         this.urlColumns = '/sys/setting/getSetting'
-        this.urlList='/bd/baseperson/PersonnelSettingList'
+        this.urlList = '/bd/baseperson/PersonnelSettingList'
+        this.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
       } else if (name == 'SupplierList') {
         this.titleTree = '供应商'
         this.urlTree = '/bd/basevendor/vendorTree'
         this.urlColumns = '/bd/basevendor/vendorColumns'
-        this.urlList='/bd/basevendor/vendorlist'
+        this.urlList = '/bd/basevendor/vendorlist'
+        this.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71004'
       }
-      console.log("route-->",JSON.stringify(this.$route.meta.permission) )
-      this.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
+      console.log('route-->', JSON.stringify(this.$route.meta.permission))
+      const parameter = {}
+      parameter.memucode = this.$route.meta.permission
+      var url = '/bd/menu/findallmenu'
+
+      // getData(parameter, url).then((res) => {
+      //   console.log("data-->",JSON.stringify(res))
+      //   this.menuid = res.result
+
+      // })
+      this.getTree()
+      this.getList()
+      this.getColumns()
     },
     getColumns() {
       const columnsParams = {}
       columnsParams.menuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       console.log('columns url--->', this.urlColumns)
-      console.log('columns parameter-->',columnsParams)
+      console.log('columns parameter-->', columnsParams)
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
         console.log('columns data--->', JSON.stringify(this.columns))
@@ -228,7 +236,6 @@ export default {
       const parameter = {}
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
-     
         this.classifyTree = res.result
         this.expandedKeys = ['2512774b-0049-4337-8150-71e4c1397813']
         this.materialclassid = res.result[0].children[0].key
@@ -242,7 +249,6 @@ export default {
     },
 
     onSelect(selectedKeys, info) {
-    
       this.selectedKeys = selectedKeys
       this.materialclassid = selectedKeys[selectedKeys.length - 1]
       this.getList()

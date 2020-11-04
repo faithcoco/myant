@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div>
     <a-card>
       <a-row :gutter="10">
         <a-col :span="4">
@@ -50,10 +50,9 @@
               <a-icon :type="isfold" :style="{ fontSize: '18px' }" @click="WidthChange()" />
             </span>
             <span slot="action" v-show="Operat_visible" slot-scope="text, record">
-             
               <a @click="handleEdit(record)">编辑</a>
               <a-divider type="vertical" />
-              <a @click="handleEdit(record)">删除</a>
+              <a @click="deleteItem(record)">删除</a>
             </span>
           </a-table>
         </a-col>
@@ -81,10 +80,11 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getProductList, getProductListColumns, getclassificationGoodsList } from '@/api/manage'
+import { getProductList, getProductListColumns, getclassificationGoodsList, postData } from '@/api/manage'
 import action from '../../core/directives/action'
 import Approval from '../Approval'
-import { logininfo } from '@/store/mutation-types'
+import { logininfo, menuname } from '@/store/mutation-types'
+
 
 const columns = []
 const selectList = [
@@ -149,6 +149,7 @@ export default {
       urlColumns: '',
       materialclassid: '',
       menuname: '',
+      materialid:''
     }
   },
   mounted() {
@@ -180,6 +181,16 @@ export default {
     },
   },
   methods: {
+    delete() {
+      const columnsParams = {}
+      columnsParams.materialid = this.materialid
+      this.urlColumns='/bd/product/delMaterialById'
+      console.log('url--->', this.urlColumns)
+      postData(columnsParams, this.urlColumns).then((res) => {
+        console.log("res",JSON.stringify(res))
+        this.getList()
+      })
+    },
     initData(name) {
       this.menuname = name
       if (name == 'productlist') {
@@ -210,8 +221,8 @@ export default {
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
         console.log('tree res-->', JSON.stringify(res))
         this.classifyTree = res.result
-        this.expandedKeys=['2512774b-0049-4337-8150-71e4c1397813']
-        this.materialclassid=res.result[0].children[0].key
+        this.expandedKeys = ['2512774b-0049-4337-8150-71e4c1397813']
+        this.materialclassid = res.result[0].children[0].key
         this.getList()
       })
     },
@@ -267,12 +278,13 @@ export default {
       }
     },
     Classify() {
+      Vue.ls.set(menuname, this.$route.name)
       this.$router.push({
         name: 'ClassificationGoods',
         params: {
           menu: this.$route.name,
         },
-      }) //编程式导航  修改 url，完成跳转
+      })
     },
     add() {
       console.log('current--->', this.materialclassid)
@@ -301,6 +313,10 @@ export default {
         },
       })
     },
+    deleteItem(record) {
+      this.materialid=record.materialid
+      this.delete()
+    },
     handleSub(record) {
       console.log(record)
     },
@@ -326,6 +342,4 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-
-
 </style>

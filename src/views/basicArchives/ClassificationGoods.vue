@@ -34,7 +34,7 @@
 </template>
 <script>
 import { getclassificationGoodsColumns, getclassificationGoodsList, insertmaterialClass, getData } from '@/api/manage'
-import { logininfo } from '@/store/mutation-types'
+import { logininfo, menuname } from '@/store/mutation-types'
 import Vue from 'vue'
 export default {
   data() {
@@ -81,21 +81,12 @@ export default {
     }
   },
   created() {
-    // getclassificationGoodsColumns().then((res) => {
-    //   this.columns = res.columns
-
-    //   console.log('columns-->', JSON.stringify(res.columns))
-    // })
-    console.log('route-->', this.$route.params.menu)
-
-    this.initData(this.$route.params.menu)
+    this.initData(Vue.ls.get(menuname))
   },
   watch: {
     $route: {
       handler: function (val, oldVal) {
-        console.log('watch--->', val.params.menu)
-
-        this.initData(val.params.menu)
+        this.initData(Vue.ls.get(menuname))
       },
       // 深度观察监听
     },
@@ -103,18 +94,18 @@ export default {
   methods: {
     initData(name) {
       this.name = name
+      console.log('name-->', name)
       if (name == 'productlist') {
         this.url = '/bd/product/materialClassTree'
-        this.urlAdd = '/bd/product/insertmaterialClass'
       } else {
         this.url = '/bd/Sector'
-        this.urlAdd = '/bd/insertDepartment'
       }
       this.getList()
     },
     getList() {
       const parameter = {}
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      console.log('url-->', this.url)
       getclassificationGoodsList(parameter, this.url).then((res) => {
         console.log('list-->', JSON.stringify(res))
         this.list = res.result
@@ -123,12 +114,14 @@ export default {
     insertmaterialClass() {
       const parameter = {}
       if (this.name == 'productlist') {
+        this.urlAdd = '/bd/product/insertmaterialClass'
         parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         parameter.materialclasscode = this.materialclasscode
         parameter.materialclassname = this.materialclassname
         parameter.materialclassgrade = ''
         parameter.fatherid = this.id
       } else {
+        this.urlAdd = '/bd/insertDepartment'
         parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         parameter.fatherid = this.id
         parameter.departmentname = this.materialclassname
@@ -177,13 +170,13 @@ export default {
         parameter.departmentid = this.id
         this.urlAdd = '/bd/deleteDepartment'
       }
-
+      console.log('delete-->', JSON.stringify(parameter))
       getData(parameter, this.urlAdd).then((res) => {
-        console.log('add-->', JSON.stringify(res))
+        console.log('delete-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.getList()
         } else {
-          this.$message.warning(res.status)
+          this.$message.warning(res.result)
         }
       })
     },

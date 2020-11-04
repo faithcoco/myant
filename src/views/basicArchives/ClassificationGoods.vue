@@ -95,7 +95,7 @@ export default {
     initData(name) {
       this.name = name
       console.log('name-->', name)
-      if (name == 'productlist') {
+      if (name == 'ProductList') {
         this.url = '/bd/product/materialClassTree'
       } else {
         this.url = '/bd/Sector'
@@ -113,7 +113,7 @@ export default {
     },
     insertmaterialClass() {
       const parameter = {}
-      if (this.name == 'productlist') {
+      if (this.name == 'ProductList') {
         this.urlAdd = '/bd/product/insertmaterialClass'
         parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         parameter.materialclasscode = this.materialclasscode
@@ -140,7 +140,7 @@ export default {
     },
     update() {
       const parameter = {}
-      if (this.name == 'productlist') {
+      if (this.name == 'ProductList') {
         parameter.materialclasscode = this.typeCode
         parameter.materialclassname = this.typeName
         parameter.materialclassid = this.id
@@ -163,7 +163,7 @@ export default {
     },
     delete() {
       const parameter = {}
-      if (this.name == 'productlist') {
+      if (this.name == 'ProductList') {
         parameter.materialclassid = this.id
         this.urlAdd = '/bd/product/delmaterialClassById'
       } else {

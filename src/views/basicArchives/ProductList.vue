@@ -85,7 +85,6 @@ import action from '../../core/directives/action'
 import Approval from '../Approval'
 import { logininfo, menuname } from '@/store/mutation-types'
 
-
 const columns = []
 const selectList = [
   { value: '全部' },
@@ -147,9 +146,10 @@ export default {
       titleTree: '',
       urlTree: '',
       urlColumns: '',
+      urlList:'',
       materialclassid: '',
       menuname: '',
-      materialid:''
+      materialid: '',
     }
   },
   mounted() {
@@ -184,42 +184,51 @@ export default {
     delete() {
       const columnsParams = {}
       columnsParams.materialid = this.materialid
-      this.urlColumns='/bd/product/delMaterialById'
+      this.urlColumns = '/bd/product/delMaterialById'
       console.log('url--->', this.urlColumns)
       postData(columnsParams, this.urlColumns).then((res) => {
-        console.log("res",JSON.stringify(res))
+        console.log('res', JSON.stringify(res))
         this.getList()
       })
     },
     initData(name) {
       this.menuname = name
-      if (name == 'productlist') {
+      console.log("menu name-->",name)
+      if (name == 'ProductList') {
         this.titleTree = '货品分类'
         this.urlTree = '/bd/product/materialClassTree'
         this.urlColumns = '/bd/product/productList/columns'
-        this.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71003'
-      } else {
+        this.urlList='/bd/product/productList'
+      } else if (name == 'PersonnelSetting') {
         this.titleTree = '部门结构'
         this.urlTree = '/bd/Sector'
-        this.urlColumns = '/bd/product/productList/columns'
-        this.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
+        this.urlColumns = '/sys/setting/getSetting'
+        this.urlList='/bd/baseperson/PersonnelSettingList'
+      } else if (name == 'SupplierList') {
+        this.titleTree = '供应商'
+        this.urlTree = '/bd/basevendor/vendorTree'
+        this.urlColumns = '/bd/basevendor/vendorColumns'
+        this.urlList='/bd/basevendor/vendorlist'
       }
+      console.log("route-->",JSON.stringify(this.$route.meta.permission) )
+      this.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
     },
     getColumns() {
       const columnsParams = {}
       columnsParams.menuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       console.log('columns url--->', this.urlColumns)
+      console.log('columns parameter-->',columnsParams)
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-        console.log('columns--->', JSON.stringify(this.columns))
+        console.log('columns data--->', JSON.stringify(this.columns))
       })
     },
     getTree() {
       const parameter = {}
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
-        console.log('tree res-->', JSON.stringify(res))
+     
         this.classifyTree = res.result
         this.expandedKeys = ['2512774b-0049-4337-8150-71e4c1397813']
         this.materialclassid = res.result[0].children[0].key
@@ -233,7 +242,7 @@ export default {
     },
 
     onSelect(selectedKeys, info) {
-      console.log('onSelect', info)
+    
       this.selectedKeys = selectedKeys
       this.materialclassid = selectedKeys[selectedKeys.length - 1]
       this.getList()
@@ -288,7 +297,7 @@ export default {
     },
     add() {
       console.log('current--->', this.materialclassid)
-      if (this.menuname == 'productlist') {
+      if (this.menuname == 'ProductList') {
         this.$router.push({
           name: 'ProductAdd',
           params: {
@@ -314,7 +323,7 @@ export default {
       })
     },
     deleteItem(record) {
-      this.materialid=record.materialid
+      this.materialid = record.materialid
       this.delete()
     },
     handleSub(record) {

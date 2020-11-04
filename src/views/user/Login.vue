@@ -187,7 +187,7 @@ export default {
       const loginParams = {}
 
       loginParams.phone = e.target.value
-      if (loginParams.phone.length == 11) {
+    
         getCompanyList(loginParams)
           .then((res) => {
             console.log('getCompanyList-->', JSON.stringify(res))
@@ -202,7 +202,7 @@ export default {
           .catch(() => {
             this.requiredTwoStepCaptcha = false
           })
-      }
+      
     },
     handleChange(value) {
       console.log('change', value)

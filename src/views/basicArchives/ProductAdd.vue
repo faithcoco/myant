@@ -36,7 +36,7 @@
       <a-card>
         <a-row>
           <a-col :span="1" :offset="4">
-            <a-button type="primary" @click="resetForm">重置表单</a-button>
+            <a-button type="primary" @click="resetForm" v-show="false">重置表单</a-button>
           </a-col>
           <a-col :span="1" :offset="1">
             <a-button type="primary" ref="submit" @click="handleSubmit">保存</a-button>

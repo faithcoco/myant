@@ -9,7 +9,7 @@
             :openKeys.sync="openKeys"
             :search="true"
             @click="handleClick"
-            @add="handleAdd"
+           
             @titleClick="handleTitleClick"
             v-model="selectedKeys"
           ></s-tree>

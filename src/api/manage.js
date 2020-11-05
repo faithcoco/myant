@@ -541,7 +541,7 @@ export function insertmaterialClass(parameter,url) {
   })
 }
 export function getData(parameter,url) {
-  console.log('getdata req-->', JSON.stringify(parameter))
+  
   return axios({
     url: url,
     method: 'get',

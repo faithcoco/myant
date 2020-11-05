@@ -6,7 +6,9 @@
           <span>{{ titleTree }}</span>
           <a-button style="margin-left: 40px" type="primary" @click="Classify()">分类设置</a-button>
           <a-divider type="horizontal" />
+
           <a-tree
+            v-show="tree_visible"
             showLine
             v-model="checkedKeys"
             :expanded-keys="expandedKeys"
@@ -45,10 +47,6 @@
             bordered
             style="margin-top: 20px"
           >
-            <span slot="customTitle">
-              {{ Operation }}
-              <a-icon :type="isfold" :style="{ fontSize: '18px' }" @click="WidthChange()" />
-            </span>
             <span slot="action" v-show="Operat_visible" slot-scope="text, record">
               <a @click="handleEdit(record)">编辑</a>
               <a-divider type="vertical" />
@@ -105,8 +103,6 @@ const selectList = [
   { value: '单位毛重' },
 ]
 
-const product = {}
-const targetTitle = columns
 const Operat_visible = true
 export default {
   components: {
@@ -118,25 +114,14 @@ export default {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
-      openKeys: ['key-01'],
       selectList,
-      approval_visible: false,
       Operat_visible,
-      Operation: '操作',
-      visible_transfer: false,
       confirmLoading: false,
-      product,
       columns,
-      targetTitle,
       queryParam: {},
       selectedRowKeys: [],
-      isfold: 'menu-unfold',
-      size: 'small',
-      targetKeys: [],
       selectedKeys: ['f5728e20-ca54-4549-bd9f-e178a94b13a2'],
-      disabled: false,
       listdata: [],
-
       classifyTree: [],
       moment,
       menuid: '',
@@ -150,6 +135,9 @@ export default {
       materialclassid: '',
       menuname: '',
       materialid: '',
+      approval_visible: false,
+      tree_visible: true,
+      product: {},
     }
   },
   mounted() {
@@ -193,33 +181,30 @@ export default {
         this.urlTree = '/bd/product/materialClassTree'
         this.urlColumns = '/bd/product/productList/columns'
         this.urlList = '/bd/product/productList'
-        this.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71003'
       } else if (name == 'PersonnelSetting') {
         this.titleTree = '部门结构'
         this.urlTree = '/bd/Sector'
         this.urlColumns = '/sys/setting/getSetting'
         this.urlList = '/bd/baseperson/PersonnelSettingList'
-        this.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
       } else if (name == 'SupplierList') {
         this.titleTree = '供应商'
         this.urlTree = '/bd/basevendor/vendorTree'
         this.urlColumns = '/bd/basevendor/vendorColumns'
         this.urlList = '/bd/basevendor/vendorlist'
-        this.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71004'
       }
-      console.log('route-->', JSON.stringify(this.$route.meta.permission))
+
       const parameter = {}
-      parameter.memucode = this.$route.meta.permission
+      parameter.memucode = this.$route.meta.permission[0]
       var url = '/bd/menu/findallmenu'
+      console.log('gtmenuid res-->', JSON.stringify(parameter))
+      getData(parameter, url).then((res) => {
+        console.log('menu id-->', JSON.stringify(res))
 
-      // getData(parameter, url).then((res) => {
-      //   console.log("data-->",JSON.stringify(res))
-      //   this.menuid = res.result
-
-      // })
-      this.getTree()
-      this.getList()
-      this.getColumns()
+        this.menuid = res.result
+        this.getTree()
+        this.getList()
+        this.getColumns()
+      })
     },
     getColumns() {
       const columnsParams = {}
@@ -233,13 +218,16 @@ export default {
       })
     },
     getTree() {
+     
       const parameter = {}
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
         this.classifyTree = res.result
-        this.expandedKeys = ['2512774b-0049-4337-8150-71e4c1397813']
+        console.log('tree', JSON.stringify(this.classifyTree))
+        this.expandedKeys.push(this.classifyTree[0].key)
         this.materialclassid = res.result[0].children[0].key
         this.getList()
+        
       })
     },
     onExpand(expandedKeys) {
@@ -272,26 +260,7 @@ export default {
       this.$refs.table.refresh(true) //用refresh方法刷新表格
     },
     selectChange() {},
-    handleDetail(record) {
-      console.log(record), (this.approval_visible = true), (this.product = record)
-    },
-    WidthChange() {
-      for (const key in this.columns) {
-        if (this.columns[key].dataIndex == 'action') {
-          if (this.Operat_visible) {
-            this.Operat_visible = false
-            this.columns[key].width = 35
-            this.Operation = ''
-            this.isfold = 'menu-fold'
-          } else {
-            this.Operat_visible = true
-            this.columns[key].width = 155
-            this.Operation = '操作'
-            this.isfold = 'menu-unfold'
-          }
-        }
-      }
-    },
+
     Classify() {
       Vue.ls.set(menuname, this.$route.name)
       this.$router.push({
@@ -302,7 +271,6 @@ export default {
       })
     },
     add() {
-      console.log('current--->', this.materialclassid)
       if (this.menuname == 'ProductList') {
         this.$router.push({
           name: 'ProductAdd',
@@ -312,8 +280,17 @@ export default {
             tag: 1,
           },
         }) //编程式导航  修改 url，完成跳转
-      } else {
+      } else if (this.menuname == 'PersonnelSetting') {
         this.$router.push({ name: 'PersonSettingAdd', query: { departmentid: this.materialclassid, operation: 'add' } })
+      } else if (this.menuname == 'SupplierList') {
+        this.$router.push({
+          name: 'ProductAdd',
+          params: {
+            menu: this.$route.name,
+            materialclassid: this.materialclassid,
+            tag: 1,
+          },
+        }) //编程式导航  修改 url，完成跳转
       }
     },
 
@@ -338,12 +315,6 @@ export default {
 
     change(visible) {
       this.approval_visible = visible
-    },
-    handleClick(e) {
-      console.log('handleClick', e)
-
-      // this.menuid=e.materialclassid
-      // this.getList()
     },
     handleAdd(item) {
       console.log('add button, item', item)

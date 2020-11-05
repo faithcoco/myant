@@ -78,6 +78,8 @@ export default {
       urlAdd: '',
       name: '',
       tag: 0, //1新增 2编辑
+      urlUpdate: '',
+      urlDelete: '',
     }
   },
   created() {
@@ -95,11 +97,22 @@ export default {
     initData(name) {
       this.name = name
       console.log('name-->', name)
+
       if (name == 'ProductList') {
         this.url = '/bd/product/materialClassTree'
-      } else {
+        this.urlAdd = '/bd/product/insertmaterialClass'
+        this.urlUpdate = '/bd/product/updatematerialClass'
+        this.urlDelete = '/bd/product/delmaterialClassById'
+      } else if (name == 'PersonnelSetting') {
         this.url = '/bd/Sector'
+        this.urlAdd = '/bd/insertDepartment'
+        this.urlUpdate = '/bd/updateDepartment'
+      } else if (name == 'SupplierList') {
+        this.url = '/bd/basevendor/vendorTree'
+        this.urlAdd = '/bd/basevendor/insterVenderClass'
+        this.urlDelete = '/bd/deleteDepartment'
       }
+
       this.getList()
     },
     getList() {
@@ -114,18 +127,21 @@ export default {
     insertmaterialClass() {
       const parameter = {}
       if (this.name == 'ProductList') {
-        this.urlAdd = '/bd/product/insertmaterialClass'
         parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         parameter.materialclasscode = this.materialclasscode
         parameter.materialclassname = this.materialclassname
         parameter.materialclassgrade = ''
         parameter.fatherid = this.id
-      } else {
-        this.urlAdd = '/bd/insertDepartment'
+      } else if (name == 'PersonnelSetting') {
         parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         parameter.fatherid = this.id
         parameter.departmentname = this.materialclassname
         parameter.departmentcode = this.materialclasscode
+      } else if (name == 'SupplierList') {
+        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+        parameter.fatherid = this.id
+        parameter.vendorclassname = this.materialclassname
+        parameter.vendorclasscode = this.materialclasscode
       }
 
       console.log('add url-->', this.urlAdd)
@@ -144,15 +160,17 @@ export default {
         parameter.materialclasscode = this.typeCode
         parameter.materialclassname = this.typeName
         parameter.materialclassid = this.id
-        this.urlAdd = '/bd/product/updatematerialClass'
-      } else {
+      } else if (name == 'PersonnelSetting') {
         parameter.departmentid = this.id
         parameter.departmentname = this.typeName
         parameter.departmentcode = this.typeCode
-        this.urlAdd = '/bd/updateDepartment'
+      } else if (name == 'SupplierList') {
+        parameter.vendorclassid = this.id
+        parameter.vendorclasscode = this.typeName
+        parameter.vendorclassname = this.typeCode
       }
 
-      insertmaterialClass(parameter, this.urlAdd).then((res) => {
+      insertmaterialClass(parameter, this.urlUpdate).then((res) => {
         console.log('update res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.getList()
@@ -163,15 +181,17 @@ export default {
     },
     delete() {
       const parameter = {}
+
       if (this.name == 'ProductList') {
         parameter.materialclassid = this.id
-        this.urlAdd = '/bd/product/delmaterialClassById'
-      } else {
+      } else if (name == 'PersonnelSetting') {
         parameter.departmentid = this.id
-        this.urlAdd = '/bd/deleteDepartment'
+      } else if (name == 'SupplierList') {
+        parameter.vendorclassid = this.id
       }
+
       console.log('delete-->', JSON.stringify(parameter))
-      getData(parameter, this.urlAdd).then((res) => {
+      getData(parameter, this.urlDelete).then((res) => {
         console.log('delete-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.getList()

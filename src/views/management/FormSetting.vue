@@ -249,7 +249,7 @@ export default {
       }
     },
     fieldname(value, record) {
-      record.fieldname = value
+      record.fielddecription = value
     },
     fieldeditChange(value, record) {
       record.fieldedit = value

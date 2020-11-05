@@ -82,7 +82,7 @@ export default {
       data: [],
 
       menuid: '03bf0fb1-e9fb-4014-92e7-7121f4f71003',
-      urlForm: '/bd/product/materialList',
+      urlForm: '',
       materialclassid: '',
       materialid: '',
       tag: 0, //1 add 2update
@@ -205,14 +205,6 @@ export default {
     },
     handleFocus() {
       console.log('focus')
-    },
-    filterOption(input, option) {
-      //   console.log(option.componentOptions)
-      //   console.log(input.toLowerCase())
-      return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
-
-      //toLowerCase() 方法用于把字符串转换为小写。
-      //indexOf() 方法可返回某个指定的字符串值在字符串中首次出现的位置。
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys

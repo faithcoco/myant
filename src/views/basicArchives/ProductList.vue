@@ -270,6 +270,7 @@ export default {
     },
     add() {
       Vue.ls.set(menuname, this.$route.name)
+      console.log('menuname-->',this.menuname)
       if (this.menuname == 'ProductList') {
         this.$router.push({
           name: 'ProductAdd',
@@ -280,12 +281,13 @@ export default {
             tag: 1,
           },
         }) //编程式导航  修改 url，完成跳转
+    
       } else if (this.menuname == 'PersonnelSetting') {
-        this.$router.push({ name: 'PersonSettingAdd', query: { departmentid: this.materialclassid, operation: 'add' } })
+
+        this.$router.push({ name: 'PersonsettingAdd', query: { departmentid: this.materialclassid, operation: 'add' } })
       } else if (this.menuname == 'SupplierList') {
-        console.log('add', this.$route.name)
         this.$router.push({
-          name: 'SupplierList',
+          name: 'ProductAdd',
           params: {
             menu: this.$route.name,
             menuid: this.menuid,

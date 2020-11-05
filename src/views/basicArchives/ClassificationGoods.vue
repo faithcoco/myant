@@ -185,9 +185,9 @@ export default {
 
       if (this.name == 'ProductList') {
         parameter.materialclassid = this.id
-      } else if (name == 'PersonnelSetting') {
+      } else if (this.name == 'PersonnelSetting') {
         parameter.departmentid = this.id
-      } else if (name == 'SupplierList') {
+      } else if (this.name == 'SupplierList') {
         parameter.vendorclassid = this.id
       }
 
@@ -198,7 +198,7 @@ export default {
           this.getList()
         } else {
         
-            this.$message.warning(res.result)
+            this.$message.warning(res.errorMsg)
         }
       })
     },

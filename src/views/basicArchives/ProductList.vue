@@ -248,7 +248,6 @@ export default {
       parameter.pageSize = '10'
       getProductList(parameter).then((res) => {
         this.listdata = res.result.data
-        
       })
     },
     onSearch(value) {
@@ -270,7 +269,6 @@ export default {
       })
     },
     add() {
-     
       Vue.ls.set(menuname, this.$route.name)
       if (this.menuname == 'ProductList') {
         this.$router.push({
@@ -285,7 +283,7 @@ export default {
       } else if (this.menuname == 'PersonnelSetting') {
         this.$router.push({ name: 'PersonSettingAdd', query: { departmentid: this.materialclassid, operation: 'add' } })
       } else if (this.menuname == 'SupplierList') {
-         console.log('add',this.$route.name)
+        console.log('add', this.$route.name)
         this.$router.push({
           name: 'SupplierList',
           params: {

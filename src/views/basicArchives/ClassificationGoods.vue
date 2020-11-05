@@ -107,6 +107,7 @@ export default {
         this.url = '/bd/Sector'
         this.urlAdd = '/bd/insertDepartment'
         this.urlUpdate = '/bd/updateDepartment'
+        this.urlDelete = '/bd/deleteDepartment'
       } else if (name == 'SupplierList') {
         this.url = '/bd/basevendor/vendorTree'
         this.urlAdd = '/bd/basevendor/insterVenderClass'
@@ -150,7 +151,7 @@ export default {
         if (res.status == 'SUCCESS') {
           this.getList()
         } else {
-          this.$message.warning(res.status)
+          this.$message.warning(res.errorMsg)
         }
       })
     },
@@ -196,7 +197,8 @@ export default {
         if (res.status == 'SUCCESS') {
           this.getList()
         } else {
-          this.$message.warning(res.result)
+        
+            this.$message.warning(res.result)
         }
       })
     },

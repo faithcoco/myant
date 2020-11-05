@@ -210,7 +210,7 @@ export default {
     // 返回到清单页面
     Back() {
       // 路由跳转
-      this.$router.push({ name: 'productlist' })
+     this.$router.go(-1)
     },
     // 重置表单
     resetForm() {

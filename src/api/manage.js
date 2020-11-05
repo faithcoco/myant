@@ -596,7 +596,7 @@ export function getServiceList(parameter) {
   })
 }
 export function getProductList(parameter) {
-  console.log('/getProductList req-->', JSON.stringify(parameter))
+  
   return axios({
     url: api.productList,
     method: 'get',

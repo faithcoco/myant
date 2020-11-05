@@ -218,7 +218,6 @@ export default {
       })
     },
     getTree() {
-     
       const parameter = {}
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
@@ -227,7 +226,6 @@ export default {
         this.expandedKeys.push(this.classifyTree[0].key)
         this.materialclassid = res.result[0].children[0].key
         this.getList()
-        
       })
     },
     onExpand(expandedKeys) {
@@ -250,6 +248,7 @@ export default {
       parameter.pageSize = '10'
       getProductList(parameter).then((res) => {
         this.listdata = res.result.data
+        
       })
     },
     onSearch(value) {
@@ -271,11 +270,14 @@ export default {
       })
     },
     add() {
+     
+      Vue.ls.set(menuname, this.$route.name)
       if (this.menuname == 'ProductList') {
         this.$router.push({
           name: 'ProductAdd',
           params: {
             menu: this.$route.name,
+            menuid: this.menuid,
             materialclassid: this.materialclassid,
             tag: 1,
           },
@@ -283,10 +285,12 @@ export default {
       } else if (this.menuname == 'PersonnelSetting') {
         this.$router.push({ name: 'PersonSettingAdd', query: { departmentid: this.materialclassid, operation: 'add' } })
       } else if (this.menuname == 'SupplierList') {
+         console.log('add',this.$route.name)
         this.$router.push({
-          name: 'ProductAdd',
+          name: 'SupplierList',
           params: {
             menu: this.$route.name,
+            menuid: this.menuid,
             materialclassid: this.materialclassid,
             tag: 1,
           },

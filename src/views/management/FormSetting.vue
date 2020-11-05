@@ -28,6 +28,7 @@
               :disabled="record.fielddisabled"
               @change="(e) => fieldname(e.target.value, record)"
               :value="record.fielddecription"
+             
             />
           </span>
           <span slot="fielddisplay" style="margin: 0" slot-scope="text, record">

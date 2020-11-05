@@ -59,9 +59,9 @@ import { PageHeader } from 'ant-design-vue'
 Vue.use(PageHeader)
 Vue.use(formModel, Button)
 import { postProductAdd } from '@/api/manage'
-import { logininfo } from '@/store/mutation-types'
-import { getForm, submitForm, postData } from '@/api/manage'
-import {Form} from 'ant-design-vue'
+import { logininfo, menuname } from '@/store/mutation-types'
+import { getForm, submitForm, postData, getData } from '@/api/manage'
+import { Form } from 'ant-design-vue'
 Vue.use(Form)
 
 const numberRow = []
@@ -81,7 +81,7 @@ export default {
       other: '',
       data: [],
 
-      menuid: '03bf0fb1-e9fb-4014-92e7-7121f4f71003',
+      menuid: '',
       urlForm: '',
       materialclassid: '',
       materialid: '',
@@ -118,7 +118,14 @@ export default {
   methods: {
     handleSubmit(e) {
       const key = this.form.getFieldValue('materialclassid')
-      var submitUrl = '/bd/product/insterMaterial'
+        if (Vue.ls.get(menuname) == 'ProductList') {
+        var submitUrl = '/bd/product/insterMaterial'
+        } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+        } else if (Vue.ls.get(menuname) == 'SupplierList') {
+         var submitUrl = '/bd/basevendor/vendorinstersave'
+        }
+
+     
       this.form.validateFields((err, values) => {
         if (!err) {
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
@@ -139,7 +146,9 @@ export default {
     onCascaderChange(value) {
       console.log(this.test)
     },
+
     getForm() {
+      this.menuid = this.$route.params.menuid
       const columnsParams = {}
       columnsParams.memuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
@@ -147,23 +156,31 @@ export default {
       if (this.$route.params.tag == 1) {
         this.materialclassid = this.$route.params.materialclassid
         columnsParams.materialclassid = this.materialclassid
-        this.urlForm = '/bd/product/materialList'
+        if (Vue.ls.get(menuname) == 'ProductList') {
+          this.urlForm = '/bd/product/materialList'
+        } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+        } else if (Vue.ls.get(menuname) == 'SupplierList') {
+          this.urlForm = '/bd/basevendor/insterForm'
+        }
       } else if (this.$route.params.tag == 2) {
         this.materialid = this.$route.params.materialid
-        this.urlForm = '/bd/product/updateform'
+        if (Vue.ls.get(menuname) == 'ProductList') {
+          this.urlForm = '/bd/product/updateform'
+        } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+        } else if (Vue.ls.get(menuname) == 'SupplierList') {
+          this.urlForm = '/bd/basevendor/vendorupdatesave'
+        }
+
         columnsParams.materialid = this.materialid
       }
 
       console.log('url--->', this.urlForm)
       getForm(columnsParams, this.urlForm).then((res) => {
-        console.log('form-->', JSON.stringify(res))
         this.data = res.result
 
         setTimeout(() => {
           for (const i in this.data) {
-            if (this.data[i].timepickerVisible == true) {
-              this.data[i].value = '2020-11-02 17:30:30'
-            }
+
             if (this.data[i].value != '') {
               this.form.setFieldsValue({
                 [this.data[i].key]: this.data[i].value,

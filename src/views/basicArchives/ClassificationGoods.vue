@@ -217,6 +217,8 @@ export default {
       this.id = record.key
       this.tag = 2
       this.visible = true
+      this.typeName = record.title
+      this.typeCode = record.materialclasscode
     },
     handleDelete(record) {
       //删除

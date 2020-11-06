@@ -29,13 +29,7 @@
                 :value="record.fielddecription"
               />
             </span>
-            <span slot="fielddefault" slot-scope="text, record">
-              <a-input
-                :disabled="record.fielddisabled"
-                @change="(e) => fielddefault(e.target.value, record)"
-                :value="record.fielddefault"
-              />
-            </span>
+         
             <span slot="fieldlength" slot-scope="text, record">
               <a-input-number
                 :min="0"
@@ -54,12 +48,7 @@
                 v-model="record.fieldmax"
               />
             </span>
-            <span slot="fielddisabled" slot-scope="text, record">
-              <a-radio-group v-model="record.fielddisabled" @change="systemChange">
-                <a-radio :value="true"> 是 </a-radio>
-                <a-radio :value="false"> 否</a-radio>
-              </a-radio-group>
-            </span>
+          
             <span slot="fieldprecision" slot-scope="text, record">
               <a-input-number
                 :min="0"

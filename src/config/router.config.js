@@ -23,19 +23,19 @@ export const asyncRouterMap = [
         redirect: '/basic_archives/goods_file/product-list',
         meta: { title: '基础档案', icon: 'user', permission: ['01'] },
         children: [
-          
+
           {
             path: 'PersonnelSetting',
             name: 'PersonnelSetting',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductList.vue'),
             meta: { title: '部门人员档案', icon: 'user', permission: ['01-01'] },
-       
+
           },
           {
             path: 'PersonsettingAdd',
             name: 'PersonsettingAdd',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/PersonSettingAdd.vue'),
-            meta: { title: '部门人员档案新增', icon: 'user'},
+            meta: { title: '部门人员档案新增', icon: 'user' },
             hidden: true
           },
           {
@@ -55,7 +55,7 @@ export const asyncRouterMap = [
             path: 'classification_goods',
             name: 'ClassificationGoods',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ClassificationGoods.vue'),
-            meta: { title: '货品分类', icon: 'user'},
+            meta: { title: '货品分类', icon: 'user' },
             hidden: true
           },
 
@@ -111,7 +111,7 @@ export const asyncRouterMap = [
             path: 'StorageManagementAdd',
             name: 'StorageManagementAdd',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/StorageManagementAdd.vue'),
-            meta: { title: '入库新增'},
+            meta: { title: '入库新增' },
             hidden: true
           },
           {
@@ -211,7 +211,7 @@ export const asyncRouterMap = [
             name: 'ReturnNoticeSupplierAdd',
             component: () =>
               import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/ReturnNoticeSupplierAdd.vue'),
-            meta: { title: '供应商退货通知新增'},
+            meta: { title: '供应商退货通知新增' },
             hidden: true
           },
 
@@ -261,7 +261,7 @@ export const asyncRouterMap = [
             path: 'InventoryAdd',
             name: 'InventoryAdd',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/InventoryAdd.vue'),
-            meta: { title: '盘点新增'},
+            meta: { title: '盘点新增' },
             hidden: true
           },
           {
@@ -274,7 +274,7 @@ export const asyncRouterMap = [
             path: 'BaleAdd',
             name: 'BaleAdd',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/BaleAdd.vue'),
-            meta: { title: '包装新增'},
+            meta: { title: '包装新增' },
             hidden: true
           }
         ]
@@ -326,6 +326,11 @@ export const asyncRouterMap = [
             name: 'message_settin',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/MessageSetting.vue'),
             meta: { title: '消息设置', icon: 'user', permission: ['05-06'] }
+          }, {
+            path: 'AdminFormsetting',
+            name: 'AdminFormsetting',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/management/AdminFormsetting.vue'),
+            meta: { title: '管理员表单设置', icon: 'user', permission: ['05-07'] }
           }
         ]
       },

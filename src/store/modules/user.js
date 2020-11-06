@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import { login, getInfo, logout } from '@/api/login'
-import { ACCESS_TOKEN,logininfo } from '@/store/mutation-types'
+import { ACCESS_TOKEN, logininfo } from '@/store/mutation-types'
 import { welcome } from '@/utils/util'
 
 const user = {
@@ -35,17 +35,17 @@ const user = {
 
   actions: {
     // 登录
-    Login ({ commit }, userInfo) {
+    Login({ commit }, userInfo) {
       console.log('login--->', userInfo)
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const result = response.result
-        
+
           Vue.ls.set(ACCESS_TOKEN, result.userToken, 7 * 24 * 60 * 60 * 1000)
-          console.log("id---->",result.basepersonPO)
-          Vue.ls.set(logininfo,result)
+          console.log("id---->", result.basepersonPO)
+          Vue.ls.set(logininfo, result)
           commit('SET_TOKEN', result.userToken)
-       
+
           resolve()
         }).catch(error => {
           reject(error)
@@ -54,13 +54,13 @@ const user = {
     },
 
     // 获取用户信息
-    GetInfo ({ commit }) {
+    GetInfo({ commit }) {
       return new Promise((resolve, reject) => {
         const params = {}
-        params.id =Vue.ls.get(logininfo).basepersonPO.personid
+        params.id = Vue.ls.get(logininfo).basepersonPO.personid
         getInfo(params).then(response => {
-          console.log("getinfo--->",JSON.stringify(response))
-        const result = response.result
+          console.log("getinfo--->", JSON.stringify(response))
+          const result = response.result
           if (result.role && result.role.permissions.length > 0) {
             const role = result.role
             role.permissions = result.role.permissions
@@ -88,7 +88,7 @@ const user = {
     },
 
     // 登出
-    Logout ({ commit, state }) {
+    Logout({ commit, state }) {
       return new Promise((resolve) => {
         logout(state.token).then(() => {
           resolve()

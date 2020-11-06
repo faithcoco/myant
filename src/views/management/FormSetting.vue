@@ -29,11 +29,11 @@
                 :value="record.fielddecription"
               />
             </span>
-            <span slot="fieldname" slot-scope="text, record">
+            <span slot="fielddefault" slot-scope="text, record">
               <a-input
                 :disabled="record.fielddisabled"
-                @change="(e) => fieldname(e.target.value, record)"
-                :value="record.fieldname"
+                @change="(e) => fielddefault(e.target.value, record)"
+                :value="record.fielddefault"
               />
             </span>
             <span slot="fieldlength" slot-scope="text, record">
@@ -297,11 +297,12 @@ export default {
         }
       }
     },
-    fieldname(value, record) {
-      record.fieldname = value
-    },
+
     fielddecription(value, record) {
       record.fielddecription = value
+    },
+     fielddefault(value, record) {
+      record.fielddefault = value
     },
 
     fieldlength(value, record) {

@@ -31,6 +31,7 @@
             </span>
             <span slot="fieldlength" slot-scope="text, record">
               <a-input-number
+                :min='0'
                 :max="record.maxlength"
                 :disabled="record.fielddisabled"
                 @change="(e) => fieldlength(e.target.value, record)"
@@ -40,6 +41,7 @@
             </span>
             <span slot="fieldmax" slot-scope="text, record">
               <a-input-number
+                :min='0'
                :max="record.maxmax"
                 :disabled="record.fielddisabled"
                 @change="(e) => fieldmax(e.target.value, record)"
@@ -54,6 +56,7 @@
             </span>
             <span slot="fieldprecision" slot-scope="text, record">
               <a-input-number
+               :min='0'
                :max="record.maxprecision"
                 :disabled="record.fielddisabled"
                 @change="(e) => fieldprecision(e.target.value, record)"

@@ -30,17 +30,20 @@
               />
             </span>
             <span slot="fieldlength" slot-scope="text, record">
-              <a-input
+              <a-input-number
+                :max="record.maxlength"
                 :disabled="record.fielddisabled"
                 @change="(e) => fieldlength(e.target.value, record)"
-                :value="record.fieldlength"
+                v-model="record.fieldlength"
               />
+
             </span>
             <span slot="fieldmax" slot-scope="text, record">
-              <a-input
+              <a-input-number
+               :max="record.maxmax"
                 :disabled="record.fielddisabled"
                 @change="(e) => fieldmax(e.target.value, record)"
-                :value="record.fieldmax"
+                v-model="record.fieldmax"
               />
             </span>
             <span slot="fielddisabled" slot-scope="text, record">
@@ -50,10 +53,11 @@
               </a-radio-group>
             </span>
             <span slot="fieldprecision" slot-scope="text, record">
-              <a-input
+              <a-input-number
+               :max="record.maxprecision"
                 :disabled="record.fielddisabled"
                 @change="(e) => fieldprecision(e.target.value, record)"
-                :value="record.fieldprecision"
+                v-model="record.fieldprecision"
               />
             </span>
 
@@ -182,6 +186,7 @@ export default {
       editVisible: false,
       currentId: '',
       disabled: true,
+      value: 3,
     }
   },
   created() {
@@ -298,8 +303,8 @@ export default {
     fieldeditChange(value, record) {
       record.fieldedit = value
     },
-     systemChange(e) {
-      console.log('radio checked', e.target.value);
+    systemChange(e) {
+      console.log('radio checked', e.target.value)
     },
     fielddisplayChange(value, record) {
       record.fielddisplay = value

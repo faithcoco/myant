@@ -330,7 +330,7 @@ export const asyncRouterMap = [
             path: 'AdminFormsetting',
             name: 'AdminFormsetting',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/AdminFormsetting.vue'),
-            meta: { title: '管理员表单设置', icon: 'user', permission: ['05-07'] }
+            meta: { title: '管理员表单设置', icon: 'user', permission: ['05-01'] }
           }
         ]
       },

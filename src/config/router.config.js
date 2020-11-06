@@ -55,7 +55,7 @@ export const asyncRouterMap = [
             path: 'classification_goods',
             name: 'ClassificationGoods',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ClassificationGoods.vue'),
-            meta: { title: '货品分类', icon: 'user' },
+            meta: { title: '分类', icon: 'user' },
             hidden: true
           },
 

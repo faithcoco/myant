@@ -19,7 +19,7 @@
             :columns="columns"
             :data-source="formSettingList.data"
             bordered
-            :scroll="{ x: 2000, y: 575 }"
+            :scroll="{ x: 2000, y: 700 }"
             :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
           >
             <span slot="fielddecription" slot-scope="text, record">
@@ -354,6 +354,6 @@ export default {
   border-radius: 4px;
   overflow: auto;
   padding: 8px 2px;
-  height: 600px;
+  height: 750px;
 }
 </style>

@@ -1,6 +1,6 @@
 <template>
   <a-layout>
-    <div class="form">
+    <div>
       <a-card>
         <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
           <a-form-item v-for="item in data" :label="item.title" :key="item.key">
@@ -257,11 +257,5 @@ export default {
 }
 </script>
 <style lang="less">
-.form {
-  border: 1px solid #e8e8e8;
-  border-radius: 4px;
-  overflow: auto;
 
-  height: 725px;
-}
 </style>

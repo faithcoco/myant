@@ -1,105 +1,139 @@
 <template>
-<div >
-  <a-card :bordered="false">
-    <a-row :gutter="8">
-      <a-col :span="4">
-        <div class="tree">
-          <s-tree
-            :dataSource="FormSettingTree"
-            :openKeys.sync="openKeys"
-            :search="true"
-            @click="handleClick"
-           
-            @titleClick="handleTitleClick"
-            v-model="selectedKeys"
-          ></s-tree>
-        </div>
-      </a-col>
-      <a-col :span="20">
-        <a-table
-          :columns="columns"
-          :data-source="formSettingList.data"
-          bordered
-          :scroll="{ x: 2000, y: 575 }"
-          :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
-        >
-          <span slot="fielddecription" slot-scope="text, record">
-            <a-input
-              :disabled="record.fielddisabled"
-              @change="(e) => fieldname(e.target.value, record)"
-              :value="record.fielddecription"
-             
-            />
-          </span>
-          <span slot="fielddisplay" style="margin: 0" slot-scope="text, record">
-            <a-checkbox
-              :disabled="record.fielddisabled"
-              @change="(e) => fielddisplayChange(e.target.checked, record)"
-              :checked="record.fielddisplay"
-            />
-          </span>
-          <a slot="fieldsort"  :disabled="record.fielddisabled" slot-scope="text, record" @click="showSort('fieldsort', record)">{{
-            record.fieldsort
-          }}</a>
-          <a slot="fieldsortlist"  :disabled="record.fielddisabled" slot-scope="text, record" @click="showSort('fieldsortlist', record)">{{
-            record.fieldsortlist
-          }}</a>
+  <div>
+    <a-card :bordered="false">
+      <a-row :gutter="8">
+        <a-col :span="4">
+          <div class="tree">
+            <s-tree
+              :dataSource="FormSettingTree"
+              :openKeys.sync="openKeys"
+              :search="true"
+              @click="handleClick"
+              @titleClick="handleTitleClick"
+              v-model="selectedKeys"
+            ></s-tree>
+          </div>
+        </a-col>
+        <a-col :span="20">
+          <a-table
+            :columns="columns"
+            :data-source="formSettingList.data"
+            bordered
+            :scroll="{ x: 2000, y: 575 }"
+            :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
+          >
+            <span slot="fielddecription" slot-scope="text, record">
+              <a-input
+                :disabled="record.fielddisabled"
+                @change="(e) => fieldname(e.target.value, record)"
+                :value="record.fielddecription"
+              />
+            </span>
+            <span slot="fieldlength" slot-scope="text, record">
+              <a-input
+                :disabled="record.fielddisabled"
+                @change="(e) => fieldlength(e.target.value, record)"
+                :value="record.fieldlength"
+              />
+            </span>
+            <span slot="fieldmax" slot-scope="text, record">
+              <a-input
+                :disabled="record.fielddisabled"
+                @change="(e) => fieldmax(e.target.value, record)"
+                :value="record.fieldmax"
+              />
+            </span>
+            <span slot="fielddisabled" slot-scope="text, record">
+              <a-radio-group v-model="record.fielddisabled" @change="systemChange">
+                <a-radio :value="true"> 是 </a-radio>
+                <a-radio :value="false"> 否</a-radio>
+              </a-radio-group>
+            </span>
+            <span slot="fieldprecision" slot-scope="text, record">
+              <a-input
+                :disabled="record.fielddisabled"
+                @change="(e) => fieldprecision(e.target.value, record)"
+                :value="record.fieldprecision"
+              />
+            </span>
 
-          <span slot="fieldwidthlist" slot-scope="text, record">
-            <a-input
+            <span slot="fielddisplay" style="margin: 0" slot-scope="text, record">
+              <a-checkbox
+                :disabled="record.fielddisabled"
+                @change="(e) => fielddisplayChange(e.target.checked, record)"
+                :checked="record.fielddisplay"
+              />
+            </span>
+            <a
+              slot="fieldsort"
               :disabled="record.fielddisabled"
-              @change="(e) => vdef2Change(e.target.value, record)"
-              :value="record.fieldwidthlist"
-              style="width: 50px"
-            />px
-          </span>
-
-          <span slot="fieldedit" style="margin: 0" slot-scope="text, record">
-            <a-checkbox
+              slot-scope="text, record"
+              @click="showSort('fieldsort', record)"
+              >{{ record.fieldsort }}</a
+            >
+            <a
+              slot="fieldsortlist"
               :disabled="record.fielddisabled"
-              @change="(e) => fieldeditChange(e.target.checked, record)"
-              :checked="record.fieldedit"
-            />
-          </span>
+              slot-scope="text, record"
+              @click="showSort('fieldsortlist', record)"
+              >{{ record.fieldsortlist }}</a
+            >
 
-          <span slot="fielddisplaylist" style="margin: 0" slot-scope="text, record">
-            <a-checkbox
-              @change="(e) => fielddisplaylistChange(e.target.checked, record)"
-              :checked="record.fielddisplaylist"
-              :disabled="record.fielddisabled"
-            />
-          </span>
-          <span slot="fieldmust" style="margin: 0" slot-scope="text, record">
-            <a-checkbox
-              @change="(e) => fieldmustChange(e.target.checked, record)"
-              :checked="record.fieldmust"
-              :disabled="record.fielddisabled"
-            />
-          </span>
-        </a-table>
+            <span slot="fieldwidthlist" slot-scope="text, record">
+              <a-input
+                :disabled="record.fielddisabled"
+                @change="(e) => vdef2Change(e.target.value, record)"
+                :value="record.fieldwidthlist"
+                style="width: 50px"
+              />px
+            </span>
 
-        <a-row :style="{ marginTop: '30px' }">
-          <a-col :span="2" :offset="8">
-            <a-button type="primary" @click="resetForm">恢复默认值</a-button>
-          </a-col>
+            <span slot="fieldedit" style="margin: 0" slot-scope="text, record">
+              <a-checkbox
+                :disabled="record.fielddisabled"
+                @change="(e) => fieldeditChange(e.target.checked, record)"
+                :checked="record.fieldedit"
+              />
+            </span>
 
-          <a-col :span="1" :offset="1">
-            <a-button type="primary" @click="onSubmit">保存</a-button>
-          </a-col>
+            <span slot="fielddisplaylist" style="margin: 0" slot-scope="text, record">
+              <a-checkbox
+                @change="(e) => fielddisplaylistChange(e.target.checked, record)"
+                :checked="record.fielddisplaylist"
+                :disabled="record.fielddisabled"
+              />
+            </span>
+            <span slot="fieldmust" style="margin: 0" slot-scope="text, record">
+              <a-checkbox
+                @change="(e) => fieldmustChange(e.target.checked, record)"
+                :checked="record.fieldmust"
+                :disabled="record.fielddisabled"
+              />
+            </span>
+          </a-table>
 
-          <a-col :span="1" :offset="1">
-            <a-button type @click="onBack">取消</a-button>
-          </a-col>
-        </a-row>
-      </a-col>
-    </a-row>
-    <a-modal title="提示" :visible="sortVisible" @ok="sortOk" @cancel="sortCancel">
-      <p>请输入想要移动位置：</p>
-      <a-input v-model="sortAfter" />
-    </a-modal>
-    <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" />
-  </a-card>
-</div>
+          <a-row :style="{ marginTop: '30px' }">
+            <a-col :span="2" :offset="8">
+              <a-button type="primary" @click="resetForm">恢复默认值</a-button>
+            </a-col>
+
+            <a-col :span="1" :offset="1">
+              <a-button type="primary" @click="onSubmit">保存</a-button>
+            </a-col>
+
+            <a-col :span="1" :offset="1">
+              <a-button type @click="onBack">取消</a-button>
+            </a-col>
+          </a-row>
+        </a-col>
+      </a-row>
+      <a-modal title="提示" :visible="sortVisible" @ok="sortOk" @cancel="sortCancel">
+        <p>请输入想要移动位置：</p>
+        <a-input v-model="sortAfter" />
+      </a-modal>
+      <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" />
+    </a-card>
+  </div>
 </template>
 
 <script>
@@ -252,8 +286,20 @@ export default {
     fieldname(value, record) {
       record.fielddecription = value
     },
+    fieldlength(value, record) {
+      record.fieldlength = value
+    },
+    fieldprecision(value, record) {
+      record.fieldprecision = value
+    },
+    fieldmax(value, record) {
+      record.fieldmax = value
+    },
     fieldeditChange(value, record) {
       record.fieldedit = value
+    },
+     systemChange(e) {
+      console.log('radio checked', e.target.value);
     },
     fielddisplayChange(value, record) {
       record.fielddisplay = value
@@ -295,7 +341,6 @@ export default {
 </script>
 
 <style lang="less">
-
 .tree {
   border: 1px solid #e8e8e8;
   border-radius: 4px;
@@ -303,5 +348,4 @@ export default {
   padding: 8px 2px;
   height: 600px;
 }
-
 </style>

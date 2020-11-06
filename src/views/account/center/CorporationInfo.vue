@@ -411,10 +411,7 @@ export default {
       this.baseenterprisePO.enterprisestatus = '已注销'
       this.color = 'black'
     }
-     this.getInfo()
-    let d = new Date(this.baseenterprisePO.enterpriseregistrationtime)
-
-    let enterpriseregistrationtime = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
+    this.getInfo()
   },
   computed: {},
   methods: {
@@ -422,17 +419,18 @@ export default {
       const params = {}
       params.id = this.baseenterprisePO.enterpriseid
       console.log(params)
-      console.log("params-->",params)
+      console.log('params-->', params)
       getBaseenterpriseInfo(params)
         .then((res) => {
           console.log('返回值--getBaseenterpriseInfo----->', JSON.stringify(res))
           this.form = res.result
           this.form.enterpriseregistrationtime = enterpriseregistrationtime
           this.form.enterprisestatus = this.baseenterprisePO.enterprisestatus
-        })
-        .catch((err) => {
+          let d = new Date(this.baseenterprisePO.enterpriseregistrationtime)
 
+          let enterpriseregistrationtime = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
         })
+        .catch((err) => {})
     },
     getNewPhoneVerificationCode() {
       this.$refs.PruleForm4.validate((valid) => {
@@ -615,10 +613,13 @@ export default {
       const params = {}
       params.enterpriseid = e.target.value
       params.enterprisephone = Vue.ls.get(logininfo).basepersonPO.personphone
-      var url = '/bd/Baseenterprise/captchaCoderegister'
+      var url = '/sys/switchlogin'
       postData(params, url)
         .then((res) => {
-         
+          console.log('change company-->', JSON.stringify(res))
+
+          Vue.ls.set(logininfo, res.result)
+          this.baseenterprisePO = Vue.ls.get(logininfo).baseenterprisePO
           this.getInfo()
         })
         .catch(() => {})

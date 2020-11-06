@@ -25,24 +25,30 @@
             <span slot="fielddecription" slot-scope="text, record">
               <a-input
                 :disabled="record.fielddisabled"
-                @change="(e) => fieldname(e.target.value, record)"
+                @change="(e) => fielddecription(e.target.value, record)"
                 :value="record.fielddecription"
+              />
+            </span>
+            <span slot="fieldname" slot-scope="text, record">
+              <a-input
+                :disabled="record.fielddisabled"
+                @change="(e) => fieldname(e.target.value, record)"
+                :value="record.fieldname"
               />
             </span>
             <span slot="fieldlength" slot-scope="text, record">
               <a-input-number
-                :min='0'
+                :min="0"
                 :max="record.maxlength"
                 :disabled="record.fielddisabled"
                 @change="(e) => fieldlength(e.target.value, record)"
                 v-model="record.fieldlength"
               />
-
             </span>
             <span slot="fieldmax" slot-scope="text, record">
               <a-input-number
-                :min='0'
-               :max="record.maxmax"
+                :min="0"
+                :max="record.maxmax"
                 :disabled="record.fielddisabled"
                 @change="(e) => fieldmax(e.target.value, record)"
                 v-model="record.fieldmax"
@@ -56,8 +62,8 @@
             </span>
             <span slot="fieldprecision" slot-scope="text, record">
               <a-input-number
-               :min='0'
-               :max="record.maxprecision"
+                :min="0"
+                :max="record.maxprecision"
                 :disabled="record.fielddisabled"
                 @change="(e) => fieldprecision(e.target.value, record)"
                 v-model="record.fieldprecision"
@@ -292,8 +298,12 @@ export default {
       }
     },
     fieldname(value, record) {
+      record.fieldname = value
+    },
+    fielddecription(value, record) {
       record.fielddecription = value
     },
+
     fieldlength(value, record) {
       record.fieldlength = value
     },

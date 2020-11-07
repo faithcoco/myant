@@ -17,7 +17,9 @@
           <a-divider type="vertical" />
           <a @click="handleEdit(record)">编辑</a>
           <a-divider type="vertical" />
-          <a @click="handleDelete(record)">删除</a>
+          <a-popconfirm title="确定删除?" @confirm="() => handleDelete(record)">
+            <a href="javascript:;">删除</a>
+          </a-popconfirm>
         </template>
       </span>
       <span slot="use" style="margin: 0">
@@ -197,8 +199,7 @@ export default {
         if (res.status == 'SUCCESS') {
           this.getList()
         } else {
-        
-            this.$message.warning(res.errorMsg)
+          this.$message.warning(res.errorMsg)
         }
       })
     },

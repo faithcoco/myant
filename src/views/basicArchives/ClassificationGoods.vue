@@ -114,6 +114,17 @@ export default {
         this.url = '/bd/basevendor/vendorTree'
         this.urlAdd = '/bd/basevendor/insterVenderClass'
         this.urlDelete = '/bd/deleteDepartment'
+        this.urlUpdate = '/bd/basevendor/updatevendorClass'
+      } else if (name == 'CustomerList') {
+        this.url = '/bd/customer/CustomerTree'
+        this.urlAdd = '/bd/customer/insterCustomerClass'
+        this.urlDelete = '/bd/customer/delCustomerClass'
+        this.urlUpdate = '/bd/customer/updateCustomerClass'
+      } else if (name == 'WarehouseList') {
+        this.url = '/bd/warehouse/WarehouseTree'
+        this.urlAdd = '/bd/warehouse/insterWarehouseClass'
+        this.urlDelete = '/bd/warehouse/delWarehouseClass'
+        this.urlUpdate = '/bd/warehouse/updateWarehouseClass'
       }
 
       this.getList()
@@ -135,19 +146,30 @@ export default {
         parameter.materialclassname = this.materialclassname
         parameter.materialclassgrade = ''
         parameter.fatherid = this.id
-      } else if (name == 'PersonnelSetting') {
+      } else if (this.name == 'PersonnelSetting') {
         parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         parameter.fatherid = this.id
         parameter.departmentname = this.materialclassname
         parameter.departmentcode = this.materialclasscode
-      } else if (name == 'SupplierList') {
+      } else if (this.name == 'SupplierList') {
         parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         parameter.fatherid = this.id
         parameter.vendorclassname = this.materialclassname
         parameter.vendorclasscode = this.materialclasscode
+      } else if (this.name == 'CustomerList') {
+        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+        parameter.fatherid = this.id
+        parameter.customerclassname = this.materialclassname
+        parameter.customerclasscode = this.materialclasscode
+      } else if (this.name == 'WarehouseList') {
+        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+        parameter.fatherid = this.id
+        parameter.warehouseclassname = this.materialclassname
+        parameter.warehouseclasscode = this.materialclasscode
       }
 
       console.log('add url-->', this.urlAdd)
+       console.log('add params-->', JSON.stringify(parameter))
       insertmaterialClass(parameter, this.urlAdd).then((res) => {
         console.log('add res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
@@ -163,14 +185,22 @@ export default {
         parameter.materialclasscode = this.typeCode
         parameter.materialclassname = this.typeName
         parameter.materialclassid = this.id
-      } else if (name == 'PersonnelSetting') {
+      } else if (this.name == 'PersonnelSetting') {
         parameter.departmentid = this.id
         parameter.departmentname = this.typeName
         parameter.departmentcode = this.typeCode
-      } else if (name == 'SupplierList') {
+      } else if (this.name == 'SupplierList') {
         parameter.vendorclassid = this.id
         parameter.vendorclasscode = this.typeName
         parameter.vendorclassname = this.typeCode
+      } else if (this.name == 'CustomerList') {
+        parameter.customerclassid = this.id
+        parameter.customerclassname = this.materialclassname
+        parameter.customerclasscode = this.materialclasscode
+      } else if (this.name == 'WarehouseList') {
+        parameter.warehouseclassid = this.id
+        parameter.warehouseclassname = this.materialclassname
+        parameter.warehouseclasscode = this.materialclasscode
       }
 
       insertmaterialClass(parameter, this.urlUpdate).then((res) => {
@@ -191,6 +221,10 @@ export default {
         parameter.departmentid = this.id
       } else if (this.name == 'SupplierList') {
         parameter.vendorclassid = this.id
+      } else if (this.name == 'CustomerList') {
+        parameter.customerclassid = this.id
+      } else if (this.name == 'WarehouseList') {
+        parameter.warehouseclassid = this.id
       }
 
       console.log('delete-->', JSON.stringify(parameter))

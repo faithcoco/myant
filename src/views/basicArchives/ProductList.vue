@@ -185,17 +185,27 @@ export default {
         this.urlColumns = '/bd/product/productList/columns'
         this.urlList = '/bd/product/productList'
       } else if (name == 'PersonnelSetting') {
-        this.titleTree = '部门结构'
+        this.titleTree = '部门分类'
         this.urlTree = '/bd/Sector'
         this.urlColumns = '/sys/setting/getSetting'
         this.urlList = '/bd/baseperson/PersonnelSettingList'
       } else if (name == 'SupplierList') {
-        this.titleTree = '供应商'
+        this.titleTree = '供应商分类'
         this.urlTree = '/bd/basevendor/vendorTree'
         this.urlColumns = '/bd/basevendor/vendorColumns'
         this.urlList = '/bd/basevendor/vendorlist'
+      } else if (name == 'CustomerList') {
+        this.titleTree = '客户分类'
+        this.urlTree = '/bd/customer/CustomerTree'
+        this.urlColumns = '/sys/setting/getSetting'
+        this.urlList = '/bd/customer/customerlist'
+      } else if (name == 'WarehouseList') {
+        this.titleTree = '仓位分类'
+        this.urlTree = '/bd/warehouse/WarehouseTree'
+        this.urlColumns = '/sys/setting/getSetting'
+        this.urlList = '/bd/warehouse/warehouselist'
       }
-
+      this.urlColumns = '/sys/setting/getSetting'
       const parameter = {}
       parameter.memucode = this.$route.meta.permission[0]
       var url = '/bd/menu/findallmenu'
@@ -214,10 +224,10 @@ export default {
       columnsParams.menuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       console.log('columns url--->', this.urlColumns)
-      console.log('columns parameter-->', columnsParams)
+      console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-        console.log('columns data--->', JSON.stringify(this.columns))
+        console.log('columns data--->', JSON.stringify(res))
       })
     },
     getTree() {
@@ -273,20 +283,9 @@ export default {
     },
     add() {
       Vue.ls.set(menuname, this.$route.name)
-
-      if (this.menuname == 'ProductList') {
-        this.$router.push({
-          name: 'ProductAdd',
-          params: {
-            menu: this.$route.name,
-            menuid: this.menuid,
-            materialclassid: this.materialclassid,
-            tag: 1,
-          },
-        }) //编程式导航  修改 url，完成跳转
-      } else if (this.menuname == 'PersonnelSetting') {
+      if (this.menuname == 'PersonnelSetting') {
         this.$router.push({ name: 'PersonsettingAdd', query: { departmentid: this.materialclassid, operation: 'add' } })
-      } else if (this.menuname == 'SupplierList') {
+      } else {
         this.$router.push({
           name: 'ProductAdd',
           params: {
@@ -295,25 +294,15 @@ export default {
             materialclassid: this.materialclassid,
             tag: 1,
           },
-        }) //编程式导航  修改 url，完成跳转
+        })
       }
     },
 
     handleEdit(record) {
       Vue.ls.set(menuname, this.$route.name)
-
-      if (this.menuname == 'ProductList') {
-        this.$router.push({
-          name: 'ProductAdd',
-          params: {
-            menu: this.$route.name,
-            materialid: record.materialid,
-            tag: 2,
-          },
-        })
-      } else if (this.menuname == 'PersonnelSetting') {
+      if (this.menuname == 'PersonnelSetting') {
         this.$router.push({ name: 'PersonsettingAdd', query: { departmentid: this.materialclassid, operation: 'add' } })
-      } else if (this.menuname == 'SupplierList') {
+      } else {
         this.$router.push({
           name: 'ProductAdd',
           params: {

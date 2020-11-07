@@ -118,25 +118,28 @@ export default {
   methods: {
     handleSubmit(e) {
       const key = this.form.getFieldValue('materialclassid')
-        if (Vue.ls.get(menuname) == 'ProductList') {
+      if (Vue.ls.get(menuname) == 'ProductList') {
         var submitUrl = '/bd/product/insterMaterial'
-        } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
-        } else if (Vue.ls.get(menuname) == 'SupplierList') {
-         var submitUrl = '/bd/basevendor/vendorinstersave'
-        }
+      } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+      } else if (Vue.ls.get(menuname) == 'SupplierList') {
+        var submitUrl = '/bd/basevendor/vendorinstersave'
+      } else if (Vue.ls.get(menuname) == 'CustomerList') {
+        var submitUrl = '/bd/customer/customerinstersave'
+      } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+        var submitUrl = '/bd/warehouse/warehouseupdatesave'
+      }
 
-     
       this.form.validateFields((err, values) => {
         if (!err) {
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-          console.log('values', JSON.stringify(values))
+          console.log('submit params-->', JSON.stringify(values))
           submitForm(values, submitUrl)
             .then((res) => {
               console.log('submit--->', JSON.stringify(res))
               if (res.status == 'SUCCESS') {
                 this.form.resetFields()
               }
-              this.$message.info(res.result)
+              this.$message.info(res.errorMsg)
             })
             .catch(() => {})
         }
@@ -161,6 +164,10 @@ export default {
         } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
         } else if (Vue.ls.get(menuname) == 'SupplierList') {
           this.urlForm = '/bd/basevendor/insterForm'
+        } else if (Vue.ls.get(menuname) == 'CustomerList') {
+          this.urlForm = '/bd/customer/insterForm'
+        } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+          this.urlForm = '/bd/customer/updateForm'
         }
       } else if (this.$route.params.tag == 2) {
         this.materialid = this.$route.params.materialid
@@ -169,18 +176,21 @@ export default {
         } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
         } else if (Vue.ls.get(menuname) == 'SupplierList') {
           this.urlForm = '/bd/basevendor/vendorupdatesave'
+        } else if (Vue.ls.get(menuname) == 'CustomerList') {
+          this.urlForm = '/bd/customer/customerinstersave'
+        } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+          this.urlForm = '/bd/warehouse/updateForm'
         }
 
         columnsParams.materialid = this.materialid
       }
-
-      console.log('url--->', this.urlForm)
+      console.log('menuname-->', Vue.ls.get(menuname))
+      console.log('form url--->', this.urlForm)
       getForm(columnsParams, this.urlForm).then((res) => {
         this.data = res.result
-        console.log("form-->",JSON.stringify(this.data))
+        console.log('form-->', JSON.stringify(res))
         setTimeout(() => {
           for (const i in this.data) {
-
             if (this.data[i].value != '') {
               this.form.setFieldsValue({
                 [this.data[i].key]: this.data[i].value,
@@ -210,7 +220,7 @@ export default {
     // 返回到清单页面
     Back() {
       // 路由跳转
-     this.$router.go(-1)
+      this.$router.go(-1)
     },
     // 重置表单
     resetForm() {
@@ -257,5 +267,4 @@ export default {
 }
 </script>
 <style lang="less">
-
 </style>

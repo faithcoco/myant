@@ -167,7 +167,7 @@ export default {
         } else if (Vue.ls.get(menuname) == 'CustomerList') {
           this.urlForm = '/bd/customer/insterForm'
         } else if (Vue.ls.get(menuname) == 'WarehouseList') {
-          this.urlForm = '/bd/customer/updateForm'
+          this.urlForm = '/bd/warehouse/insterForm'
         }
       } else if (this.$route.params.tag == 2) {
         this.materialid = this.$route.params.materialid
@@ -177,18 +177,18 @@ export default {
         } else if (Vue.ls.get(menuname) == 'SupplierList') {
           this.urlForm = '/bd/basevendor/vendorupdatesave'
         } else if (Vue.ls.get(menuname) == 'CustomerList') {
-          this.urlForm = '/bd/customer/customerinstersave'
+          this.urlForm = '/bd/customer/updateForm'
         } else if (Vue.ls.get(menuname) == 'WarehouseList') {
           this.urlForm = '/bd/warehouse/updateForm'
         }
 
         columnsParams.materialid = this.materialid
       }
-      console.log('menuname-->', Vue.ls.get(menuname))
+    
       console.log('form url--->', this.urlForm)
       getForm(columnsParams, this.urlForm).then((res) => {
         this.data = res.result
-        console.log('form-->', JSON.stringify(res))
+        console.log('form res-->', JSON.stringify(res))
         setTimeout(() => {
           for (const i in this.data) {
             if (this.data[i].value != '') {

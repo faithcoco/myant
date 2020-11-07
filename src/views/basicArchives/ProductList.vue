@@ -259,7 +259,10 @@ export default {
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = '1'
       parameter.pageSize = '10'
-      getProductList(parameter).then((res) => {
+         console.log("list url-->",this.urlList)
+       console.log("list params-->",JSON.stringify(parameter))
+      getProductList(parameter,this.urlList).then((res) => {
+        console.log("list res-->",JSON.stringify(res))
         this.listdata = res.result.data
       })
     },

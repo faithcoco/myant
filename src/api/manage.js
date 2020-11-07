@@ -594,10 +594,10 @@ export function getServiceList(parameter) {
     params: parameter
   })
 }
-export function getProductList(parameter) {
+export function getProductList(parameter,url) {
   
   return axios({
-    url: api.productList,
+    url: url,
     method: 'get',
     params: parameter
   })

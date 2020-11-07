@@ -177,7 +177,7 @@ export default {
       console.log('url--->', this.urlForm)
       getForm(columnsParams, this.urlForm).then((res) => {
         this.data = res.result
-
+        console.log("form-->",JSON.stringify(this.data))
         setTimeout(() => {
           for (const i in this.data) {
 

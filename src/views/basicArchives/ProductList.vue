@@ -50,7 +50,10 @@
             <span slot="action" v-show="Operat_visible" slot-scope="text, record">
               <a @click="handleEdit(record)">编辑</a>
               <a-divider type="vertical" />
-              <a @click="deleteItem(record)">删除</a>
+
+              <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
+                <a href="javascript:;">删除</a>
+              </a-popconfirm>
             </span>
           </a-table>
         </a-col>
@@ -270,7 +273,7 @@ export default {
     },
     add() {
       Vue.ls.set(menuname, this.$route.name)
-      console.log('menuname-->', this.menuname)
+
       if (this.menuname == 'ProductList') {
         this.$router.push({
           name: 'ProductAdd',
@@ -281,10 +284,8 @@ export default {
             tag: 1,
           },
         }) //编程式导航  修改 url，完成跳转
-
       } else if (this.menuname == 'PersonnelSetting') {
         this.$router.push({ name: 'PersonsettingAdd', query: { departmentid: this.materialclassid, operation: 'add' } })
-      
       } else if (this.menuname == 'SupplierList') {
         this.$router.push({
           name: 'ProductAdd',
@@ -299,15 +300,29 @@ export default {
     },
 
     handleEdit(record) {
-      console.log(record)
-      this.$router.push({
-        name: 'ProductAdd',
-        params: {
-          menu: this.$route.name,
-          materialid: record.materialid,
-          tag: 2,
-        },
-      })
+      Vue.ls.set(menuname, this.$route.name)
+
+      if (this.menuname == 'ProductList') {
+        this.$router.push({
+          name: 'ProductAdd',
+          params: {
+            menu: this.$route.name,
+            materialid: record.materialid,
+            tag: 2,
+          },
+        })
+      } else if (this.menuname == 'PersonnelSetting') {
+        this.$router.push({ name: 'PersonsettingAdd', query: { departmentid: this.materialclassid, operation: 'add' } })
+      } else if (this.menuname == 'SupplierList') {
+        this.$router.push({
+          name: 'ProductAdd',
+          params: {
+            menu: this.$route.name,
+            materialid: record.materialid,
+            tag: 2,
+          },
+        })
+      }
     },
     deleteItem(record) {
       this.materialid = record.materialid

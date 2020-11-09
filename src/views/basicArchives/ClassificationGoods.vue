@@ -272,7 +272,7 @@ export default {
       this.visible = true
     },
     back() {
-      this.$router.push({ name: 'ProductList' }) //编程式导航  修改 url，完成跳转
+        this.$router.go(-1)
     },
     handleOk(e) {
       this.visible = false

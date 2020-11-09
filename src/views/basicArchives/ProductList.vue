@@ -259,10 +259,10 @@ export default {
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = '1'
       parameter.pageSize = '10'
-         console.log("list url-->",this.urlList)
-       console.log("list params-->",JSON.stringify(parameter))
-      getProductList(parameter,this.urlList).then((res) => {
-        console.log("list res-->",JSON.stringify(res))
+      console.log('list url-->', this.urlList)
+      console.log('list params-->', JSON.stringify(parameter))
+      getProductList(parameter, this.urlList).then((res) => {
+        
         this.listdata = res.result.data
       })
     },
@@ -286,38 +286,53 @@ export default {
     },
     add() {
       Vue.ls.set(menuname, this.$route.name)
-      if (this.menuname == 'PersonnelSetting') {
-        this.$router.push({ name: 'PersonsettingAdd', query: { departmentid: this.materialclassid, operation: 'add' } })
-      } else {
-        this.$router.push({
-          name: 'ProductAdd',
-          params: {
-            menu: this.$route.name,
-            menuid: this.menuid,
-            materialclassid: this.materialclassid,
-            tag: 1,
-          },
-        })
-      }
+      this.$router.push({
+        name: 'ProductAdd',
+        params: {
+          menu: this.$route.name,
+          menuid: this.menuid,
+          materialclassid: this.materialclassid,
+          tag: 1,
+        },
+      })
     },
 
     handleEdit(record) {
       Vue.ls.set(menuname, this.$route.name)
-      if (this.menuname == 'PersonnelSetting') {
-        this.$router.push({ name: 'PersonsettingAdd', query: { departmentid: this.materialclassid, operation: 'add' } })
-      } else {
-        this.$router.push({
-          name: 'ProductAdd',
-          params: {
-            menu: this.$route.name,
-            materialid: record.materialid,
-            tag: 2,
-          },
-        })
+      if (this.menuname == 'ProductList') {
+        this.materialid = record.materialid
+      } else if (this.menuname == 'PersonnelSetting') {
+        this.materialid = record.personid
+      } else if (this.menuname == 'SupplierList') {
+        this.materialid = record.vendorclassid
+      } else if (this.menuname == 'CustomerList') {
+        this.materialid = record.customerid
+      } else if (this.menuname == 'WarehouseList') {
+        this.materialid = record.warehouseid
       }
+      console.log('add materialid-->', this.materialid)
+      this.$router.push({
+        name: 'ProductAdd',
+        params: {
+          menu: this.$route.name,
+          materialid: this.materialid,
+          tag: 2,
+          menuid: this.menuid,
+        },
+      })
     },
     deleteItem(record) {
-      this.materialid = record.materialid
+      if (this.menuname == 'ProductList') {
+        this.materialid = record.materialid
+      } else if (this.menuname == 'PersonnelSetting') {
+        this.materialid = record.personid
+      } else if (this.menuname == 'SupplierList') {
+        this.materialid = record.vendorclassid
+      } else if (this.menuname == 'CustomerList') {
+        this.materialid = record.customerid
+      } else if (this.menuname == 'WarehouseList') {
+        this.materialid = record.warehouseid
+      }
       this.delete()
     },
     handleSub(record) {

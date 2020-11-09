@@ -6,6 +6,7 @@
           <a-form-item v-for="item in data" :label="item.title" :key="item.key">
             <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
             <a-input-number
+              :style="{ width: '1370px' }"
               v-decorator="item.decorator"
               v-show="item.inputnumberVisible"
               :max="item.fieldmax"
@@ -19,7 +20,9 @@
               placeholder="请选择"
             />
 
+
             <a-date-picker
+              :style="{ width: '1370px' }"
               v-show="item.timepickerVisible"
               show-time
               format="YYYY-MM-DD HH:mm:ss"
@@ -52,7 +55,7 @@
 
 <script>
 import Vue from 'vue'
-import { formModel, Button } from 'ant-design-vue'
+import { formModel, Button, Tree } from 'ant-design-vue'
 import { Cascader } from 'ant-design-vue'
 Vue.use(Cascader)
 import { PageHeader } from 'ant-design-vue'
@@ -63,6 +66,8 @@ import { logininfo, menuname } from '@/store/mutation-types'
 import { getForm, submitForm, postData, getData } from '@/api/manage'
 import { Form } from 'ant-design-vue'
 Vue.use(Form)
+import { TreeSelect } from 'ant-design-vue'
+Vue.use(TreeSelect)
 
 const numberRow = []
 export default {
@@ -86,6 +91,8 @@ export default {
       materialclassid: '',
       materialid: '',
       tag: 0, //1 add 2update
+     
+   
     }
   },
   created() {
@@ -98,7 +105,6 @@ export default {
       const { selectedRowKeys } = this
       return {
         selectedRowKeys,
-        onChange: this.onSelectChange,
         hideDefaultSelections: true,
         onSelection: this.onSelection,
       }
@@ -116,23 +122,45 @@ export default {
     this.form = this.$form.createForm(this, { name: 'form' })
   },
   methods: {
+    onChange(value) {
+      console.log(value)
+      this.value = value
+    },
     handleSubmit(e) {
-      const key = this.form.getFieldValue('materialclassid')
-      if (Vue.ls.get(menuname) == 'ProductList') {
-        var submitUrl = '/bd/product/insterMaterial'
-      } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
-      } else if (Vue.ls.get(menuname) == 'SupplierList') {
-        var submitUrl = '/bd/basevendor/vendorinstersave'
-      } else if (Vue.ls.get(menuname) == 'CustomerList') {
-        var submitUrl = '/bd/customer/customerinstersave'
-      } else if (Vue.ls.get(menuname) == 'WarehouseList') {
-        var submitUrl = '/bd/warehouse/warehouseupdatesave'
-      }
-
       this.form.validateFields((err, values) => {
         if (!err) {
+          if (this.$route.params.tag == 1) {
+            if (Vue.ls.get(menuname) == 'ProductList') {
+              var submitUrl = '/bd/product/insterMaterial'
+            } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+              var submitUrl = '/bd/baseperson/personinstersave'
+            } else if (Vue.ls.get(menuname) == 'SupplierList') {
+              var submitUrl = '/bd/basevendor/vendorinstersave'
+            } else if (Vue.ls.get(menuname) == 'CustomerList') {
+              var submitUrl = '/bd/customer/customerinstersave'
+            } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+              var submitUrl = '/bd/warehouse/warehouseupdatesave'
+            }
+          } else {
+            if (Vue.ls.get(menuname) == 'ProductList') {
+              var submitUrl = '/bd/product/updateMaterial'
+              values.materialid = this.materialid
+            } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+              var submitUrl = ''
+            } else if (Vue.ls.get(menuname) == 'SupplierList') {
+              var submitUrl = '/bd/basevendor/vendorupdatesave'
+              values.vendorid = this.materialid
+            } else if (Vue.ls.get(menuname) == 'CustomerList') {
+              var submitUrl = '/bd/customer/customerupdatesave'
+              values.customerid = this.materialid
+            } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+              var submitUrl = '/bd/warehouse/warehouseupdatesave'
+              values.warehouseid = this.materialid
+            }
+          }
+
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-          console.log('submit params-->', JSON.stringify(values))
+          console.log('submit url-->', submitUrl)
           submitForm(values, submitUrl)
             .then((res) => {
               console.log('submit--->', JSON.stringify(res))
@@ -141,7 +169,7 @@ export default {
               }
               this.$message.info(res.errorMsg)
             })
-            .catch(() => {})
+        
         }
       })
     },
@@ -162,6 +190,7 @@ export default {
         if (Vue.ls.get(menuname) == 'ProductList') {
           this.urlForm = '/bd/product/materialList'
         } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+          this.urlForm = '/bd/baseperson/insterForm'
         } else if (Vue.ls.get(menuname) == 'SupplierList') {
           this.urlForm = '/bd/basevendor/insterForm'
         } else if (Vue.ls.get(menuname) == 'CustomerList') {
@@ -171,21 +200,25 @@ export default {
         }
       } else if (this.$route.params.tag == 2) {
         this.materialid = this.$route.params.materialid
+        console.log('materialid', this.materialid)
         if (Vue.ls.get(menuname) == 'ProductList') {
           this.urlForm = '/bd/product/updateform'
+          columnsParams.materialid = this.materialid
         } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
         } else if (Vue.ls.get(menuname) == 'SupplierList') {
           this.urlForm = '/bd/basevendor/vendorupdatesave'
+          columnsParams.vendorid = this.materialid
         } else if (Vue.ls.get(menuname) == 'CustomerList') {
           this.urlForm = '/bd/customer/updateForm'
+          columnsParams.customerid = this.materialid
         } else if (Vue.ls.get(menuname) == 'WarehouseList') {
           this.urlForm = '/bd/warehouse/updateForm'
+          columnsParams.warehouseid = this.materialid
         }
-
-        columnsParams.materialid = this.materialid
       }
-    
+
       console.log('form url--->', this.urlForm)
+      console.log('form params-->', JSON.stringify(columnsParams))
       getForm(columnsParams, this.urlForm).then((res) => {
         this.data = res.result
         console.log('form res-->', JSON.stringify(res))
@@ -251,15 +284,7 @@ export default {
       this.numberRow = this.selectedRow //将选择的行赋值给表单中的表格行
       console.log(this.numberRow)
     },
-    onChange(record) {
-      console.log('check', record)
-      if (record.checked) {
-        //判断是否选中
-        // 将选中的行推到selectedRow中， 其中存放的是被选中的行数据
-        this.selectedRow.push(record)
-        console.log(this.selectedRow)
-      }
-    },
+
     onSearch(value) {
       console.log(value)
     },

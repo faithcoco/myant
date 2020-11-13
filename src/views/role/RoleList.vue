@@ -18,12 +18,14 @@
             <h3>角色：{{ mdl.name }}</h3>
           </div>
           <a-form :form="form" :layout="isMobile() ? 'vertical' : 'horizontal'">
-            <a-form-item label="唯一键">
-              <a-input v-decorator="[ 'id', {rules: [{ required: true, message: 'Please input unique key!' }]} ]" placeholder="请填写唯一键" />
-            </a-form-item>
+         
 
-            <a-form-item label="角色名称">
+            <a-form-item label="角色名称？？？">
               <a-input v-decorator="[ 'name', {rules: [{ required: true, message: 'Please input role name!' }]} ]" placeholder="请填写角色名称" />
+            </a-form-item>
+            
+            <a-form-item label="人员">
+              <a-input v-decorator="[ 'list', {rules: [{ required: false, message: 'Please input role name!' }]} ]" placeholder="请选择人员" />
             </a-form-item>
 
             <a-form-item label="状态">
@@ -33,9 +35,7 @@
               </a-select>
             </a-form-item>
 
-            <a-form-item label="备注说明">
-              <a-textarea :row="3" v-decorator="[ 'describe', {rules: [{ required: true, message: 'Please input role name!' }]} ]" placeholder="请填写角色名称" />
-            </a-form-item>
+         
 
             <a-form-item label="拥有权限">
               <a-row :gutter="16" v-for="(permission, index) in permissions" :key="index">

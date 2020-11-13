@@ -99,32 +99,36 @@ export default {
     initData(name) {
       this.name = name
       console.log('name-->', name)
-
-      if (name == 'ProductList') {
-        this.url = '/bd/product/materialClassTree'
-        this.urlAdd = '/bd/product/insertmaterialClass'
-        this.urlUpdate = '/bd/product/updatematerialClass'
-        this.urlDelete = '/bd/product/delmaterialClassById'
-      } else if (name == 'PersonnelSetting') {
+      if (name == 'PersonnelSetting') {
         this.url = '/bd/Sector'
         this.urlAdd = '/bd/insertDepartment'
         this.urlUpdate = '/bd/updateDepartment'
         this.urlDelete = '/bd/deleteDepartment'
+        this.columns[1].dataIndex = ''
+      } else if (name == 'ProductList') {
+        this.url = '/bd/product/materialClassTree'
+        this.urlAdd = '/bd/product/insertmaterialClass'
+        this.urlUpdate = '/bd/product/updatematerialClass'
+        this.urlDelete = '/bd/product/delmaterialClassById'
+        this.columns[1].dataIndex = 'materialclasscode'
       } else if (name == 'SupplierList') {
         this.url = '/bd/basevendor/vendorTree'
         this.urlAdd = '/bd/basevendor/insterVenderClass'
         this.urlDelete = '/bd/deleteDepartment'
         this.urlUpdate = '/bd/basevendor/updatevendorClass'
+        this.columns[1].dataIndex = 'vendorclasscode'
       } else if (name == 'CustomerList') {
         this.url = '/bd/customer/CustomerTree'
         this.urlAdd = '/bd/customer/insterCustomerClass'
         this.urlDelete = '/bd/customer/delCustomerClass'
         this.urlUpdate = '/bd/customer/updateCustomerClass'
+        this.columns[1].dataIndex = 'customerclasscode'
       } else if (name == 'WarehouseList') {
         this.url = '/bd/warehouse/WarehouseTree'
         this.urlAdd = '/bd/warehouse/insterWarehouseClass'
         this.urlDelete = '/bd/warehouse/delWarehouseClass'
         this.urlUpdate = '/bd/warehouse/updateWarehouseClass'
+        this.columns[1].dataIndex = 'materialclasscode'
       }
 
       this.getList()
@@ -169,7 +173,7 @@ export default {
       }
 
       console.log('add url-->', this.urlAdd)
-       console.log('add params-->', JSON.stringify(parameter))
+      console.log('add params-->', JSON.stringify(parameter))
       insertmaterialClass(parameter, this.urlAdd).then((res) => {
         console.log('add res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
@@ -202,6 +206,7 @@ export default {
         parameter.warehouseclassname = this.materialclassname
         parameter.warehouseclasscode = this.materialclasscode
       }
+      parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
 
       insertmaterialClass(parameter, this.urlUpdate).then((res) => {
         console.log('update res-->', JSON.stringify(res))
@@ -255,7 +260,17 @@ export default {
       this.tag = 2
       this.visible = true
       this.typeName = record.title
-      this.typeCode = record.materialclasscode
+      if (this.name == 'PersonnelSetting') {
+        // this.typeCode = record.materialclasscode
+      } else if (this.name == 'ProductList') {
+        this.typeCode = record.materialclasscode
+      } else if (this.name == 'SupplierList') {
+        this.typeCode = record.vendorclasscode
+      } else if (this.name == 'CustomerList') {
+        this.typeCode = record.customerclasscode
+      } else if (this.name == 'WarehouseList') {
+        this.typeCode = record.materialclasscode
+      }
     },
     handleDelete(record) {
       //删除
@@ -272,7 +287,7 @@ export default {
       this.visible = true
     },
     back() {
-        this.$router.go(-1)
+      this.$router.go(-1)
     },
     handleOk(e) {
       this.visible = false

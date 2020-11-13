@@ -84,27 +84,11 @@ import { STable } from '@/components'
 import { getProductList, getProductListColumns, getclassificationGoodsList, postData, getData } from '@/api/manage'
 import action from '../../core/directives/action'
 import Approval from '../Approval'
+import SelectModal from '../other/SelectModal'
 import { logininfo, menuname } from '@/store/mutation-types'
 
 const columns = []
-const selectList = [
-  { value: '全部' },
-  { value: '货品编码' },
-  { value: '货品名称' },
-  { value: '规格型号' },
-  { value: '存货编码' },
-  { value: '存货名称' },
-  { value: '主计量单位' },
-  { value: '电商销售单位' },
-  { value: '分销单位' },
-  { value: '最低售价' },
-  { value: '商品描述' },
-  { value: '默认发货仓库' },
-  { value: '是否虚拟物品' },
-  { value: '图片' },
-  { value: '预发货日期' },
-  { value: '单位毛重' },
-]
+const selectList = [{ value: '全部' }]
 
 const Operat_visible = true
 export default {
@@ -112,6 +96,7 @@ export default {
     STable,
     STree,
     Approval,
+    SelectModal,
   },
   data() {
     const oriTargetKeys = this.columns
@@ -141,6 +126,7 @@ export default {
       approval_visible: false,
       tree_visible: true,
       product: {},
+      urlDelete: '',
     }
   },
   mounted() {
@@ -168,11 +154,21 @@ export default {
   methods: {
     delete() {
       const columnsParams = {}
-      columnsParams.materialid = this.materialid
-      this.urlColumns = '/bd/product/delMaterialById'
-      console.log('url--->', this.urlColumns)
-      postData(columnsParams, this.urlColumns).then((res) => {
-        console.log('res', JSON.stringify(res))
+      if (this.menuname == 'ProductList') {
+        columnsParams.materialid = this.materialid
+      } else if (this.menuname == 'PersonnelSetting') {
+        columnsParams.departmentid = this.materialid
+      } else if (this.menuname == 'SupplierList') {
+        columnsParams.vendorid = this.materialid
+      } else if (this.menuname == 'CustomerList') {
+        columnsParams.customerid = this.materialid
+      } else if (this.menuname == 'WarehouseList') {
+        columnsParams.warehouseid = this.materialid
+      }
+
+      console.log('delete url--->', this.urlDelete)
+      postData(columnsParams, this.urlDelete).then((res) => {
+        console.log('delete res-->', JSON.stringify(res))
         this.getList()
       })
     },
@@ -184,26 +180,31 @@ export default {
         this.urlTree = '/bd/product/materialClassTree'
         this.urlColumns = '/bd/product/productList/columns'
         this.urlList = '/bd/product/productList'
+        this.urlDelete = '/bd/product/delMaterialById'
       } else if (name == 'PersonnelSetting') {
         this.titleTree = '部门分类'
         this.urlTree = '/bd/Sector'
         this.urlColumns = '/sys/setting/getSetting'
         this.urlList = '/bd/baseperson/PersonnelSettingList'
+        this.urlDelete = '/bd/deleteDepartment'
       } else if (name == 'SupplierList') {
         this.titleTree = '供应商分类'
         this.urlTree = '/bd/basevendor/vendorTree'
         this.urlColumns = '/bd/basevendor/vendorColumns'
         this.urlList = '/bd/basevendor/vendorlist'
+        this.urlDelete = '/bd/product/delMaterialById'
       } else if (name == 'CustomerList') {
         this.titleTree = '客户分类'
         this.urlTree = '/bd/customer/CustomerTree'
         this.urlColumns = '/sys/setting/getSetting'
         this.urlList = '/bd/customer/customerlist'
+        this.urlDelete = ''
       } else if (name == 'WarehouseList') {
         this.titleTree = '仓位分类'
         this.urlTree = '/bd/warehouse/WarehouseTree'
         this.urlColumns = '/sys/setting/getSetting'
         this.urlList = '/bd/warehouse/warehouselist'
+        this.urlDelete = '/bd/warehouse/delWarehousebyid'
       }
       this.urlColumns = '/sys/setting/getSetting'
       const parameter = {}
@@ -228,6 +229,10 @@ export default {
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
         console.log('columns data--->', JSON.stringify(res))
+
+        for (let i = 0; i < this.columns.length - 1; i++) {
+          this.selectList.push({ value: this.columns[i].title })
+        }
       })
     },
     getTree() {
@@ -242,28 +247,40 @@ export default {
       })
     },
     onExpand(expandedKeys) {
-      console.log('onExpand', expandedKeys)
       this.expandedKeys = expandedKeys
       this.autoExpandParent = false
     },
 
     onSelect(selectedKeys, info) {
-      this.selectedKeys = selectedKeys
-      this.materialclassid = selectedKeys[selectedKeys.length - 1]
+      this.materialclassid = selectedKeys.join()
       this.getList()
     },
     getList() {
       const parameter = {}
+      if (this.menuname == 'PersonnelSetting') {
+      
+      } else if (this.menuname == 'ProductList') {
+        parameter.materialclassid = this.materialclassid
+      } else if (this.menuname == 'SupplierList') {
+        parameter.vendorclassid = this.materialclassid
+      } else if (this.menuname == 'CustomerList') {
+        parameter.customerclassid = this.materialclassid
+      } else if (this.menuname == 'WarehouseList') {
+        parameter.warehouseclassid = this.materialclassid
+      }
 
-      parameter.materialclassid = this.materialclassid
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = '1'
       parameter.pageSize = '10'
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
-        
+        console.log('list data-->', JSON.stringify(res))
         this.listdata = res.result.data
+
+        for (const key in this.listdata) {
+          this.listdata[key].key = key
+        }
       })
     },
     onSearch(value) {

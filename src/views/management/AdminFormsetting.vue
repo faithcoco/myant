@@ -22,7 +22,6 @@
             :scroll="{ x: 2000, y: 575 }"
             :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
           >
-
             <span slot="fielddefault" slot-scope="text, record">
               <a-input
                 :disabled="record.fielddisabled"
@@ -295,7 +294,7 @@ export default {
     fielddecription(value, record) {
       record.fielddecription = value
     },
-     fielddefault(value, record) {
+    fielddefault(value, record) {
       record.fielddefault = value
     },
 

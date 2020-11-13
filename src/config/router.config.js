@@ -89,7 +89,7 @@ export const asyncRouterMap = [
             path: 'WarehouseList',
             name: 'WarehouseList',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductList.vue'),
-            meta: { title: '仓位档案', icon: 'user', permission: ['01-05'] }
+            meta: { title: '仓库档案', icon: 'user', permission: ['01-05'] }
           },
           {
             path: 'WarehouseAdd',
@@ -97,7 +97,17 @@ export const asyncRouterMap = [
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
             meta: { title: '仓库档案新增', permission: ['dashboard'] },
             hidden: true
-          }
+          }, {
+            path: 'CargoSpace',
+            name: 'CargoSpace',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/CargoSpace.vue'),
+            meta: { title: '货位档案', icon: 'user', permission: ['01-07'] }
+          }, {
+            path: 'BusinessCategory',
+            name: 'BusinessCategory',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/BusinessCategory.vue'),
+            meta: { title: '业务类别档案', icon: 'user', permission: ['01-08'] }
+          },
         ]
       },
       {

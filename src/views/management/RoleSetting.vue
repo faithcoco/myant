@@ -2,8 +2,7 @@
   <a-card :bordered="false" :style="{ height: '100%' }">
     <a-row :gutter="24">
       <a-col :md="4">
-        <div  class="demo-infinite-container">
-         
+        <div class="demo-infinite-container">
           <a-list itemLayout="vertical" :dataSource="roles">
             <a-list-item slot="renderItem" slot-scope="item, index" :key="index">
               <a-list-item-meta :style="{ marginBottom: '0' }">
@@ -12,76 +11,72 @@
               </a-list-item-meta>
             </a-list-item>
           </a-list>
-        
         </div>
       </a-col>
       <a-col :md="20">
         <a-card>
-        <div style="max-width: 1000px">
-          <div v-if="mdl.id">
-            <h3>角色：{{ mdl.name }}</h3>
+          <div style="max-width: 1000px">
+            <div v-if="mdl.id">
+              <h3>角色：{{ mdl.name }}</h3>
+            </div>
+            <a-form :form="form">
+              <a-form-item label="角色名称">
+                <a-input
+                  @change="onChange"
+                  v-decorator="['name', { rules: [{ required: true, message: 'Please input role name!' }] }]"
+                  placeholder="请填写角色名称"
+                />
+              </a-form-item>
+              <a-form-item label="人员">
+                <a-button block style="text-align: left" @click="personnelClick">{{ personlist }}</a-button>
+              </a-form-item>
+
+              <a-form-item label="状态">
+                <a-select v-decorator="['status', { rules: [] }]" @change="handleChange">
+                  <a-select-option :value="1">正常</a-select-option>
+                  <a-select-option :value="2">禁用</a-select-option>
+                </a-select>
+              </a-form-item>
+
+              <a-form-item label="拥有权限">
+                <a-row :gutter="16" v-for="(permission, index) in permissions" :key="index">
+                  <a-col :xl="3" :lg="24"> {{ permission.name }}： </a-col>
+                  <a-col :xl="21" :lg="24">
+                    <a-checkbox
+                      v-if="permission.actionsOptions.length > 0"
+                      :indeterminate="permission.indeterminate"
+                      :checked="permission.checkedAll"
+                      @change="onChangeCheckAll($event, permission)"
+                    >
+                      全选
+                    </a-checkbox>
+                    <a-checkbox-group
+                      :options="permission.actionsOptions"
+                      v-model="permission.selected"
+                      @change="onChangeCheck(permission)"
+                    />
+                  </a-col>
+                </a-row>
+              </a-form-item>
+            </a-form>
           </div>
-          <a-form :form="form">
-            <a-form-item label="角色名称">
-              <a-input
-                @change="onChange"
-                v-decorator="['name', { rules: [{ required: true, message: 'Please input role name!' }] }]"
-                placeholder="请填写角色名称"
-              />
-            </a-form-item>
-
-            <a-form-item label="状态">
-              <a-select v-decorator="['status', { rules: [] }]" @change="handleChange">
-                <a-select-option :value="1">正常</a-select-option>
-                <a-select-option :value="2">禁用</a-select-option>
-              </a-select>
-            </a-form-item>
-
-            <a-form-item label="备注说明" v-show="false">
-              <a-textarea
-                :row="3"
-                @change="onDescribeChange"
-                v-decorator="['describe', { rules: [{ required: true, message: 'Please input role name!' }] }]"
-                placeholder="请填写角色名称"
-              />
-            </a-form-item>
-
-            <a-form-item label="拥有权限">
-              <a-row :gutter="16" v-for="(permission, index) in permissions" :key="index">
-                <a-col :xl="3" :lg="24"> {{ permission.name }}： </a-col>
-                <a-col :xl="21" :lg="24">
-                  <a-checkbox
-                    v-if="permission.actionsOptions.length > 0"
-                    :indeterminate="permission.indeterminate"
-                    :checked="permission.checkedAll"
-                    @change="onChangeCheckAll($event, permission)"
-                  >
-                    全选
-                  </a-checkbox>
-                  <a-checkbox-group
-                    :options="permission.actionsOptions"
-                    v-model="permission.selected"
-                    @change="onChangeCheck(permission)"
-                  />
-                </a-col>
-              </a-row>
-            </a-form-item>
-          </a-form>
-        </div>
-        <a-row>
-          <a-col :span="1" :offset="7">
-            <a-button type="primary" @click="onSubmit">保存</a-button>
-          </a-col>
-          <a-col :span="1" :offset="1">
-            <a-button type="danger" @click="onDelete">删除</a-button>
-          </a-col>
-          <a-col :span="1" :offset="1">
-            <a-button type @click="onBack">返回</a-button>
-          </a-col>
-        </a-row>
+          <a-row>
+            <a-col :span="1" :offset="7">
+              <a-button type="primary" @click="onSubmit">保存</a-button>
+            </a-col>
+            <a-col :span="1" :offset="1">
+              <a-button type="danger" @click="onDelete">删除</a-button>
+            </a-col>
+            <a-col :span="1" :offset="1">
+              <a-button type @click="onBack">返回</a-button>
+            </a-col>
+          </a-row>
         </a-card>
       </a-col>
     </a-row>
+    <a-modal title="选择" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
+      <select-modal :name="name" :visible="visible" @onSelect="getSelect"></select-modal>
+    </a-modal>
   </a-card>
 </template>
 
@@ -91,10 +86,16 @@ import { getRoleList, getPermissions, insertRole, updateRole, deleteRole } from 
 import { actionToObject } from '@/utils/permissions'
 import { logininfo } from '@/store/mutation-types'
 import Vue from 'vue'
+import SelectModal from '../other/SelectModal'
+import Approval from '../Approval'
 
 export default {
   name: 'RoleList',
-  components: {},
+  components: {
+    SelectModal,
+    Approval,
+  },
+
   data() {
     return {
       form: this.$form.createForm(this),
@@ -103,6 +104,11 @@ export default {
       roles: [],
       permissions: [],
       idParapms: {},
+      visible: false,
+      name: 'PersonnelSetting',
+      product: {},
+      selectList: [],
+      personlist: '',
     }
   },
   created() {
@@ -111,9 +117,30 @@ export default {
     this.loadPermissions()
   },
   methods: {
+    handleOk(e) {
+      console.log('select--->', JSON.stringify(this.selectList))
+      this.personlist = this.list.join()
+      
+      this.visible = false
+    },
+    handleCancel(e) {
+      this.visible = false
+    },
+    change(visible) {
+      this.approval_visible = visible
+    },
+    getSelect(selectlist) {
+      this.selectList = selectlist
+    },
+
+    personnelClick() {
+      this.visible = true
+      this.name = 'PersonnelSetting'
+    },
     setRole() {
       getRoleList(this.idParapms).then((res) => {
         this.roles = res.result.data
+        console.log('role-->', JSON.stringify(this.roles))
         this.roles.push({
           personid: Vue.ls.get(logininfo).basepersonPO.personid,
           enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
@@ -140,7 +167,7 @@ export default {
     },
     onSubmit() {
       this.mdl.permissions = []
-      this.mdl. describe=""
+      this.mdl.describe = ''
       for (const key in this.permissions) {
         this.mdl.permissions.push({ permissionId: this.permissions[key].action, actionEntitySet: [] })
 
@@ -161,6 +188,7 @@ export default {
           }
         })
       } else {
+        console.log('update-->',this.mdl)
         updateRole(this.mdl).then((res) => {
           console.log('  updateRole res---------->', JSON.stringify(res))
 
@@ -202,7 +230,7 @@ export default {
       this.mdl = Object.assign({}, record)
       console.log('mdl-->', this.mdl)
 
-      if (this.mdl. describe == '新增角色') {
+      if (this.mdl.describe == '新增角色') {
         this.state = 0
       }
       // 有权限表，处理勾选
@@ -223,13 +251,18 @@ export default {
           this.onChangeCheck(permission)
         })
 
-        console.log('this.permissions', this.permissions)
+      
       }
-
+      var userlist = []
+    
+      for (const key in this.mdl.personList) {
+        userlist.push(this.mdl.personList[key].personname)
+      }
+      this.personlist = userlist.join()
+     
       this.$nextTick(() => {
         this.form.setFieldsValue(pick(this.mdl, 'id', 'name', 'status', 'describe'))
       })
-      console.log('this.mdl', this.mdl)
     },
 
     onChangeCheck(permission) {

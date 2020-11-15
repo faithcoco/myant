@@ -165,7 +165,7 @@ export default {
       this.menuname = name
       console.log('menu name-->', name)
       if (name == 'CargoSpace') {
-        this.titleTree = '货位分类'
+        this.titleTree = '仓库'
         this.urlTree = '/bd/warehouse/positionTree'
         this.urlColumns = '/sys/setting/getSetting'
         this.urlList = '/bd/warehouse/positionlist'

@@ -13,12 +13,12 @@
             v-model="checkedKeys"
             :expanded-keys="expandedKeys"
             :auto-expand-parent="autoExpandParent"
-            :selected-keys="selectedKeys"
             :tree-data="classifyTree"
             @expand="onExpand"
             @select="onSelect"
           >
           </a-tree>
+          
         </a-col>
 
         <a-col :span="20">

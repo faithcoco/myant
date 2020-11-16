@@ -156,7 +156,7 @@ export default {
       columnsParams.positionid = this.materialid
       this.urlColumns = '/bd/warehouse/delposition'
       console.log('url--->', this.urlColumns)
-      postData(columnsParams, this.urlColumns).then((res) => {
+      getData(columnsParams, this.urlColumns).then((res) => {
         console.log('res', JSON.stringify(res))
         this.getList()
       })

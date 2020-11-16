@@ -172,7 +172,7 @@ export default {
     delete() {
       const columnsParams = {}
       if (this.menuname == 'ProductList') {
-        columnsParams.materialid = this.materialid
+        columnsParams.personid = this.materialid
       } else if (this.menuname == 'PersonnelSetting') {
         columnsParams.departmentid = this.materialid
       } else if (this.menuname == 'SupplierList') {
@@ -184,6 +184,7 @@ export default {
       }
 
       console.log('delete url--->', this.urlDelete)
+      console.log('delete params--->', JSON.stringify(columnsParams))
       getData(columnsParams, this.urlDelete).then((res) => {
         console.log('delete res-->', JSON.stringify(res))
         this.getList()
@@ -203,7 +204,7 @@ export default {
         this.urlTree = '/bd/Sector'
         this.urlColumns = '/sys/setting/getSetting'
         this.urlList = '/bd/baseperson/PersonnelSettingList'
-        this.urlDelete = ''
+        this.urlDelete = '/bd/baseperson/deletePerson'
       } else if (name == 'SupplierList') {
         this.titleTree = '供应商分类'
         this.urlTree = '/bd/basevendor/vendorTree'

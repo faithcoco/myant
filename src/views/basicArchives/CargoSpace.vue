@@ -6,7 +6,7 @@
           <span>{{ titleTree }}</span>
 
           <a-divider type="horizontal" />
-
+          <a-input-search style="margin-bottom: 8px" placeholder="请输入关键字" @change="treeSearch" />
           <a-tree
             v-show="tree_visible"
             showLine
@@ -126,6 +126,7 @@ export default {
       approval_visible: false,
       tree_visible: true,
       product: {},
+      treeData: [],
     }
   },
   mounted() {
@@ -151,6 +152,10 @@ export default {
     },
   },
   methods: {
+    treeSearch(e) {
+      const value = e.target.value
+      this.classifyTree = this.treeData.filter((item) => JSON.stringify(item).includes(value))
+    },
     delete() {
       const columnsParams = {}
       columnsParams.positionid = this.materialid
@@ -202,7 +207,9 @@ export default {
       const parameter = {}
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
-        this.classifyTree = res.result
+           this.treeData = res.result
+        this.classifyTree = this.treeData
+       
         console.log('tree', JSON.stringify(this.classifyTree))
         this.expandedKeys.push(this.classifyTree[0].key)
         this.materialclassid = res.result[0].children[0].key

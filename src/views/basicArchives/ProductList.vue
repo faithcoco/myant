@@ -127,6 +127,7 @@ export default {
       tree_visible: true,
       product: {},
       urlDelete: '',
+      treeData: [],
     }
   },
   mounted() {
@@ -152,18 +153,9 @@ export default {
     },
   },
   methods: {
-
-    treeSearch(e){
+    treeSearch(e) {
       const value = e.target.value
-     // this.classifyTree.filter()
-     console.log("tree-->",JSON.stringify(this.classifyTree))
-     for (const key in this.classifyTree) {
-      if(this.classifyTree[key].title.includes(value)){
-        console.log('includes-->',true)
-      }
-     }
-
-    this.classifyTree.filter(title=>title.includes(value)==true)
+      this.classifyTree = this.treeData.filter((item) => JSON.stringify(item).includes(value))
     },
     delete() {
       const columnsParams = {}
@@ -207,7 +199,6 @@ export default {
         this.urlColumns = '/bd/basevendor/vendorColumns'
         this.urlList = '/bd/basevendor/vendorlist'
         this.urlDelete = '/bd/basevendor/delvendorbyid'
-       
       } else if (name == 'CustomerList') {
         this.titleTree = '客户分类'
         this.urlTree = '/bd/customer/CustomerTree'
@@ -254,7 +245,8 @@ export default {
       const parameter = {}
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
-        this.classifyTree = res.result
+        this.treeData = res.result
+        this.classifyTree = this.treeData
         console.log('tree', JSON.stringify(this.classifyTree))
         this.expandedKeys.push(this.classifyTree[0].key)
         this.checkedKeys.push(res.result[0].key)

@@ -112,15 +112,9 @@
 
       <router-link class="register" :to="{ name: 'register' }">还没有账号？注册账户</router-link>
     </a-form>
-    <a-modal
-      title="选择企业"
-      :visible="enterpriseVisible"
-   
-      @ok="handleOk"
-      @cancel="handleCancel"
-    >
-      <a-radio-group v-model="radioValue" @change="handleChange">
-        <a-radio v-for="d in companyList" :value="d.enterpriseid">{{ d.enterprisename }}</a-radio>
+    <a-modal title="选择企业" :visible="enterpriseVisible" @ok="handleOk" @cancel="handleCancel">
+      <a-radio-group v-model="radioValue" @change="handleChange" >
+        <a-radio  :style="radioStyle" v-for="d in companyList" :value="d.enterpriseid">{{ d.enterprisename }}</a-radio>
       </a-radio-group>
     </a-modal>
     <two-step-captcha
@@ -167,7 +161,12 @@ export default {
         loginType: 0,
         smsSendBtn: false,
       },
-      radioValue:""
+      radioValue: '',
+       radioStyle: {
+        display: 'block',
+        height: '30px',
+        lineHeight: '30px',
+      },
     }
   },
   created() {
@@ -193,10 +192,7 @@ export default {
     },
     // handler
     loginSubmit() {
-       const {
-        state,
-        Login,
-      } = this
+      const { state, Login } = this
       const loginParams = {}
       loginParams.enterprisephone = this.enterprisephone
       loginParams.password = this.password

@@ -422,7 +422,7 @@ export default {
       console.log('params-->', params)
       getBaseenterpriseInfo(params)
         .then((res) => {
-          console.log('返回值--getBaseenterpriseInfo----->', JSON.stringify(res))
+          console.log('getBaseenterpriseInfo----->', JSON.stringify(res))
           this.form = res.result
           this.form.enterpriseregistrationtime = enterpriseregistrationtime
           this.form.enterprisestatus = this.baseenterprisePO.enterprisestatus

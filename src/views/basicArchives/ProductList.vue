@@ -152,22 +152,18 @@ export default {
     },
   },
   methods: {
+
     treeSearch(e){
       const value = e.target.value
-      const expandedKeys = dataList
-        .map((item) => {
-          if (item.title.indexOf(value) > -1) {
-            return getParentKey(item.key, gData)
-          }
-          return null
-        })
-        .filter((item, i, self) => item && self.indexOf(item) === i)
-      Object.assign(this, {
-        expandedKeys,
-        searchValue: value,
-        autoExpandParent: true,
-      })
-      console.log("expane-->",this.expandedKeys)
+     // this.classifyTree.filter()
+     console.log("tree-->",JSON.stringify(this.classifyTree))
+     for (const key in this.classifyTree) {
+      if(this.classifyTree[key].title.includes(value)){
+        console.log('includes-->',true)
+      }
+     }
+
+    this.classifyTree.filter(title=>title.includes(value)==true)
     },
     delete() {
       const columnsParams = {}
@@ -210,7 +206,8 @@ export default {
         this.urlTree = '/bd/basevendor/vendorTree'
         this.urlColumns = '/bd/basevendor/vendorColumns'
         this.urlList = '/bd/basevendor/vendorlist'
-        this.urlDelete = '/bd/product/delMaterialById'
+        this.urlDelete = '/bd/basevendor/delvendorbyid'
+       
       } else if (name == 'CustomerList') {
         this.titleTree = '客户分类'
         this.urlTree = '/bd/customer/CustomerTree'

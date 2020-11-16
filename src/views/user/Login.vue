@@ -115,11 +115,11 @@
     <a-modal
       title="选择企业"
       :visible="enterpriseVisible"
-      :confirm-loading="confirmLoading"
+   
       @ok="handleOk"
       @cancel="handleCancel"
     >
-      <a-radio-group v-model="value" @change="handleChange">
+      <a-radio-group v-model="radioValue" @change="handleChange">
         <a-radio v-for="d in companyList" :value="d.enterpriseid">{{ d.enterprisename }}</a-radio>
       </a-radio-group>
     </a-modal>
@@ -167,6 +167,7 @@ export default {
         loginType: 0,
         smsSendBtn: false,
       },
+      radioValue:""
     }
   },
   created() {
@@ -210,9 +211,9 @@ export default {
           state.loginBtn = false
         })
     },
-    handleChange(value) {
-      console.log('change', value)
-      this.enterpriseid = value
+    handleChange(e) {
+      console.log('change', e.target.value)
+      this.enterpriseid = e.target.value
     },
     dropdownVisibleChange(value) {},
     handleUsernameOrEmail(rule, value, callback) {

@@ -104,7 +104,7 @@ export default {
         this.urlAdd = '/bd/insertDepartment'
         this.urlUpdate = '/bd/updateDepartment'
         this.urlDelete = '/bd/deleteDepartment'
-        this.columns[1].dataIndex = ''
+        this.columns[1].dataIndex = 'code'
       } else if (name == 'ProductList') {
         this.url = '/bd/product/materialClassTree'
         this.urlAdd = '/bd/product/insertmaterialClass'
@@ -261,7 +261,7 @@ export default {
       this.visible = true
       this.typeName = record.title
       if (this.name == 'PersonnelSetting') {
-         this.typeCode = record.materialclasscode
+         this.typeCode = record.code
       } else if (this.name == 'ProductList') {
         this.typeCode = record.materialclasscode
       } else if (this.name == 'SupplierList') {

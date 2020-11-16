@@ -208,6 +208,8 @@ export default {
           this.urlForm = '/bd/product/updateform'
           columnsParams.materialid = this.materialid
         } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+           this.urlForm = '/bd/baseperson/updateForm'
+          columnsParams.personid = this.materialid
         } else if (Vue.ls.get(menuname) == 'SupplierList') {
           this.urlForm = '/bd/basevendor/vendorupdatesave'
           columnsParams.vendorid = this.materialid

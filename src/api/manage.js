@@ -49,7 +49,7 @@ const api = {
   updatePsndocRole: '/bd/basepersonrole/updatePsndocRole',
 
   updateBaseenterprise: '/bd/Baseenterprise/updateBaseenterprise',
-  insertBaseenterprise: '/bd/Baseenterprise//insertBaseenterprise',
+  insertBaseenterprise: '/bd/Baseenterprise/insertBaseenterprise',
 
   productList: '/bd/product/productList',
   SupplierList: '/SupplierList',
@@ -834,6 +834,7 @@ export function updateBaseenterprise(parameter) {
   })
 }
 export function insertBaseenterprise(parameter) {
+  console.log('create url-->',api.insertBaseenterprise)
   return axios({
     url: api.insertBaseenterprise,
     method: 'post',

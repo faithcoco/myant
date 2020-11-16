@@ -10,7 +10,6 @@
           <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px" message="账户或密码错误" />
           <a-form-item>
             <a-input
-              @change="handleUserChange"
               size="large"
               type="text"
               placeholder="请输入账号"
@@ -44,7 +43,6 @@
         <a-tab-pane key="1" tab="验证码登录">
           <a-form-item>
             <a-input
-              @change="handleUserChange"
               size="large"
               type="text"
               placeholder="手机号"
@@ -92,12 +90,7 @@
           </a-row>
         </a-tab-pane>
       </a-tabs>
-      <a-form-item v-show="enterpriseVisible">
-        企业：
-        <a-select default-value="请选择" style="width: 150px" @change="handleChange">
-          <a-select-option v-for="d in companyList" :key="d.enterpriseid">{{ d.enterprisename }}</a-select-option>
-        </a-select>
-      </a-form-item>
+
       <a-form-item>
         <a-checkbox v-decorator="['rememberMe', { valuePropName: 'checked' }]">自动登录</a-checkbox>
         <router-link :to="{ name: 'Recover', params: { user: 'aaa' } }" class="forge-password" style="float: right"
@@ -119,7 +112,17 @@
 
       <router-link class="register" :to="{ name: 'register' }">还没有账号？注册账户</router-link>
     </a-form>
-
+    <a-modal
+      title="选择企业"
+      :visible="enterpriseVisible"
+      :confirm-loading="confirmLoading"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
+      <a-radio-group v-model="value" @change="handleChange">
+        <a-radio v-for="d in companyList" :value="d.enterpriseid">{{ d.enterprisename }}</a-radio>
+      </a-radio-group>
+    </a-modal>
     <two-step-captcha
       v-if="requiredTwoStepCaptcha"
       :visible="stepCaptchaVisible"
@@ -171,7 +174,6 @@ export default {
       .then((res) => {
         console.log('2step-code-->', JSON.stringify(res))
 
-      
         this.requiredTwoStepCaptcha = res.result.stepCode
       })
       .catch(() => {
@@ -181,28 +183,32 @@ export default {
   },
   methods: {
     ...mapActions(['Login', 'Logout']),
-
+    handleOk(e) {
+      this.enterpriseVisible = false
+      this.loginSubmit()
+    },
+    handleCancel(e) {
+      this.enterpriseVisible = false
+    },
     // handler
-    handleUserChange(e) {
+    loginSubmit() {
+       const {
+        state,
+        Login,
+      } = this
       const loginParams = {}
-
-      loginParams.phone = e.target.value
-    
-        getCompanyList(loginParams)
-          .then((res) => {
-            console.log('getCompanyList-->', JSON.stringify(res))
-            if (res.result.length == 1) {
-              this.enterpriseid = res.result[0].enterpriseid
-              this.enterpriseVisible = false
-            } else {
-              this.enterpriseVisible = true
-            }
-            this.companyList = res.result
-          })
-          .catch(() => {
-            this.requiredTwoStepCaptcha = false
-          })
-      
+      loginParams.enterprisephone = this.enterprisephone
+      loginParams.password = this.password
+      loginParams.phoneCode = this.phoneCode
+      loginParams.loginType = this.customActiveKey
+      loginParams.enterpriseid = this.enterpriseid
+      console.log('login params-->', JSON.stringify(loginParams))
+      Login(loginParams)
+        .then((res) => this.loginSuccess(res))
+        .catch((err) => this.requestFailed(err))
+        .finally(() => {
+          state.loginBtn = false
+        })
     },
     handleChange(value) {
       console.log('change', value)
@@ -238,18 +244,28 @@ export default {
       const validateFieldsKey = customActiveKey === '2' ? ['username', 'password'] : ['mobile', 'captcha']
       this.form.validateFields((err, values) => {
         if (!err) {
+          this.enterprisephone = values.enterprisephone
+          this.password = values.password
+          this.phoneCode = values.phoneCode
+
           const loginParams = {}
 
-          loginParams.enterprisephone = values.enterprisephone
-          loginParams.password = values.password
-          loginParams.phoneCode = values.phoneCode
-          loginParams.loginType = this.customActiveKey
-          loginParams.enterpriseid = this.enterpriseid
-          Login(loginParams)
-            .then((res) => this.loginSuccess(res))
-            .catch((err) => this.requestFailed(err))
-            .finally(() => {
-              state.loginBtn = false
+          loginParams.phone = values.enterprisephone
+          console.log('enterpriseid params-->', loginParams)
+          getCompanyList(loginParams)
+            .then((res) => {
+              console.log('getCompanyList-->', JSON.stringify(res))
+              if (res.result.length == 1) {
+                this.enterpriseid = res.result[0].enterpriseid
+                this.enterpriseVisible = false
+                this.loginSubmit()
+              } else {
+                this.enterpriseVisible = true
+              }
+              this.companyList = res.result
+            })
+            .catch(() => {
+              this.requiredTwoStepCaptcha = false
             })
         }
       })
@@ -305,17 +321,6 @@ export default {
       })
     },
     loginSuccess(res) {
-      // check res.homePage define, set $router.push name res.homePage
-      // Why not enter onComplete
-      /*
-      this.$router.push({ name: 'analysis' }, () => {
-        console.log('onComplete')
-        this.$notification.success({
-          message: '欢迎',
-          description: `${timeFix()}，欢迎回来`
-        })
-      })
-      */
       this.$router.push({ name: 'index' })
       // 延迟 1 秒显示欢迎信息
       setTimeout(() => {

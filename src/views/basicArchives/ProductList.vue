@@ -6,19 +6,18 @@
           <span>{{ titleTree }}</span>
           <a-button style="margin-left: 40px" type="primary" @click="Classify()">分类设置</a-button>
           <a-divider type="horizontal" />
-
+          <a-input-search style="margin-bottom: 8px" placeholder="请输入关键字" @change="treeSearch" />
           <a-tree
             v-show="tree_visible"
             showLine
-            v-model="checkedKeys"
             :expanded-keys="expandedKeys"
             :auto-expand-parent="autoExpandParent"
             :tree-data="classifyTree"
             @expand="onExpand"
             @select="onSelect"
+            :defaultSelectedKeys="checkedKeys"
           >
           </a-tree>
-          
         </a-col>
 
         <a-col :span="20">
@@ -91,6 +90,7 @@ const columns = []
 const selectList = [{ value: '全部' }]
 
 const Operat_visible = true
+const dataList = []
 export default {
   components: {
     STable,
@@ -108,7 +108,7 @@ export default {
       columns,
       queryParam: {},
       selectedRowKeys: [],
-      selectedKeys: ['f5728e20-ca54-4549-bd9f-e178a94b13a2'],
+      selectedKeys: [],
       listdata: [],
       classifyTree: [],
       moment,
@@ -152,6 +152,23 @@ export default {
     },
   },
   methods: {
+    treeSearch(e){
+      const value = e.target.value
+      const expandedKeys = dataList
+        .map((item) => {
+          if (item.title.indexOf(value) > -1) {
+            return getParentKey(item.key, gData)
+          }
+          return null
+        })
+        .filter((item, i, self) => item && self.indexOf(item) === i)
+      Object.assign(this, {
+        expandedKeys,
+        searchValue: value,
+        autoExpandParent: true,
+      })
+      console.log("expane-->",this.expandedKeys)
+    },
     delete() {
       const columnsParams = {}
       if (this.menuname == 'ProductList') {
@@ -167,7 +184,7 @@ export default {
       }
 
       console.log('delete url--->', this.urlDelete)
-      postData(columnsParams, this.urlDelete).then((res) => {
+      getData(columnsParams, this.urlDelete).then((res) => {
         console.log('delete res-->', JSON.stringify(res))
         this.getList()
       })
@@ -186,7 +203,7 @@ export default {
         this.urlTree = '/bd/Sector'
         this.urlColumns = '/sys/setting/getSetting'
         this.urlList = '/bd/baseperson/PersonnelSettingList'
-        this.urlDelete = '/bd/deleteDepartment'
+        this.urlDelete = ''
       } else if (name == 'SupplierList') {
         this.titleTree = '供应商分类'
         this.urlTree = '/bd/basevendor/vendorTree'
@@ -198,7 +215,7 @@ export default {
         this.urlTree = '/bd/customer/CustomerTree'
         this.urlColumns = '/sys/setting/getSetting'
         this.urlList = '/bd/customer/customerlist'
-        this.urlDelete = ''
+        this.urlDelete = '/bd/customer/delCustomerbyid'
       } else if (name == 'WarehouseList') {
         this.titleTree = '仓位分类'
         this.urlTree = '/bd/warehouse/WarehouseTree'
@@ -242,7 +259,9 @@ export default {
         this.classifyTree = res.result
         console.log('tree', JSON.stringify(this.classifyTree))
         this.expandedKeys.push(this.classifyTree[0].key)
-        this.materialclassid = res.result[0].children[0].key
+        this.checkedKeys.push(res.result[0].key)
+        console.log('checked', JSON.stringify(this.checkedKeys))
+        this.materialclassid = res.result[0].key
         this.getList()
       })
     },
@@ -275,7 +294,6 @@ export default {
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
-        console.log('list data-->', JSON.stringify(res))
         this.listdata = res.result.data
 
         for (const key in this.listdata) {

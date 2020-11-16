@@ -255,13 +255,13 @@ export default {
     },
     handleEdit(record) {
       //编辑
-      console.log('edit-->', record)
+      console.log('edit-->', JSON.stringify(record))
       this.id = record.key
       this.tag = 2
       this.visible = true
       this.typeName = record.title
       if (this.name == 'PersonnelSetting') {
-        // this.typeCode = record.materialclasscode
+         this.typeCode = record.materialclasscode
       } else if (this.name == 'ProductList') {
         this.typeCode = record.materialclasscode
       } else if (this.name == 'SupplierList') {
@@ -285,6 +285,7 @@ export default {
       //新增类别
       this.tag = 1
       this.visible = true
+      this.id=''
     },
     back() {
       this.$router.go(-1)

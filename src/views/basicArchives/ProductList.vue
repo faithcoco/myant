@@ -267,7 +267,7 @@ export default {
     getList() {
       const parameter = {}
       if (this.menuname == 'PersonnelSetting') {
-        parameter.personid = this.materialclassid
+        parameter.departmentid = this.materialclassid
       } else if (this.menuname == 'ProductList') {
         parameter.materialclassid = this.materialclassid
       } else if (this.menuname == 'SupplierList') {

@@ -21,8 +21,8 @@
         </a-col>
 
         <a-col :span="20">
-          <a-select default-value="全部" style="width: 220px" @change="selectChange(value)">
-            <a-select-option v-for="SList in selectList" :key="SList.value" :value="SList.value">{{
+          <a-select default-value="全部" style="width: 220px" @change="selectChange">
+            <a-select-option v-for="SList in selectList" :key="SList.key" :value="SList.key">{{
               SList.value
             }}</a-select-option>
           </a-select>
@@ -87,7 +87,7 @@ import SelectModal from '../other/SelectModal'
 import { logininfo, menuname } from '@/store/mutation-types'
 
 const columns = []
-const selectList = [{ value: '全部' }]
+const selectList = [{ value: '全部', key: 'all' }]
 
 const Operat_visible = true
 const dataList = []
@@ -128,6 +128,10 @@ export default {
       product: {},
       urlDelete: '',
       treeData: [],
+
+      isSearch: false,
+      searchValue: '',
+      searchKey: 'all',
     }
   },
   mounted() {
@@ -237,7 +241,7 @@ export default {
         console.log('columns data--->', JSON.stringify(res))
 
         for (let i = 0; i < this.columns.length - 1; i++) {
-          this.selectList.push({ value: this.columns[i].title })
+          this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
         }
       })
     },
@@ -281,6 +285,11 @@ export default {
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = '1'
       parameter.pageSize = '10'
+      if (this.isSearch) {
+        console.log('search-->', this.searchKey + '/' + this.searchValue)
+        parameter[`${this.searchKey}`] = this.searchValue
+      }
+
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
@@ -289,16 +298,18 @@ export default {
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }
+        this.isSearch = false
       })
     },
     onSearch(value) {
-      console.log(value)
-      this.queryParam = {
-        key: value,
-      }
-      this.$refs.table.refresh(true) //用refresh方法刷新表格
+      console.log('is run--->')
+      this.isSearch = true
+      this.searchValue = value
+      this.getList()
     },
-    selectChange() {},
+    selectChange(value) {
+      this.searchKey = value
+    },
 
     Classify() {
       Vue.ls.set(menuname, this.$route.name)

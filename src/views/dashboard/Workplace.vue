@@ -5,7 +5,7 @@
         {{ timeFix }}，{{ user.name }}
         <span class="welcome-text">，{{ welcome }}</span>
       </div>
-      <div>前端工程师 | 蚂蚁金服 - 某某某事业群 - VUE平台</div>
+      <div>hello world</div>
     </div>
     <div slot="extra">
       <a-row class="more-info">

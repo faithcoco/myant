@@ -2,7 +2,8 @@
   <a-layout>
     <div>
       <a-card>
-        <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
+        <a-page-header title=""  @back="Back" />
+        <a-form :form="form" :label-col="{ span: 2 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
           <a-form-item v-for="item in data" :label="item.title" :key="item.key">
             <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
             <a-input-number
@@ -93,7 +94,6 @@ export default {
     }
   },
   created() {
-    
     this.getForm()
   },
 

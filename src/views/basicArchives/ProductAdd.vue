@@ -93,7 +93,7 @@ export default {
     }
   },
   created() {
-    console.log('url---->', this.urlForm)
+    
     this.getForm()
   },
 
@@ -165,6 +165,7 @@ export default {
           console.log('submit url-->', submitUrl)
           submitForm(values, submitUrl).then((res) => {
             console.log('submit--->', JSON.stringify(res))
+
             if (res.status == 'SUCCESS') {
               this.form.resetFields()
             }
@@ -208,10 +209,10 @@ export default {
           this.urlForm = '/bd/product/updateform'
           columnsParams.materialid = this.materialid
         } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
-           this.urlForm = '/bd/baseperson/updateForm'
+          this.urlForm = '/bd/baseperson/updateForm'
           columnsParams.personid = this.materialid
         } else if (Vue.ls.get(menuname) == 'SupplierList') {
-          this.urlForm = '/bd/basevendor/vendorupdatesave'
+          this.urlForm = '/bd/basevendor/updateForm'
           columnsParams.vendorid = this.materialid
         } else if (Vue.ls.get(menuname) == 'CustomerList') {
           this.urlForm = '/bd/customer/updateForm'

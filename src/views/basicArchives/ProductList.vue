@@ -160,7 +160,7 @@ export default {
     delete() {
       const columnsParams = {}
       if (this.menuname == 'ProductList') {
-        columnsParams.personid = this.materialid
+        columnsParams.materialid = this.materialid
       } else if (this.menuname == 'PersonnelSetting') {
         columnsParams.departmentid = this.materialid
       } else if (this.menuname == 'SupplierList') {
@@ -267,7 +267,7 @@ export default {
     getList() {
       const parameter = {}
       if (this.menuname == 'PersonnelSetting') {
-        parameter.departmentid = this.materialclassid
+        parameter.personid = this.materialclassid
       } else if (this.menuname == 'ProductList') {
         parameter.materialclassid = this.materialclassid
       } else if (this.menuname == 'SupplierList') {
@@ -285,7 +285,7 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-
+        console.log('list res-->', JSON.stringify(this.listdata))
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }
@@ -329,7 +329,7 @@ export default {
       } else if (this.menuname == 'PersonnelSetting') {
         this.materialid = record.personid
       } else if (this.menuname == 'SupplierList') {
-        this.materialid = record.vendorclassid
+        this.materialid = record.vendorid
       } else if (this.menuname == 'CustomerList') {
         this.materialid = record.customerid
       } else if (this.menuname == 'WarehouseList') {
@@ -352,7 +352,7 @@ export default {
       } else if (this.menuname == 'PersonnelSetting') {
         this.materialid = record.personid
       } else if (this.menuname == 'SupplierList') {
-        this.materialid = record.vendorclassid
+        this.materialid = record.vendorid
       } else if (this.menuname == 'CustomerList') {
         this.materialid = record.customerid
       } else if (this.menuname == 'WarehouseList') {

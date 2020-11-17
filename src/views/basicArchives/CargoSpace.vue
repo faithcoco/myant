@@ -207,9 +207,9 @@ export default {
       const parameter = {}
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
-           this.treeData = res.result
+        this.treeData = res.result
         this.classifyTree = this.treeData
-       
+
         console.log('tree', JSON.stringify(this.classifyTree))
         this.expandedKeys.push(this.classifyTree[0].key)
         this.materialclassid = res.result[0].children[0].key
@@ -230,7 +230,7 @@ export default {
     getList() {
       const parameter = {}
 
-      parameter.materialclassid = this.materialclassid
+      parameter.warehouseid = this.materialclassid
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = '1'
       parameter.pageSize = '10'

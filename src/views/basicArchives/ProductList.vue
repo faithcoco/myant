@@ -162,7 +162,7 @@ export default {
       if (this.menuname == 'ProductList') {
         columnsParams.materialid = this.materialid
       } else if (this.menuname == 'PersonnelSetting') {
-        columnsParams.departmentid = this.materialid
+        columnsParams.personid = this.materialid
       } else if (this.menuname == 'SupplierList') {
         columnsParams.vendorid = this.materialid
       } else if (this.menuname == 'CustomerList') {

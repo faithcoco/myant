@@ -2,9 +2,9 @@
   <a-layout>
     <div>
       <a-card>
-        <a-page-header title=""  @back="Back" />
+        <a-page-header :title="title" @back="Back" />
         <a-form :form="form" :label-col="{ span: 2 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
-          <a-form-item v-for="item in data" :label="item.title" :key="item.key">
+          <a-form-item v-for="item in data" :label="item.title">
             <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
             <a-input-number
               :style="{ width: '1370px' }"
@@ -91,6 +91,7 @@ export default {
       materialclassid: '',
       materialid: '',
       tag: 0, //1 add 2update
+      title: '',
     }
   },
   created() {
@@ -180,12 +181,15 @@ export default {
     },
 
     getForm() {
+      console.log('route-->', this.$route)
+
       this.menuid = this.$route.params.menuid
       const columnsParams = {}
       columnsParams.memuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
 
       if (this.$route.params.tag == 1) {
+        this.title = this.$route.params.title+'新增'
         this.materialclassid = this.$route.params.materialclassid
         columnsParams.materialclassid = this.materialclassid
         if (Vue.ls.get(menuname) == 'ProductList') {
@@ -201,8 +205,12 @@ export default {
         } else if (Vue.ls.get(menuname) == 'CargoSpace') {
           this.urlForm = '/bd/warehouse/positioninsterForm'
           columnsParams.positionid = this.materialid
+        }else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+          this.urlForm = '/bd/docreceiptnotice/insterform'
+          
         }
       } else if (this.$route.params.tag == 2) {
+          this.title = this.$route.params.title+'编辑'
         this.materialid = this.$route.params.materialid
         console.log('materialid', this.materialid)
         if (Vue.ls.get(menuname) == 'ProductList') {
@@ -225,12 +233,12 @@ export default {
           columnsParams.positionid = this.materialid
         }
       }
-
+      this.$multiTab.rename('/basic_archives/ProductAdd', this.title)
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
       getForm(columnsParams, this.urlForm).then((res) => {
+        console.log('form res-->', JSON.stringify(res.result))
         this.data = res.result
-        console.log('form res-->', JSON.stringify(res))
         setTimeout(() => {
           for (const i in this.data) {
             if (this.data[i].value != '') {

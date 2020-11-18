@@ -34,7 +34,7 @@ export const asyncRouterMap = [
           {
             path: 'PersonsettingAdd',
             name: 'PersonsettingAdd',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/management/PersonSettingAdd.vue'),
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
             meta: { title: '部门人员档案新增', icon: 'user' },
             hidden: true
           },
@@ -139,9 +139,9 @@ export const asyncRouterMap = [
           {
             path: 'ReceiptNoticeAdd',
             name: 'ReceiptNoticeAdd',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/ReceiptNoticeAdd.vue'),
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
             meta: { title: '收货通知新增' },
-            hidden: true
+            hidden: false
           },
           {
             path: 'ReturnNoticeClientList',

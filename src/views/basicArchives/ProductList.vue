@@ -253,9 +253,12 @@ export default {
         this.classifyTree = this.treeData
         console.log('tree', JSON.stringify(this.classifyTree))
         this.expandedKeys.push(this.classifyTree[0].key)
-        this.checkedKeys.push(res.result[0].key)
-        console.log('checked', JSON.stringify(this.checkedKeys))
-        this.materialclassid = res.result[0].key
+
+        if (this.checkedKeys.length == 0) {
+          this.checkedKeys.push(res.result[0].key)
+          this.materialclassid = res.result[0].key
+        }
+        console.log('checked-->', this.checkedKeys.length)
         this.getList()
       })
     },
@@ -329,6 +332,7 @@ export default {
           menuid: this.menuid,
           materialclassid: this.materialclassid,
           tag: 1,
+          title: this.$route.meta.title,
         },
       })
     },

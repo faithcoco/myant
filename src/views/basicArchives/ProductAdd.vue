@@ -137,7 +137,7 @@ export default {
             } else if (Vue.ls.get(menuname) == 'CustomerList') {
               var submitUrl = '/bd/customer/customerinstersave'
             } else if (Vue.ls.get(menuname) == 'WarehouseList') {
-              var submitUrl = '/bd/warehouse/warehouseupdatesave'
+              var submitUrl = '/bd/warehouse/warehouseinstersave'
             } else if (Vue.ls.get(menuname) == 'CargoSpace') {
               var submitUrl = '/bd/warehouse/positioninsterSave'
             }

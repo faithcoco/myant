@@ -282,7 +282,7 @@ export default {
     add() {
       Vue.ls.set(menuname, this.$route.name)
       this.$router.push({
-        name: 'ProductAdd',
+        name: 'ReceiptNoticeAdd',
         params: {
           menu: this.$route.name,
           menuid: this.menuid,
@@ -308,7 +308,7 @@ export default {
       }
       console.log('add materialid-->', this.materialid)
       this.$router.push({
-        name: 'ProductAdd',
+        name: 'ReceiptNoticeAdd',
         params: {
           menu: this.$route.name,
           materialid: this.materialid,

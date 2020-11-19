@@ -67,6 +67,7 @@ import { getForm, submitForm, postData, getData } from '@/api/manage'
 import { Form } from 'ant-design-vue'
 Vue.use(Form)
 import { TreeSelect } from 'ant-design-vue'
+import { keys } from 'mockjs2'
 Vue.use(TreeSelect)
 
 const numberRow = []
@@ -95,7 +96,8 @@ export default {
     }
   },
   created() {
-    this.getForm()
+    console.log('created',"is run")
+    this.getFormdata()
   },
 
   computed: {
@@ -111,7 +113,11 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-        this.getForm()
+         console.log('run  menu-->', val.params.menu)
+        if (val.params.menu !== undefined) {
+          console.log('run watch-->', val.params.menu)
+          this.getFormdata()
+        }
       },
       // 深度观察监听
     },
@@ -180,9 +186,8 @@ export default {
       console.log(this.test)
     },
 
-    getForm() {
-      console.log('route-->', this.$route)
-
+    getFormdata() {
+      console.log('run form-->')
       this.menuid = this.$route.params.menuid
       const columnsParams = {}
       columnsParams.memuid = this.menuid
@@ -241,17 +246,17 @@ export default {
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
       getForm(columnsParams, this.urlForm).then((res) => {
-        console.log('form res-->', JSON.stringify(res.result))
         this.data = res.result
+
         setTimeout(() => {
           for (const i in this.data) {
-            if (this.data[i].value != '') {
+            if (this.data[i].value !== '') {
               this.form.setFieldsValue({
                 [this.data[i].key]: this.data[i].value,
               })
             }
           }
-        }, 1000)
+        }, 3000)
       })
     },
     handleChange(info) {

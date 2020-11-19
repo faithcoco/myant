@@ -10,10 +10,9 @@
           <a-tree
             v-show="tree_visible"
             showLine
-            v-model="checkedKeys"
             :expanded-keys="expandedKeys"
             :auto-expand-parent="autoExpandParent"
-            :selected-keys="selectedKeys"
+            :selectedKeys="checkedKeys"
             :tree-data="classifyTree"
             @expand="onExpand"
             @select="onSelect"
@@ -204,15 +203,16 @@ export default {
       })
     },
     getTree() {
+      this.checkedKeys = []
       const parameter = {}
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
         this.treeData = res.result
         this.classifyTree = this.treeData
 
-        console.log('tree', JSON.stringify(this.classifyTree))
         this.expandedKeys.push(this.classifyTree[0].key)
-        this.materialclassid = res.result[0].children[0].key
+        this.checkedKeys.push(res.result[0].key)
+        this.materialclassid = res.result[0].key
         this.getList()
       })
     },
@@ -267,6 +267,7 @@ export default {
           menuid: this.menuid,
           materialclassid: this.materialclassid,
           tag: 1,
+          title: this.$route.meta.title,
         },
       })
     },
@@ -283,6 +284,7 @@ export default {
           materialid: this.materialid,
           tag: 2,
           menuid: this.menuid,
+          title: this.$route.meta.title,
         },
       })
     },

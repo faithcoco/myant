@@ -146,7 +146,7 @@ export default {
               var submitUrl = '/bd/product/updateMaterial'
               values.materialid = this.materialid
             } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
-              var submitUrl = ''
+              var submitUrl = '/bd/baseperson/personupdatesave'
             } else if (Vue.ls.get(menuname) == 'SupplierList') {
               var submitUrl = '/bd/basevendor/vendorupdatesave'
               values.vendorid = this.materialid
@@ -189,28 +189,32 @@ export default {
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
 
       if (this.$route.params.tag == 1) {
-        this.title = this.$route.params.title+'新增'
+        this.title = this.$route.params.title + '新增'
         this.materialclassid = this.$route.params.materialclassid
-        columnsParams.materialclassid = this.materialclassid
-        if (Vue.ls.get(menuname) == 'ProductList') {
-          this.urlForm = '/bd/product/materialList'
-        } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+        if (Vue.ls.get(menuname) == 'PersonnelSetting') {
           this.urlForm = '/bd/baseperson/insterForm'
+          columnsParams.departmentid = this.materialclassid
+        } else if (Vue.ls.get(menuname) == 'ProductList') {
+          this.urlForm = '/bd/product/materialList'
+          columnsParams.materialclassid = this.materialclassid
         } else if (Vue.ls.get(menuname) == 'SupplierList') {
           this.urlForm = '/bd/basevendor/insterForm'
+          columnsParams.vendorclassid = this.materialclassid
         } else if (Vue.ls.get(menuname) == 'CustomerList') {
           this.urlForm = '/bd/customer/insterForm'
+          columnsParams.customerclassid = this.materialclassid
         } else if (Vue.ls.get(menuname) == 'WarehouseList') {
           this.urlForm = '/bd/warehouse/insterForm'
+          columnsParams.warehouseclassid = this.materialclassid
         } else if (Vue.ls.get(menuname) == 'CargoSpace') {
           this.urlForm = '/bd/warehouse/positioninsterForm'
           columnsParams.positionid = this.materialid
-        }else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+          columnsParams.warehouseid = this.materialclassid
+        } else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/insterform'
-          
         }
       } else if (this.$route.params.tag == 2) {
-          this.title = this.$route.params.title+'编辑'
+        this.title = this.$route.params.title + '编辑'
         this.materialid = this.$route.params.materialid
         console.log('materialid', this.materialid)
         if (Vue.ls.get(menuname) == 'ProductList') {

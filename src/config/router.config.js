@@ -141,7 +141,7 @@ export const asyncRouterMap = [
             name: 'ReceiptNoticeAdd',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
             meta: { title: '收货通知新增' },
-            hidden: false
+            hidden: true
           },
           {
             path: 'ReturnNoticeClientList',

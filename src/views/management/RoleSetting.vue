@@ -119,18 +119,18 @@ export default {
   methods: {
     handleOk(e) {
       console.log('select--->', JSON.stringify(this.selectList))
-      this.personlist = this.list.join()
-      
+      this.personlist = this.selectList.join()
+
       this.visible = false
+    },
+    getSelect(selectlist) {
+      this.selectList = selectlist
     },
     handleCancel(e) {
       this.visible = false
     },
     change(visible) {
       this.approval_visible = visible
-    },
-    getSelect(selectlist) {
-      this.selectList = selectlist
     },
 
     personnelClick() {
@@ -188,7 +188,7 @@ export default {
           }
         })
       } else {
-        console.log('update-->',this.mdl)
+        console.log('update-->', this.mdl)
         updateRole(this.mdl).then((res) => {
           console.log('  updateRole res---------->', JSON.stringify(res))
 
@@ -250,16 +250,14 @@ export default {
           permission.selected = selected || []
           this.onChangeCheck(permission)
         })
-
-      
       }
       var userlist = []
-    
+
       for (const key in this.mdl.personList) {
         userlist.push(this.mdl.personList[key].personname)
       }
       this.personlist = userlist.join()
-     
+
       this.$nextTick(() => {
         this.form.setFieldsValue(pick(this.mdl, 'id', 'name', 'status', 'describe'))
       })

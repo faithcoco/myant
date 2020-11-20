@@ -40,6 +40,12 @@
             </a-tabs>
           </a-form-item>
         </a-form>
+        <a-modal title="选择" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
+          <archives-modal :name="name" :visible="visible" @onSelect="getSelect"></archives-modal>
+        </a-modal>
+        <a-modal title="选择" :visible="typeVisible" @ok="handleOk" @cancel="handleCancel" width="1300px">
+          <type :menuname="name" @onSelect="typeSelect"></type>
+        </a-modal>
       </a-card>
     </div>
     <a-layout-footer
@@ -54,15 +60,9 @@
             <a-button type="primary" ref="submit" @click="handleSubmit">保存继续</a-button>
           </a-col>
           <a-col :span="1" :offset="1">
-            <a-button type @click="Back">返回继续</a-button>
+            <a-button type @click="Back">保存返回</a-button>
           </a-col>
         </a-row>
-        <a-modal title="选择" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
-          <select-modal :name="name" @onSelect="getSelect"></select-modal>
-        </a-modal>
-        <a-modal title="选择" :visible="typeVisible" @ok="typeOk" @cancel="typeCancel" width="1300px">
-          <type :menuname="name" @onSelect="getSelect"></type>
-        </a-modal>
       </a-card>
     </a-layout-footer>
   </a-layout>
@@ -84,14 +84,14 @@ Vue.use(Form)
 import { TreeSelect } from 'ant-design-vue'
 import { keys } from 'mockjs2'
 Vue.use(TreeSelect)
-import SelectModal from '../other/ArchivesModal'
+import ArchivesModal from '../other/ArchivesModal'
 import Type from '../other/TypeModal'
 
 const numberRow = []
 export default {
   components: {
-    SelectModal,
     Type,
+    ArchivesModal,
   },
   data() {
     return {
@@ -107,7 +107,7 @@ export default {
       wrapperCol: { span: 22 },
       other: '',
       data: [],
-
+      selectedRowKeys: [],
       menuid: '',
       urlForm: '',
       materialclassid: '',
@@ -118,6 +118,8 @@ export default {
       modalname: '',
       selectList: [],
       typeVisible: false,
+      currentkey: '',
+      value: '@afc163',
     }
   },
   created() {
@@ -149,41 +151,70 @@ export default {
   },
   methods: {
     getSelect(selectlist) {
+      console.log('select-->', selectlist)
+      this.selectList = selectlist
+    },
+    typeSelect(selectlist) {
+      console.log('select-->', selectlist)
       this.selectList = selectlist
     },
     handleOk(e) {
-      // console.log('select--->', JSON.stringify(this.selectList))
+      console.log('select--->', JSON.stringify(this.selectList))
       // this.personlist = this.list.join()
-
-      this.visible = false
+      if (this.currentkey == 'departmentid') {
+        this.typeVisible = false
+        this.form.setFieldsValue({
+          [this.currentkey]: this.selectList[0].departmentid,
+        })
+      } else if (this.currentkey == 'personid') {
+        this.visible = false
+        this.form.setFieldsValue({
+          [this.currentkey]: this.selectList[0].personid,
+        })
+      } else if (this.currentkey == 'vendorid') {
+        this.visible = false
+        this.form.setFieldsValue({
+          [this.currentkey]: this.selectList[0].vendorid,
+        })
+      } else if (this.currentkey == 'businessclasscode') {
+        this.typeVisible = false
+          this.form.setFieldsValue({
+          [this.currentkey]: this.selectList[0].key,
+        })
+      }
     },
     handleCancel(e) {
-      this.visible = false
+      if (this.currentkey == 'departmentid') {
+        this.typeVisible = false
+      } else if (this.currentkey == 'personid') {
+        this.visible = false
+      } else if (this.currentkey == 'vendorid') {
+        this.visible = false
+      } else if (this.currentkey == 'businessclasscode') {
+        this.typeVisible = false
+      }
     },
-    typeOk(e) {
-      this.typeVisible = false
-    },
-    typeCancel(e) {
-      this.typeVisible = false
-    },
+
     onChange(value) {
       console.log(value)
       this.value = value
     },
     showModal(item) {
-      if (item.key == 'departmentid') {
+      this.currentkey = item.key
+      if (this.currentkey == 'departmentid') {
         this.typeVisible = true
         this.name = 'PersonnelSetting'
-      } else if (item.key == 'personid') {
+      } else if (this.currentkey == 'personid') {
         this.name = 'PersonnelSetting'
         this.visible = true
-      } else if (item.key == 'vendorid') {
+      } else if (this.currentkey == 'vendorid') {
         this.name = 'SupplierList'
         this.visible = true
-      } else if (item.key == 'businessclasscode') {
+      } else if (this.currentkey == 'businessclasscode') {
         this.typeVisible = true
         this.name = 'BusinessCategory'
       }
+      console.log('current->', this.name)
     },
     handleSubmit(e) {
       this.form.validateFields((err, values) => {
@@ -302,7 +333,7 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       getForm(columnsParams, this.urlForm).then((res) => {
         this.data = res.result
-        console.log('form res-->', JSON.stringify(this.data))
+
         setTimeout(() => {
           for (const i in this.data) {
             if (this.data[i].value !== '') {

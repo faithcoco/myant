@@ -29,7 +29,7 @@
             :columns="columns"
             :data-source="listdata"
             :alert="false"
-            :scroll="{ x: 1500, y: 525 }"
+            :scroll="{ x: 1500, y: 450 }"
             bordered
             style="margin-top: 20px"
             :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"

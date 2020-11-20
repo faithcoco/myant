@@ -46,7 +46,7 @@
             <a-button type="primary" ref="submit" @click="handleSubmit">保存继续</a-button>
           </a-col>
           <a-col :span="1" :offset="1">
-            <a-button type @click="Back">返回继续</a-button>
+            <a-button type @click="Back">保存返回</a-button>
           </a-col>
         </a-row>
       </a-card>

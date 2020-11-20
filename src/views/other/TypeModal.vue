@@ -5,7 +5,12 @@
       <a-col :span="5"> </a-col>
     </a-row>
     <br />
-    <a-table :columns="columns" :data-source="list" defaultExpandAllRows>
+    <a-table
+      :columns="columns"
+      :data-source="list"
+      defaultExpandAllRows
+      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: 'radio' }"
+    >
       <span slot="action" slot-scope="text, record">
         <template>
           <a @click="handleAddItem(record)">添加子类</a>
@@ -74,13 +79,14 @@ export default {
       urlUpdate: '',
       urlDelete: '',
       menuname: '',
+      selectedRowKeys: [],
     }
   },
   created() {
     this.initData(this.menuname)
   },
   watch: {
-    $route: {
+    menuname: {
       handler: function (val, oldVal) {
         this.initData(this.menuname)
       },
@@ -88,6 +94,17 @@ export default {
     },
   },
   methods: {
+    onSelectChange(selectedRowKeys) {
+      console.log('selectedRowKeys changed-->', selectedRowKeys)
+      this.selectedRowKeys = selectedRowKeys
+      var selectList = []
+      for (const key in this.list) {
+        if (this.list[key].key == selectedRowKeys) {
+          selectList.push(this.list[key])
+        }
+      }
+      this.$emit('onSelect', selectList)
+    },
     initData(name) {
       this.name = name
       console.log('name-->', name)
@@ -127,7 +144,6 @@ export default {
         this.urlDelete = '/bd/business/delbusinessClass'
         this.urlUpdate = '/bd/business/updatebusinessClass'
         this.columns[1].dataIndex = 'businessclasscode'
-        
       }
 
       this.getList()

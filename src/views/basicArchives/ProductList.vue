@@ -257,7 +257,6 @@ export default {
         console.log('tree-->', JSON.stringify(this.classifyTree))
         this.expandedKeys.push(this.classifyTree[0].key)
 
-        console.log('checked-->', this.checkedKeys)
         this.getList()
       })
     },
@@ -267,6 +266,9 @@ export default {
     },
 
     onSelect(selectedKeys, info) {
+      this.checkedKeys = []
+      this.checkedKeys.push(selectedKeys[0])
+      console.log('onselect-->', this.checkedKeys)
       this.materialclassid = selectedKeys.join()
       this.getList()
     },
@@ -296,7 +298,7 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-        console.log('list res-->', JSON.stringify(this.listdata))
+
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }
@@ -316,7 +318,7 @@ export default {
     Classify() {
       Vue.ls.set(menuname, this.$route.name)
       this.$router.push({
-        name: 'ClassificationGoods',
+        name: 'type',
         params: {
           menu: this.$route.name,
         },

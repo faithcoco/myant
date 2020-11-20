@@ -52,9 +52,9 @@ export const asyncRouterMap = [
             hidden: true
           },
           {
-            path: 'classification_goods',
-            name: 'ClassificationGoods',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ClassificationGoods.vue'),
+            path: 'type',
+            name: 'type',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/Type.vue'),
             meta: { title: '分类', icon: 'user' },
             hidden: true
           },
@@ -139,7 +139,7 @@ export const asyncRouterMap = [
           {
             path: 'ReceiptNoticeAdd',
             name: 'ReceiptNoticeAdd',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/ReceiptNoticeAdd.vue'),
             meta: { title: '收货通知新增' },
             hidden: true
           },

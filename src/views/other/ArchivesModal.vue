@@ -29,10 +29,9 @@
             :columns="columns"
             :data-source="listdata"
             :alert="false"
-            :scroll="{ x: 1500, y: 525 }"
+            :scroll="{ x: 1500, y: 475 }"
             bordered
             style="margin-top: 20px"
-            :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
           >
           </a-table>
         </a-col>
@@ -87,7 +86,7 @@ export default {
       confirmLoading: false,
       columns,
       queryParam: {},
-      selectedRowKeys: [],
+
       selectedKeys: ['f5728e20-ca54-4549-bd9f-e178a94b13a2'],
       listdata: [],
       classifyTree: [],
@@ -302,16 +301,6 @@ export default {
     },
     handleTitleClick(item) {
       console.log('handleTitleClick', item)
-    },
-    onSelectChange(selectedRowKeys) {
-      console.log('selectedRowKeys changed: ', selectedRowKeys)
-      this.selectedRowKeys = selectedRowKeys
-      var selectList = []
-      for (const key in this.selectedRowKeys) {
-        var i = this.selectedRowKeys[key]
-        selectList.push(this.listdata[i])
-      }
-      this.$emit('onSelect', selectList)
     },
   },
 }

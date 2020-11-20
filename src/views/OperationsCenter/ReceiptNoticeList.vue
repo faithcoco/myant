@@ -172,7 +172,7 @@ export default {
       this.urlColumns = '/sys/setting/getSetting'
       this.urlList = '/bd/warehouse/warehouselist'
       this.urlDelete = '/bd/warehouse/delWarehousebyid'
-     
+
       const parameter = {}
       parameter.memucode = this.$route.meta.permission[0]
       var url = '/bd/menu/findallmenu'
@@ -181,7 +181,7 @@ export default {
         console.log('menu id-->', JSON.stringify(res))
 
         this.menuid = res.result
-   
+
         this.getList()
         this.getColumns()
       })
@@ -202,19 +202,18 @@ export default {
       })
     },
     getTree() {
+      this.checkedKeys = []
       const parameter = {}
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
         this.treeData = res.result
         this.classifyTree = this.treeData
-        console.log('tree', JSON.stringify(this.classifyTree))
+        console.log('tree-->', JSON.stringify(this.classifyTree))
         this.expandedKeys.push(this.classifyTree[0].key)
 
-        if (this.checkedKeys.length == 0) {
-          this.checkedKeys.push(res.result[0].key)
-          this.materialclassid = res.result[0].key
-        }
-        console.log('checked-->', this.checkedKeys.length)
+        this.checkedKeys.push(res.result[0].key)
+        this.materialclassid = res.result[0].key
+
         this.getList()
       })
     },
@@ -224,6 +223,8 @@ export default {
     },
 
     onSelect(selectedKeys, info) {
+      this.checkedKeys = []
+      this.checkedKeys.push(selectedKeys[0])
       this.materialclassid = selectedKeys.join()
       this.getList()
     },

@@ -1,433 +1,296 @@
 <template>
   <a-layout>
-    <a-card>
-      <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-form-model-item label="发货单编码" required prop="ShippingNoticeCode">
-          <a-input v-model="form.ShippingNoticeCode" placeholder="请输入发货通知单编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
-          </a-input>
-        </a-form-model-item>
+    <div>
+      <a-card>
+        <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
+          <a-form-item v-for="item in data" :label="item.title">
+            <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
+            <a-input-number
+              :style="{ width: '1370px' }"
+              v-decorator="item.decorator"
+              v-show="item.inputnumberVisible"
+              :max="item.fieldmax"
+              :precision="item.fieldprecision"
+            />
+            <a-cascader
+              v-decorator="item.decorator"
+              v-show="item.selectVisible"
+              :field-names="{ label: 'title', value: 'key', children: 'children' }"
+              :options="item.selectList"
+              placeholder="请选择"
+            />
 
-        <a-modal v-model="visible" title="选择编码" width="1000px" @ok="handleOk">
-          <a-input-search placeholder="搜索" style="width: 400px;margin-bottom:20px" @search="onSearch" />
-          <a-table :columns="columns" :data-source="data" :scroll="{ x: 1500 }" :pagination="false" bordered>
-            <span slot="checked" style="margin: 0" slot-scope="text, record">
-              <a-checkbox v-model="record.checked" @change="onChange(record)" />
-            </span>
-            <a slot="name" slot-scope="text">{{ text }}</a>
-          </a-table>
-        </a-modal>
-
-        <a-form-model-item ref="name" label="客户编码" prop="CustomerCode">
-          <a-input v-model="form.CustomerCode" placeholder="请输入客户编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-          </a-input>
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="客户地址编码" prop="CustomerAddressCode">
-          <a-input v-model="form.CustomerAddressCode" placeholder="请输入客户地址编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-          </a-input>
-        </a-form-model-item>
-        <a-form-model-item label="联系人编码" prop="ContactCode">
-          <a-input v-model="form.ContactCode" placeholder="请输入联系人编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-          </a-input>
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="部门编码" prop="DepartmentCode">
-          <a-input v-model="form.DepartmentCode" placeholder="请输入部门编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-          </a-input>
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="业务员编码" prop="SalesmanCode">
-          <a-input v-model="form.SalesmanCode" placeholder="请输入业务员编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-          </a-input>
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="预计退库日期" prop="ExpectedReturnDate">
-          <a-date-picker
-            v-model="form.ExpectedReturnDate"
-            show-time
-            type="date"
-            placeholder="请选择预计退库日期"
-            style="width: 100%;"
-          />
-        </a-form-model-item>
-        <a-form-model-item ref="Principal" label="商品清单" prop="Principal">
-          <a-input v-model="form.Principal" placeholder="请选择存货编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-          </a-input>
-          <a-table
-            :locale="{emptyText: '暂无数据'}"
-            :columns="selectcolumns"
-            :data-source="numberRow"
-            :scroll="{ x: 1500 }"
-            :pagination="false"
-            bordered
-          ></a-table>
-        </a-form-model-item>
-      </a-form-model>
-    </a-card>
-
-    <a-layout-footer :style="{ position: 'fixed',width:'100%',bottom:'0px',marginLeft:'-25px',zIndex:'999'}">
+            <a-date-picker
+              :style="{ width: '1370px' }"
+              v-show="item.timepickerVisible"
+              show-time
+              format="YYYY-MM-DD HH:mm:ss"
+              placeholder="选择日期"
+              v-decorator="item.decorator"
+            />
+            <a-input v-decorator="item.decorator" v-show="item.listVisible" :maxLength="item.fieldlength">
+              <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
+            </a-input>
+          </a-form-item>
+          <a-form-item :wrapper-col="{ span: 12, offset: 2 }">
+           
+            <a-tabs>
+              <a-tab-pane key="1" tab="明细">
+                 <a-button   @click="showModal">选择</a-button>
+              </a-tab-pane>
+            </a-tabs>
+          </a-form-item>
+        </a-form>
+      </a-card>
+    </div>
+    <a-layout-footer
+      :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-25px', zIndex: '999' }"
+    >
       <a-card>
         <a-row>
           <a-col :span="1" :offset="4">
-            <a-button type="primary" @click="resetForm">重置表单</a-button>
+            <a-button type="primary" @click="resetForm" v-show="false">重置表单</a-button>
           </a-col>
           <a-col :span="1" :offset="1">
-            <a-button type="primary" @click="onSubmit">保存</a-button>
+            <a-button type="primary" ref="submit" @click="handleSubmit">保存继续</a-button>
           </a-col>
           <a-col :span="1" :offset="1">
-            <a-button type  @click="Back">返回</a-button>
+            <a-button type @click="Back">返回继续</a-button>
           </a-col>
         </a-row>
       </a-card>
     </a-layout-footer>
   </a-layout>
 </template>
+
 <script>
 import Vue from 'vue'
-import { formModel, Button } from 'ant-design-vue'
+import { formModel, Button, Tree } from 'ant-design-vue'
+import { Cascader } from 'ant-design-vue'
+Vue.use(Cascader)
+import { PageHeader } from 'ant-design-vue'
+Vue.use(PageHeader)
 Vue.use(formModel, Button)
-import { postReturnNoticeClientAdd } from '@/api/manage'
+import { postProductAdd } from '@/api/manage'
+import { logininfo, menuname } from '@/store/mutation-types'
+import { getForm, submitForm, postData, getData } from '@/api/manage'
+import { Form } from 'ant-design-vue'
+Vue.use(Form)
+import { TreeSelect } from 'ant-design-vue'
+import { keys } from 'mockjs2'
+Vue.use(TreeSelect)
 
-const columns = [
-  {
-    title: '选择',
-    dataIndex: 'checked',
-    key: 'checked',
-    width: 80,
-    scopedSlots: { customRender: 'checked' }
-  },
-  {
-    title: '发货单编码',
-    dataIndex: 'CustomerCode',
-    width: 155,
-    key: 'CustomerCode'
-  },
-  {
-    title: '发货仓库编码',
-    dataIndex: 'ShippingWarehouseCode',
-    width: 155,
-    key: 'ShippingWarehouseCode'
-  },
-  {
-    title: '存货编码',
-    dataIndex: 'CustomerAddressCode',
-    width: 155,
-    key: 'CustomerAddressCode'
-  },
-  {
-    title: '存货名称',
-    dataIndex: 'InventoryName',
-    width: 155,
-    key: 'InventoryName'
-  },
-  {
-    title: '批次编码',
-    dataIndex: 'DepartmentCode',
-    width: 155,
-    key: 'DepartmentCode'
-  },
-  {
-    title: '数量',
-    dataIndex: 'Quantity',
-    width: 155,
-    key: 'Quantity'
-  },
-  {
-    title: '计量单位',
-    dataIndex: 'Unit',
-    width: 155,
-    key: 'Unit'
-  },
-  {
-    title: '包装数量',
-    dataIndex: 'PackingQuantity',
-    width: 155,
-    key: 'PackingQuantity'
-  },
-  {
-    title: '包装单位',
-    dataIndex: 'PackingUnit',
-    width: 155,
-    key: 'PackingUnit'
-  },
-  {
-    title: '单价',
-    dataIndex: 'UnitPrice',
-    width: 155,
-    key: 'UnitPrice'
-  },
-  {
-    title: '含税单价',
-    dataIndex: 'TaxIncludedUnitPrice',
-    width: 155,
-    key: 'TaxIncludedUnitPrice'
-  },
-  {
-    title: '税率',
-    dataIndex: 'TaxRate',
-    width: 155,
-    key: 'TaxRate'
-  },
-  {
-    title: '金额',
-    dataIndex: 'Amount',
-    width: 155,
-    key: 'Amount'
-  },
-  {
-    title: '含税金额',
-    dataIndex: 'TaxIncludedAmount',
-    width: 155,
-    key: 'TaxIncludedAmount'
-  },
-  {
-    title: '税额',
-    dataIndex: 'Tax',
-    width: 155,
-    key: 'Tax'
-  }
-]
-const selectcolumns = [
-  {
-    title: '发货单编码',
-    dataIndex: 'CustomerCode',
-    width: 155,
-    key: 'CustomerCode'
-  },
-  {
-    title: '发货仓库编码',
-    dataIndex: 'ShippingWarehouseCode',
-    width: 155,
-    key: 'ShippingWarehouseCode'
-  },
-  {
-    title: '存货编码',
-    dataIndex: 'CustomerAddressCode',
-    width: 155,
-    key: 'CustomerAddressCode'
-  },
-  {
-    title: '存货名称',
-    dataIndex: 'InventoryName',
-    width: 155,
-    key: 'InventoryName'
-  },
-  {
-    title: '批次编码',
-    dataIndex: 'DepartmentCode',
-    width: 155,
-    key: 'DepartmentCode'
-  },
-  {
-    title: '数量',
-    dataIndex: 'Quantity',
-    width: 155,
-    key: 'Quantity'
-  },
-  {
-    title: '计量单位',
-    dataIndex: 'Unit',
-    width: 155,
-    key: 'Unit'
-  },
-  {
-    title: '包装数量',
-    dataIndex: 'PackingQuantity',
-    width: 155,
-    key: 'PackingQuantity'
-  },
-  {
-    title: '包装单位',
-    dataIndex: 'PackingUnit',
-    width: 155,
-    key: 'PackingUnit'
-  },
-  {
-    title: '单价',
-    dataIndex: 'UnitPrice',
-    width: 155,
-    key: 'UnitPrice'
-  },
-  {
-    title: '含税单价',
-    dataIndex: 'TaxIncludedUnitPrice',
-    width: 155,
-    key: 'TaxIncludedUnitPrice'
-  },
-  {
-    title: '税率',
-    dataIndex: 'TaxRate',
-    width: 155,
-    key: 'TaxRate'
-  },
-  {
-    title: '金额',
-    dataIndex: 'Amount',
-    width: 155,
-    key: 'Amount'
-  },
-  {
-    title: '含税金额',
-    dataIndex: 'TaxIncludedAmount',
-    width: 155,
-    key: 'TaxIncludedAmount'
-  },
-  {
-    title: '税额',
-    dataIndex: 'Tax',
-    width: 155,
-    key: 'Tax'
-  }
-]
-
-const data = [
-  {
-    key: '1',
-    ShippingNoticeCode: 'a121345',
-    CustomerCode: 'a121345',
-    CustomerAddressCode: 'a121345',
-    ContactCode: 'a121345',
-    DepartmentCode: 'a121345',
-    SalesmanCode: 'a121345',
-    ShippingWarehouseCode: 'a121345',
-    InventoryCode: 'a121345',
-    BatchCode: 'a121345'
-  },
-  {
-    key: '2',
-    ShippingNoticeCode: 'a121345',
-    CustomerCode: 'a121345',
-    CustomerAddressCode: 'a121345',
-    ContactCode: 'a121345',
-    DepartmentCode: 'a121345',
-    SalesmanCode: 'a121345',
-    ShippingWarehouseCode: 'a121345',
-    InventoryCode: 'a121345',
-    BatchCode: 'a121345'
-  },
-  {
-    key: '3',
-    ShippingNoticeCode: 'a121345',
-    CustomerCode: 'a121345',
-    CustomerAddressCode: 'a121345',
-    ContactCode: 'a121345',
-    DepartmentCode: 'a121345',
-    SalesmanCode: 'a121345',
-    ShippingWarehouseCode: 'a121345',
-    InventoryCode: 'a121345',
-    BatchCode: 'a121345'
-  }
-]
 const numberRow = []
 export default {
   data() {
     return {
       numberRow,
       selectedRow: [],
-      selectcolumns,
-      visible: false,
+
       selectedRowKeys: [],
-      data,
-      columns,
       headers: {
-        authorization: 'authorization-text'
+        authorization: 'authorization-text',
       },
       size: 'small',
       labelCol: { span: 2 },
       wrapperCol: { span: 22 },
       other: '',
-      form: {
-        ShippingNoticeCode: '', //发货单编码
-        CustomerCode: '', //客户编码
-        CustomerAddressCode: '', //客户地址编码
-        ContactCode: '', //联系人编码
-        DepartmentCode: '', //部门编码
-        SalesmanCode: '', //业务员编码
-        ExpectedReturnDate: '', //日期
-        ShippingWarehouseCode: '', //发货仓库编码
-        InventoryCode: '', //存货编码
-        InventoryName: '', //存货名称
-        BatchCode: '', //批次编码
-        Quantity: '', //数量
-        Unit: '', //单位
-        PackingQuantity: '', //包装数量
-        PackingUnit: '', //包装单位
-        UnitPrice: '', //单价
-        TaxIncludedUnitPrice: '', //含税单价
-        TaxRate: '', //税率
-        Amount: '', //金额
-        TaxIncludedAmount: '', //含税金额
-        Tax: '' //税额
-      },
-      rules: {
-        ShippingNoticeCode: [{ required: true, message: '请输入发货单编码', trigger: 'blur' }],
-        CustomerCode: [{ required: true, message: '请输入客户编码', trigger: 'change' }],
-        date1: [{ required: true, message: '', trigger: 'change' }],
-        type: [
-          {
-            type: 'array',
-            required: true,
-            message: 'Please select at least one activity type',
-            trigger: 'change'
-          }
-        ],
-        resource: [{ required: true, message: 'Please select activity resource', trigger: 'change' }],
-        desc: [{ required: true, message: '请输入产品说明', trigger: 'blur' }]
-      }
+      data: [],
+
+      menuid: '',
+      urlForm: '',
+      materialclassid: '',
+      materialid: '',
+      tag: 0, //1 add 2update
+      title: '',
     }
   },
+  created() {
+    this.getFormdata()
+  },
+
   computed: {
     rowSelection() {
       const { selectedRowKeys } = this
       return {
         selectedRowKeys,
-        onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
+  },
+  watch: {
+    $route: {
+      handler: function (val, oldVal) {
+        if (val.params.menu !== undefined) {
+          this.getFormdata()
+        }
+      },
+      // 深度观察监听
+    },
+  },
+  beforeCreate() {
+    this.form = this.$form.createForm(this, { name: 'form' })
   },
   methods: {
-    onSearch(value) {
+    onChange(value) {
       console.log(value)
+      this.value = value
+    },
+    handleSubmit(e) {
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          if (this.$route.params.tag == 1) {
+            if (Vue.ls.get(menuname) == 'ProductList') {
+              var submitUrl = '/bd/product/insterMaterial'
+            } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+              var submitUrl = '/bd/baseperson/personinstersave'
+            } else if (Vue.ls.get(menuname) == 'SupplierList') {
+              var submitUrl = '/bd/basevendor/vendorinstersave'
+            } else if (Vue.ls.get(menuname) == 'CustomerList') {
+              var submitUrl = '/bd/customer/customerinstersave'
+            } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+              var submitUrl = '/bd/warehouse/warehouseinstersave'
+            } else if (Vue.ls.get(menuname) == 'CargoSpace') {
+              var submitUrl = '/bd/warehouse/positioninsterSave'
+            }
+          } else {
+            if (Vue.ls.get(menuname) == 'ProductList') {
+              var submitUrl = '/bd/product/updateMaterial'
+              values.materialid = this.materialid
+            } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+              var submitUrl = '/bd/baseperson/personupdatesave'
+            } else if (Vue.ls.get(menuname) == 'SupplierList') {
+              var submitUrl = '/bd/basevendor/vendorupdatesave'
+              values.vendorid = this.materialid
+            } else if (Vue.ls.get(menuname) == 'CustomerList') {
+              var submitUrl = '/bd/customer/customerupdatesave'
+              values.customerid = this.materialid
+            } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+              var submitUrl = '/bd/warehouse/warehouseupdatesave'
+              values.warehouseid = this.materialid
+            } else if (Vue.ls.get(menuname) == 'CargoSpace') {
+              var submitUrl = '/bd/warehouse/positionupdateSave'
+              values.positionid = this.materialid
+            }
+          }
+
+          values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+          console.log('submit url-->', submitUrl)
+          submitForm(values, submitUrl).then((res) => {
+            console.log('submit--->', JSON.stringify(res))
+
+            if (res.status == 'SUCCESS') {
+              this.form.resetFields()
+            }
+            this.$message.info(res.errorMsg)
+          })
+        }
+      })
+    },
+
+    onCascaderChange(value) {
+      console.log(this.test)
+    },
+
+    getFormdata() {
+      this.menuid = this.$route.params.menuid
+      const columnsParams = {}
+      columnsParams.memuid = this.menuid
+      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+
+      if (this.$route.params.tag == 1) {
+        this.title = this.$route.params.title + '新增'
+        this.materialclassid = this.$route.params.materialclassid
+        if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+          this.urlForm = '/bd/baseperson/insterForm'
+          columnsParams.departmentid = this.materialclassid
+        } else if (Vue.ls.get(menuname) == 'ProductList') {
+          this.urlForm = '/bd/product/materialList'
+          columnsParams.materialclassid = this.materialclassid
+        } else if (Vue.ls.get(menuname) == 'SupplierList') {
+          this.urlForm = '/bd/basevendor/insterForm'
+          columnsParams.vendorclassid = this.materialclassid
+        } else if (Vue.ls.get(menuname) == 'CustomerList') {
+          this.urlForm = '/bd/customer/insterForm'
+          columnsParams.customerclassid = this.materialclassid
+        } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+          this.urlForm = '/bd/warehouse/insterForm'
+          columnsParams.warehouseclassid = this.materialclassid
+        } else if (Vue.ls.get(menuname) == 'CargoSpace') {
+          this.urlForm = '/bd/warehouse/positioninsterForm'
+          columnsParams.positionid = this.materialid
+          columnsParams.warehouseid = this.materialclassid
+        } else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+          this.urlForm = '/bd/docreceiptnotice/insterform'
+        }
+      } else if (this.$route.params.tag == 2) {
+        this.title = this.$route.params.title + '编辑'
+        this.materialid = this.$route.params.materialid
+        console.log('materialid', this.materialid)
+        if (Vue.ls.get(menuname) == 'ProductList') {
+          this.urlForm = '/bd/product/updateform'
+          columnsParams.materialid = this.materialid
+        } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+          this.urlForm = '/bd/baseperson/updateForm'
+          columnsParams.personid = this.materialid
+        } else if (Vue.ls.get(menuname) == 'SupplierList') {
+          this.urlForm = '/bd/basevendor/updateForm'
+          columnsParams.vendorid = this.materialid
+        } else if (Vue.ls.get(menuname) == 'CustomerList') {
+          this.urlForm = '/bd/customer/updateForm'
+          columnsParams.customerid = this.materialid
+        } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+          this.urlForm = '/bd/warehouse/updateForm'
+          columnsParams.warehouseid = this.materialid
+        } else if (Vue.ls.get(menuname) == 'CargoSpace') {
+          this.urlForm = '/bd/warehouse/positionupdateForm'
+          columnsParams.positionid = this.materialid
+        }
+      }
+      this.$multiTab.rename('/basic_archives/ProductAdd', this.title)
+      console.log('form url--->', this.urlForm)
+      console.log('form params-->', JSON.stringify(columnsParams))
+      getForm(columnsParams, this.urlForm).then((res) => {
+        this.data = res.result
+        console.log('form res-->', JSON.stringify(this.data))
+        setTimeout(() => {
+          for (const i in this.data) {
+            if (this.data[i].value !== '') {
+              this.form.setFieldsValue({
+                [this.data[i].key]: this.data[i].value,
+              })
+            }
+          }
+        }, 3000)
+      })
     },
     handleChange(info) {
       if (info.file.status !== 'uploading') {
+        //判断如果不处于上传中的状态，就log打印上传文件的信息和文件列表
         console.log(info.file, info.fileList)
       }
       if (info.file.status === 'done') {
-        this.$message.success(`${info.file.name} file uploaded successfully`)
+        //   如果status等于done说明上传成功，并用成功效果的提示框做提示
+        this.$message.success(`${info.file.name} 上传成功`)
       } else if (info.file.status === 'error') {
+        //   如果status等于error说明上传失败，并用失败效果的提示框做提示
         this.$message.error(`${info.file.name} file upload failed.`)
       }
     },
     handleSearchChange(value) {
       console.log(`selected ${value}`)
     },
-    onSubmit() {
-      this.$refs.ruleForm.validate(valid => {
-        console.log('name--->', this.form)
-        if (valid) {
-          postReturnNoticeClientAdd(this.form).then(res => {
-            console.log('res------->', res)
-          })
-          alert('保存成功，点击确认回到档案界面!')
-          this.$router.push({ name: 'ReturnNoticeClientList' })
-        } else {
-          console.log('error submit!!')
-          alert('亲，您的填写内容不符合要求，请重新填写！！！')
-          return false
-        }
-      })
-    },
+
+    // 返回到清单页面
     Back() {
-      this.$router.push({ name: 'ReturnNoticeClientList' })
+      // 路由跳转
+      this.$router.go(-1)
     },
+    // 重置表单
     resetForm() {
-      this.$refs.ruleForm.resetFields()
+      // 获取整个表单之后，用resetFieldes方法重置表单，使用这个方法时，表单项必须要绑定prop才有效
+      this.form.resetFields()
     },
     handleBlur() {
       console.log('blur')
@@ -435,33 +298,30 @@ export default {
     handleFocus() {
       console.log('focus')
     },
-    filterOption(input, option) {
-      return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
-    },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
     },
 
     elect() {
-      this.form.ShippingNoticeCode = 'PT2020062200001'
+      // 点击按钮之后将数据赋值给表单项实现自动获取效果
+      this.form.productCode = 'PT2020062200001'
+      console.log(this.form.productCode)
     },
     showModal() {
       this.visible = true
     },
-
     handleOk(e) {
       console.log(e)
       this.visible = false
-      this.numberRow = this.selectedRow
+      this.numberRow = this.selectedRow //将选择的行赋值给表单中的表格行
       console.log(this.numberRow)
     },
-    onChange(record) {
-      console.log('check', record)
-      if (record.checked) {
-        this.selectedRow.push(record)
-        console.log(this.selectedRow)
-      }
-    }
-  }
+
+    onSearch(value) {
+      console.log(value)
+    },
+  },
 }
 </script>
+<style lang="less">
+</style>

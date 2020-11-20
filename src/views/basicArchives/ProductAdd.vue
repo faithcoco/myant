@@ -2,8 +2,7 @@
   <a-layout>
     <div>
       <a-card>
-        <a-page-header :title="title" @back="Back" />
-        <a-form :form="form" :label-col="{ span: 2 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
+        <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
           <a-form-item v-for="item in data" :label="item.title">
             <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
             <a-input-number
@@ -29,7 +28,9 @@
               placeholder="选择日期"
               v-decorator="item.decorator"
             />
+         
           </a-form-item>
+        
         </a-form>
       </a-card>
     </div>
@@ -42,10 +43,10 @@
             <a-button type="primary" @click="resetForm" v-show="false">重置表单</a-button>
           </a-col>
           <a-col :span="1" :offset="1">
-            <a-button type="primary" ref="submit" @click="handleSubmit">保存</a-button>
+            <a-button type="primary" ref="submit" @click="handleSubmit">保存继续</a-button>
           </a-col>
           <a-col :span="1" :offset="1">
-            <a-button type @click="Back">返回</a-button>
+            <a-button type @click="Back">返回继续</a-button>
           </a-col>
         </a-row>
       </a-card>
@@ -96,7 +97,6 @@ export default {
     }
   },
   created() {
-    console.log('created',"is run")
     this.getFormdata()
   },
 
@@ -113,9 +113,7 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-         console.log('run  menu-->', val.params.menu)
         if (val.params.menu !== undefined) {
-          console.log('run watch-->', val.params.menu)
           this.getFormdata()
         }
       },
@@ -187,7 +185,6 @@ export default {
     },
 
     getFormdata() {
-      console.log('run form-->')
       this.menuid = this.$route.params.menuid
       const columnsParams = {}
       columnsParams.memuid = this.menuid
@@ -247,7 +244,7 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       getForm(columnsParams, this.urlForm).then((res) => {
         this.data = res.result
-
+        console.log('form res-->', JSON.stringify(this.data))
         setTimeout(() => {
           for (const i in this.data) {
             if (this.data[i].value !== '') {

@@ -31,22 +31,24 @@
             <a-input v-decorator="item.decorator" v-show="item.listVisible" :maxLength="item.fieldlength">
               <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
             </a-input>
-            
           </a-form-item>
-          <a-form-item :wrapper-col="{ span: 12, offset: 2 }">
+          <a-form-item :wrapper-col="{ span: 21, offset: 2 }">
             <a-tabs>
               <a-tab-pane key="1" tab="明细">
-                <a-button>选择</a-button>
+                <a-button @click="() => detailModal()">选择</a-button>
+                <a-table :columns="columns" :data-source="deatilData" :scroll="{ x: 1500 }"></a-table>
               </a-tab-pane>
             </a-tabs>
           </a-form-item>
-         
         </a-form>
         <a-modal title="选择" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
           <archives-modal :name="name" :visible="visible" @onSelect="getSelect"></archives-modal>
         </a-modal>
         <a-modal title="选择" :visible="typeVisible" @ok="handleOk" @cancel="handleCancel" width="1300px">
           <type :menuname="name" @onSelect="typeSelect"></type>
+        </a-modal>
+        <a-modal title="选择" :visible="detailVisible" @ok="detailOk" @cancel="detailCancel" width="1300px">
+          <select-modal :name="name" :visible="visible" @onSelect="detailSelect"></select-modal>
         </a-modal>
       </a-card>
     </div>
@@ -88,12 +90,14 @@ import { keys } from 'mockjs2'
 Vue.use(TreeSelect)
 import ArchivesModal from '../other/ArchivesModal'
 import Type from '../other/TypeModal'
-
+import SelectModal from '../other/SelectModal'
+import { getProductListColumns } from '@/api/manage'
 const numberRow = []
 export default {
   components: {
     Type,
     ArchivesModal,
+    SelectModal,
   },
   data() {
     return {
@@ -121,11 +125,15 @@ export default {
       selectList: [],
       typeVisible: false,
       currentkey: '',
-      value: '@afc163',
+      detailVisible: false,
+      columns: [],
+      deatilData: [],
+      menuid: '',
     }
   },
   created() {
     this.getFormdata()
+    this.initdata()
   },
 
   computed: {
@@ -143,6 +151,7 @@ export default {
       handler: function (val, oldVal) {
         if (val.params.menu !== undefined) {
           this.getFormdata()
+          this.initdata()
         }
       },
       // 深度观察监听
@@ -152,13 +161,54 @@ export default {
     this.form = this.$form.createForm(this, { name: 'form' })
   },
   methods: {
-    getSelect(selectlist) {
-      console.log('select-->', selectlist)
-      this.selectList = selectlist
+    initdata() {
+      const parameter = {}
+      parameter.memucode = '01-02'
+      var url = '/bd/menu/findallmenu'
+      console.log('menu id-->', JSON.stringify(parameter))
+      getData(parameter, url).then((res) => {
+        console.log('menu id-->', JSON.stringify(res))
+
+        this.menuid = res.result
+
+        this.getColumns()
+      })
     },
-    typeSelect(selectlist) {
-      console.log('select-->', selectlist)
-      this.selectList = selectlist
+    getColumns() {
+      const columnsParams = {}
+      columnsParams.menuid = this.menuid
+      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      console.log('columns url--->', '/bd/product/productList/columns')
+      console.log('columns parameter-->', JSON.stringify(columnsParams))
+      getProductListColumns(columnsParams, '/bd/product/productList/columns').then((res) => {
+        this.columns = res.result.columns
+        console.log('columns data--->', JSON.stringify(res))
+        this.columns.splice(this.columns.length - 1, 1)
+      })
+    },
+    detailSelect(list) {
+      console.log('select-->', list)
+      this.selectList = list
+    },
+    getSelect(list) {
+      console.log('select-->', list)
+      this.selectList = list
+    },
+    typeSelect(list) {
+      console.log('select-->', list)
+      this.selectList = list
+    },
+    detailModal(e) {
+      this.detailVisible = true
+      this.name = 'ProductList'
+    },
+    detailOk(e) {
+      this.detailVisible = false
+      this.deatilData = this.selectList
+      console.log('details-->', JSON.stringify(this.deatilData))
+    },
+    detailCancel(e) {
+      this.detailVisible = false
     },
     handleOk(e) {
       console.log('select--->', JSON.stringify(this.selectList))
@@ -171,17 +221,17 @@ export default {
       } else if (this.currentkey == 'personid') {
         this.visible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList[0].personid,
+          [this.currentkey]: this.selectList[0].personname + '[' + this.selectList[0].personid + ']',
         })
       } else if (this.currentkey == 'vendorid') {
         this.visible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList[0].vendorid,
+          [this.currentkey]: this.selectList[0].vendorname + '[' + this.selectList[0].vendorid + ']',
         })
       } else if (this.currentkey == 'businessclasscode') {
         this.typeVisible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList[0].key,
+          [this.currentkey]: this.selectList[0].title + '[' + this.selectList[0].key + ']',
         })
       }
     },

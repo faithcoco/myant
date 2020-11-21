@@ -139,6 +139,7 @@ export default {
   watch: {
     name: {
       handler: function (val, oldVal) {
+        console.log('modal-->',val+"/"+oldVal+"/"+this.name)
         this.initData(this.name)
       },
       // 深度观察监听
@@ -231,6 +232,8 @@ export default {
         this.urlList = '/bd/warehouse/warehouselist'
         this.urlDelete = '/bd/warehouse/delWarehousebyid'
         parameter.memucode = '01-05'
+      }else{
+        return
       }
       this.urlColumns = '/sys/setting/getSetting'
 
@@ -308,7 +311,7 @@ export default {
         parameter[`${this.searchKey}`] = this.searchValue
       }
 
-      console.log('list url-->', this.urlList)
+      console.log('modal list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data

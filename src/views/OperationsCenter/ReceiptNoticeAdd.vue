@@ -284,6 +284,8 @@ export default {
               var submitUrl = '/bd/warehouse/warehouseinstersave'
             } else if (Vue.ls.get(menuname) == 'CargoSpace') {
               var submitUrl = '/bd/warehouse/positioninsterSave'
+            } else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+              var submitUrl = '/bd/docreceiptnotice/instersave'
             }
           } else {
             if (Vue.ls.get(menuname) == 'ProductList') {
@@ -303,14 +305,18 @@ export default {
             } else if (Vue.ls.get(menuname) == 'CargoSpace') {
               var submitUrl = '/bd/warehouse/positionupdateSave'
               values.positionid = this.materialid
+            }else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+              var submitUrl = '/bd/docreceiptnotice/updatesave'
+               values.receiptnoticeid = this.materialid
             }
           }
 
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+          values.details=this.deatilData
           console.log('submit url-->', submitUrl)
           submitForm(values, submitUrl).then((res) => {
             console.log('submit--->', JSON.stringify(res))
-
+             
             if (res.status == 'SUCCESS') {
               this.form.resetFields()
             }
@@ -378,6 +384,9 @@ export default {
         } else if (Vue.ls.get(menuname) == 'CargoSpace') {
           this.urlForm = '/bd/warehouse/positionupdateForm'
           columnsParams.positionid = this.materialid
+        }else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+          this.urlForm = '/bd/docreceiptnotice/updateform'
+          columnsParams.receiptnoticeid = this.materialid
         }
       }
       this.$multiTab.rename('/basic_archives/ProductAdd', this.title)

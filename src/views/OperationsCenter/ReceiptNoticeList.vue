@@ -155,6 +155,8 @@ export default {
         columnsParams.customerid = this.materialid
       } else if (this.menuname == 'WarehouseList') {
         columnsParams.warehouseid = this.materialid
+      }else if (this.menuname == 'ReceiptNoticeList') {
+        columnsParams.receiptnoticeid = this.materialid
       }
 
       console.log('delete url--->', this.urlDelete)
@@ -168,10 +170,10 @@ export default {
       this.menuname = name
       console.log('menu name-->', name)
       this.titleTree = '仓位分类'
-      this.urlTree = '/bd/warehouse/WarehouseTree'
+     
       this.urlColumns = '/sys/setting/getSetting'
-      this.urlList = '/bd/warehouse/warehouselist'
-      this.urlDelete = '/bd/warehouse/delWarehousebyid'
+      this.urlList = '/bd/docreceiptnotice/list'
+      this.urlDelete = '/bd/docreceiptnotice/del'
 
       const parameter = {}
       parameter.memucode = this.$route.meta.permission[0]

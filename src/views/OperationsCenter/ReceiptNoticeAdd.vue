@@ -31,6 +31,7 @@
             <a-input v-decorator="item.decorator" v-show="item.listVisible" :maxLength="item.fieldlength">
               <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
             </a-input>
+            
           </a-form-item>
           <a-form-item :wrapper-col="{ span: 12, offset: 2 }">
             <a-tabs>
@@ -39,6 +40,7 @@
               </a-tab-pane>
             </a-tabs>
           </a-form-item>
+         
         </a-form>
         <a-modal title="选择" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
           <archives-modal :name="name" :visible="visible" @onSelect="getSelect"></archives-modal>
@@ -164,7 +166,7 @@ export default {
       if (this.currentkey == 'departmentid') {
         this.typeVisible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList[0].departmentid,
+          [this.currentkey]: this.selectList[0].title + '[' + this.selectList[0].departmentid + ']',
         })
       } else if (this.currentkey == 'personid') {
         this.visible = false
@@ -178,7 +180,7 @@ export default {
         })
       } else if (this.currentkey == 'businessclasscode') {
         this.typeVisible = false
-          this.form.setFieldsValue({
+        this.form.setFieldsValue({
           [this.currentkey]: this.selectList[0].key,
         })
       }

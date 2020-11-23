@@ -322,7 +322,7 @@ export function postData(parameter, url) {
 }
 
 export function submitForm(parameter, url) {
-  console.log('submitForm req-->', JSON.stringify(parameter))
+ 
   return axios({
     url: url,
     method: 'post',

@@ -28,7 +28,7 @@
             bordered
             style="margin-top: 20px"
           >
-            <span slot="action" v-show="Operat_visible" slot-scope="text, record">
+            <span slot="action" slot-scope="text, record">
               <a @click="handleEdit(record)">编辑</a>
               <a-divider type="vertical" />
 
@@ -71,7 +71,6 @@ import { logininfo, menuname } from '@/store/mutation-types'
 const columns = []
 const selectList = [{ value: '全部', key: 'all' }]
 
-const Operat_visible = true
 const dataList = []
 export default {
   components: {
@@ -85,7 +84,7 @@ export default {
     const targetList = []
     return {
       selectList,
-      Operat_visible,
+
       confirmLoading: false,
       columns,
       queryParam: {},
@@ -145,17 +144,7 @@ export default {
     },
     delete() {
       const columnsParams = {}
-      if (this.menuname == 'ProductList') {
-        columnsParams.materialid = this.materialid
-      } else if (this.menuname == 'PersonnelSetting') {
-        columnsParams.personid = this.materialid
-      } else if (this.menuname == 'SupplierList') {
-        columnsParams.vendorid = this.materialid
-      } else if (this.menuname == 'CustomerList') {
-        columnsParams.customerid = this.materialid
-      } else if (this.menuname == 'WarehouseList') {
-        columnsParams.warehouseid = this.materialid
-      }else if (this.menuname == 'ReceiptNoticeList') {
+      if (this.menuname == 'ReceiptNoticeList') {
         columnsParams.receiptnoticeid = this.materialid
       }
 
@@ -170,7 +159,7 @@ export default {
       this.menuname = name
       console.log('menu name-->', name)
       this.titleTree = '仓位分类'
-     
+
       this.urlColumns = '/sys/setting/getSetting'
       this.urlList = '/bd/docreceiptnotice/list'
       this.urlDelete = '/bd/docreceiptnotice/del'
@@ -298,18 +287,10 @@ export default {
 
     handleEdit(record) {
       Vue.ls.set(menuname, this.$route.name)
-      if (this.menuname == 'ProductList') {
-        this.materialid = record.materialid
-      } else if (this.menuname == 'PersonnelSetting') {
-        this.materialid = record.personid
-      } else if (this.menuname == 'SupplierList') {
-        this.materialid = record.vendorid
-      } else if (this.menuname == 'CustomerList') {
-        this.materialid = record.customerid
-      } else if (this.menuname == 'WarehouseList') {
-        this.materialid = record.warehouseid
+      if (this.menuname == 'ReceiptNoticeList') {
+        this.materialid = record.receiptnoticeid
       }
-      console.log('add materialid-->', this.materialid)
+
       this.$router.push({
         name: 'ReceiptNoticeAdd',
         params: {
@@ -321,16 +302,8 @@ export default {
       })
     },
     deleteItem(record) {
-      if (this.menuname == 'ProductList') {
-        this.materialid = record.materialid
-      } else if (this.menuname == 'PersonnelSetting') {
-        this.materialid = record.personid
-      } else if (this.menuname == 'SupplierList') {
-        this.materialid = record.vendorid
-      } else if (this.menuname == 'CustomerList') {
-        this.materialid = record.customerid
-      } else if (this.menuname == 'WarehouseList') {
-        this.materialid = record.warehouseid
+      if (this.menuname == 'ReceiptNoticeList') {
+        this.materialid = record.receiptnoticeid
       }
       this.delete()
     },

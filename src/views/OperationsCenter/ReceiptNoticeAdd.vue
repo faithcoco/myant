@@ -129,6 +129,10 @@ export default {
       columns: [],
       deatilData: [],
       menuid: '',
+      departmentid: '',
+      personid: '',
+      vendorid: '',
+      businessclasscode: '',
     }
   },
   created() {
@@ -163,7 +167,7 @@ export default {
   methods: {
     initdata() {
       const parameter = {}
-      parameter.memucode = '01-02'
+      parameter.memucode = '02-02'
       var url = '/bd/menu/findallmenu'
       console.log('menu id-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
@@ -178,9 +182,10 @@ export default {
       const columnsParams = {}
       columnsParams.menuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      console.log('columns url--->', '/bd/product/productList/columns')
+      var urlColumns='/sys/setting/getChildrenSetting'
+      console.log('columns url--->', urlColumns)
       console.log('columns parameter-->', JSON.stringify(columnsParams))
-      getProductListColumns(columnsParams, '/bd/product/productList/columns').then((res) => {
+      getProductListColumns(columnsParams, urlColumns).then((res) => {
         this.columns = res.result.columns
         console.log('columns data--->', JSON.stringify(res))
         this.columns.splice(this.columns.length - 1, 1)
@@ -205,34 +210,42 @@ export default {
     detailOk(e) {
       this.detailVisible = false
       this.deatilData = this.selectList
-      console.log('details-->', JSON.stringify(this.deatilData))
     },
     detailCancel(e) {
       this.detailVisible = false
     },
     handleOk(e) {
       console.log('select--->', JSON.stringify(this.selectList))
+      console.log('key--->', this.currentkey)
       // this.personlist = this.list.join()
       if (this.currentkey == 'departmentid') {
         this.typeVisible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList[0].title + '[' + this.selectList[0].departmentid + ']',
+          [this.currentkey]: this.selectList[0].title,
         })
+        this.departmentid = this.selectList[0].departmentid
       } else if (this.currentkey == 'personid') {
         this.visible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList[0].personname + '[' + this.selectList[0].personid + ']',
+          [this.currentkey]: this.selectList[0].personname,
         })
+        this.personid = this.selectList[0].personid
       } else if (this.currentkey == 'vendorid') {
         this.visible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList[0].vendorname + '[' + this.selectList[0].vendorid + ']',
+          [this.currentkey]: this.selectList[0].vendorname,
         })
+        this.vendorid = this.selectList[0].vendorid
       } else if (this.currentkey == 'businessclasscode') {
         this.typeVisible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList[0].title + '[' + this.selectList[0].key + ']',
+          [this.currentkey]: this.selectList[0].businessclasscode,
         })
+
+        this.form.setFieldsValue({
+          businessclassname: this.selectList[0].title,
+        })
+        this.businessclasscode = this.selectList[0].key
       }
     },
     handleCancel(e) {
@@ -305,23 +318,33 @@ export default {
             } else if (Vue.ls.get(menuname) == 'CargoSpace') {
               var submitUrl = '/bd/warehouse/positionupdateSave'
               values.positionid = this.materialid
-            }else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+            } else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
               var submitUrl = '/bd/docreceiptnotice/updatesave'
-               values.receiptnoticeid = this.materialid
+              values.receiptnoticeid = this.materialid
             }
           }
 
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-          values.details=this.deatilData
+          values.details = this.deatilData
+          values.departmentid = this.departmentid
+          values.personid = this.personid
+          values.vendorid = this.vendorid
+          values.businessclasscode = this.businessclasscode
           console.log('submit url-->', submitUrl)
-          submitForm(values, submitUrl).then((res) => {
-            console.log('submit--->', JSON.stringify(res))
+          console.log('submit parameter-->', JSON.stringify(values))
+          submitForm(values, submitUrl)
+            .then((res) => {
+              console.log('submit--->', JSON.stringify(res))
+
+              if (res.status == 'SUCCESS') {
+                this.form.resetFields()
+              }
+              this.$message.info(res.errorMsg)
+            })
+            .catch((err) => {
              
-            if (res.status == 'SUCCESS') {
-              this.form.resetFields()
-            }
-            this.$message.info(res.errorMsg)
-          })
+              this.$message.error(err.message)
+            })
         }
       })
     },
@@ -384,7 +407,7 @@ export default {
         } else if (Vue.ls.get(menuname) == 'CargoSpace') {
           this.urlForm = '/bd/warehouse/positionupdateForm'
           columnsParams.positionid = this.materialid
-        }else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+        } else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/updateform'
           columnsParams.receiptnoticeid = this.materialid
         }
@@ -394,7 +417,7 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       getForm(columnsParams, this.urlForm).then((res) => {
         this.data = res.result
-
+        console.log('form res-->', JSON.stringify(this.data))
         setTimeout(() => {
           for (const i in this.data) {
             if (this.data[i].value !== '') {

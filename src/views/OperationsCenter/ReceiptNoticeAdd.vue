@@ -28,13 +28,18 @@
               placeholder="选择日期"
               v-decorator="item.decorator"
             />
-            <a-input v-decorator="item.decorator" v-show="item.listVisible" :maxLength="item.fieldlength">
+            <a-input
+              v-decorator="item.decorator"
+              :disabled="disabled"
+              v-show="item.listVisible"
+              :maxLength="item.fieldlength"
+            >
               <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
             </a-input>
           </a-form-item>
           <a-form-item :wrapper-col="{ span: 21, offset: 2 }">
             <a-tabs>
-              <a-tab-pane key="1" tab="明细">
+              <a-tab-pane tab="明细">
                 <a-button @click="() => detailModal()">选择</a-button>
                 <a-table :columns="columns" :data-source="deatilData" :scroll="{ x: 1500 }"></a-table>
               </a-tab-pane>
@@ -101,6 +106,7 @@ export default {
   },
   data() {
     return {
+      disabled: true,
       numberRow,
       selectedRow: [],
 
@@ -165,6 +171,15 @@ export default {
     this.form = this.$form.createForm(this, { name: 'form' })
   },
   methods: {
+    getNamefromKey() {
+      const columnsParams = {}
+      var urlForm = ''
+
+      //this.data
+      getForm(columnsParams, this.urlForm).then((res) => {
+        console.log('res-->', JSON.stringify(res))
+      })
+    },
     initdata() {
       const parameter = {}
       parameter.memucode = '02-02'
@@ -182,7 +197,7 @@ export default {
       const columnsParams = {}
       columnsParams.menuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      var urlColumns='/sys/setting/getChildrenSetting'
+      var urlColumns = '/sys/setting/getChildrenSetting'
       console.log('columns url--->', urlColumns)
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, urlColumns).then((res) => {
@@ -192,15 +207,12 @@ export default {
       })
     },
     detailSelect(list) {
-      console.log('select-->', list)
       this.selectList = list
     },
     getSelect(list) {
-      console.log('select-->', list)
       this.selectList = list
     },
     typeSelect(list) {
-      console.log('select-->', list)
       this.selectList = list
     },
     detailModal(e) {
@@ -330,6 +342,7 @@ export default {
           values.personid = this.personid
           values.vendorid = this.vendorid
           values.businessclasscode = this.businessclasscode
+          values.approvalprocess = values.approvalprocess.join()
           console.log('submit url-->', submitUrl)
           console.log('submit parameter-->', JSON.stringify(values))
           submitForm(values, submitUrl)
@@ -342,7 +355,6 @@ export default {
               this.$message.info(res.errorMsg)
             })
             .catch((err) => {
-             
               this.$message.error(err.message)
             })
         }
@@ -363,51 +375,14 @@ export default {
       if (this.$route.params.tag == 1) {
         this.title = this.$route.params.title + '新增'
         this.materialclassid = this.$route.params.materialclassid
-        if (Vue.ls.get(menuname) == 'PersonnelSetting') {
-          this.urlForm = '/bd/baseperson/insterForm'
-          columnsParams.departmentid = this.materialclassid
-        } else if (Vue.ls.get(menuname) == 'ProductList') {
-          this.urlForm = '/bd/product/materialList'
-          columnsParams.materialclassid = this.materialclassid
-        } else if (Vue.ls.get(menuname) == 'SupplierList') {
-          this.urlForm = '/bd/basevendor/insterForm'
-          columnsParams.vendorclassid = this.materialclassid
-        } else if (Vue.ls.get(menuname) == 'CustomerList') {
-          this.urlForm = '/bd/customer/insterForm'
-          columnsParams.customerclassid = this.materialclassid
-        } else if (Vue.ls.get(menuname) == 'WarehouseList') {
-          this.urlForm = '/bd/warehouse/insterForm'
-          columnsParams.warehouseclassid = this.materialclassid
-        } else if (Vue.ls.get(menuname) == 'CargoSpace') {
-          this.urlForm = '/bd/warehouse/positioninsterForm'
-          columnsParams.positionid = this.materialid
-          columnsParams.warehouseid = this.materialclassid
-        } else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+        if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/insterform'
         }
       } else if (this.$route.params.tag == 2) {
         this.title = this.$route.params.title + '编辑'
         this.materialid = this.$route.params.materialid
         console.log('materialid', this.materialid)
-        if (Vue.ls.get(menuname) == 'ProductList') {
-          this.urlForm = '/bd/product/updateform'
-          columnsParams.materialid = this.materialid
-        } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
-          this.urlForm = '/bd/baseperson/updateForm'
-          columnsParams.personid = this.materialid
-        } else if (Vue.ls.get(menuname) == 'SupplierList') {
-          this.urlForm = '/bd/basevendor/updateForm'
-          columnsParams.vendorid = this.materialid
-        } else if (Vue.ls.get(menuname) == 'CustomerList') {
-          this.urlForm = '/bd/customer/updateForm'
-          columnsParams.customerid = this.materialid
-        } else if (Vue.ls.get(menuname) == 'WarehouseList') {
-          this.urlForm = '/bd/warehouse/updateForm'
-          columnsParams.warehouseid = this.materialid
-        } else if (Vue.ls.get(menuname) == 'CargoSpace') {
-          this.urlForm = '/bd/warehouse/positionupdateForm'
-          columnsParams.positionid = this.materialid
-        } else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+        if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/updateform'
           columnsParams.receiptnoticeid = this.materialid
         }
@@ -426,6 +401,7 @@ export default {
               })
             }
           }
+        //  console.log('name--->', this.form.getFieldValue('departmentid'))
         }, 3000)
       })
     },

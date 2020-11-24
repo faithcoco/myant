@@ -195,7 +195,7 @@ export default {
       this.selectedRowKeys=[]
       this.menuname = name
       const parameter = {}
-      console.log('menu name-->', name)
+
       if (name == 'ProductList') {
         this.titleTree = '货品分类'
         this.urlTree = '/bd/product/materialClassTree'

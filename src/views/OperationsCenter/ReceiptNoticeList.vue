@@ -157,7 +157,6 @@ export default {
     },
     initData(name) {
       this.menuname = name
-      console.log('menu name-->', name)
       this.titleTree = '仓位分类'
 
       this.urlColumns = '/sys/setting/getSetting'

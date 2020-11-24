@@ -184,7 +184,6 @@ export default {
     },
     initData(name) {
       this.menuname = name
-      console.log('menu name-->', name)
       if (name == 'ProductList') {
         this.titleTree = '货品分类'
         this.urlTree = '/bd/product/materialClassTree'
@@ -234,11 +233,11 @@ export default {
       const columnsParams = {}
       columnsParams.menuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      console.log('columns url--->', this.urlColumns)
+      console.log('columnsurl--->', this.urlColumns)
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-        console.log('columns data--->', JSON.stringify(res))
+        console.log(this.menuname + ' columnsdata--->', JSON.stringify(res))
 
         for (let i = 0; i < this.columns.length - 1; i++) {
           this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
@@ -298,7 +297,7 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-
+        console.log(this.menuname + ' listdata-->',JSON.stringify(this.listdata))
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }
@@ -359,6 +358,7 @@ export default {
           materialid: this.materialid,
           tag: 2,
           menuid: this.menuid,
+          title: this.$route.meta.title,
         },
       })
     },

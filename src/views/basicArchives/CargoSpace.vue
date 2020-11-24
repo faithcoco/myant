@@ -167,7 +167,6 @@ export default {
     },
     initData(name) {
       this.menuname = name
-      console.log('menu name-->', name)
       if (name == 'CargoSpace') {
         this.titleTree = '仓库'
         this.urlTree = '/bd/warehouse/positionTree'

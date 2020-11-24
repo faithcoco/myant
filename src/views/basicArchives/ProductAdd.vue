@@ -28,9 +28,7 @@
               placeholder="选择日期"
               v-decorator="item.decorator"
             />
-         
           </a-form-item>
-        
         </a-form>
       </a-card>
     </div>
@@ -159,15 +157,18 @@ export default {
               values.customerid = this.materialid
             } else if (Vue.ls.get(menuname) == 'WarehouseList') {
               var submitUrl = '/bd/warehouse/warehouseupdatesave'
+              values.warehousestatus=values.warehousestatus.join()
               values.warehouseid = this.materialid
             } else if (Vue.ls.get(menuname) == 'CargoSpace') {
               var submitUrl = '/bd/warehouse/positionupdateSave'
               values.positionid = this.materialid
+              values.positionstatus=values.positionstatus.join()
             }
           }
 
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           console.log('submit url-->', submitUrl)
+          console.log('submit params-->',JSON.stringify(values))
           submitForm(values, submitUrl).then((res) => {
             console.log('submit--->', JSON.stringify(res))
 
@@ -210,10 +211,7 @@ export default {
           columnsParams.warehouseclassid = this.materialclassid
         } else if (Vue.ls.get(menuname) == 'CargoSpace') {
           this.urlForm = '/bd/warehouse/positioninsterForm'
-          columnsParams.positionid = this.materialid
           columnsParams.warehouseid = this.materialclassid
-        } else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
-          this.urlForm = '/bd/docreceiptnotice/insterform'
         }
       } else if (this.$route.params.tag == 2) {
         this.title = this.$route.params.title + '编辑'
@@ -240,8 +238,9 @@ export default {
         }
       }
       this.$multiTab.rename('/basic_archives/ProductAdd', this.title)
-      console.log('form url--->', this.urlForm)
-      console.log('form params-->', JSON.stringify(columnsParams))
+      console.log(Vue.ls.get(menuname) + '/route--->', this.$route)
+      console.log(Vue.ls.get(menuname) + '/formurl--->', this.urlForm)
+      console.log(Vue.ls.get(menuname) + '/form params-->', JSON.stringify(columnsParams))
       getForm(columnsParams, this.urlForm).then((res) => {
         this.data = res.result
         console.log('form res-->', JSON.stringify(this.data))

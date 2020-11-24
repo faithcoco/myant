@@ -118,7 +118,7 @@
           <a-input v-model="form.enterpriseregistrationtime" disabled placeholder="无"></a-input>
         </a-form-model-item>
         <a-form-model-item label="状态:" prop="EnterpriseStatus">
-          <a-input v-model="form.enterprisestatus" disabled placeholder="请输入新手机号"></a-input>
+          <a-input v-model="form.enterprisestatusname" disabled placeholder="请输入新手机号"></a-input>
         </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -299,6 +299,7 @@ export default {
   },
   data() {
     return {
+      currentChecked: '',
       Telshow: false,
       Phoneshow: false,
       changeTelVisible1: false,
@@ -339,29 +340,7 @@ export default {
       name: '',
       enterprisename: [],
       Form: Object,
-      form: {
-        EnterpriseAddress: '',
-        enterprisename: '',
-        EnterpriseContact: '',
-        EnterpriseTel: '',
-        EnterpriseRegistrant: '',
-        enterprisename: '',
-        EnterprisePhone: '',
-        enterprisephone: '',
-        NewTel: '',
-        Newphone: '',
-        PersonPhone: '',
-        enterpriseregistrationtime: '',
-        EnterpriseStatus: '',
-        enterprisetrialdays: '',
-        mail: '',
-        userCount: '',
-        LOGO: '',
-        expiryDate: '',
-        time: '',
-        cName: '',
-        VerificationCode: '',
-      },
+      form: {},
       color: 'green',
       labelCol: { span: 4 },
       wrapperCol: { span: 18 },
@@ -393,24 +372,6 @@ export default {
     }
   },
   created() {
-    this.baseenterprisePO = Vue.ls.get(logininfo).baseenterprisePO
-    //企业状态：0待审核、1已审核、2已过期、5试用中、9已注销——注册成功默认5
-    if (this.baseenterprisePO.enterprisestatus === 5) {
-      this.baseenterprisePO.enterprisestatus = '试用中'
-      this.color = 'yellow'
-    } else if (this.baseenterprisePO.enterprisestatus === 0) {
-      this.baseenterprisePO.enterprisestatus = '待审核'
-      this.color = 'red'
-    } else if (this.baseenterprisePO.enterprisestatus === 1) {
-      this.baseenterprisePO.enterprisestatus = '已审核'
-      this.color = 'yellowgreen'
-    } else if (this.baseenterprisePO.enterprisestatus === 2) {
-      this.baseenterprisePO.enterprisestatus = '已过期'
-      this.color = 'gray'
-    } else if (this.baseenterprisePO.enterprisestatus === 9) {
-      this.baseenterprisePO.enterprisestatus = '已注销'
-      this.color = 'black'
-    }
     this.getInfo()
   },
   computed: {},
@@ -418,17 +379,31 @@ export default {
     getInfo() {
       const params = {}
       params.id = this.baseenterprisePO.enterpriseid
-      console.log(params)
+
       console.log('params-->', params)
       getBaseenterpriseInfo(params)
         .then((res) => {
           console.log('getBaseenterpriseInfo----->', JSON.stringify(res))
           this.form = res.result
-          this.form.enterpriseregistrationtime = enterpriseregistrationtime
-          this.form.enterprisestatus = this.baseenterprisePO.enterprisestatus
           let d = new Date(this.baseenterprisePO.enterpriseregistrationtime)
-
           let enterpriseregistrationtime = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
+          //企业状态：0待审核、1已审核、2已过期、5试用中、9已注销——注册成功默认5
+          if (this.form.enterprisestatus === 5) {
+            this.enterprisestatusname = '试用中'
+            this.color = 'yellow'
+          } else if (this.form.enterprisestatus === 0) {
+            this.enterprisestatusname = '待审核'
+            this.color = 'red'
+          } else if (this.form.enterprisestatus === 1) {
+            this.enterprisestatusname = '已审核'
+            this.color = 'yellowgreen'
+          } else if (this.form.enterprisestatus === 2) {
+            this.enterprisestatusname = '已过期'
+            this.color = 'gray'
+          } else if (this.form.enterprisestatus === 9) {
+            this.enterprisestatusname = '已注销'
+            this.color = 'black'
+          }
         })
         .catch((err) => {})
     },
@@ -607,30 +582,22 @@ export default {
       this.changeTelVisible1 = true
     },
     onChange(e) {
-      console.log('radio checked', e.target.value)
-      console.log('radio checked', this.form.enterprisename)
-
+      this.currentChecked = e.target.value
+    },
+    changeHandleOk(e) {
       const params = {}
-      params.enterpriseid = e.target.value
+      params.enterpriseid = this.currentChecked
       params.enterprisephone = Vue.ls.get(logininfo).basepersonPO.personphone
       var url = '/sys/switchlogin'
       postData(params, url)
         .then((res) => {
-          console.log('change company-->', JSON.stringify(res))
-
           Vue.ls.set(logininfo, res.result)
           this.baseenterprisePO = Vue.ls.get(logininfo).baseenterprisePO
           this.getInfo()
+          this.changeVisible=false
         })
         .catch(() => {})
-    },
-    changeHandleOk(e) {
-      this.changeConfirmLoading = true
-      setTimeout(() => {
-        this.changeVisible = false
-        this.changeConfirmLoading = false
-        this.form = this.Form
-      }, 2000)
+   
     },
     changeHandleCancel(e) {
       this.changeVisible = false
@@ -665,14 +632,7 @@ export default {
           .then((res) => {
             console.log('getCompanyList-->', JSON.stringify(res))
             this.enterprisename = res.result
-            // if (res.result.length == 1) {
-            //   this.enterpriseid = res.result[0].enterpriseid
-            //   this.enterpriseVisible=false
-            // } else {
-            //   this.enterpriseVisible = true
-
-            // }
-            //  this.companyList = res.result
+        
           })
           .catch(() => {})
     },

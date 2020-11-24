@@ -171,15 +171,6 @@ export default {
     this.form = this.$form.createForm(this, { name: 'form' })
   },
   methods: {
-    getNamefromKey() {
-      const columnsParams = {}
-      var urlForm = ''
-
-      //this.data
-      getForm(columnsParams, this.urlForm).then((res) => {
-        console.log('res-->', JSON.stringify(res))
-      })
-    },
     initdata() {
       const parameter = {}
       parameter.memucode = '02-02'
@@ -242,6 +233,9 @@ export default {
           [this.currentkey]: this.selectList[0].personname,
         })
         this.personid = this.selectList[0].personid
+        this.form.setFieldsValue({
+          departmentid: this.selectList[0].departmentid,
+        })
       } else if (this.currentkey == 'vendorid') {
         this.visible = false
         this.form.setFieldsValue({
@@ -391,17 +385,25 @@ export default {
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
       getForm(columnsParams, this.urlForm).then((res) => {
+        this.data = []
         this.data = res.result
         console.log('form res-->', JSON.stringify(this.data))
+
         setTimeout(() => {
           for (const i in this.data) {
-            if (this.data[i].value !== '') {
-              this.form.setFieldsValue({
-                [this.data[i].key]: this.data[i].value,
-              })
+            this.form.setFieldsValue({
+              [this.data[i].key]: this.data[i].value,
+            })
+            if (this.data[i].key == 'departmentid') {
+              this.departmentid = this.data[i].keyvalue
+            } else if (this.data[i].key == 'personid') {
+              this.personid = this.data[i].keyvalue
+            } else if (this.data[i].key == 'vendorid') {
+              this.vendorid = this.data[i].keyvalue
+            } else if (this.data[i].key == 'businessclasscode') {
+              this.businessclasscode = this.data[i].keyvalue
             }
           }
-        //  console.log('name--->', this.form.getFieldValue('departmentid'))
         }, 3000)
       })
     },

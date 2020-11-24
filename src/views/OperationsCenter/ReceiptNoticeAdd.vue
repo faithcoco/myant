@@ -41,7 +41,13 @@
             <a-tabs>
               <a-tab-pane tab="明细">
                 <a-button @click="() => detailModal()">选择</a-button>
-                <a-table :columns="columns" :data-source="deatilData" :scroll="{ x: 1500 }"></a-table>
+                <a-table :columns="columns" :data-source="deatilData" :scroll="{ x: 1500 }">
+                  <span slot="action" slot-scope="text, record">
+                    <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
+                      <a href="javascript:;">删除</a>
+                    </a-popconfirm>
+                  </span>
+                </a-table>
               </a-tab-pane>
             </a-tabs>
           </a-form-item>
@@ -171,6 +177,9 @@ export default {
     this.form = this.$form.createForm(this, { name: 'form' })
   },
   methods: {
+    deleteItem(record) {
+      this.deatilData = this.deatilData.filter((item) => item.key !== record.key)
+    },
     initdata() {
       const parameter = {}
       parameter.memucode = '02-02'
@@ -184,8 +193,8 @@ export default {
         this.getColumns()
         if (this.$route.params.tag == 2) {
           this.getList()
-        }else{
-          this.deatilData=[]
+        } else {
+          this.deatilData = []
         }
       })
     },
@@ -199,7 +208,6 @@ export default {
       getProductListColumns(columnsParams, urlColumns).then((res) => {
         this.columns = res.result.columns
         console.log('columns data--->', JSON.stringify(res))
-        this.columns.splice(this.columns.length - 1, 1)
       })
     },
     getList() {
@@ -319,7 +327,10 @@ export default {
               values.receiptnoticeid = this.materialid
             }
           }
-
+          if(this.deatilData.length==0){
+            this.$message.warn('请添加明细')
+            return
+          }
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           values.details = this.deatilData
           values.departmentid = this.departmentid

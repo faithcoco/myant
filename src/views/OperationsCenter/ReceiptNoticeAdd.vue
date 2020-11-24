@@ -182,6 +182,11 @@ export default {
         this.menuid = res.result
 
         this.getColumns()
+        if (this.$route.params.tag == 2) {
+          this.getList()
+        }else{
+          this.deatilData=[]
+        }
       })
     },
     getColumns() {
@@ -195,6 +200,20 @@ export default {
         this.columns = res.result.columns
         console.log('columns data--->', JSON.stringify(res))
         this.columns.splice(this.columns.length - 1, 1)
+      })
+    },
+    getList() {
+      const columnsParams = {}
+      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      columnsParams.pageNo = 1
+      columnsParams.pageSize = 10
+      columnsParams.receiptnoticeid = this.materialid
+      var urlColumns = '/bd/docreceiptnotice/childrenlist'
+      console.log('listdata url--->', urlColumns)
+      console.log('listdata parameter-->', JSON.stringify(columnsParams))
+      getData(columnsParams, urlColumns).then((res) => {
+        this.deatilData = res.result.data
+        console.log('listdata res-->', JSON.stringify(res))
       })
     },
     detailSelect(list) {
@@ -291,40 +310,11 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           if (this.$route.params.tag == 1) {
-            if (Vue.ls.get(menuname) == 'ProductList') {
-              var submitUrl = '/bd/product/insterMaterial'
-            } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
-              var submitUrl = '/bd/baseperson/personinstersave'
-            } else if (Vue.ls.get(menuname) == 'SupplierList') {
-              var submitUrl = '/bd/basevendor/vendorinstersave'
-            } else if (Vue.ls.get(menuname) == 'CustomerList') {
-              var submitUrl = '/bd/customer/customerinstersave'
-            } else if (Vue.ls.get(menuname) == 'WarehouseList') {
-              var submitUrl = '/bd/warehouse/warehouseinstersave'
-            } else if (Vue.ls.get(menuname) == 'CargoSpace') {
-              var submitUrl = '/bd/warehouse/positioninsterSave'
-            } else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+            if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
               var submitUrl = '/bd/docreceiptnotice/instersave'
             }
           } else {
-            if (Vue.ls.get(menuname) == 'ProductList') {
-              var submitUrl = '/bd/product/updateMaterial'
-              values.materialid = this.materialid
-            } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
-              var submitUrl = '/bd/baseperson/personupdatesave'
-            } else if (Vue.ls.get(menuname) == 'SupplierList') {
-              var submitUrl = '/bd/basevendor/vendorupdatesave'
-              values.vendorid = this.materialid
-            } else if (Vue.ls.get(menuname) == 'CustomerList') {
-              var submitUrl = '/bd/customer/customerupdatesave'
-              values.customerid = this.materialid
-            } else if (Vue.ls.get(menuname) == 'WarehouseList') {
-              var submitUrl = '/bd/warehouse/warehouseupdatesave'
-              values.warehouseid = this.materialid
-            } else if (Vue.ls.get(menuname) == 'CargoSpace') {
-              var submitUrl = '/bd/warehouse/positionupdateSave'
-              values.positionid = this.materialid
-            } else if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+            if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
               var submitUrl = '/bd/docreceiptnotice/updatesave'
               values.receiptnoticeid = this.materialid
             }

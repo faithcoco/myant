@@ -2,7 +2,13 @@
   <a-layout>
     <div>
       <a-card>
-        <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
+        <a-form
+         
+          :form="form"
+          :label-col="{ span: 3 }"
+          :wrapper-col="{ span: 20 }"
+          @submit="handleSubmit"
+        >
           <a-form-item v-for="item in data" :label="item.title">
             <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
             <a-input-number
@@ -46,6 +52,15 @@
                     <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
                       <a href="javascript:;">删除</a>
                     </a-popconfirm>
+                    <span slot="fieldprecision" slot-scope="text, record">
+                      <a-input-number
+                        :min="0"
+                        :max="record.maxprecision"
+                        :disabled="record.fielddisabled"
+                        @change="(e) => fieldprecision(e.target.value, record)"
+                        v-model="record.fieldprecision"
+                      />
+                    </span>
                   </span>
                 </a-table>
               </a-tab-pane>
@@ -103,6 +118,9 @@ import ArchivesModal from '../other/ArchivesModal'
 import Type from '../other/TypeModal'
 import SelectModal from '../other/SelectModal'
 import { getProductListColumns } from '@/api/manage'
+import { Empty } from 'ant-design-vue'
+Vue.use(Empty)
+
 const numberRow = []
 export default {
   components: {
@@ -145,6 +163,7 @@ export default {
       personid: '',
       vendorid: '',
       businessclasscode: '',
+     
     }
   },
   created() {
@@ -221,7 +240,7 @@ export default {
       console.log('listdata parameter-->', JSON.stringify(columnsParams))
       getData(columnsParams, urlColumns).then((res) => {
         this.deatilData = res.result.data
-        console.log('listdata res-->', JSON.stringify(res))
+       
       })
     },
     detailSelect(list) {
@@ -327,10 +346,11 @@ export default {
               values.receiptnoticeid = this.materialid
             }
           }
-          if(this.deatilData.length==0){
+          if (this.deatilData.length == 0) {
             this.$message.warn('请添加明细')
             return
           }
+
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           values.details = this.deatilData
           values.departmentid = this.departmentid
@@ -361,6 +381,7 @@ export default {
     },
 
     getFormdata() {
+      
       this.modalname = this.$route.params.menu
       this.menuid = this.$route.params.menuid
       const columnsParams = {}
@@ -405,6 +426,7 @@ export default {
               this.businessclasscode = this.data[i].keyvalue
             }
           }
+         
         }, 3000)
       })
     },

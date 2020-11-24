@@ -139,9 +139,11 @@ export default {
             } else if (Vue.ls.get(menuname) == 'CustomerList') {
               var submitUrl = '/bd/customer/customerinstersave'
             } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+              values.warehousestatus = values.warehousestatus.join()
               var submitUrl = '/bd/warehouse/warehouseinstersave'
             } else if (Vue.ls.get(menuname) == 'CargoSpace') {
               var submitUrl = '/bd/warehouse/positioninsterSave'
+              values.positionstatus = values.positionstatus.join()
             }
           } else {
             if (Vue.ls.get(menuname) == 'ProductList') {
@@ -157,18 +159,18 @@ export default {
               values.customerid = this.materialid
             } else if (Vue.ls.get(menuname) == 'WarehouseList') {
               var submitUrl = '/bd/warehouse/warehouseupdatesave'
-              values.warehousestatus=values.warehousestatus.join()
+              values.warehousestatus = values.warehousestatus.join()
               values.warehouseid = this.materialid
             } else if (Vue.ls.get(menuname) == 'CargoSpace') {
               var submitUrl = '/bd/warehouse/positionupdateSave'
               values.positionid = this.materialid
-              values.positionstatus=values.positionstatus.join()
+              values.positionstatus = values.positionstatus.join()
             }
           }
 
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           console.log('submit url-->', submitUrl)
-          console.log('submit params-->',JSON.stringify(values))
+          console.log('submit params-->', JSON.stringify(values))
           submitForm(values, submitUrl).then((res) => {
             console.log('submit--->', JSON.stringify(res))
 

@@ -75,7 +75,12 @@
       </a-col>
     </a-row>
     <a-modal title="选择" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
-      <select-modal :name="name" :visible="visible" @onSelect="getSelect"></select-modal>
+      <select-modal
+        :name="name"
+        :defaultSelect="selectedRowKeys"
+        :visible="visible"
+        @onSelect="getSelect"
+      ></select-modal>
     </a-modal>
   </a-card>
 </template>
@@ -109,6 +114,10 @@ export default {
       product: {},
       selectList: [],
       personlist: '',
+      updateList: [],
+      selectedRowKeys: [],
+      selectName:[],
+      selectList:[]
     }
   },
   created() {
@@ -118,8 +127,15 @@ export default {
   },
   methods: {
     handleOk(e) {
-      console.log('select--->', JSON.stringify(this.selectList))
-      this.personlist = this.selectList.join()
+      var list = []
+
+      console.log('this list-->', JSON.stringify(this.selectList.length))
+      for (const key in this.selectList) {
+        list.push(this.selectList[key].personname)
+
+        this.updateList.push({ personid: this.selectList[key].personid, personname: this.selectList[key].personname })
+      }
+      this.personlist = list.join()
 
       this.visible = false
     },
@@ -136,11 +152,13 @@ export default {
     personnelClick() {
       this.visible = true
       this.name = 'PersonnelSetting'
+
+      console.log('prop--->', this.selectedRowKeys)
     },
     setRole() {
       getRoleList(this.idParapms).then((res) => {
         this.roles = res.result.data
-        console.log('role-->', JSON.stringify(this.roles))
+
         this.roles.push({
           personid: Vue.ls.get(logininfo).basepersonPO.personid,
           enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
@@ -178,9 +196,9 @@ export default {
         }
       }
 
+      console.log('submit--->', JSON.stringify(this.mdl))
       if (this.state == 0) {
         insertRole(this.mdl).then((res) => {
-          console.log('insertRole res---------->', JSON.stringify(res))
           if (res.status != 'SUCCESS') {
             this.$message.error(res.errorMsg)
           } else {
@@ -188,10 +206,8 @@ export default {
           }
         })
       } else {
-        console.log('update-->', this.mdl)
+        this.mdl.personlist = this.updateList
         updateRole(this.mdl).then((res) => {
-          console.log('  updateRole res---------->', JSON.stringify(res))
-
           if (res.status != 'SUCCESS') {
             this.$message.error(res.errorMsg)
           } else {
@@ -228,7 +244,7 @@ export default {
 
     edit(record) {
       this.mdl = Object.assign({}, record)
-      console.log('mdl-->', this.mdl)
+      console.log('mdl-->', JSON.stringify(this.mdl))
 
       if (this.mdl.describe == '新增角色') {
         this.state = 0
@@ -255,8 +271,10 @@ export default {
 
       for (const key in this.mdl.personList) {
         userlist.push(this.mdl.personList[key].personname)
+        this.selectedRowKeys.push(this.mdl.personList[key].personid)
       }
       this.personlist = userlist.join()
+      this.selectName=userlist
 
       this.$nextTick(() => {
         this.form.setFieldsValue(pick(this.mdl, 'id', 'name', 'status', 'describe'))

@@ -572,7 +572,7 @@ export function updateForm(parameter) {
   })
 }
 export function updateRole(parameter) {
-  console.log('updateRole(parameter) --->', JSON.stringify(parameter))
+ 
   return axios({
     url: '/bd/role/updateRole',
     method: 'post',

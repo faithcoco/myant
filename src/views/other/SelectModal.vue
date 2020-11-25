@@ -89,6 +89,12 @@ export default {
     name: {
       type: String,
     },
+    defaultSelect: {
+      type: Array,
+      default: () => {
+        return []
+      },
+    },
   },
   components: {
     STable,
@@ -157,13 +163,15 @@ export default {
   },
   methods: {
     onSelectChange(selectedRowKeys) {
-      console.log('selectedRowKeys changed: ', selectedRowKeys)
       this.selectedRowKeys = selectedRowKeys
       var selectList = []
       for (const key in this.selectedRowKeys) {
         var i = this.selectedRowKeys[key]
+        for (const key in this.listdata) {
+        }
         selectList.push(this.listdata[i])
       }
+      console.log('selectedRowKeys changed: ', this.selectedRowKeys)
       this.$emit('onSelect', selectList)
     },
     treeSearch(e) {
@@ -192,7 +200,7 @@ export default {
       })
     },
     initData(name) {
-      this.selectedRowKeys=[]
+      this.selectedRowKeys = []
       this.menuname = name
       const parameter = {}
 
@@ -287,6 +295,7 @@ export default {
       this.getList()
     },
     getList() {
+      this.selectedRowKeys = []
       const parameter = {}
       if (this.menuname == 'PersonnelSetting') {
         parameter.departmentid = this.materialclassid
@@ -312,10 +321,16 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-
+        console.log('list--->', JSON.stringify(this.listdata))
         for (const key in this.listdata) {
           this.listdata[key].key = key
+          for (const y in this.defaultSelect) {
+            if (this.defaultSelect[y] == this.listdata[key].personid) {
+              this.selectedRowKeys.push(key)
+            }
+          }
         }
+
         this.isSearch = false
       })
     },

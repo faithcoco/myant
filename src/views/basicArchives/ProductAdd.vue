@@ -21,7 +21,7 @@
             />
 
             <a-date-picker
-              :style="{ width: '1370px' }"
+              :style="{ width: '100%' }"
               v-show="item.timepickerVisible"
               show-time
               format="YYYY-MM-DD HH:mm:ss"
@@ -277,7 +277,61 @@ export default {
     // 返回到清单页面
     Back() {
       // 路由跳转
-      this.$router.go(-1)
+       this.form.validateFields((err, values) => {
+        if (!err) {
+          if (this.$route.params.tag == 1) {
+            if (Vue.ls.get(menuname) == 'ProductList') {
+              var submitUrl = '/bd/product/insterMaterial'
+            } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+              var submitUrl = '/bd/baseperson/personinstersave'
+            } else if (Vue.ls.get(menuname) == 'SupplierList') {
+              var submitUrl = '/bd/basevendor/vendorinstersave'
+            } else if (Vue.ls.get(menuname) == 'CustomerList') {
+              var submitUrl = '/bd/customer/customerinstersave'
+            } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+              values.warehousestatus = values.warehousestatus.join()
+              var submitUrl = '/bd/warehouse/warehouseinstersave'
+            } else if (Vue.ls.get(menuname) == 'CargoSpace') {
+              var submitUrl = '/bd/warehouse/positioninsterSave'
+              values.positionstatus = values.positionstatus.join()
+            }
+          } else {
+            if (Vue.ls.get(menuname) == 'ProductList') {
+              var submitUrl = '/bd/product/updateMaterial'
+              values.materialid = this.materialid
+            } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+              var submitUrl = '/bd/baseperson/personupdatesave'
+            } else if (Vue.ls.get(menuname) == 'SupplierList') {
+              var submitUrl = '/bd/basevendor/vendorupdatesave'
+              values.vendorid = this.materialid
+            } else if (Vue.ls.get(menuname) == 'CustomerList') {
+              var submitUrl = '/bd/customer/customerupdatesave'
+              values.customerid = this.materialid
+            } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+              var submitUrl = '/bd/warehouse/warehouseupdatesave'
+              values.warehousestatus = values.warehousestatus.join()
+              values.warehouseid = this.materialid
+            } else if (Vue.ls.get(menuname) == 'CargoSpace') {
+              var submitUrl = '/bd/warehouse/positionupdateSave'
+              values.positionid = this.materialid
+              values.positionstatus = values.positionstatus.join()
+            }
+          }
+
+          values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+          console.log('submit url-->', submitUrl)
+          console.log('submit params-->', JSON.stringify(values))
+          submitForm(values, submitUrl).then((res) => {
+            console.log('submit--->', JSON.stringify(res))
+
+            if (res.status == 'SUCCESS') {
+              this.$router.go(-1)
+            }
+            this.$message.info(res.errorMsg)
+          })
+        }
+      })
+     
     },
     // 重置表单
     resetForm() {

@@ -2,13 +2,7 @@
   <a-layout>
     <div>
       <a-card>
-        <a-form
-         
-          :form="form"
-          :label-col="{ span: 3 }"
-          :wrapper-col="{ span: 20 }"
-          @submit="handleSubmit"
-        >
+        <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
           <a-form-item v-for="item in data" :label="item.title">
             <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
             <a-input-number
@@ -143,7 +137,7 @@ export default {
       wrapperCol: { span: 22 },
       other: '',
       data: [],
-      selectedRowKeys: [],
+
       menuid: '',
       urlForm: '',
       materialclassid: '',
@@ -163,7 +157,6 @@ export default {
       personid: '',
       vendorid: '',
       businessclasscode: '',
-     
     }
   },
   created() {
@@ -240,7 +233,6 @@ export default {
       console.log('listdata parameter-->', JSON.stringify(columnsParams))
       getData(columnsParams, urlColumns).then((res) => {
         this.deatilData = res.result.data
-       
       })
     },
     detailSelect(list) {
@@ -381,7 +373,6 @@ export default {
     },
 
     getFormdata() {
-      
       this.modalname = this.$route.params.menu
       this.menuid = this.$route.params.menuid
       const columnsParams = {}
@@ -426,7 +417,6 @@ export default {
               this.businessclasscode = this.data[i].keyvalue
             }
           }
-         
         }, 3000)
       })
     },

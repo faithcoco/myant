@@ -2,18 +2,18 @@
   <a-card :bordered="false">
     <a-row :gutter="8">
       <a-col :span="5">
-          <div class="approvalTree">
-        <s-tree
-          :dataSource="approvalSettinTree"
-          :openKeys.sync="openKeys"
-          :search="true"
-          @click="handleClick"
-          @add="handleAdd"
-          @titleClick="handleTitleClick"
-          v-model="selectedKeys"
-           :selectedKeys='selectedKeys'
-        ></s-tree>
-          </div>
+        <div class="approvalTree">
+          <s-tree
+            :dataSource="approvalSettinTree"
+            :openKeys.sync="openKeys"
+            :search="true"
+            @click="handleClick"
+            @add="handleAdd"
+            @titleClick="handleTitleClick"
+            v-model="selectedKeys"
+            :selectedKeys="selectedKeys"
+          ></s-tree>
+        </div>
       </a-col>
       <a-col :span="19">
         <a-form layout="vertical">
@@ -26,47 +26,45 @@
           >
 
           <a-form-item label="审批节点一:">
-             <a-select   style="width: 50%"  placeholder="请选择审批人员" @change="handleChange1" v-model="select1"  label-in-value>
-              <a-select-option v-for="(item, i) in nameList" :key="item.key">
-                {{ item.name }}
-              </a-select-option>
-            </a-select>
+            <a-tree-select
+              @change="handleChange1"
+              style="width: 50%"
+              :tree-data="nameList"
+              multiple
+              search-placeholder="Please select"
+            />
           </a-form-item>
           <a-form-item label="审批节点二:">
-            <a-select   style="width: 50%"  label-in-value placeholder="请选择审批人员"   v-model="select2" @change="handleChange2" > 
-              <a-select-option v-for="(item, i) in nameList" :key="item.key">
-                {{ item.name }}
-              </a-select-option>
-            </a-select>
+            <a-tree-select
+              @change="handleChange2"
+              style="width: 50%"
+              :tree-data="nameList"
+              multiple
+              search-placeholder="Please select"
+            />
           </a-form-item>
           <a-form-item label="审批节点三:">
-            <a-select   style="width: 50%"  label-in-value placeholder="请选择审批人员"  v-model="select3" @change="handleChange3">
-              <a-select-option v-for="(item, i) in nameList" :key="item.key">
-                {{ item.name }}
-              </a-select-option>
-            </a-select>
-
+            <a-tree-select
+              @change="handleChange3"
+              style="width: 50%"
+              :tree-data="nameList"
+              multiple
+              search-placeholder="Please select"
+            />
           </a-form-item>
           <a-form-item label :required="false">
             <a-steps direction="vertical" size="small" :current="3" progress-dot>
-              <a-step v-for="(item, i) in list" :title="item.title" :description="item.name" />
-            </a-steps>
-          </a-form-item>
-                       <a-form-item >
-       <a-row>
-         
-          <a-col :span="1" :offset="1">
-            <a-button type="primary" @click="onSubmit">保存</a-button>
-          </a-col>
-          <a-col :span="1" :offset="1">
-            <a-button type @click="onBack">取消</a-button>
-          </a-col>
-        </a-row>
-          </a-form-item>
-        
+              <a-step v-for="(item, i) in steps" :title="item.title" :description="item.name" />
             </a-steps>
           </a-form-item>
         </a-form>
+
+        <a-col :span="1" :offset="1">
+          <a-button type="primary" @click="onSubmit">保存</a-button>
+        </a-col>
+        <a-col :span="1" :offset="1">
+          <a-button type @click="onBack">取消</a-button>
+        </a-col>
       </a-col>
     </a-row>
 
@@ -81,6 +79,8 @@ import OrgModal from '../other/modules/OrgModal'
 import { getData, postData } from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
 import Vue from 'vue'
+import { TreeSelect } from 'ant-design-vue'
+Vue.use(TreeSelect)
 const columns = []
 export default {
   name: 'TreeList',
@@ -99,6 +99,11 @@ export default {
         { key: 2, name: '李四 ' },
         { key: 3, name: '王五' },
       ],
+      steps: [
+        { title: '审批节点一', name: '' },
+        { title: '审批节点二', name: '' },
+        { title: '审批节点三', name: '' },
+      ],
 
       // 查询参数
       queryParam: {},
@@ -112,6 +117,11 @@ export default {
       select1: { key: '' },
       select2: { key: '' },
       select3: { key: '' },
+      submit: {
+        node1: [],
+        node2: [],
+        node3: [],
+      },
     }
   },
   created() {
@@ -120,15 +130,15 @@ export default {
     const params = {}
     getData(params, url).then((res) => {
       this.approvalSettinTree = res.result
-      console.log("tree-->",JSON.stringify(this.approvalSettinTree))
-      this.menuid=this.approvalSettinTree[0].memuid
+      console.log('tree-->', JSON.stringify(this.approvalSettinTree))
+      this.menuid = this.approvalSettinTree[0].memuid
       this.getSelect()
     })
     url = '/work/getPsndocOrRoleList'
     const paramsName = { enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid }
     getData(paramsName, url).then((res) => {
       console.log('name list ->', JSON.stringify(res))
-      this.nameList = res.result.nameList
+      this.nameList = res.result
     })
   },
   methods: {
@@ -139,18 +149,20 @@ export default {
       }
       var url = '/work/getWorkFlowSetInfo'
       getData(parameter, url).then((res) => {
-        console.log('approval init ->', JSON.stringify(res))
         this.list = res.result.list
-        this.select1.key = this.list[0].key
-        this.select2.key = this.list[1].key
-        this.select3.key = this.list[2].key
+        console.log('approval init ->', JSON.stringify(this.list))
+        if (this.list.length !== 0) {
+          this.select1.key = this.list[0].key
+          this.select2.key = this.list[1].key
+          this.select3.key = this.list[2].key
+        }
       })
     },
     onSubmit(e) {
       const parameter = {
         enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
         memuid: this.menuid,
-        nameList: this.list,
+        nameList: this.submit,
       }
       var url = '/work/insertWorkflow'
       postData(parameter, url).then((res) => {
@@ -167,18 +179,18 @@ export default {
     onBack(e) {
       this.getSelect()
     },
-    handleChange1(value) {
+    handleChange1(value, label) {
       console.log(JSON.stringify(value))
-      this.list[0].name = value.label
-      this.list[0].key = value.key
+      this.steps[0].name = label.join()
+      this.submit.node1 = value
     },
-    handleChange2(value) {
-      this.list[1].name = value.label
-      this.list[1].key = value.key
+    handleChange2(value, label) {
+      this.steps[1].name = label.join()
+      this.submit.node2 = value
     },
-    handleChange3(value) {
-      this.list[2].name = value.label
-      this.list[2].key = value.key
+    handleChange3(value, label) {
+      this.steps[2].name = label.join()
+      this.submit.node3 = value
     },
     onChange(checked) {
       console.log(`a-switch to ${checked}`)

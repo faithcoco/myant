@@ -21,7 +21,7 @@
             />
 
             <a-date-picker
-              :style="{ width: '1370px' }"
+              :style="{ width: '100%' }"
               v-show="item.timepickerVisible"
               show-time
               format="YYYY-MM-DD HH:mm:ss"
@@ -160,7 +160,6 @@ export default {
     }
   },
   created() {
-    this.getFormdata()
     this.initdata()
   },
 
@@ -178,8 +177,10 @@ export default {
     $route: {
       handler: function (val, oldVal) {
         if (val.params.menu !== undefined) {
-          this.getFormdata()
-          this.initdata()
+          console.log('notice val-->', val)
+          if (this.$route.params.menu == 'ReceiptNoticeList') {
+            this.initdata()
+          }
         }
       },
       // 深度观察监听
@@ -209,6 +210,7 @@ export default {
           this.deatilData = []
         }
       })
+      this.getFormdata()
     },
     getColumns() {
       const columnsParams = {}
@@ -329,11 +331,11 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           if (this.$route.params.tag == 1) {
-            if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+            if (this.$route.params.menu == 'ReceiptNoticeList') {
               var submitUrl = '/bd/docreceiptnotice/instersave'
             }
           } else {
-            if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+            if (this.$route.params.menu == 'ReceiptNoticeList') {
               var submitUrl = '/bd/docreceiptnotice/updatesave'
               values.receiptnoticeid = this.materialid
             }
@@ -382,19 +384,20 @@ export default {
       if (this.$route.params.tag == 1) {
         this.title = this.$route.params.title + '新增'
         this.materialclassid = this.$route.params.materialclassid
-        if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+        if (this.$route.params.menu == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/insterform'
         }
       } else if (this.$route.params.tag == 2) {
         this.title = this.$route.params.title + '编辑'
         this.materialid = this.$route.params.materialid
         console.log('materialid', this.materialid)
-        if (Vue.ls.get(menuname) == 'ReceiptNoticeList') {
+        if (this.$route.params.menu == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/updateform'
           columnsParams.receiptnoticeid = this.materialid
         }
       }
-      this.$multiTab.rename('/basic_archives/ProductAdd', this.title)
+      this.$multiTab.rename(this.$route, this.title)
+        console.log('2 is run')
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
       getForm(columnsParams, this.urlForm).then((res) => {

@@ -91,12 +91,12 @@ export default {
     }
   },
   created() {
-   this.initData(Vue.ls.get(menuname))
+   this.initData(this.$route.params.menu)
   },
   watch: {
     $route: {
       handler: function (val, oldVal) {
-        this.initData(Vue.ls.get(menuname))
+        this.initData(this.$route.params.menu)
       },
       // 深度观察监听
     },
@@ -111,30 +111,40 @@ export default {
         this.urlUpdate = '/bd/updateDepartment'
         this.urlDelete = '/bd/deleteDepartment'
         this.columns[1].dataIndex = 'code'
+          this.columns[0].title='部门名称'
+         this.columns[1].title='部门编号'
       } else if (name == 'ProductList') {
         this.url = '/bd/product/materialClassTree'
         this.urlAdd = '/bd/product/insertmaterialClass'
         this.urlUpdate = '/bd/product/updatematerialClass'
         this.urlDelete = '/bd/product/delmaterialClassById'
         this.columns[1].dataIndex = 'materialclasscode'
+            this.columns[0].title='料品名称'
+         this.columns[1].title='料品编号'
       } else if (name == 'SupplierList') {
         this.url = '/bd/basevendor/vendorTree'
         this.urlAdd = '/bd/basevendor/insterVenderClass'
-        this.urlDelete = '/bd/deleteDepartment'
+        this.urlDelete = '/bd/basevendor/delvendorClass'
         this.urlUpdate = '/bd/basevendor/updatevendorClass'
         this.columns[1].dataIndex = 'vendorclasscode'
+          this.columns[0].title='供应商名称'
+         this.columns[1].title='供应商编号'
       } else if (name == 'CustomerList') {
         this.url = '/bd/customer/CustomerTree'
         this.urlAdd = '/bd/customer/insterCustomerClass'
         this.urlDelete = '/bd/customer/delCustomerClass'
         this.urlUpdate = '/bd/customer/updateCustomerClass'
         this.columns[1].dataIndex = 'customerclasscode'
+          this.columns[0].title='客户名称'
+         this.columns[1].title='客户编号'
       } else if (name == 'WarehouseList') {
         this.url = '/bd/warehouse/WarehouseTree'
         this.urlAdd = '/bd/warehouse/insterWarehouseClass'
         this.urlDelete = '/bd/warehouse/delWarehouseClass'
         this.urlUpdate = '/bd/warehouse/updateWarehouseClass'
         this.columns[1].dataIndex = 'materialclasscode'
+             this.columns[0].title='客户名称'
+         this.columns[1].title='客户编号'
       }
 
       this.getList()
@@ -238,7 +248,8 @@ export default {
         parameter.warehouseclassid = this.id
       }
 
-      console.log('delete-->', JSON.stringify(parameter))
+      console.log('delete params-->', JSON.stringify(parameter))
+      console.log('delete url-->', this.urlDelete)
       getData(parameter, this.urlDelete).then((res) => {
         console.log('delete-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {

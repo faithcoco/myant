@@ -96,11 +96,11 @@
         <a-form-model-item label="电话:" prop="EnterpriseTel">
           <a-input
             v-model="form.enterprisetel"
-            disabled
-            style="width: 90%; margin-right: 10px"
+            
+            style="width: 100%; margin-right: 10px"
             placeholder="请输入电话"
           ></a-input>
-          <a @click="changeTel">更改</a>
+         
         </a-form-model-item>
         <a-form-model-item label="注册人:" prop="EnterpriseRegistrant">
           <a-input v-model="form.enterpriseregistrant" disabled placeholder="请输入注册人"></a-input>
@@ -371,14 +371,16 @@ export default {
       },
     }
   },
-  created() {
+
+  mounted() {
+   
     this.getInfo()
+    
   },
-  computed: {},
   methods: {
     getInfo() {
       const params = {}
-      params.id = this.baseenterprisePO.enterpriseid
+      params.id = Vue.ls.get(logininfo).basepersonPO.enterpriseid
 
       console.log('params-->', params)
       getBaseenterpriseInfo(params)
@@ -594,10 +596,9 @@ export default {
           Vue.ls.set(logininfo, res.result)
           this.baseenterprisePO = Vue.ls.get(logininfo).baseenterprisePO
           this.getInfo()
-          this.changeVisible=false
+          this.changeVisible = false
         })
         .catch(() => {})
-   
     },
     changeHandleCancel(e) {
       this.changeVisible = false
@@ -632,7 +633,6 @@ export default {
           .then((res) => {
             console.log('getCompanyList-->', JSON.stringify(res))
             this.enterprisename = res.result
-        
           })
           .catch(() => {})
     },

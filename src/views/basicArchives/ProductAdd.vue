@@ -67,6 +67,7 @@ import { Form } from 'ant-design-vue'
 Vue.use(Form)
 import { TreeSelect } from 'ant-design-vue'
 import { keys } from 'mockjs2'
+import ReturnNoticeClientListVue from '../OperationsCenter/ReturnNoticeClientList.vue'
 Vue.use(TreeSelect)
 
 const numberRow = []
@@ -92,6 +93,7 @@ export default {
       materialid: '',
       tag: 0, //1 add 2update
       title: '',
+      menuname:''
     }
   },
   created() {
@@ -111,8 +113,9 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-        if (val.params.menu !== undefined) {
+        if (val.params.baseTitle !== undefined) {
           this.getFormdata()
+           
         }
       },
       // 深度观察监听
@@ -130,38 +133,38 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           if (this.$route.params.tag == 1) {
-            if (Vue.ls.get(menuname) == 'ProductList') {
+            if (this.$route.params.menu == 'ProductList') {
               var submitUrl = '/bd/product/insterMaterial'
-            } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+            } else if (this.$route.params.menu == 'PersonnelSetting') {
               var submitUrl = '/bd/baseperson/personinstersave'
-            } else if (Vue.ls.get(menuname) == 'SupplierList') {
+            } else if (this.$route.params.menu == 'SupplierList') {
               var submitUrl = '/bd/basevendor/vendorinstersave'
-            } else if (Vue.ls.get(menuname) == 'CustomerList') {
+            } else if (this.$route.params.menu == 'CustomerList') {
               var submitUrl = '/bd/customer/customerinstersave'
-            } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+            } else if (this.$route.params.menu == 'WarehouseList') {
               values.warehousestatus = values.warehousestatus.join()
               var submitUrl = '/bd/warehouse/warehouseinstersave'
-            } else if (Vue.ls.get(menuname) == 'CargoSpace') {
+            } else if (this.$route.params.menu == 'CargoSpace') {
               var submitUrl = '/bd/warehouse/positioninsterSave'
               values.positionstatus = values.positionstatus.join()
             }
           } else {
-            if (Vue.ls.get(menuname) == 'ProductList') {
+            if (this.$route.params.menu == 'ProductList') {
               var submitUrl = '/bd/product/updateMaterial'
               values.materialid = this.materialid
-            } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+            } else if (this.$route.params.menu == 'PersonnelSetting') {
               var submitUrl = '/bd/baseperson/personupdatesave'
-            } else if (Vue.ls.get(menuname) == 'SupplierList') {
+            } else if (this.$route.params.menu == 'SupplierList') {
               var submitUrl = '/bd/basevendor/vendorupdatesave'
               values.vendorid = this.materialid
-            } else if (Vue.ls.get(menuname) == 'CustomerList') {
+            } else if (this.$route.params.menu == 'CustomerList') {
               var submitUrl = '/bd/customer/customerupdatesave'
               values.customerid = this.materialid
-            } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+            } else if (this.$route.params.menu == 'WarehouseList') {
               var submitUrl = '/bd/warehouse/warehouseupdatesave'
               values.warehousestatus = values.warehousestatus.join()
               values.warehouseid = this.materialid
-            } else if (Vue.ls.get(menuname) == 'CargoSpace') {
+            } else if (this.$route.params.menu == 'CargoSpace') {
               var submitUrl = '/bd/warehouse/positionupdateSave'
               values.positionid = this.materialid
               values.positionstatus = values.positionstatus.join()
@@ -188,74 +191,79 @@ export default {
     },
 
     getFormdata() {
+      
       this.menuid = this.$route.params.menuid
       const columnsParams = {}
       columnsParams.memuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
 
       if (this.$route.params.tag == 1) {
-        this.title = this.$route.params.title + '新增'
+        this.title = this.$route.params.baseTitle + '新增'
         this.materialclassid = this.$route.params.materialclassid
-        if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+        if (this.$route.params.menu == 'PersonnelSetting') {
           this.urlForm = '/bd/baseperson/insterForm'
           columnsParams.departmentid = this.materialclassid
-        } else if (Vue.ls.get(menuname) == 'ProductList') {
+        } else if (this.$route.params.menu == 'ProductList') {
           this.urlForm = '/bd/product/materialList'
           columnsParams.materialclassid = this.materialclassid
-        } else if (Vue.ls.get(menuname) == 'SupplierList') {
+        } else if (this.$route.params.menu == 'SupplierList') {
           this.urlForm = '/bd/basevendor/insterForm'
           columnsParams.vendorclassid = this.materialclassid
-        } else if (Vue.ls.get(menuname) == 'CustomerList') {
+        } else if (this.$route.params.menu == 'CustomerList') {
           this.urlForm = '/bd/customer/insterForm'
           columnsParams.customerclassid = this.materialclassid
-        } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+        } else if (this.$route.params.menu == 'WarehouseList') {
           this.urlForm = '/bd/warehouse/insterForm'
           columnsParams.warehouseclassid = this.materialclassid
-        } else if (Vue.ls.get(menuname) == 'CargoSpace') {
+        } else if (this.$route.params.menu == 'CargoSpace') {
           this.urlForm = '/bd/warehouse/positioninsterForm'
           columnsParams.warehouseid = this.materialclassid
         }
       } else if (this.$route.params.tag == 2) {
-        this.title = this.$route.params.title + '编辑'
+        this.title = tthis.$route.params.baseTitle + '编辑'
         this.materialid = this.$route.params.materialid
         console.log('materialid', this.materialid)
-        if (Vue.ls.get(menuname) == 'ProductList') {
+        if (this.$route.params.menu == 'ProductList') {
           this.urlForm = '/bd/product/updateform'
           columnsParams.materialid = this.materialid
-        } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+        } else if (this.$route.params.menu == 'PersonnelSetting') {
           this.urlForm = '/bd/baseperson/updateForm'
           columnsParams.personid = this.materialid
-        } else if (Vue.ls.get(menuname) == 'SupplierList') {
+        } else if (this.$route.params.menu == 'SupplierList') {
           this.urlForm = '/bd/basevendor/updateForm'
           columnsParams.vendorid = this.materialid
-        } else if (Vue.ls.get(menuname) == 'CustomerList') {
+        } else if (this.$route.params.menu == 'CustomerList') {
           this.urlForm = '/bd/customer/updateForm'
           columnsParams.customerid = this.materialid
-        } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+        } else if (this.$route.params.menu == 'WarehouseList') {
           this.urlForm = '/bd/warehouse/updateForm'
           columnsParams.warehouseid = this.materialid
-        } else if (Vue.ls.get(menuname) == 'CargoSpace') {
+        } else if (this.$route.params.menu == 'CargoSpace') {
           this.urlForm = '/bd/warehouse/positionupdateForm'
           columnsParams.positionid = this.materialid
         }
       }
-      this.$multiTab.rename('/basic_archives/ProductAdd', this.title)
-      console.log(Vue.ls.get(menuname) + '/route--->', this.$route)
-      console.log(Vue.ls.get(menuname) + '/formurl--->', this.urlForm)
-      console.log(Vue.ls.get(menuname) + '/form params-->', JSON.stringify(columnsParams))
-      getForm(columnsParams, this.urlForm).then((res) => {
-        this.data = res.result
-        console.log('form res-->', JSON.stringify(this.data))
-        setTimeout(() => {
-          for (const i in this.data) {
-            if (this.data[i].value !== '') {
-              this.form.setFieldsValue({
-                [this.data[i].key]: this.data[i].value,
-              })
+
+      console.log(this.$route.params.menu + '/route--->', this.$route)
+      console.log(this.$route.params.menu + '/formurl--->', this.urlForm)
+      console.log(this.$route.params.menu + '/form params-->', JSON.stringify(columnsParams))
+      if (this.urlForm !== '') {
+        getForm(columnsParams, this.urlForm).then((res) => {
+          this.data = res.result
+          this.$multiTab.rename(this.$route, this.title)
+          console.log('1 is run')
+          console.log('form res-->', JSON.stringify(this.data))
+          setTimeout(() => {
+            for (const i in this.data) {
+              if (this.data[i].value !== '') {
+                this.form.setFieldsValue({
+                  [this.data[i].key]: this.data[i].value,
+                })
+              }
             }
-          }
-        }, 3000)
-      })
+          }, 3000)
+        })
+      }
     },
     handleChange(info) {
       if (info.file.status !== 'uploading') {
@@ -277,41 +285,41 @@ export default {
     // 返回到清单页面
     Back() {
       // 路由跳转
-       this.form.validateFields((err, values) => {
+      this.form.validateFields((err, values) => {
         if (!err) {
           if (this.$route.params.tag == 1) {
-            if (Vue.ls.get(menuname) == 'ProductList') {
+            if (this.$route.params.menu == 'ProductList') {
               var submitUrl = '/bd/product/insterMaterial'
-            } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+            } else if (this.$route.params.menu == 'PersonnelSetting') {
               var submitUrl = '/bd/baseperson/personinstersave'
-            } else if (Vue.ls.get(menuname) == 'SupplierList') {
+            } else if (this.$route.params.menu == 'SupplierList') {
               var submitUrl = '/bd/basevendor/vendorinstersave'
-            } else if (Vue.ls.get(menuname) == 'CustomerList') {
+            } else if (this.$route.params.menu == 'CustomerList') {
               var submitUrl = '/bd/customer/customerinstersave'
-            } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+            } else if (this.$route.params.menu == 'WarehouseList') {
               values.warehousestatus = values.warehousestatus.join()
               var submitUrl = '/bd/warehouse/warehouseinstersave'
-            } else if (Vue.ls.get(menuname) == 'CargoSpace') {
+            } else if (this.$route.params.menu == 'CargoSpace') {
               var submitUrl = '/bd/warehouse/positioninsterSave'
               values.positionstatus = values.positionstatus.join()
             }
           } else {
-            if (Vue.ls.get(menuname) == 'ProductList') {
+            if (this.$route.params.menu == 'ProductList') {
               var submitUrl = '/bd/product/updateMaterial'
               values.materialid = this.materialid
-            } else if (Vue.ls.get(menuname) == 'PersonnelSetting') {
+            } else if (this.$route.params.menu == 'PersonnelSetting') {
               var submitUrl = '/bd/baseperson/personupdatesave'
-            } else if (Vue.ls.get(menuname) == 'SupplierList') {
+            } else if (this.$route.params.menu == 'SupplierList') {
               var submitUrl = '/bd/basevendor/vendorupdatesave'
               values.vendorid = this.materialid
-            } else if (Vue.ls.get(menuname) == 'CustomerList') {
+            } else if (this.$route.params.menu == 'CustomerList') {
               var submitUrl = '/bd/customer/customerupdatesave'
               values.customerid = this.materialid
-            } else if (Vue.ls.get(menuname) == 'WarehouseList') {
+            } else if (this.$route.params.menu == 'WarehouseList') {
               var submitUrl = '/bd/warehouse/warehouseupdatesave'
               values.warehousestatus = values.warehousestatus.join()
               values.warehouseid = this.materialid
-            } else if (Vue.ls.get(menuname) == 'CargoSpace') {
+            } else if (this.$route.params.menu == 'CargoSpace') {
               var submitUrl = '/bd/warehouse/positionupdateSave'
               values.positionid = this.materialid
               values.positionstatus = values.positionstatus.join()
@@ -326,12 +334,12 @@ export default {
 
             if (res.status == 'SUCCESS') {
               this.$router.go(-1)
+              this.form.resetFields()
             }
             this.$message.info(res.errorMsg)
           })
         }
       })
-     
     },
     // 重置表单
     resetForm() {

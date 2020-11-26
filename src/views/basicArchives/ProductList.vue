@@ -247,13 +247,15 @@ export default {
     getTree() {
       this.checkedKeys = []
       const parameter = {}
+      this.classifyTree = []
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
+        console.log(this.menuname + 'tree-->', JSON.stringify(res))
         this.checkedKeys.push(res.result[0].key)
         this.materialclassid = res.result[0].key
         this.treeData = res.result
         this.classifyTree = this.treeData
-        console.log('tree-->', JSON.stringify(this.classifyTree))
+
         this.expandedKeys.push(this.classifyTree[0].key)
 
         this.getList()
@@ -297,7 +299,7 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-        console.log(this.menuname + ' listdata-->',JSON.stringify(this.listdata))
+        console.log(this.menuname + ' listdata-->', JSON.stringify(this.listdata))
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }
@@ -305,7 +307,6 @@ export default {
       })
     },
     onSearch(value) {
-      console.log('is run--->')
       this.isSearch = true
       this.searchValue = value
       this.getList()
@@ -324,7 +325,6 @@ export default {
       })
     },
     add() {
-      Vue.ls.set(menuname, this.$route.name)
       this.$router.push({
         name: 'ProductAdd',
         params: {
@@ -332,13 +332,12 @@ export default {
           menuid: this.menuid,
           materialclassid: this.materialclassid,
           tag: 1,
-          title: this.$route.meta.title,
+          baseTitle: this.$route.meta.title,
         },
       })
     },
 
     handleEdit(record) {
-      Vue.ls.set(menuname, this.$route.name)
       if (this.menuname == 'ProductList') {
         this.materialid = record.materialid
       } else if (this.menuname == 'PersonnelSetting') {
@@ -350,7 +349,7 @@ export default {
       } else if (this.menuname == 'WarehouseList') {
         this.materialid = record.warehouseid
       }
-      console.log('add materialid-->', this.materialid)
+
       this.$router.push({
         name: 'ProductAdd',
         params: {
@@ -358,7 +357,7 @@ export default {
           materialid: this.materialid,
           tag: 2,
           menuid: this.menuid,
-          title: this.$route.meta.title,
+          baseTitle: this.$route.meta.title,
         },
       })
     },

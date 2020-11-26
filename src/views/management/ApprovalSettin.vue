@@ -27,6 +27,7 @@
 
           <a-form-item label="审批节点一:">
             <a-tree-select
+              v-model="submit.node1"
               @change="handleChange1"
               style="width: 50%"
               :tree-data="nameList"
@@ -41,6 +42,7 @@
               :tree-data="nameList"
               multiple
               search-placeholder="Please select"
+              v-model="submit.node2"
             />
           </a-form-item>
           <a-form-item label="审批节点三:">
@@ -50,6 +52,7 @@
               :tree-data="nameList"
               multiple
               search-placeholder="Please select"
+              v-model="submit.node3"
             />
           </a-form-item>
           <a-form-item label :required="false">
@@ -122,6 +125,7 @@ export default {
         node2: [],
         node3: [],
       },
+      node1: [],
     }
   },
   created() {
@@ -132,13 +136,29 @@ export default {
       this.approvalSettinTree = res.result
       console.log('tree-->', JSON.stringify(this.approvalSettinTree))
       this.menuid = this.approvalSettinTree[0].memuid
-      this.getSelect()
     })
     url = '/work/getPsndocOrRoleList'
     const paramsName = { enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid }
     getData(paramsName, url).then((res) => {
       console.log('name list ->', JSON.stringify(res))
-      this.nameList = res.result
+      // this.nameList = res.result
+      this.nameList = [
+        {
+          children: [
+            {
+              selectable: 'true',
+              title: 'cbc',
+              value: 'bc6a7b35-dd53-43d6-82b7-c7d09a2fb96c',
+              key: 'bc6a7b35-dd53-43d6-82b7-c7d09a2fb96c',
+            },
+          ],
+          selectable: 'false',
+          title: '管理员',
+          value: 'a1e87014-a896-4e29-a667-dd69a7e33e36',
+          key: 'a1e87014-a896-4e29-a667-dd69a7e33e36',
+        },
+      ]
+      this.getSelect()
     })
   },
   methods: {
@@ -149,13 +169,10 @@ export default {
       }
       var url = '/work/getWorkFlowSetInfo'
       getData(parameter, url).then((res) => {
-        this.list = res.result.list
-        console.log('approval init ->', JSON.stringify(this.list))
-        if (this.list.length !== 0) {
-          this.select1.key = this.list[0].key
-          this.select2.key = this.list[1].key
-          this.select3.key = this.list[2].key
-        }
+        this.submit.node1 = res.result.node1
+        this.submit.node2 = res.result.node2
+        this.submit.node3 = res.result.node3
+        console.log('approval init ->', JSON.stringify(res))
       })
     },
     onSubmit(e) {
@@ -180,6 +197,7 @@ export default {
       this.getSelect()
     },
     handleChange1(value, label) {
+      
       console.log(JSON.stringify(value))
       this.steps[0].name = label.join()
       this.submit.node1 = value

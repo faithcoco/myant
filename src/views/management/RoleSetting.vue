@@ -116,8 +116,8 @@ export default {
       personlist: '',
       updateList: [],
       selectedRowKeys: [],
-      selectName:[],
-      selectList:[]
+      selectName: [],
+      selectList: [],
     }
   },
   created() {
@@ -157,6 +157,7 @@ export default {
     },
     setRole() {
       getRoleList(this.idParapms).then((res) => {
+        console.log('role list-->', JSON.stringify(res))
         this.roles = res.result.data
 
         this.roles.push({
@@ -172,6 +173,8 @@ export default {
             },
           ],
         })
+        this.mdl=this.roles[0]
+        this.setData()
       })
     },
     onChange(e) {
@@ -197,6 +200,8 @@ export default {
       }
 
       console.log('submit--->', JSON.stringify(this.mdl))
+      console.log('state-->', this.state)
+
       if (this.state == 0) {
         insertRole(this.mdl).then((res) => {
           if (res.status != 'SUCCESS') {
@@ -208,9 +213,11 @@ export default {
       } else {
         this.mdl.personlist = this.updateList
         updateRole(this.mdl).then((res) => {
+          console.log('role set--->', JSON.stringify(res))
           if (res.status != 'SUCCESS') {
             this.$message.error(res.errorMsg)
           } else {
+            this.$message.info('保存成功')
             this.setRole()
           }
         })
@@ -221,6 +228,10 @@ export default {
     },
 
     onDelete() {
+      if (this.mdl.admin) {
+        this.$message.info('管理员不能删除')
+        return
+      }
       const params = {}
       params.id = this.mdl.id
       console.log('delete--->', params)
@@ -241,14 +252,12 @@ export default {
     add() {
       this.edit({ id: 0 })
     },
-
-    edit(record) {
-      this.mdl = Object.assign({}, record)
-      console.log('mdl-->', JSON.stringify(this.mdl))
-
+    setData() {
       if (this.mdl.describe == '新增角色') {
         this.state = 0
+        this.mdl.name = ''
       }
+
       // 有权限表，处理勾选
       if (this.mdl.permissions && this.permissions) {
         // 先处理要勾选的权限结构
@@ -274,11 +283,18 @@ export default {
         this.selectedRowKeys.push(this.mdl.personList[key].personid)
       }
       this.personlist = userlist.join()
-      this.selectName=userlist
+      this.selectName = userlist
 
       this.$nextTick(() => {
         this.form.setFieldsValue(pick(this.mdl, 'id', 'name', 'status', 'describe'))
       })
+    },
+
+    edit(record) {
+      this.mdl = Object.assign({}, record)
+      console.log('mdl-->', JSON.stringify(this.mdl))
+
+      this.setData()
     },
 
     onChangeCheck(permission) {

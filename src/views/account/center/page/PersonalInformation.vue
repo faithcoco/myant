@@ -9,38 +9,37 @@
           <a-col :span="14">
             <a-form ref="ruleForm" :model="form" :rules="rules">
               <a-form-item>
-                <a-icon style="margin-right:10px" type="apartment" />
+                <a-icon style="margin-right: 10px" type="apartment" />
                 所在部门: {{ form.departmentname }}
-
               </a-form-item>
               <a-form-item>
-                <a-icon style="margin-right:10px" type="idcard" />
+                <a-icon style="margin-right: 10px" type="idcard" />
                 工号: {{ form.personcode }}
               </a-form-item>
               <a-form-item>
-                <a-icon style="margin-right:10px" type="user" />
+                <a-icon style="margin-right: 10px" type="user" />
                 姓名:{{ form.personname }}
               </a-form-item>
 
               <a-form-item>
-                <a-icon style="margin-right:10px" type="phone" />
+                <a-icon style="margin-right: 10px" type="phone" />
                 手机号: {{ form.personphone }}
-                <a-tag :color="phoneColor" style="margin-left:10px">{{phoneStatus}}</a-tag>
+                <a-tag :color="phoneColor" style="margin-left: 10px">{{ phoneStatus }}</a-tag>
               </a-form-item>
               <!-- <a-form-item>
                                 <a-icon style="margin-right:10px" type="mail"  />邮箱: {{ form.mail }}<a-tag :color="mailColor" style="margin-left:10px">{{mailStatus}}</a-tag>
               </a-form-item>-->
               <a-form-item>
-                <a-icon style="margin-right:10px" type="deployment-unit" />
+                <a-icon style="margin-right: 10px" type="deployment-unit" />
                 入职时间:{{ form.personbegintime }}
               </a-form-item>
               <a-form-item>
-                <a-icon style="margin-right:10px" type="apartment" />
+                <a-icon style="margin-right: 10px" type="apartment" />
                 建立时间: {{ form.personcreationdate }}
                 <!-- {{departments}} -->
               </a-form-item>
               <a-form-item>
-                <a-icon style="margin-right:10px" type="apartment" />
+                <a-icon style="margin-right: 10px" type="apartment" />
                 个性签名: {{ form.personlabel }}
                 <!-- {{departments}} -->
               </a-form-item>
@@ -48,14 +47,9 @@
           </a-col>
         </a-row>
       </a-card>
-      <a-card
-        style="display: flex;
-                        justify-content: flex-end;
-                        align-items: flex-end;"
-        :bordered="false"
-      >
+      <a-card style="display: flex; justify-content: flex-end; align-items: flex-end" :bordered="false">
         <a-button type="primary" @click="edit()">编辑</a-button>
-        <a-button type="primary" style="margin-left:10px" @click="changePassword()">密码修改</a-button>
+        <a-button type="primary" style="margin-left: 10px" @click="changePassword()">密码修改</a-button>
       </a-card>
     </div>
 
@@ -66,15 +60,9 @@
             <a-avatar :size="70" icon="user" />
           </a-col>
           <a-col :span="20">
-            <a-form-model
-              ref="ruleForm"
-              :model="form"
-              :rules="rules"
-              :label-col="labelCol"
-              :wrapper-col="wrapperCol"
-            >
+            <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
               <a-form-model-item label="所在部门:" prop="DepartmentID">
-                <a-input v-model="form.departmentid" disabled placeholder="请输入姓名"></a-input>
+                <a-input v-model="form.departmentname" disabled placeholder="请输入姓名"></a-input>
               </a-form-model-item>
               <a-form-model-item label="工号:" prop="PersonCode">
                 <a-input v-model="form.personcode" disabled placeholder="请输入工号"></a-input>
@@ -86,7 +74,7 @@
                 <a-input
                   v-model="form.personphone"
                   disabled
-                  style="width:85%;margin-right:10px"
+                  style="width: 85%; margin-right: 10px"
                   placeholder="请输入手机"
                 ></a-input>
                 <a @click="changePhone">更改</a>
@@ -105,13 +93,8 @@
           </a-col>
         </a-row>
       </a-card>
-      <a-card
-        style="display: flex;
-                        justify-content: flex-end;
-                        align-items: flex-end;"
-        :bordered="false"
-      >
-        <a-button style="margin-right:20px" @click="cancel()">取消</a-button>
+      <a-card style="display: flex; justify-content: flex-end; align-items: flex-end" :bordered="false">
+        <a-button style="margin-right: 20px" @click="cancel()">取消</a-button>
         <a-button type="primary" :loading="loading" @click="submit()">保存</a-button>
       </a-card>
     </div>
@@ -130,13 +113,9 @@
         </a-form-model-item>
         <a-form-model-item prop="phoneCode1">
           <a-input v-model="form.phoneCode1" placeholder="请输入验证码">
-            <a-button
-              class="GPBtn"
-              :disabled="false"
-              slot="suffix"
-              type="link"
-              @click="getVerificationCode"
-            >获取验证码</a-button>
+            <a-button class="GPBtn" :disabled="false" slot="suffix" type="link" @click="getVerificationCode"
+              >获取验证码</a-button
+            >
           </a-input>
           <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
         </a-form-model-item>
@@ -158,13 +137,9 @@
         </a-form-model-item>
         <a-form-model-item prop="phoneCode2">
           <a-input v-model="form.phoneCode2" placeholder="请输入验证码">
-            <a-button
-              class="GPBtn2"
-              slot="suffix"
-              :disabled="false"
-              type="link"
-              @click="getVerificationCode1"
-            >获取验证码</a-button>
+            <a-button class="GPBtn2" slot="suffix" :disabled="false" type="link" @click="getVerificationCode1"
+              >获取验证码</a-button
+            >
           </a-input>
           <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
         </a-form-model-item>
@@ -186,23 +161,14 @@
       <a-form-model ref="codeRuleForm" :model="form" :rules="Mrules">
         <a-form-model-item prop="phoneCode">
           <a-input v-model="form.phoneCode" placeholder="请输入验证码">
-            <a-button
-              class="GMBtn"
-              :disabled="false"
-              slot="suffix"
-              type="link"
-              @click="getMailVerificationCode"
-            >获取验证码</a-button>
+            <a-button class="GMBtn" :disabled="false" slot="suffix" type="link" @click="getMailVerificationCode"
+              >获取验证码</a-button
+            >
           </a-input>
         </a-form-model-item>
       </a-form-model>
     </a-modal>
-    <a-modal
-      title="滑动验证"
-      :visible="verificationVisible"
-      @ok="verificationOk"
-      @cancel="verificationCancel"
-    >
+    <a-modal title="滑动验证" :visible="verificationVisible" @ok="verificationOk" @cancel="verificationCancel">
       <slider ref="slideblock" v-on:confirmSuccess="confirmSuccess"></slider>
     </a-modal>
     <!-- <a-modal
@@ -216,12 +182,9 @@
     <a-modal title="设置提单默认部门" :visible="departVisible" @ok="departOk" @cancel="departCancel">
       <p>此部门会在提交单据时指定为默认提交部门</p>
       <a-radio-group v-model="form.defaultDepart" @change="onChange">
-        <a-radio
-          v-for="defaultDepart in department"
-          :key="defaultDepart"
-          :style="radioStyle"
-          :value="defaultDepart"
-        >{{defaultDepart}}</a-radio>
+        <a-radio v-for="defaultDepart in department" :key="defaultDepart" :style="radioStyle" :value="defaultDepart">{{
+          defaultDepart
+        }}</a-radio>
       </a-radio-group>
     </a-modal>
     <a-modal
@@ -241,13 +204,9 @@
 
         <a-form-model-item prop="phoneCode">
           <a-input v-model="form.phoneCode" placeholder="请输入验证码">
-            <a-button
-              class="GPBtn4"
-              slot="suffix"
-              :disabled="false"
-              type="link"
-              @click="getNewpasswordVerificationCode"
-            >获取验证码</a-button>
+            <a-button class="GPBtn4" slot="suffix" :disabled="false" type="link" @click="getNewpasswordVerificationCode"
+              >获取验证码</a-button
+            >
           </a-input>
           <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
         </a-form-model-item>
@@ -263,8 +222,7 @@ Vue.use(formModel, Button)
 import { mapGetters } from 'vuex'
 import { retrievePsdSendSMSregister } from '@/api/register'
 import { forgetPasswordlogin } from '@/api/ForgotPassword'
-import {  logininfo } from '@/store/mutation-types'
-
+import { logininfo } from '@/store/mutation-types'
 
 import { getBaseenterpriseInfo, getBasepersonInfo, updateBaseperson } from '@/api/manage'
 export default {
@@ -274,7 +232,7 @@ export default {
   },
   data() {
     return {
-      basepersonPO:{},
+      basepersonPO: {},
       Department: ['开发部', '销售部', '管理层', '总裁会'],
       department: '',
       departments: '',
@@ -358,21 +316,20 @@ export default {
     }
   },
   created() {
-   
-    this.basepersonPO=Vue.ls.get(logininfo).basepersonPO
-    this.enterprisephone=this.basepersonPO.personphone
+    this.basepersonPO = Vue.ls.get(logininfo).basepersonPO
+    this.enterprisephone = this.basepersonPO.personphone
     const Params = {}
 
     Params.id = this.basepersonPO.personid
     console.log(Params)
     getBaseenterpriseInfo(Params)
       .then((res) => {
-        console.log('企业信息返回值--getBaseenterpriseInfo----->', res.result)
+        console.log('getBaseenterpriseInfo----->', JSON.stringify(res.result))
       })
       .catch((err) => {})
 
     const params = {}
-    params.id =this.basepersonPO.personid
+    params.id = this.basepersonPO.personid
     getBasepersonInfo(params)
       .then((res) => {
         console.log('个人信息返回值--getBasepersonInfo----->', JSON.stringify(res))
@@ -391,9 +348,7 @@ export default {
     let PersonCreationdate = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
     let personbegintime = b.getFullYear() + '年' + (b.getMonth() + 1) + '月' + b.getDate() + '日'
   },
-  computed: {
-   
-  },
+  computed: {},
   methods: {
     confirmSuccess: function (confirmSuccess) {
       this.Success = confirmSuccess
@@ -526,7 +481,7 @@ export default {
             data.personname = this.form.personname
             data.personlabel = this.form.personlabel
             data.personphone = this.form.personphone
-            console.log("个人信息 修改保存--->",data)
+            console.log('个人信息 修改保存--->', data)
             updateBaseperson(data)
               .then((res) => {
                 console.log('updateBaseperson--->', res)
@@ -632,9 +587,9 @@ export default {
       // this.$message.info("发送验证码成功！")
 
       const hide = this.$message.loading('验证码发送中..', 0)
-   
+
       const params = {}
-     
+
       params.enterprisephone = this.form.personphone
       retrievePsdSendSMSregister(params)
         .then((res) => {

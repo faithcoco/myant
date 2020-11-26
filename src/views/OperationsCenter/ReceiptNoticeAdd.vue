@@ -1,5 +1,6 @@
 <template>
   <a-layout>
+     <a-spin size="large" :spinning="spinning" tip="正在加载">
     <div>
       <a-card>
         <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
@@ -72,6 +73,7 @@
         </a-modal>
       </a-card>
     </div>
+     </a-spin>
     <a-layout-footer
       :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-25px', zIndex: '999' }"
     >
@@ -157,6 +159,7 @@ export default {
       personid: '',
       vendorid: '',
       businessclasscode: '',
+       spinning: false,
     }
   },
   created() {
@@ -194,6 +197,7 @@ export default {
       this.deatilData = this.deatilData.filter((item) => item.key !== record.key)
     },
     initdata() {
+      this.spinning=true
       const parameter = {}
       parameter.memucode = '02-02'
       var url = '/bd/menu/findallmenu'
@@ -420,7 +424,8 @@ export default {
               this.businessclasscode = this.data[i].keyvalue
             }
           }
-        }, 3000)
+          this.spinning=false
+        }, 500)
       })
     },
     handleChange(info) {

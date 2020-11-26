@@ -1,37 +1,40 @@
 <template>
   <a-layout>
-    <div>
-      <a-card>
-        <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
-          <a-form-item v-for="item in data" :label="item.title">
-            <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
-            <a-input-number
-              :style="{ width: '1370px' }"
-              v-decorator="item.decorator"
-              v-show="item.inputnumberVisible"
-              :max="item.fieldmax"
-              :precision="item.fieldprecision"
-            />
-            <a-cascader
-              v-decorator="item.decorator"
-              v-show="item.selectVisible"
-              :field-names="{ label: 'title', value: 'key', children: 'children' }"
-              :options="item.selectList"
-              placeholder="请选择"
-            />
+    <a-spin size="large" :spinning="spinning" tip="正在加载">
+      <div>
+        <a-card>
+          <div></div>
+          <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
+            <a-form-item v-for="item in data" :label="item.title">
+              <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
+              <a-input-number
+                :style="{ width: '1370px' }"
+                v-decorator="item.decorator"
+                v-show="item.inputnumberVisible"
+                :max="item.fieldmax"
+                :precision="item.fieldprecision"
+              />
+              <a-cascader
+                v-decorator="item.decorator"
+                v-show="item.selectVisible"
+                :field-names="{ label: 'title', value: 'key', children: 'children' }"
+                :options="item.selectList"
+                placeholder="请选择"
+              />
 
-            <a-date-picker
-              :style="{ width: '100%' }"
-              v-show="item.timepickerVisible"
-              show-time
-              format="YYYY-MM-DD HH:mm:ss"
-              placeholder="选择日期"
-              v-decorator="item.decorator"
-            />
-          </a-form-item>
-        </a-form>
-      </a-card>
-    </div>
+              <a-date-picker
+                :style="{ width: '100%' }"
+                v-show="item.timepickerVisible"
+                show-time
+                format="YYYY-MM-DD HH:mm:ss"
+                placeholder="选择日期"
+                v-decorator="item.decorator"
+              />
+            </a-form-item>
+          </a-form>
+        </a-card>
+      </div>
+    </a-spin>
     <a-layout-footer
       :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-25px', zIndex: '999' }"
     >
@@ -93,7 +96,8 @@ export default {
       materialid: '',
       tag: 0, //1 add 2update
       title: '',
-      menuname:''
+      menuname: '',
+       spinning: false,
     }
   },
   created() {
@@ -115,7 +119,6 @@ export default {
       handler: function (val, oldVal) {
         if (val.params.baseTitle !== undefined) {
           this.getFormdata()
-           
         }
       },
       // 深度观察监听
@@ -191,7 +194,7 @@ export default {
     },
 
     getFormdata() {
-      
+      this.spinning=true
       this.menuid = this.$route.params.menuid
       const columnsParams = {}
       columnsParams.memuid = this.menuid
@@ -261,7 +264,8 @@ export default {
                 })
               }
             }
-          }, 3000)
+            this.spinning=false
+          }, 500)
         })
       }
     },
@@ -378,4 +382,8 @@ export default {
 }
 </script>
 <style lang="less">
+.spin-content {
+  background-color: #e6f7ff;
+  padding: 325px;
+}
 </style>

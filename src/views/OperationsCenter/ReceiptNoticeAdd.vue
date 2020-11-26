@@ -1,79 +1,84 @@
 <template>
   <a-layout>
-     <a-spin size="large" :spinning="spinning" tip="正在加载">
-    <div>
-      <a-card>
-        <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
-          <a-form-item v-for="item in data" :label="item.title">
-            <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
-            <a-input-number
-              :style="{ width: '1370px' }"
-              v-decorator="item.decorator"
-              v-show="item.inputnumberVisible"
-              :max="item.fieldmax"
-              :precision="item.fieldprecision"
-            />
-            <a-cascader
-              v-decorator="item.decorator"
-              v-show="item.selectVisible"
-              :field-names="{ label: 'title', value: 'key', children: 'children' }"
-              :options="item.selectList"
-              placeholder="请选择"
-            />
+    <a-spin size="large" :spinning="spinning" tip="正在加载">
+      <div>
+        <a-card>
+          <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
+            <a-form-item v-for="item in data" :label="item.title">
+              <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
+              <a-input-number
+                :style="{ width: '1370px' }"
+                v-decorator="item.decorator"
+                v-show="item.inputnumberVisible"
+                :max="item.fieldmax"
+                :precision="item.fieldprecision"
+              />
+              <a-cascader
+                v-decorator="item.decorator"
+                v-show="item.selectVisible"
+                :field-names="{ label: 'title', value: 'key', children: 'children' }"
+                :options="item.selectList"
+                placeholder="请选择"
+              />
 
-            <a-date-picker
-              :style="{ width: '100%' }"
-              v-show="item.timepickerVisible"
-              show-time
-              format="YYYY-MM-DD HH:mm:ss"
-              placeholder="选择日期"
-              v-decorator="item.decorator"
-            />
-            <a-input
-              v-decorator="item.decorator"
-              :disabled="disabled"
-              v-show="item.listVisible"
-              :maxLength="item.fieldlength"
-            >
-              <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
-            </a-input>
-          </a-form-item>
-          <a-form-item :wrapper-col="{ span: 21, offset: 2 }">
-            <a-tabs>
-              <a-tab-pane tab="明细">
-                <a-button @click="() => detailModal()">选择</a-button>
-                <a-table :columns="columns" :data-source="deatilData" :scroll="{ x: 1500 }">
-                  <span slot="action" slot-scope="text, record">
-                    <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
-                      <a href="javascript:;">删除</a>
-                    </a-popconfirm>
-                    <span slot="fieldprecision" slot-scope="text, record">
-                      <a-input-number
-                        :min="0"
-                        :max="record.maxprecision"
-                        :disabled="record.fielddisabled"
-                        @change="(e) => fieldprecision(e.target.value, record)"
-                        v-model="record.fieldprecision"
-                      />
+              <a-date-picker
+                :style="{ width: '100%' }"
+                v-show="item.timepickerVisible"
+                show-time
+                format="YYYY-MM-DD HH:mm:ss"
+                placeholder="选择日期"
+                v-decorator="item.decorator"
+              />
+              <a-input
+                v-decorator="item.decorator"
+                :disabled="disabled"
+                v-show="item.listVisible"
+                :maxLength="item.fieldlength"
+              >
+                <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
+              </a-input>
+            </a-form-item>
+            <a-form-item :wrapper-col="{ span: 21, offset: 2 }">
+              <a-tabs>
+                <a-tab-pane tab="明细">
+                  <a-button @click="() => detailModal()">选择</a-button>
+                  <a-table :columns="columns" :data-source="deatilData" :scroll="{ x: 1500 }">
+                    <span slot="action" slot-scope="text, record">
+                      <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
+                        <a href="javascript:;">删除</a>
+                      </a-popconfirm>
+                      <span slot="fieldprecision" slot-scope="text, record">
+                        <a-input-number
+                          :min="0"
+                          :max="record.maxprecision"
+                          :disabled="record.fielddisabled"
+                          @change="(e) => fieldprecision(e.target.value, record)"
+                          v-model="record.fieldprecision"
+                        />
+                      </span>
                     </span>
-                  </span>
-                </a-table>
-              </a-tab-pane>
-            </a-tabs>
-          </a-form-item>
-        </a-form>
-        <a-modal title="选择" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
-          <archives-modal :name="name" :visible="visible" @onSelect="getSelect"></archives-modal>
-        </a-modal>
-        <a-modal title="选择" :visible="typeVisible" @ok="handleOk" @cancel="handleCancel" width="1300px">
-          <type :menuname="name" @onSelect="typeSelect"></type>
-        </a-modal>
-        <a-modal title="选择" :visible="detailVisible" @ok="detailOk" @cancel="detailCancel" width="1300px">
-          <select-modal :name="name" :visible="visible" @onSelect="detailSelect"></select-modal>
-        </a-modal>
-      </a-card>
-    </div>
-     </a-spin>
+                  </a-table>
+                </a-tab-pane>
+              </a-tabs>
+            </a-form-item>
+          </a-form>
+          <a-modal title="选择" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
+            <archives-modal :name="name" :visible="visible" @onSelect="getSelect"></archives-modal>
+          </a-modal>
+          <a-modal title="选择" :visible="typeVisible" @ok="handleOk" @cancel="handleCancel" width="1300px">
+            <type :menuname="name" @onSelect="typeSelect"></type>
+          </a-modal>
+          <a-modal title="选择" :visible="detailVisible" @ok="detailOk" @cancel="detailCancel" width="1300px">
+            <select-modal
+              :name="name"
+              :defaultSelect="selectedRowKeys"
+              :visible="visible"
+              @onSelect="detailSelect"
+            ></select-modal>
+          </a-modal>
+        </a-card>
+      </div>
+    </a-spin>
     <a-layout-footer
       :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-25px', zIndex: '999' }"
     >
@@ -159,7 +164,8 @@ export default {
       personid: '',
       vendorid: '',
       businessclasscode: '',
-       spinning: false,
+      spinning: false,
+      name: '',
     }
   },
   created() {
@@ -180,7 +186,7 @@ export default {
     $route: {
       handler: function (val, oldVal) {
         if (val.params.menu !== undefined) {
-          console.log('notice val-->', val)
+          console.log('6 is run-->', val)
           if (this.$route.params.menu == 'ReceiptNoticeList') {
             this.initdata()
           }
@@ -194,10 +200,11 @@ export default {
   },
   methods: {
     deleteItem(record) {
-      this.deatilData = this.deatilData.filter((item) => item.key !== record.key)
+      console.log('on delect',JSON.stringify(record))
+      this.deatilData = this.deatilData.filter((item) => item.materialid !== record.materialid)
     },
     initdata() {
-      this.spinning=true
+      this.spinning = true
       const parameter = {}
       parameter.memucode = '02-02'
       var url = '/bd/menu/findallmenu'
@@ -225,7 +232,7 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, urlColumns).then((res) => {
         this.columns = res.result.columns
-        console.log('columns data--->', JSON.stringify(res))
+       
       })
     },
     getList() {
@@ -242,6 +249,7 @@ export default {
       })
     },
     detailSelect(list) {
+      console.log('detail-->', JSON.stringify(list))
       this.selectList = list
     },
     getSelect(list) {
@@ -251,6 +259,11 @@ export default {
       this.selectList = list
     },
     detailModal(e) {
+      this.selectedRowKeys = []
+      for (const key in this.deatilData) {
+        this.selectedRowKeys.push(this.deatilData[key].materialid)
+      }
+      console.log('show modal--->',this.selectedRowKeys.length)
       this.detailVisible = true
       this.name = 'ProductList'
     },
@@ -401,7 +414,7 @@ export default {
         }
       }
       this.$multiTab.rename(this.$route, this.title)
-        console.log('2 is run')
+
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
       getForm(columnsParams, this.urlForm).then((res) => {
@@ -424,7 +437,7 @@ export default {
               this.businessclasscode = this.data[i].keyvalue
             }
           }
-          this.spinning=false
+          this.spinning = false
         }, 500)
       })
     },
@@ -460,9 +473,6 @@ export default {
     },
     handleFocus() {
       console.log('focus')
-    },
-    onSelectChange(selectedRowKeys) {
-      this.selectedRowKeys = selectedRowKeys
     },
 
     elect() {

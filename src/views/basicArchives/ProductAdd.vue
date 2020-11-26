@@ -118,6 +118,7 @@ export default {
     $route: {
       handler: function (val, oldVal) {
         if (val.params.baseTitle !== undefined) {
+            console.log('3 is run--->',val)
           this.getFormdata()
         }
       },
@@ -254,7 +255,7 @@ export default {
         getForm(columnsParams, this.urlForm).then((res) => {
           this.data = res.result
           this.$multiTab.rename(this.$route, this.title)
-          console.log('1 is run')
+        
           console.log('form res-->', JSON.stringify(this.data))
           setTimeout(() => {
             for (const i in this.data) {

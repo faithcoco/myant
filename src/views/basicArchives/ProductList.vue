@@ -140,6 +140,7 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
+        console.log('1 is run--->',val)
         this.initData(val.name)
       },
       // 深度观察监听
@@ -299,7 +300,7 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-        console.log(this.menuname + ' listdata-->', JSON.stringify(this.listdata))
+       
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }

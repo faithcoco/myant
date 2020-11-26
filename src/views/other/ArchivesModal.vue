@@ -255,7 +255,7 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-        console.log('columns data--->', JSON.stringify(res))
+       
         this.columns.splice(this.columns.length - 1, 1)
       })
     },
@@ -314,7 +314,7 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-
+        this.selectedRowKeys=[]
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }

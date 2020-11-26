@@ -96,6 +96,7 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
+          console.log('4 is run--->',val)
         this.initData(this.$route.params.menu)
       },
       // 深度观察监听

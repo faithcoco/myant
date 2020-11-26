@@ -2,25 +2,7 @@
   <div>
     <a-card>
       <a-row :gutter="10">
-        <a-col :span="4">
-          <span>{{ titleTree }}</span>
-
-          <a-divider type="horizontal" />
-          <a-input-search style="margin-bottom: 8px" placeholder="请输入关键字" @change="treeSearch" />
-          <a-tree
-            v-show="tree_visible"
-            showLine
-            :expanded-keys="expandedKeys"
-            :auto-expand-parent="autoExpandParent"
-            :tree-data="classifyTree"
-            @expand="onExpand"
-            @select="onSelect"
-            :selectedKeys="checkedKeys"
-          >
-          </a-tree>
-        </a-col>
-
-        <a-col :span="20">
+        <a-col :span="24">
           <a-select default-value="全部" style="width: 220px" @change="selectChange">
             <a-select-option v-for="SList in selectList" :key="SList.key" :value="SList.key">{{
               SList.value
@@ -35,7 +17,7 @@
             :columns="columns"
             :data-source="listdata"
             :alert="false"
-            :scroll="{ x: 1500, y: 525 }"
+            :scroll="{ x: 1500, y: 425 }"
             bordered
             style="margin-top: 20px"
             :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
@@ -143,7 +125,7 @@ export default {
     this.initData(this.name)
   },
   watch: {
-    name: {
+   defaultSelect: {
       handler: function (val, oldVal) {
         this.initData(this.name)
       },
@@ -248,7 +230,7 @@ export default {
         console.log('menu id-->', JSON.stringify(res))
 
         this.menuid = res.result
-        this.getTree()
+
         this.getList()
         this.getColumns()
       })
@@ -261,27 +243,11 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-        console.log('columns data--->', JSON.stringify(res))
+     
         this.columns.splice(this.columns.length - 1, 1)
       })
     },
-    getTree() {
-      this.checkedKeys = []
-      const parameter = {}
-      parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      console.log('tree params-->', parameter)
-      console.log('tree url', this.urlTree)
-      getclassificationGoodsList(parameter, this.urlTree).then((res) => {
-        this.checkedKeys.push(res.result[0].key)
-        this.materialclassid = res.result[0].key
-        this.treeData = res.result
-        this.classifyTree = this.treeData
-        console.log('tree-->', JSON.stringify(this.classifyTree))
-        this.expandedKeys.push(this.classifyTree[0].key)
 
-        this.getList()
-      })
-    },
     onExpand(expandedKeys) {
       this.expandedKeys = expandedKeys
       this.autoExpandParent = false
@@ -297,17 +263,6 @@ export default {
     getList() {
       this.selectedRowKeys = []
       const parameter = {}
-      if (this.menuname == 'PersonnelSetting') {
-        parameter.departmentid = this.materialclassid
-      } else if (this.menuname == 'ProductList') {
-        parameter.materialclassid = this.materialclassid
-      } else if (this.menuname == 'SupplierList') {
-        parameter.vendorclassid = this.materialclassid
-      } else if (this.menuname == 'CustomerList') {
-        parameter.customerclassid = this.materialclassid
-      } else if (this.menuname == 'WarehouseList') {
-        parameter.warehouseclassid = this.materialclassid
-      }
 
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = '1'
@@ -321,16 +276,24 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-        console.log('list--->', JSON.stringify(this.listdata))
+        
+
         for (const key in this.listdata) {
           this.listdata[key].key = key
-          for (const y in this.defaultSelect) {
-            if (this.defaultSelect[y] == this.listdata[key].personid) {
-              this.selectedRowKeys.push(key)
+          for (const y in this.defaultSelect +"/"+JSON.stringify(this.defaultSelect)) {
+            console.log('select--->',this.name)
+            if (this.name == 'PersonnelSetting') {
+              if (this.defaultSelect[y] == this.listdata[key].personid) {
+                this.selectedRowKeys.push(key)
+              }
+            }else  if (this.name == 'ProductList') {
+               if (this.defaultSelect[y] == this.listdata[key].materialid) {
+                this.selectedRowKeys.push(key)
+              }
             }
           }
         }
-
+        
         this.isSearch = false
       })
     },

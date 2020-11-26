@@ -358,7 +358,9 @@
     },
     watch: {
       $route: {
+        
         handler: function (val, oldVal) {
+            console.log('5 is run--->',val)
           this.getColumn()
           this.getDeptTree()
           this.onSearch();

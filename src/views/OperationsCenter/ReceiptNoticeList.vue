@@ -121,6 +121,7 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
+          console.log('7 is run--->',val)
         this.initData(val.name)
       },
       // 深度观察监听
@@ -184,7 +185,6 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-        console.log('columns data--->', JSON.stringify(res))
 
         for (let i = 0; i < this.columns.length - 1; i++) {
           this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })

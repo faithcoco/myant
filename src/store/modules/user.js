@@ -40,7 +40,7 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const result = response.result
-
+          console.log('login res-->',JSON.stringify(response))
           Vue.ls.set(ACCESS_TOKEN, result.userToken, 7 * 24 * 60 * 60 * 1000)
           console.log("id---->", result.basepersonPO)
           Vue.ls.set(logininfo, result)

@@ -10,7 +10,7 @@
             <a-form ref="ruleForm" :model="form" :rules="rules">
               <a-form-item>
                 <a-icon style="margin-right: 10px" type="apartment" />
-                所在部门: {{ form.departmentname }}
+                所在企业: {{ form.departmentname }}
               </a-form-item>
               <a-form-item>
                 <a-icon style="margin-right: 10px" type="idcard" />
@@ -61,7 +61,7 @@
           </a-col>
           <a-col :span="20">
             <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-              <a-form-model-item label="所在部门:" prop="DepartmentID">
+              <a-form-model-item label="所在企业:" prop="DepartmentID">
                 <a-input v-model="form.departmentname" disabled placeholder="请输入姓名"></a-input>
               </a-form-model-item>
               <a-form-model-item label="工号:" prop="PersonCode">

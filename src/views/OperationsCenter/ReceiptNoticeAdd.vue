@@ -80,17 +80,17 @@
       </div>
     </a-spin>
     <a-layout-footer
-      :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-25px', zIndex: '999' }"
+      :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-10px', zIndex: '999' }"
     >
       <a-card>
-        <a-row>
-          <a-col :span="1" :offset="4">
-            <a-button type="primary" @click="resetForm" v-show="false">重置表单</a-button>
+        <a-row type="flex" justify="center" align="top">
+          <a-col :span="2">
+            <a-button type="primary" ref="submit" v-show="approvalVisilbe" @click="submitApproval">提交审批</a-button>
           </a-col>
-          <a-col :span="1" :offset="1">
+          <a-col :span="2">
             <a-button type="primary" ref="submit" @click="handleSubmit">保存继续</a-button>
           </a-col>
-          <a-col :span="1" :offset="1">
+          <a-col :span="2">
             <a-button type @click="Back">保存返回</a-button>
           </a-col>
         </a-row>
@@ -166,6 +166,8 @@ export default {
       businessclasscode: '',
       spinning: false,
       name: '',
+      approvalVisilbe: false,
+      billcode: '',
     }
   },
   created() {
@@ -199,8 +201,23 @@ export default {
     this.form = this.$form.createForm(this, { name: 'form' })
   },
   methods: {
+    submitApproval(e) {
+      const parameter = {}
+      parameter.bizid = this.materialid
+      parameter.billcode = this.billcode
+      parameter.memuid = this.menuid
+      console.log('timeline param-->', JSON.stringify(parameter))
+      getData(parameter, '/work/submitProcess').then((res) => {
+        console.log('timeline-->', JSON.stringify(res))
+        if (res.status == 'SUCCESS') {
+          this.$message.info('提交审批成功')
+        } else {
+          this.$message.warn('EXCEPTION')
+        }
+      })
+    },
     deleteItem(record) {
-      console.log('on delect',JSON.stringify(record))
+      console.log('on delect', JSON.stringify(record))
       this.deatilData = this.deatilData.filter((item) => item.materialid !== record.materialid)
     },
     initdata() {
@@ -232,7 +249,6 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, urlColumns).then((res) => {
         this.columns = res.result.columns
-       
       })
     },
     getList() {
@@ -263,7 +279,7 @@ export default {
       for (const key in this.deatilData) {
         this.selectedRowKeys.push(this.deatilData[key].materialid)
       }
-      console.log('show modal--->',this.selectedRowKeys.length)
+      console.log('show modal--->', this.selectedRowKeys.length)
       this.detailVisible = true
       this.name = 'ProductList'
     },
@@ -399,12 +415,14 @@ export default {
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
 
       if (this.$route.params.tag == 1) {
+        this.approvalVisilbe=false
         this.title = this.$route.params.title + '新增'
         this.materialclassid = this.$route.params.materialclassid
         if (this.$route.params.menu == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/insterform'
         }
       } else if (this.$route.params.tag == 2) {
+        this.approvalVisilbe = true
         this.title = this.$route.params.title + '编辑'
         this.materialid = this.$route.params.materialid
         console.log('materialid', this.materialid)
@@ -417,10 +435,16 @@ export default {
 
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
+
       getForm(columnsParams, this.urlForm).then((res) => {
-        this.data = []
-        this.data = res.result
-        console.log('form res-->', JSON.stringify(this.data))
+        if (res.status == 'SUCCESS') {
+          this.data = []
+          this.data = res.result
+        } else {
+          this.$message.warn('EXCEPTION')
+        }
+
+        console.log('form res-->', JSON.stringify(res))
 
         setTimeout(() => {
           for (const i in this.data) {
@@ -435,6 +459,8 @@ export default {
               this.vendorid = this.data[i].keyvalue
             } else if (this.data[i].key == 'businessclasscode') {
               this.businessclasscode = this.data[i].keyvalue
+            } else if (this.data[i].key == 'receiptnoticecode') {
+              this.billcode = this.data[i].keyvalue
             }
           }
           this.spinning = false

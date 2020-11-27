@@ -161,11 +161,11 @@ export default {
         this.roles = res.result.data
 
         this.roles.push({
-          personid: Vue.ls.get(logininfo).basepersonPO.personid,
+          personid: [],
           enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
           name: '新增角色',
           describe: '新增角色',
-          status: '',
+          status: 1,
           permissions: [
             {
               permissionId: '01',
@@ -173,7 +173,7 @@ export default {
             },
           ],
         })
-        this.mdl=this.roles[0]
+        this.mdl = this.roles[0]
         this.setData()
       })
     },
@@ -187,6 +187,7 @@ export default {
       this.mdl.status = value
     },
     onSubmit() {
+      console.log('list-->', JSON.stringify(this.updateList))
       this.mdl.permissions = []
       this.mdl.describe = ''
       for (const key in this.permissions) {
@@ -201,8 +202,9 @@ export default {
 
       console.log('submit--->', JSON.stringify(this.mdl))
       console.log('state-->', this.state)
-
+      this.mdl.personList = this.updateList
       if (this.state == 0) {
+        console.log('add role params-->', JSON.stringify(this.mdl))
         insertRole(this.mdl).then((res) => {
           if (res.status != 'SUCCESS') {
             this.$message.error(res.errorMsg)
@@ -211,7 +213,7 @@ export default {
           }
         })
       } else {
-        this.mdl.personlist = this.updateList
+        console.log('update role params-->', JSON.stringify(this.mdl))
         updateRole(this.mdl).then((res) => {
           console.log('role set--->', JSON.stringify(res))
           if (res.status != 'SUCCESS') {

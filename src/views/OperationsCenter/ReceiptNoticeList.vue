@@ -29,6 +29,8 @@
             style="margin-top: 20px"
           >
             <span slot="action" slot-scope="text, record">
+              <a @click="showApproval(record)">审批</a>
+              <a-divider type="vertical" />
               <a @click="handleEdit(record)">编辑</a>
               <a-divider type="vertical" />
 
@@ -41,7 +43,7 @@
       </a-row>
     </a-card>
 
-    <approval :visible="approval_visible" :product="product" @change="change"></approval>
+    <approval :visible="approval_visible" :materialid="materialid" :menu="menu" @change="change"></approval>
   </div>
 </template>
 
@@ -121,7 +123,7 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-          console.log('7 is run--->',val)
+        console.log('7 is run--->', val)
         this.initData(val.name)
       },
       // 深度观察监听
@@ -139,6 +141,12 @@ export default {
     },
   },
   methods: {
+    showApproval(record) {
+      this.approval_visible = true
+      if (this.menuname == 'ReceiptNoticeList') {
+        this.materialid = record.receiptnoticeid
+      }
+    },
     treeSearch(e) {
       const value = e.target.value
       this.classifyTree = this.treeData.filter((item) => JSON.stringify(item).includes(value))
@@ -157,6 +165,7 @@ export default {
       })
     },
     initData(name) {
+      this.menu = this.$route.name
       this.menuname = name
       this.titleTree = '仓位分类'
 
@@ -244,7 +253,7 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-        console.log('list res-->', JSON.stringify(this.listdata))
+
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }

@@ -9,24 +9,13 @@
       :after-visible-change="afterVisibleChange"
       @close="onClose"
     >
-     <a-descriptions title :column="2">
-        <a-descriptions-item label="货品编码">{{product.productCode}}</a-descriptions-item>
-        <a-descriptions-item label="货品名称">{{product.productName}}</a-descriptions-item>
-        <a-descriptions-item label="规格型号">{{product.SpecificationModel}}</a-descriptions-item>
-        <a-descriptions-item label="存货编码">{{product.InventoryCode}}</a-descriptions-item>
-        <a-descriptions-item label="存货名称">{{product.InventoryName}}</a-descriptions-item>
-        <a-descriptions-item label="主计量单位">{{product.MainUnit}}</a-descriptions-item>
-        <a-descriptions-item label="电商销售单位">{{product.SalesUnit}}</a-descriptions-item>
-        <a-descriptions-item label="分销单位">{{product.SalesUnit}}</a-descriptions-item>
-        <a-descriptions-item label="最低售价">{{product.LowestPrice}}</a-descriptions-item>
-        <a-descriptions-item label="商品描述">{{product.description}}</a-descriptions-item>
-        <a-descriptions-item label="默认发货仓库">{{product.DefaultShippingWarehouse}}</a-descriptions-item>
-        <a-descriptions-item label="是否虚拟物品">{{product.VirtualItem}}</a-descriptions-item>
-        <a-descriptions-item label="图片">{{product.Image}}</a-descriptions-item>
-        <a-descriptions-item label="预发货日期">{{product.StorageDate}}</a-descriptions-item>
-        <a-descriptions-item label="单位毛重">{{product.UnitGrossWeight}}</a-descriptions-item>
+      <a-descriptions title :column="2">
+        <a-descriptions-item v-for="(item, index) in descriptions" v-if="item.label != '审批流'" :label="item.label">{{
+          item.value
+        }}</a-descriptions-item>
+
         <a-descriptions-item label="审批状态">
-          <a-tag :color="color">{{status}}</a-tag>
+          <a-tag :color="color">{{ status }}</a-tag>
         </a-descriptions-item>
       </a-descriptions>
       <a-divider>审批详情</a-divider>
@@ -34,15 +23,15 @@
         <a-timeline-item v-for="item in timelinelist" :key="item.key">
           <p>
             <a-row>
-              <a-col :span="5">
-                <b>{{item.title}}</b>
+              <a-col :span="8">
+                <b>{{ item.name + ' ' + item.approvestatus }}</b>
               </a-col>
-              <a-col :span="12">{{item.time}}</a-col>
+              <a-col :span="3">{{ item.time }}</a-col>
             </a-row>
           </p>
           <p>
-            <a href="#" v-for="item in item.mentions" :key="item.name">@{{item.name}}</a>
-            {{item.content}}
+            <a href="#" v-for="item in item.mentions" :key="item.name">@{{ item.name }}</a>
+            {{ item.approveNote }}
           </p>
           <p v-show="item.isShow">
             <a-card v-for="item in item.img" :key="item.src" :bordered="false">
@@ -82,11 +71,9 @@
           <div slot="content">
             <a-form-item>
               <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
-                <a-mentions-option
-                  v-for="item in personnelList"
-                  :key="item.name"
-                  :value="item.name"
-                >{{item.name}}</a-mentions-option>
+                <a-mentions-option v-for="item in personnelList" :key="item.name" :value="item.name">{{
+                  item.name
+                }}</a-mentions-option>
               </a-mentions>
               <a-upload
                 name="file"
@@ -99,12 +86,7 @@
               </a-upload>
             </a-form-item>
             <a-form-item>
-              <a-button
-                html-type="submit"
-                :loading="submitting"
-                type="primary"
-                @click="handleSubmit"
-              >评论</a-button>
+              <a-button html-type="submit" :loading="submitting" type="primary" @click="handleSubmit">评论</a-button>
             </a-form-item>
           </div>
         </a-comment>
@@ -122,7 +104,9 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import { getPersonnelList, getApproval } from '@/api/manage'
 import moment from 'moment'
-const timelinelist = []
+import { logininfo } from '@/store/mutation-types'
+import { postData, getData } from '@/api/manage'
+
 const product = {}
 const personnelList = []
 
@@ -133,7 +117,12 @@ export default {
       type: Boolean,
       default: false,
     },
-  
+    materialid: {
+      type: String,
+    },
+    menu: {
+      type: String,
+    },
     product: {
       type: Object,
     },
@@ -143,7 +132,7 @@ export default {
       // visible: false,
       // product,
       status: '正在审批',
-      timelinelist,
+      timelinelist: [],
       chat_visible: false,
       submitting: false,
       personnelList,
@@ -154,46 +143,78 @@ export default {
       headers: {
         authorization: 'authorization-text',
       },
-
+      menuid: '',
       size: 'small',
+      descriptions: [],
+      instanceId: '',
+      expiryDate: '1606468834000',
     }
   },
   components: {},
-  created() {
-    getApproval().then((res) => {
-      this.timelinelist = res.result
-      this.timelinelist = [
-        {
-          key: '0',
-          title: 'curry 提交合同申请',
-          time: '2020-07-01 10:00',
-          content: '',
-        },
-        {
-          key: '1',
-          title: 'curry 评论',
-          time: '2020-07-02 10:00',
-          content: '了解一下功能',
-          mentions: [{ name: '高明亮' }, { name: '张勇' }],
-        },
-        {
-          key: '2',
-          title: 'curry 评论',
-          time: '2020-07-03 10:00',
-          content: '发一张图片',
-          img: [{ src: 'https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png' }],
-          isShow: 'true',
-        },
-      ]
-    })
-    getPersonnelList().then((res) => {
-      this.personnelList = res.result
-    })
-  },
+  created() {},
+
   mounted() {},
   methods: {
+    getTimeline() {
+      const parameter = {}
+      parameter.bizid = this.materialid
+      console.log('timeline param-->', JSON.stringify(parameter))
+      getData(parameter, '/work/getApprovalInfo').then((res) => {
+        console.log('timeline-->', JSON.stringify(res))
+        if (res.status == 'SUCCESS') {
+          this.timelinelist = res.result.data
+          this.instanceId = res.result.instanceId
+        } else {
+          this.$message.warn('EXCEPTION')
+        }
+      })
+    },
+    initdata() {
+      const parameter = {}
+      parameter.memucode = '02-02'
+      var url = '/bd/menu/findallmenu'
+
+      getData(parameter, url).then((res) => {
+        this.menuid = res.result
+        this.getFormdata()
+        this.getTimeline()
+      })
+    },
+    getFormdata() {
+      const columnsParams = {}
+      columnsParams.memuid = this.menuid
+      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+
+      this.materialid = this.materialid
+      console.log('materialid', this.materialid)
+      if (this.menu == 'ReceiptNoticeList') {
+        this.urlForm = '/bd/docreceiptnotice/updateform'
+        columnsParams.receiptnoticeid = this.materialid
+      }
+
+      this.$multiTab.rename(this.$route, this.title)
+
+      console.log('form url--->', this.urlForm)
+      console.log('form params-->', JSON.stringify(columnsParams))
+
+      getData(columnsParams, this.urlForm).then((res) => {
+        if (res.status == 'SUCCESS') {
+          this.data = []
+          this.data = res.result
+          this.descriptions = res.result.map((item) => {
+            return {
+              label: item.title,
+              value: item.value,
+            }
+          })
+        } else {
+          this.$message.warn('EXCEPTION')
+        }
+      })
+    },
     afterVisibleChange(val) {
       console.log('visible', val)
+      this.initdata()
     },
     onClose() {
       this.$emit('change', false)
@@ -204,12 +225,36 @@ export default {
       this.chat_visible = true
     },
     cancelClick() {
-      this.status = '已撤销'
-      this.color = '#f00707a6'
+      const parameter = {}
+      parameter.instanceId = this.instanceId
+      parameter.bizid = this.materialid
+      parameter.approveNote = 'hello world'
+      getData(parameter, '/work/rejectProcess').then((res) => {
+        if (res.status == 'SUCCESS') {
+          console.log(JSON.stringify(res))
+          this.getTimeline()
+          this.status = '已撤销'
+          this.color = '#f00707a6'
+        } else {
+          this.$message.warn('EXCEPTION')
+        }
+      })
     },
     approvalClick() {
-      this.status = '已审批'
-      this.color = '#108ee9'
+      const parameter = {}
+      parameter.instanceId = this.instanceId
+      parameter.bizid = this.materialid
+      parameter.approveNote = 'hello world'
+      getData(parameter, '/work/approveProcess').then((res) => {
+        if (res.status == 'SUCCESS') {
+          console.log(JSON.stringify(res))
+          this.getTimeline()
+          this.status = '已审批'
+          this.color = '#108ee9'
+        } else {
+          this.$message.warn('EXCEPTION')
+        }
+      })
     },
 
     chatOk(e) {
@@ -227,11 +272,11 @@ export default {
       setTimeout(() => {
         this.submitting = false
         this.timelinelist.push({
-          key: '1',
-          title: 'curry 评论',
-          time: moment(new Date()).format('YYYY-MM-DD HH:mm'),
-          content: this.value,
+          name: 'curry 评论',
+          time: moment(this.expiryDate).format('YYYY-MM-DD HH:mm'),
+          approveNote: this.value,
         })
+        console.log('time-->', moment(parseInt(this.expiryDate)).format('YYYY-MM-DD HH:mm'))
       }, 1000),
         (this.chat_visible = false)
     },

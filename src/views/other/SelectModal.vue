@@ -281,7 +281,7 @@ export default {
         for (const key in this.listdata) {
           this.listdata[key].key = key
           for (const y in this.defaultSelect +"/"+JSON.stringify(this.defaultSelect)) {
-            console.log('select--->',this.name)
+        
             if (this.name == 'PersonnelSetting') {
               if (this.defaultSelect[y] == this.listdata[key].personid) {
                 this.selectedRowKeys.push(key)

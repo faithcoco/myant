@@ -94,14 +94,9 @@ export default {
   },
   data() {
     return {
-      openKeys: ['03bf0fb1-e9fb-4014-92e7-7121f4f71002'],
       selectedKeys: ['03bf0fb1-e9fb-4014-92e7-7121f4f71002'],
       list: [],
-      nameList: [
-        { key: 1, name: '张三 ' },
-        { key: 2, name: '李四 ' },
-        { key: 3, name: '王五' },
-      ],
+      nameList: [],
       steps: [
         { title: '审批节点一', name: '' },
         { title: '审批节点二', name: '' },
@@ -141,23 +136,8 @@ export default {
     const paramsName = { enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid }
     getData(paramsName, url).then((res) => {
       console.log('name list ->', JSON.stringify(res))
-      // this.nameList = res.result
-      this.nameList = [
-        {
-          children: [
-            {
-              selectable: 'true',
-              title: 'cbc',
-              value: 'bc6a7b35-dd53-43d6-82b7-c7d09a2fb96c',
-              key: 'bc6a7b35-dd53-43d6-82b7-c7d09a2fb96c',
-            },
-          ],
-          selectable: 'false',
-          title: '管理员',
-          value: 'a1e87014-a896-4e29-a667-dd69a7e33e36',
-          key: 'a1e87014-a896-4e29-a667-dd69a7e33e36',
-        },
-      ]
+      this.nameList = res.result
+
       this.getSelect()
     })
   },
@@ -169,10 +149,14 @@ export default {
       }
       var url = '/work/getWorkFlowSetInfo'
       getData(parameter, url).then((res) => {
-        this.submit.node1 = res.result.node1
-        this.submit.node2 = res.result.node2
-        this.submit.node3 = res.result.node3
-        console.log('approval init ->', JSON.stringify(res))
+        console.log('approval init-->',JSON.stringify(res))
+        this.submit.node1 = res.result.node1.map((item) => item.key)
+        this.submit.node2 = res.result.node2.map((item) => item.key)
+        this.submit.node3 = res.result.node3.map((item) => item.key)
+        this.steps[0].name=res.result.node1.map((item) => item.name).join()
+         this.steps[1].name=res.result.node2.map((item) => item.name).join()
+          this.steps[2].name=res.result.node3.map((item) => item.name).join()
+       
       })
     },
     onSubmit(e) {
@@ -197,7 +181,6 @@ export default {
       this.getSelect()
     },
     handleChange1(value, label) {
-      
       console.log(JSON.stringify(value))
       this.steps[0].name = label.join()
       this.submit.node1 = value

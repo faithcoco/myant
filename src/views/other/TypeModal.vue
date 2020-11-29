@@ -114,41 +114,47 @@ export default {
         this.urlUpdate = '/bd/updateDepartment'
         this.urlDelete = '/bd/deleteDepartment'
         this.columns[1].dataIndex = 'code'
-        this.columns[0].title='部门名称'
-         this.columns[1].title='部门编号'
+        this.columns[0].title = '部门名称'
+        this.columns[1].title = '部门编号'
       } else if (name == 'ProductList') {
         this.url = '/bd/product/materialClassTree'
         this.urlAdd = '/bd/product/insertmaterialClass'
         this.urlUpdate = '/bd/product/updatematerialClass'
         this.urlDelete = '/bd/product/delmaterialClassById'
         this.columns[1].dataIndex = 'materialclasscode'
-          this.columns[0].title='料品名称'
-         this.columns[1].title='料品编号'
+        this.columns[0].title = '料品名称'
+        this.columns[1].title = '料品编号'
       } else if (name == 'SupplierList') {
         this.url = '/bd/basevendor/vendorTree'
         this.urlAdd = '/bd/basevendor/insterVenderClass'
         this.urlDelete = '/bd/deleteDepartment'
         this.urlUpdate = '/bd/basevendor/updatevendorClass'
         this.columns[1].dataIndex = 'vendorclasscode'
-            this.columns[0].title='供应商名称'
-         this.columns[1].title='供应商编号'
+        this.columns[0].title = '供应商名称'
+        this.columns[1].title = '供应商编号'
       } else if (name == 'CustomerList') {
         this.url = '/bd/customer/CustomerTree'
         this.urlAdd = '/bd/customer/insterCustomerClass'
         this.urlDelete = '/bd/customer/delCustomerClass'
         this.urlUpdate = '/bd/customer/updateCustomerClass'
         this.columns[1].dataIndex = 'customerclasscode'
-             this.columns[0].title='客户名称'
-         this.columns[1].title='客户编号'
+        this.columns[0].title = '客户名称'
+        this.columns[1].title = '客户编号'
       } else if (name == 'WarehouseList') {
         this.url = '/bd/warehouse/WarehouseTree'
         this.urlAdd = '/bd/warehouse/insterWarehouseClass'
         this.urlDelete = '/bd/warehouse/delWarehouseClass'
         this.urlUpdate = '/bd/warehouse/updateWarehouseClass'
         this.columns[1].dataIndex = 'materialclasscode'
-             this.columns[0].title='仓库名称'
-         this.columns[1].title='仓库编号'
-      } 
+        this.columns[0].title = '仓库名称'
+        this.columns[1].title = '仓库编号'
+      } else if (name == 'BusinessCategory') {
+        this.url = '/bd/business/businessClassTree'
+
+        this.columns[1].dataIndex = 'businessclasscode'
+        this.columns[0].title = '业务名称'
+        this.columns[1].title = '业务编号'
+      }
 
       this.getList()
     },
@@ -161,172 +167,20 @@ export default {
         this.list = res.result
       })
     },
-    insertmaterialClass() {
-      const parameter = {}
-      if (this.name == 'ProductList') {
-        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-        parameter.materialclasscode = this.materialclasscode
-        parameter.materialclassname = this.materialclassname
-        parameter.materialclassgrade = ''
-        parameter.fatherid = this.id
-      } else if (this.name == 'PersonnelSetting') {
-        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-        parameter.fatherid = this.id
-        parameter.departmentname = this.materialclassname
-        parameter.departmentcode = this.materialclasscode
-      } else if (this.name == 'SupplierList') {
-        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-        parameter.fatherid = this.id
-        parameter.vendorclassname = this.materialclassname
-        parameter.vendorclasscode = this.materialclasscode
-      } else if (this.name == 'CustomerList') {
-        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-        parameter.fatherid = this.id
-        parameter.customerclassname = this.materialclassname
-        parameter.customerclasscode = this.materialclasscode
-      } else if (this.name == 'WarehouseList') {
-        parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-        parameter.fatherid = this.id
-        parameter.warehouseclassname = this.materialclassname
-        parameter.warehouseclasscode = this.materialclasscode
-      }
 
-      console.log('add url-->', this.urlAdd)
-      console.log('add params-->', JSON.stringify(parameter))
-      insertmaterialClass(parameter, this.urlAdd).then((res) => {
-        console.log('add res-->', JSON.stringify(res))
-        if (res.status == 'SUCCESS') {
-          this.getList()
-        } else {
-          this.$message.warning(res.errorMsg)
-        }
-      })
-    },
-    update() {
-      const parameter = {}
-      if (this.name == 'ProductList') {
-        parameter.materialclasscode = this.typeCode
-        parameter.materialclassname = this.typeName
-        parameter.materialclassid = this.id
-      } else if (this.name == 'PersonnelSetting') {
-        parameter.departmentid = this.id
-        parameter.departmentname = this.typeName
-        parameter.departmentcode = this.typeCode
-      } else if (this.name == 'SupplierList') {
-        parameter.vendorclassid = this.id
-        parameter.vendorclasscode = this.typeName
-        parameter.vendorclassname = this.typeCode
-      } else if (this.name == 'CustomerList') {
-        parameter.customerclassid = this.id
-        parameter.customerclassname = this.materialclassname
-        parameter.customerclasscode = this.materialclasscode
-      } else if (this.name == 'WarehouseList') {
-        parameter.warehouseclassid = this.id
-        parameter.warehouseclassname = this.materialclassname
-        parameter.warehouseclasscode = this.materialclasscode
-      }
-      parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-
-      insertmaterialClass(parameter, this.urlUpdate).then((res) => {
-        console.log('update res-->', JSON.stringify(res))
-        if (res.status == 'SUCCESS') {
-          this.getList()
-        } else {
-          this.$message.warning(res.status)
-        }
-      })
-    },
-    delete() {
-      const parameter = {}
-
-      if (this.name == 'ProductList') {
-        parameter.materialclassid = this.id
-      } else if (this.name == 'PersonnelSetting') {
-        parameter.departmentid = this.id
-      } else if (this.name == 'SupplierList') {
-        parameter.vendorclassid = this.id
-      } else if (this.name == 'CustomerList') {
-        parameter.customerclassid = this.id
-      } else if (this.name == 'WarehouseList') {
-        parameter.warehouseclassid = this.id
-      }
-
-      console.log('delete-->', JSON.stringify(parameter))
-      getData(parameter, this.urlDelete).then((res) => {
-        console.log('delete-->', JSON.stringify(res))
-        if (res.status == 'SUCCESS') {
-          this.getList()
-        } else {
-          this.$message.warning(res.errorMsg)
-        }
-      })
-    },
     onChange(e) {
       console.log(`checked = ${e.target.checked}`)
     },
-    handleAddItem(record) {
-      //添加子类
-      this.tag = 1
-      this.currentRecord = record
 
-      this.visible = true
-      this.id = record.key
-    },
-    handleEdit(record) {
-      //编辑
-      console.log('edit-->', JSON.stringify(record))
-      this.id = record.key
-      this.tag = 2
-      this.visible = true
-      this.typeName = record.title
-      if (this.name == 'PersonnelSetting') {
-        this.typeCode = record.code
-      } else if (this.name == 'ProductList') {
-        this.typeCode = record.materialclasscode
-      } else if (this.name == 'SupplierList') {
-        this.typeCode = record.vendorclasscode
-      } else if (this.name == 'CustomerList') {
-        this.typeCode = record.customerclasscode
-      } else if (this.name == 'WarehouseList') {
-        this.typeCode = record.materialclasscode
-      }
-    },
-    handleDelete(record) {
-      //删除
-      console.log('edit-->', record)
-      this.id = record.key
-      this.delete()
-    },
     handleSub(record) {
       console.log(record)
     },
-    handleAdd() {
-      //新增类别
-      this.tag = 1
-      this.visible = true
-      this.id = ''
-    },
+
     back() {
       this.$router.go(-1)
     },
-    handleOk(e) {
-      this.visible = false
 
-      this.materialclassname = this.typeName
-      this.materialclasscode = this.typeCode
-      if (this.tag == 1) {
-        this.insertmaterialClass()
-      } else if (this.tag == 2) {
-        this.update()
-      }
 
-      this.typeName = ''
-      this.typeCode = ''
-    },
-    onDelete(key) {
-      const list = [...this.list]
-      this.list = list.filter((item) => item.key !== key)
-    },
   },
 }
 </script>

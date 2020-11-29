@@ -140,7 +140,7 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-        console.log('1 is run--->',val)
+      
         this.initData(val.name)
       },
       // 深度观察监听

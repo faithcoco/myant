@@ -43,19 +43,15 @@
                 <a-tab-pane tab="明细">
                   <a-button @click="() => detailModal()">选择</a-button>
                   <a-table :columns="columns" :data-source="deatilData" :scroll="{ x: 1500 }">
+                    <template v-for="col in columns" :slot="col.dataIndex" slot-scope="text, record, index">
+                      <div :key="col.dataIndex">
+                        <a-input :value="text" @change="(e) => handleChange(e.target.value, col.dataIndex, record)" />
+                      </div>
+                    </template>
                     <span slot="action" slot-scope="text, record">
                       <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
                         <a href="javascript:;">删除</a>
                       </a-popconfirm>
-                      <span slot="fieldprecision" slot-scope="text, record">
-                        <a-input-number
-                          :min="0"
-                          :max="record.maxprecision"
-                          :disabled="record.fielddisabled"
-                          @change="(e) => fieldprecision(e.target.value, record)"
-                          v-model="record.fieldprecision"
-                        />
-                      </span>
                     </span>
                   </a-table>
                 </a-tab-pane>
@@ -201,6 +197,12 @@ export default {
     this.form = this.$form.createForm(this, { name: 'form' })
   },
   methods: {
+    handleChange(value, key, record) {
+      console.log('change-->', record[key])
+      record[key] = value
+      console.log('change-->', record[key])
+    },
+
     submitApproval(e) {
       const parameter = {}
       parameter.bizid = this.materialid
@@ -248,6 +250,7 @@ export default {
       console.log('columns url--->', urlColumns)
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, urlColumns).then((res) => {
+        console.log('columns-->', JSON.stringify(res))
         this.columns = res.result.columns
       })
     },
@@ -415,7 +418,7 @@ export default {
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
 
       if (this.$route.params.tag == 1) {
-        this.approvalVisilbe=false
+        this.approvalVisilbe = false
         this.title = this.$route.params.title + '新增'
         this.materialclassid = this.$route.params.materialclassid
         if (this.$route.params.menu == 'ReceiptNoticeList') {
@@ -444,8 +447,6 @@ export default {
           this.$message.warn('EXCEPTION')
         }
 
-        console.log('form res-->', JSON.stringify(res))
-
         setTimeout(() => {
           for (const i in this.data) {
             this.form.setFieldsValue({
@@ -467,19 +468,7 @@ export default {
         }, 500)
       })
     },
-    handleChange(info) {
-      if (info.file.status !== 'uploading') {
-        //判断如果不处于上传中的状态，就log打印上传文件的信息和文件列表
-        console.log(info.file, info.fileList)
-      }
-      if (info.file.status === 'done') {
-        //   如果status等于done说明上传成功，并用成功效果的提示框做提示
-        this.$message.success(`${info.file.name} 上传成功`)
-      } else if (info.file.status === 'error') {
-        //   如果status等于error说明上传失败，并用失败效果的提示框做提示
-        this.$message.error(`${info.file.name} file upload failed.`)
-      }
-    },
+
     handleSearchChange(value) {
       console.log(`selected ${value}`)
     },

@@ -71,7 +71,14 @@
           <a-modal title="选择" :visible="typeVisible" @ok="handleOk" @cancel="handleCancel" width="1300px">
             <type :menuname="name" @onSelect="typeSelect"></type>
           </a-modal>
-          <a-modal title="选择" :visible="detailVisible" @ok="detailOk" @cancel="detailCancel" destroyOnClose='true' width="1300px">
+          <a-modal
+            title="选择"
+            :visible="detailVisible"
+            @ok="detailOk"
+            @cancel="detailCancel"
+            destroyOnClose="true"
+            width="1300px"
+          >
             <select-modal :name="name" :visible="visible" @onSelect="detailSelect"></select-modal>
           </a-modal>
         </a-card>
@@ -187,6 +194,7 @@ export default {
       handler: function (val, oldVal) {
         if (val.params.menu !== undefined) {
           if (this.$route.params.menu == 'ReceiptNoticeList') {
+          
             this.initdata()
           }
         }
@@ -249,7 +257,6 @@ export default {
       console.log('columns url--->', urlColumns)
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, urlColumns).then((res) => {
-       
         this.columns = res.result.columns
       })
     },
@@ -284,7 +291,7 @@ export default {
       for (const key in this.deatilData) {
         this.selectedRowKeys.push(this.deatilData[key].materialid)
       }
-    
+
       this.detailVisible = true
       this.name = 'ProductList'
     },
@@ -440,7 +447,7 @@ export default {
           columnsParams.receiptnoticeid = this.materialid
         }
       }
-      this.$multiTab.rename(this.$route, this.title)
+      this.$multiTab.rename(this.$route.path, this.title)
 
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))

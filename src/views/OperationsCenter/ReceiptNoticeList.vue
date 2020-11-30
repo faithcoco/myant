@@ -306,6 +306,7 @@ export default {
           materialid: this.materialid,
           tag: 2,
           menuid: this.menuid,
+          title: this.$route.meta.title,
         },
       })
     },

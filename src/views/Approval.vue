@@ -70,7 +70,7 @@
           />
           <div slot="content">
             <a-form-item>
-              <a-mentions v-model="value" :rows="4" @change="onChange" @select="onSelect">
+              <a-mentions v-model="content" :rows="4" @change="onChange" @select="onSelect">
                 <a-mentions-option v-for="item in personnelList" :key="item.name" :value="item.name">{{
                   item.name
                 }}</a-mentions-option>
@@ -106,6 +106,7 @@ import { getPersonnelList, getApproval } from '@/api/manage'
 import moment from 'moment'
 import { logininfo } from '@/store/mutation-types'
 import { postData, getData } from '@/api/manage'
+import { resetWarned } from 'ant-design-vue/es/_util/warning'
 
 const product = {}
 const personnelList = []
@@ -148,6 +149,8 @@ export default {
       descriptions: [],
       instanceId: '',
       expiryDate: '1606468834000',
+      currtent: 0, //1审批2撤销
+      content: '',
     }
   },
   components: {},
@@ -192,7 +195,7 @@ export default {
         columnsParams.receiptnoticeid = this.materialid
       }
 
-      this.$multiTab.rename(this.$route, this.title)
+     
 
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
@@ -224,11 +227,12 @@ export default {
       this.value = ''
       this.chat_visible = true
     },
-    cancelClick() {
+
+    rejectProcess() {
       const parameter = {}
       parameter.instanceId = this.instanceId
       parameter.bizid = this.materialid
-      parameter.approveNote = 'hello world'
+      parameter.approveNote = this.approveNote
       getData(parameter, '/work/rejectProcess').then((res) => {
         if (res.status == 'SUCCESS') {
           console.log(JSON.stringify(res))
@@ -241,11 +245,22 @@ export default {
       })
     },
     approvalClick() {
+      this.currtent = 1
+      this.content = ''
+      this.chat_visible = true
+    },
+    cancelClick() {
+      this.currtent = 2
+      this.content = ''
+      this.chat_visible = true
+    },
+    approveProcess() {
       const parameter = {}
       parameter.instanceId = this.instanceId
       parameter.bizid = this.materialid
-      parameter.approveNote = 'hello world'
+      parameter.approveNote = this.content
       getData(parameter, '/work/approveProcess').then((res) => {
+        console.log('approval-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           console.log(JSON.stringify(res))
           this.getTimeline()
@@ -264,21 +279,13 @@ export default {
       this.chat_visible = false
     },
     handleSubmit() {
-      if (!this.value) {
-        return
+      if (this.currtent == 1) {
+        this.approveProcess()
+      } else if (this.currtent == 2) {
+        this.rejectProcess()
       }
-      this.submitting = true
-      const time = new Date()
-      setTimeout(() => {
-        this.submitting = false
-        this.timelinelist.push({
-          name: 'curry 评论',
-          time: moment(this.expiryDate).format('YYYY-MM-DD HH:mm'),
-          approveNote: this.value,
-        })
-        console.log('time-->', moment(parseInt(this.expiryDate)).format('YYYY-MM-DD HH:mm'))
-      }, 1000),
-        (this.chat_visible = false)
+
+      this.chat_visible = false
     },
     onSelect(option) {
       console.log('select', option)

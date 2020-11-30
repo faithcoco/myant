@@ -224,7 +224,7 @@ export default {
           columnsParams.warehouseid = this.materialclassid
         }
       } else if (this.$route.params.tag == 2) {
-        this.title = tthis.$route.params.baseTitle + '编辑'
+        this.title = this.$route.params.baseTitle + '编辑'
         this.materialid = this.$route.params.materialid
         console.log('materialid', this.materialid)
         if (this.$route.params.menu == 'ProductList') {
@@ -254,7 +254,7 @@ export default {
       if (this.urlForm !== '') {
         getForm(columnsParams, this.urlForm).then((res) => {
           this.data = res.result
-          this.$multiTab.rename(this.$route, this.title)
+          this.$multiTab.rename(this.$route.path, this.title)
         
           console.log('form res-->', JSON.stringify(this.data))
           setTimeout(() => {

@@ -71,12 +71,7 @@ export default {
     name: {
       type: String,
     },
-    defaultSelect: {
-      type: Array,
-      default: () => {
-        return []
-      },
-    },
+
   },
   components: {
     STable,
@@ -278,21 +273,7 @@ export default {
         this.listdata = res.result.data
         
 
-        for (const key in this.listdata) {
-          this.listdata[key].key = key
-          for (const y in this.defaultSelect +"/"+JSON.stringify(this.defaultSelect)) {
-        
-            if (this.name == 'PersonnelSetting') {
-              if (this.defaultSelect[y] == this.listdata[key].personid) {
-                this.selectedRowKeys.push(key)
-              }
-            }else  if (this.name == 'ProductList') {
-               if (this.defaultSelect[y] == this.listdata[key].materialid) {
-                this.selectedRowKeys.push(key)
-              }
-            }
-          }
-        }
+      
         
         this.isSearch = false
       })

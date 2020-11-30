@@ -45,7 +45,14 @@
                   <a-table :columns="columns" :data-source="deatilData" :scroll="{ x: 1500 }">
                     <template v-for="col in columns" :slot="col.dataIndex" slot-scope="text, record, index">
                       <div :key="col.dataIndex">
-                        <a-input :value="text" @change="(e) => handleChange(e.target.value, col.dataIndex, record)" />
+                        <a-input
+                          :value="text"
+                          @change="(e) => handleChange(e.target.value, col.dataIndex, record)"
+                          v-if="col.isEdit"
+                        />
+                        <template v-else>
+                          {{ text }}
+                        </template>
                       </div>
                     </template>
                     <span slot="action" slot-scope="text, record">
@@ -64,13 +71,8 @@
           <a-modal title="选择" :visible="typeVisible" @ok="handleOk" @cancel="handleCancel" width="1300px">
             <type :menuname="name" @onSelect="typeSelect"></type>
           </a-modal>
-          <a-modal title="选择" :visible="detailVisible" @ok="detailOk" @cancel="detailCancel" width="1300px">
-            <select-modal
-              :name="name"
-              :defaultSelect="selectedRowKeys"
-              :visible="visible"
-              @onSelect="detailSelect"
-            ></select-modal>
+          <a-modal title="选择" :visible="detailVisible" @ok="detailOk" @cancel="detailCancel" destroyOnClose='true' width="1300px">
+            <select-modal :name="name" :visible="visible" @onSelect="detailSelect"></select-modal>
           </a-modal>
         </a-card>
       </div>
@@ -184,7 +186,6 @@ export default {
     $route: {
       handler: function (val, oldVal) {
         if (val.params.menu !== undefined) {
-          console.log('6 is run-->', val)
           if (this.$route.params.menu == 'ReceiptNoticeList') {
             this.initdata()
           }
@@ -198,9 +199,7 @@ export default {
   },
   methods: {
     handleChange(value, key, record) {
-      console.log('change-->', record[key])
       record[key] = value
-      console.log('change-->', record[key])
     },
 
     submitApproval(e) {
@@ -220,7 +219,7 @@ export default {
     },
     deleteItem(record) {
       console.log('on delect', JSON.stringify(record))
-      this.deatilData = this.deatilData.filter((item) => item.materialid !== record.materialid)
+      this.deatilData = this.deatilData.filter((item) => item.id !== record.id)
     },
     initdata() {
       this.spinning = true
@@ -250,7 +249,7 @@ export default {
       console.log('columns url--->', urlColumns)
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, urlColumns).then((res) => {
-        console.log('columns-->', JSON.stringify(res))
+       
         this.columns = res.result.columns
       })
     },
@@ -265,6 +264,9 @@ export default {
       console.log('listdata parameter-->', JSON.stringify(columnsParams))
       getData(columnsParams, urlColumns).then((res) => {
         this.deatilData = res.result.data
+        for (const key in this.deatilData) {
+          this.deatilData[key].id = key
+        }
       })
     },
     detailSelect(list) {
@@ -282,13 +284,16 @@ export default {
       for (const key in this.deatilData) {
         this.selectedRowKeys.push(this.deatilData[key].materialid)
       }
-      console.log('show modal--->', this.selectedRowKeys.length)
+    
       this.detailVisible = true
       this.name = 'ProductList'
     },
     detailOk(e) {
       this.detailVisible = false
-      this.deatilData = this.selectList
+      this.deatilData = this.deatilData.concat(this.selectList)
+      for (const key in this.deatilData) {
+        this.deatilData[key].id = key
+      }
     },
     detailCancel(e) {
       this.detailVisible = false
@@ -396,6 +401,7 @@ export default {
 
               if (res.status == 'SUCCESS') {
                 this.form.resetFields()
+                this.deatilData = []
               }
               this.$message.info(res.errorMsg)
             })

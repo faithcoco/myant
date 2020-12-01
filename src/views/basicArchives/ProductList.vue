@@ -140,7 +140,6 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-      
         this.initData(val.name)
       },
       // 深度观察监听
@@ -188,13 +187,13 @@ export default {
       if (name == 'ProductList') {
         this.titleTree = '货品分类'
         this.urlTree = '/bd/product/materialClassTree'
-        this.urlColumns = '/bd/product/productList/columns'
+
         this.urlList = '/bd/product/productList'
         this.urlDelete = '/bd/product/delMaterialById'
       } else if (name == 'PersonnelSetting') {
         this.titleTree = '部门分类'
         this.urlTree = '/bd/Sector'
-        this.urlColumns = '/sys/setting/getSetting'
+
         this.urlList = '/bd/baseperson/PersonnelSettingList'
         this.urlDelete = '/bd/baseperson/deletePerson'
       } else if (name == 'SupplierList') {
@@ -206,19 +205,20 @@ export default {
       } else if (name == 'CustomerList') {
         this.titleTree = '客户分类'
         this.urlTree = '/bd/customer/CustomerTree'
-        this.urlColumns = '/sys/setting/getSetting'
+
         this.urlList = '/bd/customer/customerlist'
         this.urlDelete = '/bd/customer/delCustomerbyid'
       } else if (name == 'WarehouseList') {
         this.titleTree = '仓位分类'
         this.urlTree = '/bd/warehouse/WarehouseTree'
-        this.urlColumns = '/sys/setting/getSetting'
+
         this.urlList = '/bd/warehouse/warehouselist'
         this.urlDelete = '/bd/warehouse/delWarehousebyid'
       }
       this.urlColumns = '/sys/setting/getSetting'
       const parameter = {}
       parameter.memucode = this.$route.meta.permission[0]
+     
       var url = '/bd/menu/findallmenu'
       console.log('gtmenuid res-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
@@ -300,7 +300,7 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-        console.log('list res--.',JSON.stringify(this.listdata))
+        console.log('list res--.', JSON.stringify(this.listdata))
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }

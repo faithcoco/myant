@@ -78,7 +78,7 @@
               <a-upload
                 name="file"
                 :multiple="true"
-                action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                action="/api/common/upload"
                 :headers="headers"
                 @change="fileChange"
               >
@@ -315,9 +315,10 @@ export default {
         console.log(info.file, info.fileList)
       }
       if (info.file.status === 'done') {
-        this.$message.success(`${info.file.name} file uploaded successfully`)
+        console.log('info-->',JSON.stringify(info))
+        this.$message.success(`${info.file.name} 上传成功`)
       } else if (info.file.status === 'error') {
-        this.$message.error(`${info.file.name} file upload failed.`)
+        this.$message.error(`${info.file.name} 上传失败`)
       }
     },
   },

@@ -16,7 +16,7 @@
         </span>
         <span slot="date" slot-scope="text, record" @click="handleDate(record)">
           <a-dropdown>
-            <a class="ant-dropdown-link" @click="e => e.preventDefault()">{{text}}</a>
+            <a class="ant-dropdown-link" @click="(e) => e.preventDefault()">{{ text }}</a>
             <a-menu slot="overlay" @click="onClick">
               <a-menu-item key="1">年</a-menu-item>
               <a-menu-item key="2">年/月</a-menu-item>
@@ -38,15 +38,15 @@
       @close="onClose"
     >
       <a-descriptions title :column="1">
-        <a-descriptions-item label="功能模块">{{product.name }}</a-descriptions-item>
-        <a-descriptions-item label="字符名称">{{product.code}}</a-descriptions-item>
-        <a-descriptions-item label="前缀编号">{{product.type}}</a-descriptions-item>
-        <a-descriptions-item label="日期">{{product.unit}}</a-descriptions-item>
-        <a-descriptions-item label="后缀位数">{{product.sales_unit_price}}</a-descriptions-item>
-        <a-descriptions-item label="初始值">{{product.purchase_unit_price}}</a-descriptions-item>
-        <a-descriptions-item
-          label="示例"
-        >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item>
+        <a-descriptions-item label="功能模块">{{ product.name }}</a-descriptions-item>
+        <a-descriptions-item label="字符名称">{{ product.code }}</a-descriptions-item>
+        <a-descriptions-item label="前缀编号">{{ product.type }}</a-descriptions-item>
+        <a-descriptions-item label="日期">{{ product.unit }}</a-descriptions-item>
+        <a-descriptions-item label="后缀位数">{{ product.sales_unit_price }}</a-descriptions-item>
+        <a-descriptions-item label="初始值">{{ product.purchase_unit_price }}</a-descriptions-item>
+        <a-descriptions-item label="示例"
+          >No. 18, Wantang Road, Xihu District, Hangzhou, Zhejiang, China</a-descriptions-item
+        >
       </a-descriptions>
     </a-drawer>
     <a-modal
@@ -61,7 +61,7 @@
         :titles="['选择显示字段', '已选择字段']"
         :target-keys="targetKeys"
         :selected-keys="selectedKeys"
-        :render="item => item.title"
+        :render="(item) => item.title"
         :disabled="disabled"
         @change="handleChange"
         @selectChange="handleSelectChange"
@@ -90,7 +90,7 @@ for (let i = 0; i < 46; i++) {
     sales_unit_price: 5,
     purchase_unit_price: 3,
     example: 'PT2020062200001',
-    date: '年'
+    date: '年',
   })
 }
 const product = {}
@@ -104,19 +104,90 @@ export default {
       data,
       product,
       columns,
-      targetTitle,
-      selectedRowKeys: [], 
+      targetTitle: [
+        {
+          key: 'address',
+          title: '启用',
+          dataIndex: '',
+          width: '150px',
+          scopedSlots: {
+            customRender: 'use',
+          },
+        },
+        {
+          key: '0',
+          title: '功能模块',
+          dataIndex: 'name',
+          width: '150px',
+          scopedSlots: {
+            customRender: 'name',
+          },
+        },
+        {
+          key: '1',
+          title: '字符名称',
+          dataIndex: 'code',
+          width: '150px',
+          scopedSlots: {
+            customRender: '',
+          },
+        },
+        {
+          key: '2',
+          title: '前缀编号',
+          dataIndex: 'prefix',
+          width: '150px',
+          scopedSlots: {
+            customRender: 'prefix',
+          },
+        },
+        {
+          key: '3',
+          title: '日期',
+          dataIndex: 'date',
+          width: '150px',
+          scopedSlots: {
+            customRender: 'date',
+          },
+        },
+        {
+          key: '4',
+          title: '后缀位数',
+          dataIndex: 'sales_unit_price',
+          width: '150px',
+          scopedSlots: {
+            customRender: 'suffix',
+          },
+        },
+        {
+          key: '5',
+          title: '初始值',
+          dataIndex: 'purchase_unit_price',
+          width: '150px',
+          scopedSlots: {
+            customRender: 'initial',
+          },
+        },
+        {
+          key: '6',
+          title: '示例',
+          dataIndex: 'example',
+          width: '150px',
+          scopedSlots: {
+            customRender: 'example',
+          },
+        },
+      ],
+      selectedRowKeys: [],
       modal_visible: false,
       confirmLoading: false,
       targetKeys: oriTargetKeys,
       selectedKeys: ['0'],
-      disabled: false
+      disabled: false,
     }
   },
   created() {
-    getCodeSettingColumns().then(res => {
-      this.targetTitle = res.columns
-    })
+    
   },
   computed: {
     rowSelection() {
@@ -125,9 +196,9 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
   methods: {
     onClick({ key }) {
@@ -143,13 +214,9 @@ export default {
       console.log('value', value)
       const data = [...this.data]
       //this.data = data.filter(item => item.code == value)
-      this.data = this.data.filter(function(data) {
-        return Object.keys(data).some(function(key) {
-          return (
-            String(data[key])
-              .toLowerCase()
-              .indexOf(value) > -1
-          )
+      this.data = this.data.filter(function (data) {
+        return Object.keys(data).some(function (key) {
+          return String(data[key]).toLowerCase().indexOf(value) > -1
         })
       })
     },
@@ -170,7 +237,7 @@ export default {
     },
     onDelete(key) {
       const data = [...this.data]
-      this.data = data.filter(item => item.key !== key)
+      this.data = data.filter((item) => item.key !== key)
     },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
@@ -200,8 +267,8 @@ export default {
     handleScroll(direction, e) {},
     onChange(e) {
       console.log(`checked = ${e.target.checked}`)
-    }
-  }
+    },
+  },
 }
 </script>
 <style lang='less' scoped>

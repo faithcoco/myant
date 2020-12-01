@@ -5,13 +5,19 @@
         <a-card>
           <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
             <a-form-item v-for="item in data" :label="item.title">
-              <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
+              <a-input
+                v-decorator="item.decorator"
+                :disabled="item.disabled"
+                v-show="item.inputVisible"
+                :maxLength="item.fieldlength"
+              />
               <a-input-number
                 :style="{ width: '1370px' }"
                 v-decorator="item.decorator"
                 v-show="item.inputnumberVisible"
                 :max="item.fieldmax"
                 :precision="item.fieldprecision"
+                :disabled="item.disabled"
               />
               <a-cascader
                 v-decorator="item.decorator"
@@ -19,6 +25,7 @@
                 :field-names="{ label: 'title', value: 'key', children: 'children' }"
                 :options="item.selectList"
                 placeholder="请选择"
+                :disabled="item.disabled"
               />
 
               <a-date-picker
@@ -28,6 +35,7 @@
                 format="YYYY-MM-DD HH:mm:ss"
                 placeholder="选择日期"
                 v-decorator="item.decorator"
+                :disabled="item.disabled"
               />
               <a-input
                 v-decorator="item.decorator"
@@ -194,7 +202,6 @@ export default {
       handler: function (val, oldVal) {
         if (val.params.menu !== undefined) {
           if (this.$route.params.menu == 'ReceiptNoticeList') {
-          
             this.initdata()
           }
         }
@@ -284,6 +291,7 @@ export default {
       this.selectList = list
     },
     typeSelect(list) {
+       console.log('type-->', JSON.stringify(list))
       this.selectList = list
     },
     detailModal(e) {
@@ -312,7 +320,7 @@ export default {
       if (this.currentkey == 'departmentid') {
         this.typeVisible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList[0].title,
+          [this.currentkey]: this.selectList.title,
         })
         this.departmentid = this.selectList[0].departmentid
       } else if (this.currentkey == 'personid') {
@@ -322,8 +330,9 @@ export default {
         })
         this.personid = this.selectList[0].personid
         this.form.setFieldsValue({
-          departmentid: this.selectList[0].departmentid,
+          departmentid: this.selectList[0].departmentname,
         })
+        this.departmentid=this.selectList[0].departmentid
       } else if (this.currentkey == 'vendorid') {
         this.visible = false
         this.form.setFieldsValue({
@@ -333,13 +342,13 @@ export default {
       } else if (this.currentkey == 'businessclasscode') {
         this.typeVisible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList[0].businessclasscode,
+          [this.currentkey]: this.selectList.businessclasscode,
         })
 
         this.form.setFieldsValue({
-          businessclassname: this.selectList[0].title,
+          businessclassname: this.selectList.title,
         })
-        this.businessclasscode = this.selectList[0].key
+        this.businessclasscode = this.selectList.key
       }
     },
     handleCancel(e) {
@@ -453,6 +462,7 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
 
       getForm(columnsParams, this.urlForm).then((res) => {
+          console.log('form res--->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = []
           this.data = res.result

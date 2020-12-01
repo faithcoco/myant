@@ -27,6 +27,8 @@
             :scroll="{ x: 1500, y: 525 }"
             bordered
             style="margin-top: 20px"
+            :pagination="pagination"
+            @change="handleTableChange"
           >
             <span slot="action" slot-scope="text, record">
               <a @click="showApproval(record)">审批</a>
@@ -86,7 +88,6 @@ export default {
     const targetList = []
     return {
       selectList,
-
       confirmLoading: false,
       columns,
       queryParam: {},
@@ -115,6 +116,8 @@ export default {
       isSearch: false,
       searchValue: '',
       searchKey: 'all',
+      pagination: { current: 1, pageSize: 10, total: 10 },
+      pageNo:1,
     }
   },
   mounted() {
@@ -123,7 +126,7 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-        console.log('7 is run--->', val)
+        
         this.initData(val.name)
       },
       // 深度观察监听
@@ -141,6 +144,11 @@ export default {
     },
   },
   methods: {
+    handleTableChange(pagination, filters, sorter) {
+      console.log('pagination',pagination)
+      this.pageNo=pagination.current
+      this.getList()
+    },
     showApproval(record) {
       this.approval_visible = true
       if (this.menuname == 'ReceiptNoticeList') {
@@ -242,7 +250,7 @@ export default {
       }
 
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      parameter.pageNo = '1'
+      parameter.pageNo = this.pageNo
       parameter.pageSize = '10'
       if (this.isSearch) {
         console.log('search-->', this.searchKey + '/' + this.searchValue)
@@ -252,11 +260,20 @@ export default {
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
+
+        this.pagination.current = res.result.pageNo
+        this.pagination.pageSize = res.result.pageSize
+        this.pagination.total =res.result.totalCount
+        console.log('pagination', JSON.stringify(this.pagination))
         this.listdata = res.result.data
 
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }
+
+        // Read total count from server
+        // pagination.total = data.totalCount;
+
         this.isSearch = false
       })
     },

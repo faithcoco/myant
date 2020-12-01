@@ -9,7 +9,7 @@
       :columns="columns"
       :data-source="list"
       defaultExpandAllRows
-      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: 'radio' }"
+      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: 'radio', onSelect: onSelect }"
     >
       <span slot="action" slot-scope="text, record">
         <template>
@@ -94,16 +94,16 @@ export default {
     },
   },
   methods: {
+    onSelect(record) {
+      console.log('record-->', JSON.stringify(record))
+    
+       this.$emit('onSelect', record)
+    },
     onSelectChange(selectedRowKeys) {
       console.log('selectedRowKeys changed-->', selectedRowKeys)
+      console.log('this list-->', JSON.stringify(this.list))
       this.selectedRowKeys = selectedRowKeys
-      var selectList = []
-      for (const key in this.list) {
-        if (this.list[key].key == selectedRowKeys) {
-          selectList.push(this.list[key])
-        }
-      }
-      this.$emit('onSelect', selectList)
+   
     },
     initData(name) {
       this.name = name
@@ -179,8 +179,6 @@ export default {
     back() {
       this.$router.go(-1)
     },
-
-
   },
 }
 </script>

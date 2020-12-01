@@ -300,7 +300,7 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-       
+        console.log('list res--.',JSON.stringify(this.listdata))
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }

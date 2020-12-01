@@ -150,6 +150,7 @@ import {
   getFormSettingColumns,
   updateForm,
   postData,
+  getData,
 } from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
 import Vue from 'vue'
@@ -219,13 +220,11 @@ export default {
     getlist() {
       const parameter = {
         enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
-        menuid: this.menuid,
-        pageNo: 1,
-        pageSize: 10,
+       
       }
 
-      getFormSettingList(parameter).then((res) => {
-      
+      getData(parameter,'/bd/numbersettings/numbersettingslist').then((res) => {
+        console.log('res',JSON.stringify(res))
         if (res.status == 'FAILED') {
           this.$message.error(res.errorMsg)
         } else {

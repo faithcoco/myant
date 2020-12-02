@@ -10,6 +10,7 @@
                 :disabled="item.disabled"
                 v-show="item.inputVisible"
                 :maxLength="item.fieldlength"
+               
               />
               <a-input-number
                 :style="{ width: '1370px' }"
@@ -84,7 +85,7 @@
             :visible="detailVisible"
             @ok="detailOk"
             @cancel="detailCancel"
-            destroyOnClose="true"
+            :destroyOnClose="destroyOnClose"
             width="1300px"
           >
             <select-modal :name="name" :visible="visible" @onSelect="detailSelect"></select-modal>
@@ -181,6 +182,7 @@ export default {
       name: '',
       approvalVisilbe: false,
       billcode: '',
+      destroyOnClose:true
     }
   },
   created() {

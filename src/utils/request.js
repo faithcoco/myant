@@ -6,21 +6,21 @@ import { VueAxios } from './axios'
 import { ACCESS_TOKEN } from '@/store/mutation-types'
 import store from '@/store'
 let url;
-if(process.env.NODE_ENV==='production'){
+if (process.env.NODE_ENV === 'production') {
   // 有些浏览器(主要是IE)没有这个属性，所以我们需要手工构建它……
   if (!window.location.origin) {
     window.location.origin = window.location.protocol + '//' + window.location.hostname + (window.location.port ? (':' + window.location.port) : '');
   }
 
-  url=window.location.origin+"/wms-web"+'/pc'; //生产环境下的配置
-}else{
-  url=process.env.VUE_APP_API_BASE_URL; //开发环境下的配置
+  url = window.location.origin + "/wms-web" + '/pc'; //生产环境下的配置
+} else {
+  url = process.env.VUE_APP_API_BASE_URL; //开发环境下的配置
 }
 
 export {
   url
 }
- console.log("url-->",url)
+console.log("url-->", url)
 // 创建 axios 实例
 const service = axios.create({
   baseURL: url, // api base_url
@@ -50,6 +50,11 @@ const err = (error) => {
           }, 1500)
         })
       }
+    } else if (error.response.status === 500) {
+      notification.error({
+        message: '500',
+        description: '服务器正在维护'
+      })
     }
   }
   return Promise.reject(error)
@@ -71,7 +76,7 @@ service.interceptors.response.use((response) => {
 
 const installer = {
   vm: {},
-  install (Vue) {
+  install(Vue) {
     Vue.use(VueAxios, service)
   }
 }

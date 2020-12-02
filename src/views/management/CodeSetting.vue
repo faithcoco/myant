@@ -1,374 +1,121 @@
 <template>
   <div>
-    <a-card :bordered="false">
-      <a-row :gutter="8">
-        <a-col :span="4">
-          <div class="tree">
-            <s-tree
-              :dataSource="FormSettingTree"
-              :openKeys.sync="openKeys"
-              :search="true"
-              @click="handleClick"
-              @titleClick="handleTitleClick"
-              v-model="selectedKeys"
-            ></s-tree>
-          </div>
+    <a-card>
+      <a-table :columns="columns" :data-source="data" :pagination="{ hideOnSinglePage: true, pageSize: 500 }">
+        <span slot="prefix1" slot-scope="text, record">
+          <a-input :value="text" style="width: 50px" />
+        </span>
+        <span slot="maxserialnumber" slot-scope="text, record">
+          <a-input :value="text" style="width: 50px" />
+        </span>
+        <span slot="currentserialnumber" slot-scope="text, record">
+          <a-input :value="text" style="width: 150px" />
+        </span>
+        <span slot="ismanual" slot-scope="text, record">
+          <a-select :value="record.ismanual" @change="(value) => ruleChange(value, record)" style="width: 150px">
+            <a-select-option value="0"> 否</a-select-option>
+            <a-select-option value="1"> 是 </a-select-option>
+          </a-select>
+        </span>
+        <span slot="prefix2" slot-scope="text, record">
+          <a-select :value="text" @change="(value) => ruleChange(value, record)" style="width: 150px">
+            <a-select-option value="yyyyMMdd"> 年月日yyyyMMdd </a-select-option>
+            <a-select-option value="yyMMdd"> 年月日yyMMdd </a-select-option>
+            <a-select-option value="yyyyMM"> 年月yyyyMM </a-select-option>
+            <a-select-option value="yyMM "> 年月yyMM </a-select-option>
+            <a-select-option value="yyyy"> 年yyyy </a-select-option>
+          </a-select>
+        </span>
+      </a-table>
+      <a-row :style="{ marginTop: '30px' }" type="flex" justify="center">
+        <a-col :span="1" :offset="1">
+          <a-button type="primary" @click="onSubmit">保存</a-button>
         </a-col>
-        <a-col :span="20">
-          <a-table
-            :columns="columns"
-            :data-source="formSettingList.data"
-            bordered
-            :scroll="{ x: 2000, y: 700 }"
-            :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
-          >
-            <span slot="fielddecription" slot-scope="text, record">
-              <a-input
-                :disabled="record.fielddisabled"
-                @change="(e) => fielddecription(e.target.value, record)"
-                :value="record.fielddecription"
-              />
-            </span>
 
-            <span slot="fieldlength" slot-scope="text, record">
-              <a-input-number
-                :min="0"
-                :max="record.maxlength"
-                :disabled="record.fielddisabled"
-                @change="(e) => fieldlength(e.target.value, record)"
-                v-model="record.fieldlength"
-              />
-            </span>
-            <span slot="fieldmax" slot-scope="text, record">
-              <a-input-number
-                :min="0"
-                :max="record.maxmax"
-                :disabled="record.fielddisabled"
-                @change="(e) => fieldmax(e.target.value, record)"
-                v-model="record.fieldmax"
-              />
-            </span>
-
-            <span slot="fieldprecision" slot-scope="text, record">
-              <a-input-number
-                :min="0"
-                :max="record.maxprecision"
-                :disabled="record.fielddisabled"
-                @change="(e) => fieldprecision(e.target.value, record)"
-                v-model="record.fieldprecision"
-              />
-            </span>
-
-            <span slot="fielddisplay" style="margin: 0" slot-scope="text, record">
-              <a-checkbox
-                :disabled="record.fielddisabled"
-                @change="(e) => fielddisplayChange(e.target.checked, record)"
-                :checked="record.fielddisplay"
-              />
-            </span>
-            <a
-              slot="fieldsort"
-              :disabled="record.fielddisabled"
-              slot-scope="text, record"
-              @click="showSort('fieldsort', record)"
-              >{{ record.fieldsort }}</a
-            >
-            <a
-              slot="fieldsortlist"
-              :disabled="record.fielddisabled"
-              slot-scope="text, record"
-              @click="showSort('fieldsortlist', record)"
-              >{{ record.fieldsortlist }}</a
-            >
-
-            <span slot="fieldwidthlist" slot-scope="text, record">
-              <a-input
-                :disabled="record.fielddisabled"
-                @change="(e) => vdef2Change(e.target.value, record)"
-                :value="record.fieldwidthlist"
-                style="width: 50px"
-              />px
-            </span>
-
-            <span slot="fieldedit" style="margin: 0" slot-scope="text, record">
-              <a-checkbox
-                :disabled="record.fielddisabled"
-                @change="(e) => fieldeditChange(e.target.checked, record)"
-                :checked="record.fieldedit"
-              />
-            </span>
-
-            <span slot="fielddisplaylist" style="margin: 0" slot-scope="text, record">
-              <a-checkbox
-                @change="(e) => fielddisplaylistChange(e.target.checked, record)"
-                :checked="record.fielddisplaylist"
-                :disabled="record.fielddisabled"
-              />
-            </span>
-            <span slot="fieldmust" style="margin: 0" slot-scope="text, record">
-              <a-checkbox
-                @change="(e) => fieldmustChange(e.target.checked, record)"
-                :checked="record.fieldmust"
-                :disabled="record.fielddisabled"
-              />
-            </span>
-          </a-table>
-
-          <a-row :style="{ marginTop: '30px' }">
-            <a-col :span="2" :offset="8">
-              <a-button type="primary" @click="resetForm">恢复默认值</a-button>
-            </a-col>
-
-            <a-col :span="1" :offset="1">
-              <a-button type="primary" @click="onSubmit">保存</a-button>
-            </a-col>
-
-            <a-col :span="1" :offset="1">
-              <a-button type @click="onBack">取消</a-button>
-            </a-col>
-          </a-row>
+        <a-col :span="1" :offset="1">
+          <a-button type @click="onBack">取消</a-button>
         </a-col>
       </a-row>
-      <a-modal title="提示" :visible="sortVisible" @ok="sortOk" @cancel="sortCancel">
-        <p>请输入想要移动位置：</p>
-        <a-input v-model="sortAfter" />
-      </a-modal>
-      <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" />
     </a-card>
   </div>
 </template>
 
 <script>
-import STree from '@/components/Tree/Tree'
-import { STable } from '@/components'
-import OrgModal from '../other/modules/OrgModal'
-import {
-  getProductListColumns,
-  getFormSettingTree,
-  getServiceList,
-  getFormSettingList,
-  getFormSettingColumns,
-  updateForm,
-  postData,
-  getData,
-} from '@/api/manage'
-import { logininfo } from '@/store/mutation-types'
 import Vue from 'vue'
+import { Descriptions } from 'ant-design-vue'
+import { Transfer } from 'ant-design-vue'
+Vue.use(Descriptions)
+Vue.use(Transfer)
+import { getCodeSettingColumns } from '@/api/manage'
+import { postData, getData } from '@/api/manage'
+import { logininfo } from '@/store/mutation-types'
 
-const columns = []
-//表单设置
+const product = {}
+
 export default {
-  name: 'TreeList',
-  components: {
-    STable,
-    STree,
-    OrgModal,
-  },
   data() {
     return {
-      openKeys: ['01'],
-      selectedKeys: ['01-01'],
-      menuid: '',
-      // 查询参数
-      queryParam: {},
-      // 表头
-      columns:[],
-      // 加载数据方法 必须为 Promise 对象
-
-      FormSettingTree: [],
-      selectedRowKeys: [],
-      selectedRows: [],
-      formSettingList: {},
-      sortVisible: false,
-      sortAfter: '',
-
-      sortMax: 100,
-      currentItem: '',
-      editVisible: false,
-      currentId: '',
-      disabled: true,
-      value: 3,
-      urlColumns:'/sys/setting/getSetting'
-
+      data: [],
+      columns: [],
     }
   },
   created() {
     this.getColumns()
-    getFormSettingTree().then((res) => {
-      console.log('tree-->', JSON.stringify(res.result))
-      this.FormSettingTree = res.result
-      this.menuid = this.FormSettingTree[0].children[0].memuid
-      this.getlist()
-    })
+    this.getDataSource()
+  },
+  computed: {
+    rowSelection() {
+      const { selectedRowKeys } = this
+      return {
+        selectedRowKeys,
+        onChange: this.onSelectChange,
+        hideDefaultSelections: true,
+        onSelection: this.onSelection,
+      }
+    },
   },
   methods: {
-    getColumns() {
-      const columnsParams = {}
-      columnsParams.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f75005'
-      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      console.log('columnsurl--->', this.urlColumns)
-      console.log('columns parameter-->', JSON.stringify(columnsParams))
-      getProductListColumns(columnsParams, this.urlColumns).then((res) => {
-        this.columns = res.result.columns
-        console.log(this.menuname + ' columnsdata--->', JSON.stringify(res))
-
-        for (let i = 0; i < this.columns.length - 1; i++) {
-          this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
-        }
-      })
-    },
-    getlist() {
-      const parameter = {
-        enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
-       
-      }
-
-      getData(parameter,'/bd/numbersettings/numbersettingslist').then((res) => {
-        console.log('res',JSON.stringify(res))
-        if (res.status == 'FAILED') {
-          this.$message.error(res.errorMsg)
-        } else {
-          this.formSettingList = res.result
-          this.sortMax = this.formSettingList.length
-        }
-      })
-    },
-    sortOk(e) {
-      if (this.currentId == 'fieldsort') {
-        if (this.currentItem.fieldsort > this.sortAfter) {
-          for (var i = this.sortAfter - 1; i < this.currentItem.fieldsort; i++) {
-            this.formSettingList.data[i].fieldsort = parseInt(i) + 2
-          }
-        } else {
-          for (var i = this.currentItem.fieldsort; i < this.sortAfter; i++) {
-            this.formSettingList.data[i].fieldsort = i
-          }
-        }
-        this.currentItem.fieldsort = this.sortAfter
-      } else {
-        //fieldsortlist
-        if (this.currentItem.fieldsortlist > this.sortAfter) {
-          for (var i = this.sortAfter - 1; i < this.currentItem.fieldsortlist; i++) {
-            this.formSettingList.data[i].fieldsortlist = parseInt(i) + 2
-          }
-        } else {
-          for (var i = this.currentItem.fieldsortlist; i < this.sortAfter; i++) {
-            this.formSettingList.data[i].fieldsortlist = i
-          }
-        }
-        this.currentItem.fieldsortlist = this.sortAfter
-      }
-      this.sortAfter = ''
-      this.sortVisible = false
-    },
-    sortCancel(e) {
-      this.sortVisible = false
-    },
-    showSort(text, record) {
-      this.sortVisible = true
-      this.currentId = text
-      this.currentItem = record
-    },
     onSubmit(e) {
-      updateForm(this.formSettingList).then((res) => {
-        this.$message.success('更改成功')
-        this.getlist()
-      })
-    },
-    resetForm(e) {
-      const parameter = {
-        enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
-        memuid: this.menuid,
-      }
-      var url = '/bd/FormSetting/initdefault'
-      postData(parameter, url).then((res) => {
-        console.log('init form-->', JSON.stringify(res))
-        if (res.status == 'FAILED') {
-          this.$message.error(res.errorMsg)
-        } else {
-          this.getlist()
-        }
-      })
+      this.submit()
     },
     onBack(e) {
       this.getlist()
     },
-
-    vdef2Change(value, record) {
-      for (const key in this.formSettingList.data) {
-        if (record.id == this.formSettingList.data[key].id) {
-          this.formSettingList.data[key].vdef2 = value
+    submit() {
+      const params = {}
+      params.data = this.data
+      postData(params, '/bd/numbersettings/updateNumSettings').then((res) => {
+        if(res.status=='FAILED'){
+            this.$message.warn(res.errorMsg)
+        }else{
+          this.$message.info('保存成功')
+          this.getDataSource()
         }
-      }
+        console.log('submit--->', JSON.stringify(res))
+      })
     },
-
-    fielddecription(value, record) {
-      record.fielddecription = value
+    getColumns() {
+      const params = {}
+      params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      getData(params, '/bd/numbersettings/numTop').then((res) => {
+        console.log('columns--->', JSON.stringify(res.result.columns))
+        this.columns = res.result.columns
+      })
     },
-    fielddefault(value, record) {
-      record.fielddefault = value
+    getDataSource() {
+      const params = {}
+      params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      getData(params, '/bd/numbersettings/numbersettingslist').then((res) => {
+        console.log('data--->', JSON.stringify(res))
+        this.data = res.result
+      })
     },
-
-    fieldlength(value, record) {
-      record.fieldlength = value
+    ruleChange(value, record) {
+      console.log(`selected ${value}`)
+      record.prefix2 = value
     },
-    fieldprecision(value, record) {
-      record.fieldprecision = value
-    },
-    fieldmax(value, record) {
-      record.fieldmax = value
-    },
-    fieldeditChange(value, record) {
-      record.fieldedit = value
-    },
-    systemChange(e) {
-      console.log('radio checked', e.target.value)
-    },
-    fielddisplayChange(value, record) {
-      record.fielddisplay = value
-    },
-    fielddisplaylistChange(value, record) {
-      record.fielddisplaylist = value
-    },
-    fieldmustChange(value, record) {
-      record.fieldmust = value
-    },
-    onChange(e) {
-      console.log(`checked = ${e.target.checked}`)
-    },
-    handleClick(e) {
-      for (const key in this.FormSettingTree) {
-        for (const i in this.FormSettingTree[key].children) {
-          if (e.key == this.FormSettingTree[key].children[i].key) {
-            this.menuid = this.FormSettingTree[key].children[i].memuid
-          }
-        }
-      }
-      this.getlist()
-    },
-    handleAdd(item) {
-      console.log('add button, item', item)
-      this.$message.info(`提示：你点了 ${item.key} - ${item.title} `)
-      this.$refs.modal.add(item.key)
-    },
-    handleTitleClick(item) {
-      console.log('handleTitleClick', item)
-    },
-    titleClick(e) {
-      console.log('titleClick', e)
-    },
-    handleSaveOk() {},
-    handleSaveClose() {},
   },
 }
 </script>
-
-<style lang="less">
-.tree {
-  border: 1px solid #e8e8e8;
-  border-radius: 4px;
-  overflow: auto;
-  padding: 8px 2px;
-  height: 750px;
-}
+<style lang='less' scoped>
 </style>

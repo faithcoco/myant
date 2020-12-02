@@ -117,7 +117,7 @@ export default {
       searchValue: '',
       searchKey: 'all',
       pagination: { current: 1, pageSize: 10, total: 10 },
-      pageNo:1,
+      pageNo: 1,
     }
   },
   mounted() {
@@ -126,7 +126,6 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-        
         this.initData(val.name)
       },
       // 深度观察监听
@@ -145,8 +144,8 @@ export default {
   },
   methods: {
     handleTableChange(pagination, filters, sorter) {
-      console.log('pagination',pagination)
-      this.pageNo=pagination.current
+      console.log('pagination', pagination)
+      this.pageNo = pagination.current
       this.getList()
     },
     showApproval(record) {
@@ -260,10 +259,9 @@ export default {
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
-
         this.pagination.current = res.result.pageNo
         this.pagination.pageSize = res.result.pageSize
-        this.pagination.total =res.result.totalCount
+        this.pagination.total = res.result.totalCount
         console.log('pagination', JSON.stringify(this.pagination))
         this.listdata = res.result.data
 

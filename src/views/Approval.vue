@@ -43,10 +43,10 @@
       </a-timeline>
       <a-row>
         <a-col :span="3">
-          <a-button type="primary" @click="approvalClick">审批</a-button>
+          <a-button type="primary" @click="approvalClick">同意</a-button>
         </a-col>
         <a-col :span="3">
-          <a-button type="danger" @click="cancelClick">撤销</a-button>
+          <a-button type="danger" @click="cancelClick">拒绝</a-button>
         </a-col>
         <a-col :span="3">
           <a-button type="primary" @click="chatClick">评论</a-button>
@@ -55,7 +55,7 @@
     </a-drawer>
     <a-modal
       width="1000px"
-      title="评论"
+      :title="title"
       :visible="chat_visible"
       :confirm-loading="confirmLoading"
       @ok="chatOk"
@@ -86,7 +86,7 @@
               </a-upload>
             </a-form-item>
             <a-form-item>
-              <a-button html-type="submit" :loading="submitting" type="primary" @click="handleSubmit">评论</a-button>
+              <a-button html-type="submit" :loading="submitting" type="primary" @click="handleSubmit">提交</a-button>
             </a-form-item>
           </div>
         </a-comment>
@@ -151,6 +151,7 @@ export default {
       expiryDate: '1606468834000',
       currtent: 0, //1审批2撤销
       content: '',
+      title:''
     }
   },
   components: {},
@@ -224,6 +225,7 @@ export default {
     },
 
     chatClick() {
+      this.title='评论'
       this.value = ''
       this.chat_visible = true
     },
@@ -248,11 +250,13 @@ export default {
       this.currtent = 1
       this.content = ''
       this.chat_visible = true
+      this.title='审批'
     },
     cancelClick() {
       this.currtent = 2
       this.content = ''
       this.chat_visible = true
+       this.title='审批'
     },
     approveProcess() {
       const parameter = {}

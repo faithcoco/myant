@@ -31,7 +31,7 @@
             @change="handleTableChange"
           >
             <span slot="action" slot-scope="text, record">
-              <a @click="showApproval(record)">审批</a>
+              <a @click="showApproval(record)">查审</a>
               <a-divider type="vertical" />
               <a @click="handleEdit(record)">编辑</a>
               <a-divider type="vertical" />

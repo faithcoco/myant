@@ -88,7 +88,7 @@ export default {
       urlUpdate: '',
       urlDelete: '',
       menuname: '',
-      title:''
+      title: '',
     }
   },
   created() {
@@ -97,10 +97,7 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-      
         if (val.params.baseTitle !== undefined) {
-          this.title=this.$route.params.baseTitle+'分类'
-         
           this.initData(this.$route.params.menu)
         }
       },
@@ -110,7 +107,7 @@ export default {
   methods: {
     initData(name) {
       this.name = name
-    
+      this.title = this.$route.params.baseTitle + '分类'
       if (name == 'PersonnelSetting') {
         this.url = '/bd/Sector'
         this.urlAdd = '/bd/insertDepartment'

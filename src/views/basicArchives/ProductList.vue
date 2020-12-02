@@ -4,7 +4,7 @@
       <a-row :gutter="10">
         <a-col :span="4">
           <span>{{ titleTree }}</span>
-          <a-button style="margin-left: 40px" type="primary" @click="Classify()">分类设置</a-button>
+          <a-button style="margin-left: 40px" type="primary" @click="classify">分类设置</a-button>
           <a-divider type="horizontal" />
           <a-input-search style="margin-bottom: 8px" placeholder="请输入关键字" @change="treeSearch" />
           <a-tree
@@ -218,7 +218,7 @@ export default {
       this.urlColumns = '/sys/setting/getSetting'
       const parameter = {}
       parameter.memucode = this.$route.meta.permission[0]
-     
+
       var url = '/bd/menu/findallmenu'
       console.log('gtmenuid res-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
@@ -300,7 +300,7 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-        console.log('list res--.', JSON.stringify(this.listdata))
+      
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }
@@ -316,12 +316,12 @@ export default {
       this.searchKey = value
     },
 
-    Classify() {
-      Vue.ls.set(menuname, this.$route.name)
+    classify(e) {
       this.$router.push({
-        name: 'type',
+        name: 'Type',
         params: {
           menu: this.$route.name,
+          baseTitle: this.$route.meta.title,
         },
       })
     },

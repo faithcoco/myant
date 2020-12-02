@@ -52,8 +52,8 @@ export const asyncRouterMap = [
             hidden: true
           },
           {
-            path: 'type',
-            name: 'type',
+            path: 'Type',
+            name: 'Type',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/Type.vue'),
             meta: { title: '分类', icon: 'user' },
             hidden: true

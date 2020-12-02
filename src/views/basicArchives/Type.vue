@@ -88,16 +88,21 @@ export default {
       urlUpdate: '',
       urlDelete: '',
       menuname: '',
+      title:''
     }
   },
   created() {
-   this.initData(this.$route.params.menu)
+    this.initData(this.$route.params.menu)
   },
   watch: {
     $route: {
       handler: function (val, oldVal) {
-          console.log('4 is run--->',val)
-        this.initData(this.$route.params.menu)
+      
+        if (val.params.baseTitle !== undefined) {
+          this.title=this.$route.params.baseTitle+'分类'
+         
+          this.initData(this.$route.params.menu)
+        }
       },
       // 深度观察监听
     },
@@ -105,48 +110,49 @@ export default {
   methods: {
     initData(name) {
       this.name = name
-      console.log('name-->', name)
+    
       if (name == 'PersonnelSetting') {
         this.url = '/bd/Sector'
         this.urlAdd = '/bd/insertDepartment'
         this.urlUpdate = '/bd/updateDepartment'
         this.urlDelete = '/bd/deleteDepartment'
         this.columns[1].dataIndex = 'code'
-          this.columns[0].title='部门名称'
-         this.columns[1].title='部门编号'
+        this.columns[0].title = '部门名称'
+        this.columns[1].title = '部门编号'
       } else if (name == 'ProductList') {
         this.url = '/bd/product/materialClassTree'
         this.urlAdd = '/bd/product/insertmaterialClass'
         this.urlUpdate = '/bd/product/updatematerialClass'
         this.urlDelete = '/bd/product/delmaterialClassById'
         this.columns[1].dataIndex = 'materialclasscode'
-            this.columns[0].title='料品名称'
-         this.columns[1].title='料品编号'
+        this.columns[0].title = '料品名称'
+        this.columns[1].title = '料品编号'
       } else if (name == 'SupplierList') {
         this.url = '/bd/basevendor/vendorTree'
         this.urlAdd = '/bd/basevendor/insterVenderClass'
         this.urlDelete = '/bd/basevendor/delvendorClass'
         this.urlUpdate = '/bd/basevendor/updatevendorClass'
         this.columns[1].dataIndex = 'vendorclasscode'
-          this.columns[0].title='供应商名称'
-         this.columns[1].title='供应商编号'
+        this.columns[0].title = '供应商名称'
+        this.columns[1].title = '供应商编号'
       } else if (name == 'CustomerList') {
         this.url = '/bd/customer/CustomerTree'
         this.urlAdd = '/bd/customer/insterCustomerClass'
         this.urlDelete = '/bd/customer/delCustomerClass'
         this.urlUpdate = '/bd/customer/updateCustomerClass'
         this.columns[1].dataIndex = 'customerclasscode'
-          this.columns[0].title='客户名称'
-         this.columns[1].title='客户编号'
+        this.columns[0].title = '客户名称'
+        this.columns[1].title = '客户编号'
       } else if (name == 'WarehouseList') {
         this.url = '/bd/warehouse/WarehouseTree'
         this.urlAdd = '/bd/warehouse/insterWarehouseClass'
         this.urlDelete = '/bd/warehouse/delWarehouseClass'
         this.urlUpdate = '/bd/warehouse/updateWarehouseClass'
         this.columns[1].dataIndex = 'materialclasscode'
-             this.columns[0].title='客户名称'
-         this.columns[1].title='客户编号'
+        this.columns[0].title = '仓位名称'
+        this.columns[1].title = '仓位编号'
       }
+      this.$multiTab.rename(this.$route.path, this.title)
 
       this.getList()
     },
@@ -155,7 +161,7 @@ export default {
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       console.log('url-->', this.url)
       getclassificationGoodsList(parameter, this.url).then((res) => {
-        console.log('list-->', JSON.stringify(res))
+        console.log('type list-->', JSON.stringify(res))
         this.list = res.result
       })
     },

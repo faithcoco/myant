@@ -10,7 +10,6 @@
                 :disabled="item.disabled"
                 v-show="item.inputVisible"
                 :maxLength="item.fieldlength"
-               
               />
               <a-input-number
                 :style="{ width: '1370px' }"
@@ -182,7 +181,7 @@ export default {
       name: '',
       approvalVisilbe: false,
       billcode: '',
-      destroyOnClose:true
+      destroyOnClose: true,
     }
   },
   created() {
@@ -293,7 +292,7 @@ export default {
       this.selectList = list
     },
     typeSelect(list) {
-       console.log('type-->', JSON.stringify(list))
+      console.log('type-->', JSON.stringify(list))
       this.selectList = list
     },
     detailModal(e) {
@@ -324,7 +323,11 @@ export default {
         this.form.setFieldsValue({
           [this.currentkey]: this.selectList.title,
         })
-        this.departmentid = this.selectList[0].departmentid
+        this.form.setFieldsValue({
+          personid: '',
+        })
+         this.personid=""
+        this.departmentid = this.selectList.departmentid
       } else if (this.currentkey == 'personid') {
         this.visible = false
         this.form.setFieldsValue({
@@ -334,7 +337,7 @@ export default {
         this.form.setFieldsValue({
           departmentid: this.selectList[0].departmentname,
         })
-        this.departmentid=this.selectList[0].departmentid
+        this.departmentid = this.selectList[0].departmentid
       } else if (this.currentkey == 'vendorid') {
         this.visible = false
         this.form.setFieldsValue({
@@ -464,7 +467,7 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
 
       getForm(columnsParams, this.urlForm).then((res) => {
-          console.log('form res--->', JSON.stringify(res))
+        console.log('form res--->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = []
           this.data = res.result

@@ -182,6 +182,7 @@ export default {
       approvalVisilbe: false,
       billcode: '',
       destroyOnClose: true,
+      menu: '',
     }
   },
   created() {
@@ -201,10 +202,8 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-        if (val.params.menu !== undefined) {
-          if (this.$route.params.menu == 'ReceiptNoticeList') {
-            this.initdata()
-          }
+        if (val.params.storageTitle !== undefined) {
+          this.initdata()
         }
       },
       // 深度观察监听
@@ -223,9 +222,8 @@ export default {
       parameter.bizid = this.materialid
       parameter.billcode = this.billcode
       parameter.memuid = this.menuid
-      console.log('timeline param-->', JSON.stringify(parameter))
+
       getData(parameter, '/work/submitProcess').then((res) => {
-        console.log('timeline-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.$message.info('提交审批成功')
         } else {
@@ -239,22 +237,22 @@ export default {
     },
     initdata() {
       this.spinning = true
-      const parameter = {}
-      parameter.memucode = '02-02'
-      var url = '/bd/menu/findallmenu'
-      console.log('menu id-->', JSON.stringify(parameter))
-      getData(parameter, url).then((res) => {
-        console.log('menu id-->', JSON.stringify(res))
+      this.menu = this.$route.params.menu
+      console.log('add menu-->', this.$route)
+      if (this.$route.params.menu == 'ReceiptNoticeList') {
+        this.memuid = '03bf0fb1-e9fb-4014-92e7-7121f4f72003'
+      } else if (this.$route.params.menu == 'StorageManagementList') {
+        this.memuid = '03bf0fb1-e9fb-4014-92e7-7121f4f72002'
+      } else {
+        return
+      }
 
-        this.menuid = res.result
-
-        this.getColumns()
-        if (this.$route.params.tag == 2) {
-          this.getList()
-        } else {
-          this.deatilData = []
-        }
-      })
+      this.getColumns()
+      if (this.$route.params.tag == 2) {
+        this.getList()
+      } else {
+        this.deatilData = []
+      }
       this.getFormdata()
     },
     getColumns() {
@@ -274,7 +272,12 @@ export default {
       columnsParams.pageNo = 1
       columnsParams.pageSize = 10
       columnsParams.receiptnoticeid = this.materialid
-      var urlColumns = '/bd/docreceiptnotice/childrenlist'
+      if (this.$route.params.menu == 'ReceiptNoticeList') {
+        var urlColumns = '/bd/docreceiptnotice/childrenlist'
+      } else if (this.$route.params.menu == 'StorageManagementList') {
+        var urlColumns = '/bd/Stockinrecord/stockinrecordlineList'
+      }
+
       console.log('listdata url--->', urlColumns)
       console.log('listdata parameter-->', JSON.stringify(columnsParams))
       getData(columnsParams, urlColumns).then((res) => {
@@ -315,9 +318,6 @@ export default {
       this.detailVisible = false
     },
     handleOk(e) {
-      console.log('select--->', JSON.stringify(this.selectList))
-      console.log('key--->', this.currentkey)
-      // this.personlist = this.list.join()
       if (this.currentkey == 'departmentid') {
         this.typeVisible = false
         this.form.setFieldsValue({
@@ -326,7 +326,7 @@ export default {
         this.form.setFieldsValue({
           personid: '',
         })
-         this.personid=""
+        this.personid = ''
         this.departmentid = this.selectList.departmentid
       } else if (this.currentkey == 'personid') {
         this.visible = false
@@ -387,7 +387,6 @@ export default {
         this.typeVisible = true
         this.name = 'BusinessCategory'
       }
-      console.log('current->', this.name)
     },
     handleSubmit(e) {
       this.form.validateFields((err, values) => {
@@ -395,11 +394,16 @@ export default {
           if (this.$route.params.tag == 1) {
             if (this.$route.params.menu == 'ReceiptNoticeList') {
               var submitUrl = '/bd/docreceiptnotice/instersave'
+            } else if (this.$route.params.menu == 'StorageManagementList') {
+              var submitUrl = '/bd/Stockinrecord/insterSave'
             }
           } else {
             if (this.$route.params.menu == 'ReceiptNoticeList') {
               var submitUrl = '/bd/docreceiptnotice/updatesave'
               values.receiptnoticeid = this.materialid
+            } else if (this.$route.params.menu == 'StorageManagementList') {
+              var submitUrl = '/bd/Stockinrecord/updateSave'
+              values.stockinid = this.materialid
             }
           }
           if (this.deatilData.length == 0) {
@@ -419,11 +423,13 @@ export default {
           submitForm(values, submitUrl)
             .then((res) => {
               console.log('submit--->', JSON.stringify(res))
-
-              if (res.status == 'SUCCESS') {
-                this.form.resetFields()
-                this.deatilData = []
+              if (this.$route.params.tag == 1) {
+                if (res.status == 'SUCCESS') {
+                  this.getFormdata()
+                  this.deatilData = []
+                }
               }
+
               this.$message.info(res.errorMsg)
             })
             .catch((err) => {
@@ -446,19 +452,24 @@ export default {
 
       if (this.$route.params.tag == 1) {
         this.approvalVisilbe = false
-        this.title = this.$route.params.title + '新增'
+        this.title = this.$route.params.storageTitle + '新增'
         this.materialclassid = this.$route.params.materialclassid
         if (this.$route.params.menu == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/insterform'
+        } else if (this.$route.params.menu == 'StorageManagementList') {
+          this.urlForm = '/bd/Stockinrecord/insterForm'
         }
       } else if (this.$route.params.tag == 2) {
         this.approvalVisilbe = true
-        this.title = this.$route.params.title + '编辑'
+        this.title = this.$route.params.storageTitle + '编辑'
         this.materialid = this.$route.params.materialid
         console.log('materialid', this.materialid)
         if (this.$route.params.menu == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/updateform'
           columnsParams.receiptnoticeid = this.materialid
+        } else if (this.$route.params.menu == 'StorageManagementList') {
+          this.urlForm = '/bd/Stockinrecord/updateForm'
+          columnsParams.stockinid = this.materialid
         }
       }
       this.$multiTab.rename(this.$route.path, this.title)
@@ -507,21 +518,12 @@ export default {
       this.$router.go(-1)
     },
     // 重置表单
-    resetForm() {
-      // 获取整个表单之后，用resetFieldes方法重置表单，使用这个方法时，表单项必须要绑定prop才有效
-      this.form.resetFields()
-    },
+
     handleBlur() {
       console.log('blur')
     },
     handleFocus() {
       console.log('focus')
-    },
-
-    elect() {
-      // 点击按钮之后将数据赋值给表单项实现自动获取效果
-      this.form.productCode = 'PT2020062200001'
-      console.log(this.form.productCode)
     },
 
     onSearch(value) {

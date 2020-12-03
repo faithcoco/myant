@@ -175,11 +175,15 @@ export default {
       this.menu = this.$route.name
       this.menuname = name
       this.titleTree = '仓位分类'
-
+      console.log('menu-->', this.menu)
+      if (this.menu == 'StorageManagementList') {
+        this.urlList = '/bd/Stockinrecord/stockinrecordList'
+        this.urlDelete = '/bd/Stockinrecord/delStocinrec'
+      } else if (this.menu == 'ReceiptNoticeList') {
+        this.urlList = '/bd/docreceiptnotice/list'
+        this.urlDelete = '/bd/docreceiptnotice/del'
+      }
       this.urlColumns = '/sys/setting/getSetting'
-      this.urlList = '/bd/docreceiptnotice/list'
-      this.urlDelete = '/bd/docreceiptnotice/del'
-
       const parameter = {}
       parameter.memucode = this.$route.meta.permission[0]
       var url = '/bd/menu/findallmenu'
@@ -202,27 +206,16 @@ export default {
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
 
-        for (let i = 0; i < this.columns.length - 1; i++) {
-          this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
+        for (let i = 0; i < this.columns.length; i++) {
+          if (i < this.columns.length - 1) {
+            this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
+          } else {
+            this.columns[i].width = 155
+          }
         }
       })
     },
-    getTree() {
-      this.checkedKeys = []
-      const parameter = {}
-      parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      getclassificationGoodsList(parameter, this.urlTree).then((res) => {
-        this.treeData = res.result
-        this.classifyTree = this.treeData
-        console.log('tree-->', JSON.stringify(this.classifyTree))
-        this.expandedKeys.push(this.classifyTree[0].key)
 
-        this.checkedKeys.push(res.result[0].key)
-        this.materialclassid = res.result[0].key
-
-        this.getList()
-      })
-    },
     onExpand(expandedKeys) {
       this.expandedKeys = expandedKeys
       this.autoExpandParent = false
@@ -236,17 +229,6 @@ export default {
     },
     getList() {
       const parameter = {}
-      if (this.menuname == 'PersonnelSetting') {
-        parameter.departmentid = this.materialclassid
-      } else if (this.menuname == 'ProductList') {
-        parameter.materialclassid = this.materialclassid
-      } else if (this.menuname == 'SupplierList') {
-        parameter.vendorclassid = this.materialclassid
-      } else if (this.menuname == 'CustomerList') {
-        parameter.customerclassid = this.materialclassid
-      } else if (this.menuname == 'WarehouseList') {
-        parameter.warehouseclassid = this.materialclassid
-      }
 
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = this.pageNo
@@ -259,24 +241,28 @@ export default {
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
-        this.pagination.current = res.result.pageNo
-        this.pagination.pageSize = res.result.pageSize
-        this.pagination.total = res.result.totalCount
-        console.log('pagination', JSON.stringify(this.pagination))
-        this.listdata = res.result.data
+        console.log('list data->', JSON.stringify(res))
+        this.listdata=[]
+        if (res.status == 'SUCCESS') {
+          this.pagination.current = res.result.pageNo
+          this.pagination.pageSize = res.result.pageSize
+          this.pagination.total = res.result.totalCount
 
-        for (const key in this.listdata) {
-          this.listdata[key].key = key
+          this.listdata = res.result.data
+
+          for (const key in this.listdata) {
+            this.listdata[key].key = key
+          }
+          this.isSearch = false
+        } else {
+          this.$message.warning(res.errorMsg)
         }
 
         // Read total count from server
         // pagination.total = data.totalCount;
-
-        this.isSearch = false
       })
     },
     onSearch(value) {
-      console.log('is run--->')
       this.isSearch = true
       this.searchValue = value
       this.getList()
@@ -295,7 +281,7 @@ export default {
       })
     },
     add() {
-      Vue.ls.set(menuname, this.$route.name)
+      console.log('push-->', this.$route.name)
       this.$router.push({
         name: 'ReceiptNoticeAdd',
         params: {
@@ -303,13 +289,12 @@ export default {
           menuid: this.menuid,
           materialclassid: this.materialclassid,
           tag: 1,
-          title: this.$route.meta.title,
+          storageTitle: this.$route.meta.title,
         },
       })
     },
 
     handleEdit(record) {
-      Vue.ls.set(menuname, this.$route.name)
       if (this.menuname == 'ReceiptNoticeList') {
         this.materialid = record.receiptnoticeid
       }
@@ -321,7 +306,7 @@ export default {
           materialid: this.materialid,
           tag: 2,
           menuid: this.menuid,
-          title: this.$route.meta.title,
+          storageTitle: this.$route.meta.title,
         },
       })
     },

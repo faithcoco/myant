@@ -97,7 +97,7 @@ export default {
       tag: 0, //1 add 2update
       title: '',
       menuname: '',
-       spinning: false,
+      spinning: false,
     }
   },
   created() {
@@ -118,7 +118,6 @@ export default {
     $route: {
       handler: function (val, oldVal) {
         if (val.params.baseTitle !== undefined) {
-          
           this.getFormdata()
         }
       },
@@ -133,6 +132,7 @@ export default {
       console.log(value)
       this.value = value
     },
+
     handleSubmit(e) {
       this.form.validateFields((err, values) => {
         if (!err) {
@@ -180,10 +180,12 @@ export default {
           console.log('submit params-->', JSON.stringify(values))
           submitForm(values, submitUrl).then((res) => {
             console.log('submit--->', JSON.stringify(res))
-
-            if (res.status == 'SUCCESS') {
-              this.form.resetFields()
+            if (this.$route.params.tag == 1) {
+              if (res.status == 'SUCCESS') {
+                this.form.resetFields()
+              }
             }
+
             this.$message.info(res.errorMsg)
           })
         }
@@ -195,7 +197,7 @@ export default {
     },
 
     getFormdata() {
-      this.spinning=true
+      this.spinning = true
       this.menuid = this.$route.params.menuid
       const columnsParams = {}
       columnsParams.memuid = this.menuid
@@ -255,8 +257,7 @@ export default {
         getForm(columnsParams, this.urlForm).then((res) => {
           this.data = res.result
           this.$multiTab.rename(this.$route.path, this.title)
-        
-         
+
           setTimeout(() => {
             for (const i in this.data) {
               if (this.data[i].value !== '') {
@@ -265,7 +266,7 @@ export default {
                 })
               }
             }
-            this.spinning=false
+            this.spinning = false
           }, 500)
         })
       }

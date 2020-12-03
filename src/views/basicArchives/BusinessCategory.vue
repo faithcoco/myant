@@ -44,7 +44,7 @@ export default {
       list: [],
       columns: [
         {
-          title: '业务类别名称',
+          title: '业务类别分类名称',
           dataIndex: 'title',
           key: 'name',
           scopedSlots: {
@@ -52,7 +52,7 @@ export default {
           },
         },
         {
-          title: '业务类别编号',
+          title: '业务类别分类编号',
           dataIndex: 'businessclasscode',
           key: 'age',
           scopedSlots: {

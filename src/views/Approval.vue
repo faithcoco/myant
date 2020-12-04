@@ -143,6 +143,7 @@ export default {
       confirmLoading: false,
       headers: {
         authorization: 'authorization-text',
+        
       },
       menuid: '',
       size: 'small',
@@ -169,7 +170,7 @@ export default {
           this.timelinelist = res.result.data
           this.instanceId = res.result.instanceId
         } else {
-          this.$message.warn('EXCEPTION')
+          this.$message.warn(res.errorMsg)
         }
       })
     },

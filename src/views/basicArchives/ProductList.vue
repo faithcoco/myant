@@ -238,7 +238,7 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-        console.log(this.menuname + ' columnsdata--->', JSON.stringify(res))
+       
 
         for (let i = 0; i < this.columns.length - 1; i++) {
           this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })

@@ -162,6 +162,8 @@ export default {
       const columnsParams = {}
       if (this.menuname == 'ReceiptNoticeList') {
         columnsParams.receiptnoticeid = this.materialid
+      } else if (this.menu == 'StorageManagementList') {
+        columnsParams.stockinid = this.materialid
       }
 
       console.log('delete url--->', this.urlDelete)
@@ -241,8 +243,7 @@ export default {
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
-        console.log('list data->', JSON.stringify(res))
-        this.listdata=[]
+        this.listdata = []
         if (res.status == 'SUCCESS') {
           this.pagination.current = res.result.pageNo
           this.pagination.pageSize = res.result.pageSize
@@ -297,6 +298,8 @@ export default {
     handleEdit(record) {
       if (this.menuname == 'ReceiptNoticeList') {
         this.materialid = record.receiptnoticeid
+      } else if (this.menuname == 'StorageManagementList') {
+        this.materialid = record.stockinid
       }
 
       this.$router.push({
@@ -313,6 +316,8 @@ export default {
     deleteItem(record) {
       if (this.menuname == 'ReceiptNoticeList') {
         this.materialid = record.receiptnoticeid
+      } else if (this.menuname == 'StorageManagementList') {
+        this.materialid = record.stockinid
       }
       this.delete()
     },

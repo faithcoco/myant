@@ -37,12 +37,7 @@
                 v-decorator="item.decorator"
                 :disabled="item.disabled"
               />
-              <a-input
-                v-decorator="item.decorator"
-                :disabled="disabled"
-                v-show="item.listVisible"
-                :maxLength="item.fieldlength"
-              >
+              <a-input v-decorator="item.decorator" v-show="item.listVisible" :maxLength="item.fieldlength">
                 <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
               </a-input>
             </a-form-item>
@@ -249,6 +244,7 @@ export default {
 
       this.getColumns()
       if (this.$route.params.tag == 2) {
+        this.materialid = this.$route.params.materialid
         this.getList()
       } else {
         this.deatilData = []
@@ -271,16 +267,20 @@ export default {
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       columnsParams.pageNo = 1
       columnsParams.pageSize = 10
-      columnsParams.receiptnoticeid = this.materialid
+
       if (this.$route.params.menu == 'ReceiptNoticeList') {
         var urlColumns = '/bd/docreceiptnotice/childrenlist'
+        columnsParams.receiptnoticeid = this.materialid
       } else if (this.$route.params.menu == 'StorageManagementList') {
         var urlColumns = '/bd/Stockinrecord/stockinrecordlineList'
+        columnsParams.stockinid = this.materialid
       }
 
       console.log('listdata url--->', urlColumns)
       console.log('listdata parameter-->', JSON.stringify(columnsParams))
       getData(columnsParams, urlColumns).then((res) => {
+        console.log(this.$route.params.menu + '/list res-->', JSON.stringify(res))
+        this.deatilData = []
         this.deatilData = res.result.data
         for (const key in this.deatilData) {
           this.deatilData[key].id = key
@@ -462,8 +462,8 @@ export default {
       } else if (this.$route.params.tag == 2) {
         this.approvalVisilbe = true
         this.title = this.$route.params.storageTitle + '编辑'
-        this.materialid = this.$route.params.materialid
-        console.log('materialid', this.materialid)
+      
+
         if (this.$route.params.menu == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/updateform'
           columnsParams.receiptnoticeid = this.materialid
@@ -476,9 +476,9 @@ export default {
 
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
+      console.log('id--->', this.materialid)
 
       getForm(columnsParams, this.urlForm).then((res) => {
-        console.log('form res--->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = []
           this.data = res.result

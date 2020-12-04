@@ -242,13 +242,13 @@ export default {
         return
       }
 
-      this.getColumns()
       if (this.$route.params.tag == 2) {
         this.materialid = this.$route.params.materialid
         this.getList()
       } else {
         this.deatilData = []
       }
+      this.getColumns()
       this.getFormdata()
     },
     getColumns() {
@@ -462,7 +462,6 @@ export default {
       } else if (this.$route.params.tag == 2) {
         this.approvalVisilbe = true
         this.title = this.$route.params.storageTitle + '编辑'
-      
 
         if (this.$route.params.menu == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/updateform'

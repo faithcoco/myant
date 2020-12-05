@@ -178,6 +178,7 @@ export default {
       billcode: '',
       destroyOnClose: true,
       menu: '',
+      status: 1, //1continue2back
     }
   },
   created() {
@@ -208,6 +209,60 @@ export default {
     this.form = this.$form.createForm(this, { name: 'form' })
   },
   methods: {
+    submit() {
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          if (this.$route.params.tag == 1) {
+            if (this.$route.params.menu == 'ReceiptNoticeList') {
+              var submitUrl = '/bd/docreceiptnotice/instersave'
+            } else if (this.$route.params.menu == 'StorageManagementList') {
+              var submitUrl = '/bd/Stockinrecord/insterSave'
+            }
+          } else {
+            if (this.$route.params.menu == 'ReceiptNoticeList') {
+              var submitUrl = '/bd/docreceiptnotice/updatesave'
+              values.receiptnoticeid = this.materialid
+            } else if (this.$route.params.menu == 'StorageManagementList') {
+              var submitUrl = '/bd/Stockinrecord/updateSave'
+              values.stockinid = this.materialid
+            }
+          }
+          if (this.deatilData.length == 0) {
+            this.$message.warn('请添加明细')
+            return
+          }
+
+          values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+          values.details = this.deatilData
+          values.departmentid = this.departmentid
+          values.personid = this.personid
+          values.vendorid = this.vendorid
+          values.businessclasscode = this.businessclasscode
+          values.approvalprocess = values.approvalprocess.join()
+          console.log('submit url-->', submitUrl)
+          console.log('submit parameter-->', JSON.stringify(values))
+          submitForm(values, submitUrl)
+            .then((res) => {
+              console.log('submit--->', JSON.stringify(res))
+              if (this.$route.params.tag == 1) {
+                if (res.status == 'SUCCESS') {
+                  this.deatilData = []
+                  if (this.status == 1) {
+                    this.getFormdata()
+                  } else if (this.status == 2) {
+                    this.$router.go(-1)
+                  }
+                }
+              }
+
+              this.$message.info(res.errorMsg)
+            })
+            .catch((err) => {
+              this.$message.error(err.message)
+            })
+        }
+      })
+    },
     handleChange(value, key, record) {
       record[key] = value
     },
@@ -389,54 +444,8 @@ export default {
       }
     },
     handleSubmit(e) {
-      this.form.validateFields((err, values) => {
-        if (!err) {
-          if (this.$route.params.tag == 1) {
-            if (this.$route.params.menu == 'ReceiptNoticeList') {
-              var submitUrl = '/bd/docreceiptnotice/instersave'
-            } else if (this.$route.params.menu == 'StorageManagementList') {
-              var submitUrl = '/bd/Stockinrecord/insterSave'
-            }
-          } else {
-            if (this.$route.params.menu == 'ReceiptNoticeList') {
-              var submitUrl = '/bd/docreceiptnotice/updatesave'
-              values.receiptnoticeid = this.materialid
-            } else if (this.$route.params.menu == 'StorageManagementList') {
-              var submitUrl = '/bd/Stockinrecord/updateSave'
-              values.stockinid = this.materialid
-            }
-          }
-          if (this.deatilData.length == 0) {
-            this.$message.warn('请添加明细')
-            return
-          }
-
-          values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-          values.details = this.deatilData
-          values.departmentid = this.departmentid
-          values.personid = this.personid
-          values.vendorid = this.vendorid
-          values.businessclasscode = this.businessclasscode
-          values.approvalprocess = values.approvalprocess.join()
-          console.log('submit url-->', submitUrl)
-          console.log('submit parameter-->', JSON.stringify(values))
-          submitForm(values, submitUrl)
-            .then((res) => {
-              console.log('submit--->', JSON.stringify(res))
-              if (this.$route.params.tag == 1) {
-                if (res.status == 'SUCCESS') {
-                  this.getFormdata()
-                  this.deatilData = []
-                }
-              }
-
-              this.$message.info(res.errorMsg)
-            })
-            .catch((err) => {
-              this.$message.error(err.message)
-            })
-        }
-      })
+      this.status = 1
+      this.submit()
     },
 
     onCascaderChange(value) {
@@ -513,8 +522,9 @@ export default {
 
     // 返回到清单页面
     Back() {
+      this.status = 2
+      this.submit()
       // 路由跳转
-      this.$router.go(-1)
     },
     // 重置表单
 

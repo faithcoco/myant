@@ -2,15 +2,18 @@
   <div>
     <a-card>
       <a-table :columns="columns" :data-source="data" :pagination="{ hideOnSinglePage: true, pageSize: 500 }">
-        <span slot="prefix1" slot-scope="text, record">
-          <a-input :value="text" style="width: 50px" />
-        </span>
-        <span slot="maxserialnumber" slot-scope="text, record">
-          <a-input :value="text" style="width: 50px" />
-        </span>
-        <span slot="currentserialnumber" slot-scope="text, record">
-          <a-input :value="text" style="width: 150px" />
-        </span>
+        <template v-for="col in columns" :slot="col.dataIndex" slot-scope="text, record, index">
+          <div :key="col.dataIndex">
+            <a-input
+              :value="text"
+              @change="(e) => handleChange(e.target.value, col.dataIndex, record)"
+              v-if="col.isEdit"
+            />
+            <template v-else>
+              {{ text }}
+            </template>
+          </div>
+        </template>
         <span slot="ismanual" slot-scope="text, record">
           <a-select :value="record.ismanual" @change="(value) => ruleChange(value, record)" style="width: 150px">
             <a-select-option value="0"> 否</a-select-option>
@@ -75,6 +78,9 @@ export default {
     },
   },
   methods: {
+    handleChange(value, key, record) {
+      record[key] = value
+    },
     onSubmit(e) {
       this.submit()
     },
@@ -85,9 +91,9 @@ export default {
       const params = {}
       params.data = this.data
       postData(params, '/bd/numbersettings/updateNumSettings').then((res) => {
-        if(res.status=='FAILED'){
-            this.$message.warn(res.errorMsg)
-        }else{
+        if (res.status == 'FAILED') {
+          this.$message.warn(res.errorMsg)
+        } else {
           this.$message.info('保存成功')
           this.getDataSource()
         }

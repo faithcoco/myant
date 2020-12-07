@@ -37,7 +37,7 @@
                 v-decorator="item.decorator"
                 :disabled="item.disabled"
               />
-              <a-input v-decorator="item.decorator" v-show="item.listVisible" :maxLength="item.fieldlength">
+              <a-input v-decorator="item.decorator" v-show="item.listVisible" :maxLength="item.fieldlength"   :disabled="disabled">
                 <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
               </a-input>
             </a-form-item>
@@ -487,6 +487,7 @@ export default {
       console.log('id--->', this.materialid)
 
       getForm(columnsParams, this.urlForm).then((res) => {
+     
         if (res.status == 'SUCCESS') {
           this.data = []
           this.data = res.result

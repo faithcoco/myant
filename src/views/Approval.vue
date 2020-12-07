@@ -26,7 +26,7 @@
               <a-col :span="8">
                 <b>{{ item.name + ' ' + item.approvestatus }}</b>
               </a-col>
-              <a-col :span="3">{{ item.time }}</a-col>
+              <a-col :span="5">{{ item.time | formatDate }}</a-col>
             </a-row>
           </p>
           <p>
@@ -76,7 +76,7 @@
                 }}</a-mentions-option>
               </a-mentions>
               <a-upload
-                name="file"
+                name="multipartFile"
                 :multiple="true"
                 action="/api/common/upload"
                 :headers="headers"
@@ -104,12 +104,13 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import { getPersonnelList, getApproval } from '@/api/manage'
 import moment from 'moment'
-import { logininfo } from '@/store/mutation-types'
+import { logininfo, ACCESS_TOKEN } from '@/store/mutation-types'
 import { postData, getData } from '@/api/manage'
 import { resetWarned } from 'ant-design-vue/es/_util/warning'
-
+import { url } from '@/utils/request'
+import { uploadHelp } from '@/utils/uploadHelp'
 const product = {}
-const personnelList = []
+const personnelList = [{ name: '张三' }]
 
 export default {
   name: 'approval',
@@ -143,16 +144,21 @@ export default {
       confirmLoading: false,
       headers: {
         authorization: 'authorization-text',
-        
+        'Access-Token': Vue.ls.get(ACCESS_TOKEN),
       },
       menuid: '',
       size: 'small',
       descriptions: [],
       instanceId: '',
       expiryDate: '1606468834000',
-      currtent: 0, //1审批2撤销
+      currtent: 0, //1审批2撤销3评论
       content: '',
-      title:''
+      title: '',
+      uploadUrl: url + '/common/upload', //上传
+      uploadHelp: { file: new uploadHelp(this, this.fileSuccess, '上传', '上传', this.fileRemove, false) },
+      mentions:[],
+      upload:[]
+      
     }
   },
   components: {},
@@ -160,6 +166,18 @@ export default {
 
   mounted() {},
   methods: {
+    handleChange(info) {
+      console.log('info--->', JSON.stringify(info))
+      let fileList = [...info.fileList]
+      fileList = fileList.slice(-2)
+      fileList = fileList.map((file) => {
+        if (file.response) {
+          file.url = file.response.url
+        }
+        return file
+      })
+      this.fileList = fileList
+    },
     getTimeline() {
       const parameter = {}
       parameter.bizid = this.materialid
@@ -169,6 +187,7 @@ export default {
         if (res.status == 'SUCCESS') {
           this.timelinelist = res.result.data
           this.instanceId = res.result.instanceId
+          console.log('time-->', moment(1607327988000).format('YYYY-MM-DD HH:mm:ss'))
         } else {
           this.$message.warn(res.errorMsg)
         }
@@ -197,8 +216,6 @@ export default {
         columnsParams.receiptnoticeid = this.materialid
       }
 
-     
-
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
 
@@ -226,7 +243,7 @@ export default {
     },
 
     chatClick() {
-      this.title='评论'
+      this.title = '评论'
       this.value = ''
       this.chat_visible = true
     },
@@ -251,19 +268,27 @@ export default {
       this.currtent = 1
       this.content = ''
       this.chat_visible = true
-      this.title='审批'
+      this.title = '审批'
     },
     cancelClick() {
       this.currtent = 2
       this.content = ''
       this.chat_visible = true
-       this.title='审批'
+      this.title = '审批'
+    },
+    comment() {
+      const parameter = {}
+      parameter.bizid = this.materialid
+      parameter.msgcontent=this.content
+      parameter.personIdList=this.mentions
+      parameter.sysAttachList=this.upload
     },
     approveProcess() {
       const parameter = {}
       parameter.instanceId = this.instanceId
       parameter.bizid = this.materialid
       parameter.approveNote = this.content
+      parameter.personIdList=
       getData(parameter, '/work/approveProcess').then((res) => {
         console.log('approval-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
@@ -320,7 +345,7 @@ export default {
         console.log(info.file, info.fileList)
       }
       if (info.file.status === 'done') {
-        console.log('info-->',JSON.stringify(info))
+        console.log('info-->', JSON.stringify(info))
         this.$message.success(`${info.file.name} 上传成功`)
       } else if (info.file.status === 'error') {
         this.$message.error(`${info.file.name} 上传失败`)

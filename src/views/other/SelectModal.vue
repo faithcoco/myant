@@ -20,16 +20,8 @@
             :scroll="{ x: 1500, y: 425 }"
             bordered
             style="margin-top: 20px"
-            :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange }"
+            :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, onSelect: onSelect }"
           >
-            <span slot="action" v-show="Operat_visible" slot-scope="text, record">
-              <a @click="handleEdit(record)">编辑</a>
-              <a-divider type="vertical" />
-
-              <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
-                <a href="javascript:;">删除</a>
-              </a-popconfirm>
-            </span>
           </a-table>
         </a-col>
       </a-row>
@@ -71,7 +63,6 @@ export default {
     name: {
       type: String,
     },
-
   },
   components: {
     STable,
@@ -120,36 +111,20 @@ export default {
     this.initData(this.name)
   },
   watch: {
-   defaultSelect: {
+    defaultSelect: {
       handler: function (val, oldVal) {
         this.initData(this.name)
       },
       // 深度观察监听
     },
   },
-  computed: {
-    rowSelection() {
-      const { selectedRowKeys } = this
-      return {
-        selectedRowKeys,
-        onChange: this.onSelectChange,
-        hideDefaultSelections: true,
-        onSelection: this.onSelection,
-      }
-    },
-  },
+
   methods: {
+    onSelect(record, selected, selectedRows) {
+      this.$emit('onSelect', selectedRows)
+    },
     onSelectChange(selectedRowKeys) {
       this.selectedRowKeys = selectedRowKeys
-      var selectList = []
-      for (const key in this.selectedRowKeys) {
-        var i = this.selectedRowKeys[key]
-        for (const key in this.listdata) {
-        }
-        selectList.push(this.listdata[i])
-      }
-      console.log('selectedRowKeys changed: ', this.selectedRowKeys)
-      this.$emit('onSelect', selectList)
     },
     treeSearch(e) {
       const value = e.target.value
@@ -238,7 +213,7 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-     
+
         this.columns.splice(this.columns.length - 1, 1)
       })
     },
@@ -248,13 +223,6 @@ export default {
       this.autoExpandParent = false
     },
 
-    onSelect(selectedKeys, info) {
-      this.checkedKeys = []
-      this.checkedKeys.push(selectedKeys[0])
-      console.log('onselect-->', this.checkedKeys)
-      this.materialclassid = selectedKeys.join()
-      this.getList()
-    },
     getList() {
       this.selectedRowKeys = []
       const parameter = {}
@@ -270,16 +238,15 @@ export default {
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
+       
         this.listdata = res.result.data
-        
-
-      
-        
+        for (const key in this.listdata) {
+          this.listdata[key].key = key
+        }
         this.isSearch = false
       })
     },
     onSearch(value) {
-      console.log('is run--->')
       this.isSearch = true
       this.searchValue = value
       this.getList()

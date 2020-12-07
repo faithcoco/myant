@@ -294,8 +294,11 @@ export default {
       params.userToken = this.data.userToken
       params.enterprisename = this.data.enterprisename
       params.phoneCode = this.data.phoneCode
+      params.password=this.data.password
+      console.log('register params-->',JSON.stringify(params))
+      this.registerBtn=true
       insertBdregister(params).then((res) => {
-        console.log('insertBdregister res-->', res)
+        console.log('insertBdregister res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.$router.push({
             name: `registerResult`, // 这里只能是name，对应路由
@@ -304,6 +307,7 @@ export default {
         } else {
           this.$message.error(res.errorMsg)
         }
+        this.registerBtn=false
       })
     },
 

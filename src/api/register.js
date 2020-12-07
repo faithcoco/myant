@@ -23,7 +23,7 @@ export function retrievePsdSendSMSregister(parameter) {
   })
 }
 export function insertBdregister(parameter) {
-  console.log('/insertBdregister req-->', JSON.stringify(parameter))
+
   return axios({
     url: api.insertBdregister,
     method: 'post',

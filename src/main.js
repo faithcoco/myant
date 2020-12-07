@@ -18,9 +18,12 @@ import './permission' // permission control
 import './utils/filter' // global filter
 import './components/global.less'
 import { Dialog } from '@/components'
+import Moment from 'moment'
 
 Vue.config.productionTip = false
-
+Vue.filter('formatDate', function (value) {
+  return Moment(value).format('YYYY-MM-DD HH:mm:ss')
+})
 // mount axios Vue.$http and this.$http
 Vue.use(VueAxios)
 Vue.use(Dialog)

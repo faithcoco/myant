@@ -209,7 +209,7 @@ export default {
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
         this.treeData = res.result
         this.classifyTree = this.treeData
-
+         
         this.expandedKeys.push(this.classifyTree[0].key)
         this.checkedKeys.push(res.result[0].key)
         this.materialclassid = res.result[0].key
@@ -223,8 +223,11 @@ export default {
     },
 
     onSelect(selectedKeys, info) {
-      this.selectedKeys = selectedKeys
-      this.materialclassid = selectedKeys[selectedKeys.length - 1]
+      
+       this.checkedKeys = []
+      this.checkedKeys.push(selectedKeys[0])
+      console.log('onselect-->', this.checkedKeys)
+      this.materialclassid = selectedKeys.join()
       this.getList()
     },
     getList() {

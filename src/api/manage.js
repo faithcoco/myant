@@ -556,7 +556,7 @@ export function getRoleList(parameter) {
   })
 }
 export function insertRole(parameter) {
-  console.log(' insertRole(parameter)--->', JSON.stringify(parameter))
+  
   return axios({
     url: '/bd/role/insertRole',
     method: 'post',

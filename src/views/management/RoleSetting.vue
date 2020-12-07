@@ -152,23 +152,21 @@ export default {
     personnelClick() {
       this.visible = true
       this.name = 'PersonnelSetting'
-
-      console.log('prop--->', this.selectedRowKeys)
     },
     setRole() {
       getRoleList(this.idParapms).then((res) => {
-        console.log('role list-->', JSON.stringify(res))
+     
         this.roles = res.result.data
 
         this.roles.push({
-          personid: [],
+          personid: res.result.data[0].personid,
           enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
           name: '新增角色',
           describe: '新增角色',
           status: 1,
           permissions: [
             {
-              permissionId: '01',
+              permissionId: '00',
               actionEntitySet: [],
             },
           ],
@@ -200,12 +198,11 @@ export default {
         }
       }
 
-      console.log('submit--->', JSON.stringify(this.mdl))
-      console.log('state-->', this.state)
       this.mdl.personList = this.updateList
       if (this.state == 0) {
-        console.log('add role params-->', JSON.stringify(this.mdl))
+        console.log('addrole params-->', JSON.stringify(this.mdl))
         insertRole(this.mdl).then((res) => {
+          console.log('addrole res-->', JSON.stringify(res))
           if (res.status != 'SUCCESS') {
             this.$message.error(res.errorMsg)
           } else {
@@ -294,20 +291,18 @@ export default {
 
     edit(record) {
       this.mdl = Object.assign({}, record)
-      console.log('mdl-->', JSON.stringify(this.mdl))
+   
 
       this.setData()
     },
 
     onChangeCheck(permission) {
-      console.log('permission:', permission.action + JSON.stringify(permission.selected))
+     
       permission.indeterminate =
         !!permission.selected.length && permission.selected.length < permission.actionsOptions.length
       permission.checkedAll = permission.selected.length === permission.actionsOptions.length
     },
     onChangeCheckAll(e, permission) {
-      console.log('permission all:', permission.action + JSON.stringify(permission.selected))
-
       Object.assign(permission, {
         selected: e.target.checked ? permission.actionsOptions.map((obj) => obj.value) : [],
         indeterminate: false,

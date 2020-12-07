@@ -101,7 +101,7 @@ export default {
       // 恢复坐标原点和旋转角度
       ctx.rotate(-deg * Math.PI / 180)
       ctx.translate(-x, -y)
-      console.log(txt);
+     
     },
     drawLine(ctx) {
       // 绘制干扰线

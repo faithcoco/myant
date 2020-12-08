@@ -48,8 +48,7 @@ import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import { getProductList, getProductListColumns, getclassificationGoodsList, postData, getData } from '@/api/manage'
 import action from '../../core/directives/action'
-import Approval from '../Approval'
-import SelectModal from '../other/SelectModal'
+
 import { logininfo, menuname } from '@/store/mutation-types'
 
 const columns = []
@@ -67,8 +66,6 @@ export default {
   components: {
     STable,
     STree,
-    Approval,
-    SelectModal,
   },
   data() {
     const oriTargetKeys = this.columns
@@ -130,27 +127,7 @@ export default {
       const value = e.target.value
       this.classifyTree = this.treeData.filter((item) => JSON.stringify(item).includes(value))
     },
-    delete() {
-      const columnsParams = {}
-      if (this.menuname == 'ProductList') {
-        columnsParams.materialid = this.materialid
-      } else if (this.menuname == 'PersonnelSetting') {
-        columnsParams.personid = this.materialid
-      } else if (this.menuname == 'SupplierList') {
-        columnsParams.vendorid = this.materialid
-      } else if (this.menuname == 'CustomerList') {
-        columnsParams.customerid = this.materialid
-      } else if (this.menuname == 'WarehouseList') {
-        columnsParams.warehouseid = this.materialid
-      }
 
-      console.log('delete url--->', this.urlDelete)
-      console.log('delete params--->', JSON.stringify(columnsParams))
-      getData(columnsParams, this.urlDelete).then((res) => {
-        console.log('delete res-->', JSON.stringify(res))
-        this.getList()
-      })
-    },
     initData(name) {
       this.selectedRowKeys = []
       this.menuname = name
@@ -238,7 +215,6 @@ export default {
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
-       
         this.listdata = res.result.data
         for (const key in this.listdata) {
           this.listdata[key].key = key

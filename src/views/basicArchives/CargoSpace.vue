@@ -134,7 +134,7 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-          console.log('2 is run--->',val)
+      
         this.initData(val.name)
       },
       // 深度观察监听
@@ -196,7 +196,7 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-      
+
         for (let i = 0; i < this.columns.length - 1; i++) {
           this.selectList.push({ value: this.columns[i].title })
         }
@@ -209,7 +209,7 @@ export default {
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
         this.treeData = res.result
         this.classifyTree = this.treeData
-         
+
         this.expandedKeys.push(this.classifyTree[0].key)
         this.checkedKeys.push(res.result[0].key)
         this.materialclassid = res.result[0].key
@@ -223,8 +223,7 @@ export default {
     },
 
     onSelect(selectedKeys, info) {
-      
-       this.checkedKeys = []
+      this.checkedKeys = []
       this.checkedKeys.push(selectedKeys[0])
       console.log('onselect-->', this.checkedKeys)
       this.materialclassid = selectedKeys.join()

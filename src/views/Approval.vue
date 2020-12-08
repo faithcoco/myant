@@ -3,7 +3,7 @@
     <a-drawer
       title="产品详情"
       placement="right"
-      :width="720"
+      :width="700"
       :closable="false"
       :visible="visible"
       :after-visible-change="afterVisibleChange"
@@ -23,15 +23,15 @@
         <a-timeline-item v-for="item in timelinelist" :key="item.key">
           <p>
             <a-row>
-              <a-col :span="8">
-                <b>{{ item.name + ' ' + item.approvestatus }}</b>
+              <a-col :span="14">
+                <b>{{ item.title + ' ' + item.approvestatus }}</b>
               </a-col>
-              <a-col :span="5">{{ item.time | formatDate }}</a-col>
+              <a-col :span="10">{{ item.time | formatDate }}</a-col>
             </a-row>
           </p>
           <p>
             <a href="#" v-for="item in item.mentions" :key="item.name">@{{ item.name }}</a>
-            {{ item.approveNote }}
+            {{ item.content }}
           </p>
           <p v-show="item.isShow">
             <a-card v-for="item in item.img" :key="item.src" :bordered="false">
@@ -41,18 +41,19 @@
           </p>
         </a-timeline-item>
       </a-timeline>
-      <a-row>
-        <a-col :span="3">
-          <a-button type="primary" @click="approvalClick">同意</a-button>
+      <a-row type="flex" justify="center">
+        <a-col :span="4">
+          <a-button type="primary" v-show="approvalVisible" @click="approvalClick">同意</a-button>
         </a-col>
-        <a-col :span="3">
-          <a-button type="danger" @click="cancelClick">拒绝</a-button>
+        <a-col :span="4">
+          <a-button type="danger" v-show="approvalVisible" @click="cancelClick">拒绝</a-button>
         </a-col>
-        <a-col :span="3">
+        <a-col :span="4">
           <a-button type="primary" @click="chatClick">评论</a-button>
         </a-col>
       </a-row>
     </a-drawer>
+
     <a-modal
       width="1000px"
       :title="title"
@@ -70,11 +71,12 @@
           />
           <div slot="content">
             <a-form-item>
-              <a-mentions v-model="content" :rows="4" @change="onChange" @select="onSelect">
-                <a-mentions-option v-for="item in personnelList" :key="item.name" :value="item.name">{{
+              <a-mentions v-model="mentions" :rows="4">
+                <a-mentions-option v-for="item in personnelList" :key="item.key" :value="item.name">{{
                   item.name
                 }}</a-mentions-option>
               </a-mentions>
+
               <a-upload
                 name="multipartFile"
                 :multiple="true"
@@ -85,6 +87,9 @@
                 <a-button type="link" :size="size">添加附件</a-button>
               </a-upload>
             </a-form-item>
+            <a-form-item label="通知人员">
+              <a-button block style="text-align: left" @click="personnelClick">{{ personlist }}</a-button>
+            </a-form-item>
             <a-form-item>
               <a-button html-type="submit" :loading="submitting" type="primary" @click="handleSubmit">提交</a-button>
             </a-form-item>
@@ -92,6 +97,28 @@
         </a-comment>
       </div>
       <div slot="footer"></div>
+    </a-modal>
+    <a-modal
+      :destroyOnClose="destroyOnClose"
+      width="1000px"
+      title="选择通知人员"
+      :visible="personVisible"
+      :confirm-loading="confirmLoading"
+      @ok="handleOk"
+      @cancel="handleCancel"
+    >
+      <a-table
+        ref="table"
+        size="default"
+        :columns="columns"
+        :data-source="listdata"
+        :alert="false"
+        :scroll="{ x: 1500, y: 425 }"
+        bordered
+        style="margin-top: 20px"
+        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, onSelect: onSelect }"
+      >
+      </a-table>
     </a-modal>
   </div>
 </template>
@@ -102,18 +129,23 @@ import { type } from 'mockjs2'
 Vue.use(Timeline)
 import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
+
 import { getPersonnelList, getApproval } from '@/api/manage'
 import moment from 'moment'
 import { logininfo, ACCESS_TOKEN } from '@/store/mutation-types'
-import { postData, getData } from '@/api/manage'
+import { postData, getData, getProductListColumns, getProductList } from '@/api/manage'
 import { resetWarned } from 'ant-design-vue/es/_util/warning'
 import { url } from '@/utils/request'
 import { uploadHelp } from '@/utils/uploadHelp'
+
 const product = {}
-const personnelList = [{ name: '张三' }]
+const personnelList = [
+  { name: '张三', key: '1' },
+  { name: '李四', key: '2' },
+  { name: '王五', key: '3' },
+]
 
 export default {
-  name: 'approval',
   props: {
     visible: {
       type: Boolean,
@@ -152,20 +184,114 @@ export default {
       instanceId: '',
       expiryDate: '1606468834000',
       currtent: 0, //1审批2撤销3评论
-      content: '',
+
       title: '',
       uploadUrl: url + '/common/upload', //上传
       uploadHelp: { file: new uploadHelp(this, this.fileSuccess, '上传', '上传', this.fileRemove, false) },
-      mentions:[],
-      upload:[]
-      
+      mentions: '',
+      upload: [],
+
+      personVisible: false,
+      personName: 'PersonnelSetting',
+      personlist: '',
+
+      selectList: [],
+      selectedRowKeys: [],
+      destroyOnClose: true,
+      columns: [],
+      listdata: [],
+      menuid: '',
+      urlColumns: '',
+      urlList: '',
+      personIdList: [],
+      approvalVisible: true,
     }
   },
   components: {},
-  created() {},
+  created() {
+    this.urlList = '/bd/baseperson/PersonnelSettingList'
+    this.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
+    this.urlColumns = '/sys/setting/getSetting'
+    this.getColumns()
+    this.getList()
+  },
 
   mounted() {},
   methods: {
+    onSelect(record, selected, selectedRows) {
+      this.selectList = selectedRows
+    },
+    onSelectChange(selectedRowKeys) {
+      this.selectedRowKeys = selectedRowKeys
+    },
+    handleCancel(e) {
+      this.personVisible = false
+    },
+    handleOk(e) {
+      var list = []
+
+      for (const key in this.selectList) {
+        list.push(this.selectList[key].personname)
+        this.personIdList.push(this.selectList[key].personid)
+      }
+      this.personlist = list.join()
+
+      this.personVisible = false
+    },
+    getColumns() {
+      const columnsParams = {}
+      columnsParams.menuid = this.menuid
+      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      console.log('columns url--->', this.urlColumns)
+      console.log('columns parameter-->', JSON.stringify(columnsParams))
+      getProductListColumns(columnsParams, this.urlColumns).then((res) => {
+        this.columns = res.result.columns
+
+        this.columns.splice(this.columns.length - 1, 1)
+      })
+    },
+    getList() {
+      this.selectedRowKeys = []
+      const parameter = {}
+
+      parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      parameter.pageNo = '1'
+      parameter.pageSize = '10'
+      if (this.isSearch) {
+        console.log('search-->', this.searchKey + '/' + this.searchValue)
+        parameter[`${this.searchKey}`] = this.searchValue
+      }
+
+      console.log('list url-->', this.urlList)
+      console.log('list params-->', JSON.stringify(parameter))
+      getProductList(parameter, this.urlList).then((res) => {
+        this.listdata = res.result.data
+        for (const key in this.listdata) {
+          this.listdata[key].key = key
+        }
+        this.isSearch = false
+      })
+    },
+
+    personnelClick() {
+      this.personVisible = true
+      this.name = 'PersonnelSetting'
+    },
+    comment() {
+      const parameter = {}
+      parameter.bizid = this.materialid
+      parameter.msgcontent = this.mentions
+      parameter.personIdList = this.personIdList
+      parameter.sysAttachList = this.upload
+      postData(parameter, '/work/sendMsg').then((res) => {
+        console.log('comment-->', JSON.stringify(res))
+        if (res.status == 'SUCCESS') {
+        } else {
+          this.$message.warn('EXCEPTION')
+        }
+      })
+    },
+
     handleChange(info) {
       console.log('info--->', JSON.stringify(info))
       let fileList = [...info.fileList]
@@ -187,6 +313,9 @@ export default {
         if (res.status == 'SUCCESS') {
           this.timelinelist = res.result.data
           this.instanceId = res.result.instanceId
+          this.setStatus(res.result.appstatus)
+          this.approvalVisible == res.result.isDisplay
+
           console.log('time-->', moment(1607327988000).format('YYYY-MM-DD HH:mm:ss'))
         } else {
           this.$message.warn(res.errorMsg)
@@ -203,6 +332,24 @@ export default {
         this.getFormdata()
         this.getTimeline()
       })
+    },
+    setStatus(status) {
+      if (status == 1) {
+        this.status = '审批通过'
+        this.color = '#15BC83'
+      } else if (status == 2) {
+        this.status = '审批中'
+        this.color = '#3296FA'
+      } else if (status == 3) {
+        this.status = '已提交'
+        this.color = '#3296FA'
+      } else if (status == 8) {
+        this.status = '未提交审批'
+        this.color = '#FF943E'
+      } else if (status == 9) {
+        this.status = '审批未通过'
+        this.color = ' #F25643'
+      }
     },
     getFormdata() {
       const columnsParams = {}
@@ -223,19 +370,20 @@ export default {
         if (res.status == 'SUCCESS') {
           this.data = []
           this.data = res.result
-          this.descriptions = res.result.map((item) => {
-            return {
-              label: item.title,
-              value: item.value,
+
+          for (const key in res.result) {
+            if (res.result[key].key == 'ApproveStatus') {
+              this.setStatus(res.result[key].value)
+            } else if (res.result[key].key !== 'approvalprocess') {
+              this.descriptions.push({ label: res.result[key].title, value: res.result[key].value })
             }
-          })
+          }
         } else {
           this.$message.warn('EXCEPTION')
         }
       })
     },
     afterVisibleChange(val) {
-      console.log('visible', val)
       this.initdata()
     },
     onClose() {
@@ -243,9 +391,10 @@ export default {
     },
 
     chatClick() {
-      this.title = '评论'
-      this.value = ''
+      this.currtent = 3
+      this.content = ''
       this.chat_visible = true
+      this.title = '评论'
     },
 
     rejectProcess() {
@@ -257,10 +406,9 @@ export default {
         if (res.status == 'SUCCESS') {
           console.log(JSON.stringify(res))
           this.getTimeline()
-          this.status = '已撤销'
-          this.color = '#f00707a6'
+          this.getFormdata()
         } else {
-          this.$message.warn('EXCEPTION')
+          this.$message.warn(res.errorMsg)
         }
       })
     },
@@ -276,26 +424,18 @@ export default {
       this.chat_visible = true
       this.title = '审批'
     },
-    comment() {
-      const parameter = {}
-      parameter.bizid = this.materialid
-      parameter.msgcontent=this.content
-      parameter.personIdList=this.mentions
-      parameter.sysAttachList=this.upload
-    },
+
     approveProcess() {
       const parameter = {}
       parameter.instanceId = this.instanceId
       parameter.bizid = this.materialid
       parameter.approveNote = this.content
-      parameter.personIdList=
-      getData(parameter, '/work/approveProcess').then((res) => {
+      parameter.personIdList = getData(parameter, '/work/approveProcess').then((res) => {
         console.log('approval-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           console.log(JSON.stringify(res))
           this.getTimeline()
-          this.status = '已审批'
-          this.color = '#108ee9'
+          this.getFormdata()
         } else {
           this.$message.warn('EXCEPTION')
         }
@@ -313,16 +453,13 @@ export default {
         this.approveProcess()
       } else if (this.currtent == 2) {
         this.rejectProcess()
+      } else if (this.currtent == 3) {
+        this.comment()
       }
 
       this.chat_visible = false
     },
-    onSelect(option) {
-      console.log('select', option)
-    },
-    onChange(value) {
-      console.log('Change:', value)
-    },
+
     handleScroll(direction, e) {},
     handleChange(nextTargetKeys, direction, moveKeys) {
       console.log(nextTargetKeys)
@@ -342,10 +479,15 @@ export default {
     },
     fileChange(info) {
       if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList)
+        this.upload = []
+        for (const key in info.fileList) {
+          this.upload.push({
+            attachmentFilename: info.fileList[key].name,
+            attachmentPath: info.fileList[key].response.result,
+          })
+        }
       }
       if (info.file.status === 'done') {
-        console.log('info-->', JSON.stringify(info))
         this.$message.success(`${info.file.name} 上传成功`)
       } else if (info.file.status === 'error') {
         this.$message.error(`${info.file.name} 上传失败`)

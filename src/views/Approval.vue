@@ -34,22 +34,22 @@
             {{ item.content }}
           </p>
           <p v-show="item.isShow">
-            <a-card v-for="item in item.img" :key="item.src" :bordered="false" >
-              <img slot="extra" alt="logo" :src="item.src" />
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+              <img slot="extra" alt="logo" :src="item.src" height="100%" width="100%" />
               <br />
             </a-card>
           </p>
         </a-timeline-item>
       </a-timeline>
       <a-row type="flex" justify="center">
-        <a-col :span="4">
-          <a-button type="primary" v-show="approvalVisible" @click="approvalClick">同意</a-button>
-        </a-col>
-        <a-col :span="4">
-          <a-button type="danger" v-show="approvalVisible" @click="cancelClick">拒绝</a-button>
-        </a-col>
-        <a-col :span="4">
-          <a-button type="primary" @click="chatClick">评论</a-button>
+        <a-col :span="9">
+          <a-button type="primary" v-show="approvalVisible" style="margin-right: 10px" @click="approvalClick"
+            >同意</a-button
+          >
+          <a-button type="danger" v-show="approvalVisible" style="margin-right: 10px" @click="cancelClick"
+            >拒绝</a-button
+          >
+          <a-button type="primary" style="margin-right: 10px" @click="chatClick">评论</a-button>
         </a-col>
       </a-row>
     </a-drawer>
@@ -61,6 +61,7 @@
       :confirm-loading="confirmLoading"
       @ok="chatOk"
       @cancel="chatCancel"
+      :destroyOnClose="destroyOnClose"
     >
       <div>
         <a-comment>
@@ -78,6 +79,7 @@
               </a-mentions>
 
               <a-upload
+                v-show="isContent"
                 name="multipartFile"
                 :multiple="true"
                 action="/api/common/upload"
@@ -87,7 +89,7 @@
                 <a-button type="link" :size="size">添加附件</a-button>
               </a-upload>
             </a-form-item>
-            <a-form-item label="通知人员">
+            <a-form-item v-show="isContent" label="通知人员">
               <a-button block style="text-align: left" @click="personnelClick">{{ personlist }}</a-button>
             </a-form-item>
             <a-form-item>
@@ -205,6 +207,7 @@ export default {
       urlList: '',
       personIdList: [],
       approvalVisible: true,
+      isContent: false,
     }
   },
   components: {},
@@ -214,7 +217,6 @@ export default {
     this.urlColumns = '/sys/setting/getSetting'
     this.getColumns()
     this.getList()
-    
   },
 
   mounted() {},
@@ -287,6 +289,7 @@ export default {
       postData(parameter, '/work/sendMsg').then((res) => {
         console.log('comment-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
+          this.getTimeline()
         } else {
           this.$message.warn('EXCEPTION')
         }
@@ -315,9 +318,7 @@ export default {
           this.timelinelist = res.result.data
           this.instanceId = res.result.instanceId
           this.setStatus(res.result.appstatus)
-          this.approvalVisible == res.result.isDisplay
-
-       
+          this.approvalVisible = res.result.isDisplay
         } else {
           this.$message.warn(res.errorMsg)
         }
@@ -396,6 +397,7 @@ export default {
       this.content = ''
       this.chat_visible = true
       this.title = '评论'
+      this.isContent = true
     },
 
     rejectProcess() {
@@ -406,8 +408,8 @@ export default {
       getData(parameter, '/work/rejectProcess').then((res) => {
         if (res.status == 'SUCCESS') {
           console.log(JSON.stringify(res))
+          this.content = ''
           this.getTimeline()
-        
         } else {
           this.$message.warn(res.errorMsg)
         }
@@ -418,12 +420,14 @@ export default {
       this.content = ''
       this.chat_visible = true
       this.title = '审批'
+      this.isContent = false
     },
     cancelClick() {
       this.currtent = 2
       this.content = ''
       this.chat_visible = true
       this.title = '审批'
+      this.isContent = false
     },
 
     approveProcess() {
@@ -434,9 +438,9 @@ export default {
       parameter.personIdList = getData(parameter, '/work/approveProcess').then((res) => {
         console.log('approval-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
+          this.content = ''
           console.log(JSON.stringify(res))
           this.getTimeline()
-        
         } else {
           this.$message.warn('EXCEPTION')
         }

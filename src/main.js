@@ -22,7 +22,12 @@ import Moment from 'moment'
 
 Vue.config.productionTip = false
 Vue.filter('formatDate', function (value) {
-  return Moment(value).format('YYYY-MM-DD HH:mm:ss')
+  if(value==""){
+    return ''
+  }else{
+    return Moment(value).format('YYYY-MM-DD HH:mm:ss')
+  }
+ 
 })
 // mount axios Vue.$http and this.$http
 Vue.use(VueAxios)

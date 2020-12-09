@@ -40,9 +40,9 @@ const user = {
       return new Promise((resolve, reject) => {
         login(userInfo).then(response => {
           const result = response.result
-          console.log('login res-->',JSON.stringify(response))
+          console.log('login res-->', JSON.stringify(response))
           Vue.ls.set(ACCESS_TOKEN, result.userToken, 7 * 24 * 60 * 60 * 1000)
-          console.log("id---->", result.basepersonPO)
+
           Vue.ls.set(logininfo, result)
           commit('SET_TOKEN', result.userToken)
 
@@ -59,7 +59,7 @@ const user = {
         const params = {}
         params.id = Vue.ls.get(logininfo).basepersonPO.personid
         getInfo(params).then(response => {
-          console.log("getinfo--->", JSON.stringify(response))
+
           const result = response.result
           if (result.role && result.role.permissions.length > 0) {
             const role = result.role
@@ -76,9 +76,10 @@ const user = {
           } else {
             reject(new Error('getInfo: roles must be a non-null array !'))
           }
+          console.log("getinfo--->", JSON.stringify(result))
 
-          commit('SET_NAME', { name: result.name, welcome: welcome() })
           commit('SET_AVATAR', result.avatar)
+          commit('SET_NAME', { name: result.enterprisename, welcome: welcome() })
 
           resolve(response)
         }).catch(error => {

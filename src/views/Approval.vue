@@ -34,7 +34,7 @@
             {{ item.content }}
           </p>
           <p v-show="item.isShow">
-            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
+            <a-card v-for="item in item.img" :key="item.src" :bordered="false" >
               <img slot="extra" alt="logo" :src="item.src" />
               <br />
             </a-card>
@@ -214,6 +214,7 @@ export default {
     this.urlColumns = '/sys/setting/getSetting'
     this.getColumns()
     this.getList()
+    
   },
 
   mounted() {},
@@ -316,7 +317,7 @@ export default {
           this.setStatus(res.result.appstatus)
           this.approvalVisible == res.result.isDisplay
 
-          console.log('time-->', moment(1607327988000).format('YYYY-MM-DD HH:mm:ss'))
+       
         } else {
           this.$message.warn(res.errorMsg)
         }
@@ -406,7 +407,7 @@ export default {
         if (res.status == 'SUCCESS') {
           console.log(JSON.stringify(res))
           this.getTimeline()
-          this.getFormdata()
+        
         } else {
           this.$message.warn(res.errorMsg)
         }
@@ -435,7 +436,7 @@ export default {
         if (res.status == 'SUCCESS') {
           console.log(JSON.stringify(res))
           this.getTimeline()
-          this.getFormdata()
+        
         } else {
           this.$message.warn('EXCEPTION')
         }

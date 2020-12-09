@@ -96,11 +96,9 @@
         <a-form-model-item label="电话:" prop="EnterpriseTel">
           <a-input
             v-model="form.enterprisetel"
-            
             style="width: 100%; margin-right: 10px"
             placeholder="请输入电话"
           ></a-input>
-         
         </a-form-model-item>
         <a-form-model-item label="注册人:" prop="EnterpriseRegistrant">
           <a-input v-model="form.enterpriseregistrant" disabled placeholder="请输入注册人"></a-input>
@@ -287,6 +285,7 @@ import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
 import moment from 'moment'
 import { mapActions } from 'vuex'
+import { welcome } from '@/utils/util'
 import AvatarModal from '../settings/AvatarModal'
 import { getBaseenterpriseInfo, updateBaseenterprise, postData } from '@/api/manage'
 import { mapGetters } from 'vuex'
@@ -373,9 +372,7 @@ export default {
   },
 
   mounted() {
-   
     this.getInfo()
-    
   },
   methods: {
     getInfo() {
@@ -406,6 +403,7 @@ export default {
             this.enterprisestatusname = '已注销'
             this.color = 'black'
           }
+          this.$store.commit('SET_NAME', { name: res.result.enterprisename, welcome: welcome() })
         })
         .catch((err) => {})
     },

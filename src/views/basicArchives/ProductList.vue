@@ -85,6 +85,7 @@ import action from '../../core/directives/action'
 import Approval from '../Approval'
 import SelectModal from '../other/SelectModal'
 import { logininfo, menuname } from '@/store/mutation-types'
+import { mapActions, mapGetters } from 'vuex'
 
 const columns = []
 const selectList = [{ value: '全部', key: 'all' }]
@@ -98,6 +99,7 @@ export default {
     Approval,
     SelectModal,
   },
+
   data() {
     const oriTargetKeys = this.columns
     const targetList = []
@@ -132,29 +134,25 @@ export default {
       isSearch: false,
       searchValue: '',
       searchKey: 'all',
+      isInit: false,
     }
   },
   mounted() {
+    console.log('test--->', this.selectkey)
+    
     this.initData(this.$route.name)
   },
   watch: {
     $route: {
       handler: function (val, oldVal) {
         this.initData(val.name)
+        console.log('watch--->', val)
       },
       // 深度观察监听
     },
   },
   computed: {
-    rowSelection() {
-      const { selectedRowKeys } = this
-      return {
-        selectedRowKeys,
-        onChange: this.onSelectChange,
-        hideDefaultSelections: true,
-        onSelection: this.onSelection,
-      }
-    },
+    ...mapGetters(['selectkey']),
   },
   methods: {
     treeSearch(e) {
@@ -183,7 +181,6 @@ export default {
       })
     },
     initData(name) {
-      this.menuname = name
       if (name == 'ProductList') {
         this.titleTree = '货品分类'
         this.urlTree = '/bd/product/materialClassTree'
@@ -214,12 +211,23 @@ export default {
 
         this.urlList = '/bd/warehouse/warehouselist'
         this.urlDelete = '/bd/warehouse/delWarehousebyid'
+      } else {
+        return
       }
+    
+      if (this.menuname == name) {
+        this.isInit=false
+      }else{
+        this.isInit=true
+      }
+      this.menuname = name
+
       this.urlColumns = '/sys/setting/getSetting'
       const parameter = {}
       parameter.memucode = this.$route.meta.permission[0]
 
       var url = '/bd/menu/findallmenu'
+     
       console.log('gtmenuid res-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
         console.log('menu id-->', JSON.stringify(res))
@@ -238,7 +246,6 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-       
 
         for (let i = 0; i < this.columns.length - 1; i++) {
           this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
@@ -252,12 +259,19 @@ export default {
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
         console.log(this.menuname + 'tree-->', JSON.stringify(res))
-        this.checkedKeys.push(res.result[0].key)
-        this.materialclassid = res.result[0].key
+
+        if (this.isInit) {
+          var treekey = res.result[0].key
+        } else {
+          var treekey = this.selectkey
+        }
+
+        this.checkedKeys.push(treekey)
+        this.materialclassid = treekey
         this.treeData = res.result
         this.classifyTree = this.treeData
 
-        this.expandedKeys.push(this.classifyTree[0].key)
+        this.expandedKeys.push(treekey)
 
         this.getList()
       })
@@ -270,9 +284,10 @@ export default {
     onSelect(selectedKeys, info) {
       this.checkedKeys = []
       this.checkedKeys.push(selectedKeys[0])
-      console.log('onselect-->', this.checkedKeys)
+      console.log('onselect-->', selectedKeys)
       this.materialclassid = selectedKeys.join()
       this.getList()
+      this.$store.commit('SET_SELECTKEY',this.materialclassid)
     },
     getList() {
       const parameter = {}
@@ -300,7 +315,7 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-      
+
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }

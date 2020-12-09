@@ -15,6 +15,7 @@
                 :precision="item.fieldprecision"
               />
               <a-cascader
+                @change="onChange"
                 v-decorator="item.decorator"
                 v-show="item.selectVisible"
                 :field-names="{ label: 'title', value: 'key', children: 'children' }"
@@ -98,6 +99,7 @@ export default {
       title: '',
       menuname: '',
       spinning: false,
+      typeValue:''
     }
   },
   created() {
@@ -128,11 +130,7 @@ export default {
     this.form = this.$form.createForm(this, { name: 'form' })
   },
   methods: {
-    onChange(value) {
-      console.log(value)
-      this.value = value
-    },
-
+  
     handleSubmit(e) {
       this.form.validateFields((err, values) => {
         if (!err) {
@@ -174,7 +172,8 @@ export default {
               values.positionstatus = values.positionstatus.join()
             }
           }
-
+           // this.$store.commit('SET_SELECTKEY',values[])
+           console.log('commit--->',values.materialclassid[values.materialclassid.length-1])
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           console.log('submit url-->', submitUrl)
           console.log('submit params-->', JSON.stringify(values))
@@ -250,26 +249,23 @@ export default {
         }
       }
 
-      console.log(this.$route.params.menu + '/route--->', this.$route)
-      console.log(this.$route.params.menu + '/formurl--->', this.urlForm)
-      console.log(this.$route.params.menu + '/form params-->', JSON.stringify(columnsParams))
-      if (this.urlForm !== '') {
-        getForm(columnsParams, this.urlForm).then((res) => {
-          this.data = res.result
-          this.$multiTab.rename(this.$route.path, this.title)
+      console.log(this.$route.params.menu + ' route--->', this.$route)
+      console.log(this.$route.params.menu + ' formurl--->', this.urlForm)
+      console.log(this.$route.params.menu + ' form params-->', JSON.stringify(columnsParams))
 
-          setTimeout(() => {
-            for (const i in this.data) {
-              if (this.data[i].value !== '') {
-                this.form.setFieldsValue({
-                  [this.data[i].key]: this.data[i].value,
-                })
-              }
-            }
-            this.spinning = false
-          }, 500)
-        })
-      }
+      getForm(columnsParams, this.urlForm).then((res) => {
+        this.data = res.result
+        this.$multiTab.rename(this.$route.path, this.title)
+
+        setTimeout(() => {
+          for (const i in this.data) {
+            this.form.setFieldsValue({
+              [this.data[i].key]: this.data[i].value,
+            })
+          }
+          this.spinning = false
+        }, 500)
+      })
     },
     handleChange(info) {
       if (info.file.status !== 'uploading') {

@@ -11,10 +11,13 @@ const user = {
     avatar: '',
     roles: [],
     info: {},
-
+    selectkey:'c6d0f290-b045-4851-bcb8-d00b60081d22'
   },
 
   mutations: {
+    SET_SELECTKEY: (state, selectkey) => {
+      state.selectkey = selectkey
+    },
     SET_TOKEN: (state, token) => {
       state.token = token
     },

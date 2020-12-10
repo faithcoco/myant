@@ -416,11 +416,11 @@ export default {
       } else if (this.currentkey == 'vendorid') {
         this.visible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList[0].vendorname,
+          [this.currentkey]: this.selectList[0].vendorcode,
         })
-        //   this.form.setFieldsValue({
-        //   vendorcontactenterprise: this.selectList[0].,
-        // })
+          this.form.setFieldsValue({
+          vendorcontactenterprise: this.selectList[0].vendorname,
+        })
           this.form.setFieldsValue({
          vendorcontactaddress: this.selectList[0].vendoraddress,
         })

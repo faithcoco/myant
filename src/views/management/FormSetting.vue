@@ -29,7 +29,7 @@
                 :value="record.fielddecription"
               />
             </span>
-         
+
             <span slot="fieldlength" slot-scope="text, record">
               <a-input-number
                 :min="0"
@@ -48,7 +48,7 @@
                 v-model="record.fieldmax"
               />
             </span>
-          
+
             <span slot="fieldprecision" slot-scope="text, record">
               <a-input-number
                 :min="0"
@@ -189,7 +189,7 @@ export default {
   },
   created() {
     getFormSettingColumns().then((res) => {
-      console.log('columns-->', JSON.stringify(res))
+      console.log('form columns-->', JSON.stringify(res))
       this.columns = res.result.columns
     })
     getFormSettingTree().then((res) => {
@@ -218,31 +218,36 @@ export default {
         }
       })
     },
+    upGo(arr, index) {
+      if (index != 0) {
+        arr[index] = arr.splice(index - 1, 1, arr[index])[0]
+      } else {
+        arr.push(arr.shift())
+      }
+    },
     sortOk(e) {
+      var tamp = this.currentItem
       if (this.currentId == 'fieldsort') {
-        if (this.currentItem.fieldsort > this.sortAfter) {
-          for (var i = this.sortAfter - 1; i < this.currentItem.fieldsort; i++) {
-            this.formSettingList.data[i].fieldsort = parseInt(i) + 2
-          }
-        } else {
-          for (var i = this.currentItem.fieldsort; i < this.sortAfter; i++) {
-            this.formSettingList.data[i].fieldsort = i
-          }
+        this.formSettingList.data.splice(parseInt(this.currentItem.fieldsort) - 1, 1)
+        this.formSettingList.data.splice(parseInt(this.sortAfter) - 1, 0, tamp)
+        for (const key in this.formSettingList.data) {
+          this.formSettingList.data[key].fieldsort = parseInt(key) + 1
         }
-        this.currentItem.fieldsort = this.sortAfter
+        this.formSettingList.data.sort(function (a, b) {
+          return a.fieldsort - b.fieldsort
+        })
       } else {
         //fieldsortlist
-        if (this.currentItem.fieldsortlist > this.sortAfter) {
-          for (var i = this.sortAfter - 1; i < this.currentItem.fieldsortlist; i++) {
-            this.formSettingList.data[i].fieldsortlist = parseInt(i) + 2
-          }
-        } else {
-          for (var i = this.currentItem.fieldsortlist; i < this.sortAfter; i++) {
-            this.formSettingList.data[i].fieldsortlist = i
-          }
+        this.formSettingList.data.splice(parseInt(this.currentItem.fieldsortlist) - 1, 1)
+        this.formSettingList.data.splice(parseInt(this.sortAfter) - 1, 0, tamp)
+        for (const key in this.formSettingList.data) {
+          this.formSettingList.data[key].fieldsortlist = parseInt(key) + 1
         }
-        this.currentItem.fieldsortlist = this.sortAfter
+        this.formSettingList.data.sort(function (a, b) {
+          return a.fieldsortlist - b.fieldsortlist
+        })
       }
+
       this.sortAfter = ''
       this.sortVisible = false
     },
@@ -290,7 +295,7 @@ export default {
     fielddecription(value, record) {
       record.fielddecription = value
     },
-     fielddefault(value, record) {
+    fielddefault(value, record) {
       record.fielddefault = value
     },
 

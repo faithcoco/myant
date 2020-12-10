@@ -19,17 +19,16 @@
             :columns="columns"
             :data-source="formSettingList.data"
             bordered
-            :scroll="{ x: 2000, y: 700 }"
+            :scroll="{ x: 2000, y: 575 }"
             :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
           >
-            <span slot="fielddecription" slot-scope="text, record">
+            <span slot="fielddefault" slot-scope="text, record">
               <a-input
                 :disabled="record.fielddisabled"
-                @change="(e) => fielddecription(e.target.value, record)"
-                :value="record.fielddecription"
+                @change="(e) => fielddefault(e.target.value, record)"
+                :value="record.fielddefault"
               />
             </span>
-
             <span slot="fieldlength" slot-scope="text, record">
               <a-input-number
                 :min="0"
@@ -48,7 +47,12 @@
                 v-model="record.fieldmax"
               />
             </span>
-
+            <span slot="fielddisabled" slot-scope="text, record">
+              <a-radio-group v-model="record.fielddisabled" @change="systemChange">
+                <a-radio :value="true"> 是 </a-radio>
+                <a-radio :value="false"> 否</a-radio>
+              </a-radio-group>
+            </span>
             <span slot="fieldprecision" slot-scope="text, record">
               <a-input-number
                 :min="0"
@@ -189,7 +193,7 @@ export default {
   },
   created() {
     getFormSettingColumns().then((res) => {
-      console.log('form columns-->', JSON.stringify(res))
+      console.log('columns-->', JSON.stringify(res))
       this.columns = res.result.columns
     })
     getFormSettingTree().then((res) => {
@@ -217,13 +221,6 @@ export default {
           this.sortMax = this.formSettingList.length
         }
       })
-    },
-    upGo(arr, index) {
-      if (index != 0) {
-        arr[index] = arr.splice(index - 1, 1, arr[index])[0]
-      } else {
-        arr.push(arr.shift())
-      }
     },
     sortOk(e) {
       var tamp = this.currentItem
@@ -359,6 +356,6 @@ export default {
   border-radius: 4px;
   overflow: auto;
   padding: 8px 2px;
-  height: 750px;
+  height: 600px;
 }
 </style>

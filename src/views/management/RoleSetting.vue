@@ -255,6 +255,8 @@ export default {
       if (this.mdl.describe == '新增角色') {
         this.state = 0
         this.mdl.name = ''
+      }else{
+        this.state=1
       }
 
       // 有权限表，处理勾选

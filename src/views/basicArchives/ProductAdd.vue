@@ -171,8 +171,7 @@ export default {
               values.positionstatus = values.positionstatus.join()
             }
           }
-         
-         
+
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           console.log('submit url-->', submitUrl)
           console.log('submit params-->', JSON.stringify(values))
@@ -186,8 +185,8 @@ export default {
 
             this.$message.info(res.errorMsg)
           })
-        }else{
-          console.log('error--->',err)
+        } else {
+          console.log('error--->', err)
         }
       })
     },
@@ -313,6 +312,7 @@ export default {
               values.materialid = this.materialid
             } else if (this.$route.params.menu == 'PersonnelSetting') {
               var submitUrl = '/bd/baseperson/personupdatesave'
+              columnsParams.personid = this.materialid
             } else if (this.$route.params.menu == 'SupplierList') {
               var submitUrl = '/bd/basevendor/vendorupdatesave'
               values.vendorid = this.materialid

@@ -73,10 +73,24 @@
               </a-tabs>
             </a-form-item>
           </a-form>
-          <a-modal title="选择" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
-            <archives-modal :name="name" :visible="visible" @onSelect="getSelect"></archives-modal>
+          <a-modal
+            title="选择"
+            :visible="visible"
+            @ok="handleOk"
+            @cancel="handleCancel"
+            width="1300px"
+            :destroyOnClose="destroyOnClose"
+          >
+            <archives-modal :name="name" @onSelect="getSelect"></archives-modal>
           </a-modal>
-          <a-modal title="选择" :visible="typeVisible" @ok="handleOk" @cancel="handleCancel" width="1300px">
+          <a-modal
+            title="选择"
+            :visible="typeVisible"
+            @ok="handleOk"
+            @cancel="handleCancel"
+            width="1300px"
+            :destroyOnClose="destroyOnClose"
+          >
             <type :menuname="name" @onSelect="typeSelect"></type>
           </a-modal>
           <a-modal
@@ -301,16 +315,15 @@ export default {
       } else {
         return
       }
-     
-     
+
       if (this.$route.params.tag == 2) {
         this.materialid = this.$route.params.materialid
         this.getList()
       } else {
         this.deatilData = []
       }
-       this.getFormdata()
-       this.getColumns()
+      this.getFormdata()
+      this.getColumns()
     },
     getColumns() {
       const columnsParams = {}
@@ -379,6 +392,7 @@ export default {
       this.detailVisible = false
     },
     handleOk(e) {
+      console.log('select--->',JSON.stringify(this.selectList))
       if (this.currentkey == 'departmentid') {
         this.typeVisible = false
         this.form.setFieldsValue({
@@ -404,6 +418,19 @@ export default {
         this.form.setFieldsValue({
           [this.currentkey]: this.selectList[0].vendorname,
         })
+        //   this.form.setFieldsValue({
+        //   vendorcontactenterprise: this.selectList[0].,
+        // })
+          this.form.setFieldsValue({
+         vendorcontactaddress: this.selectList[0].vendoraddress,
+        })
+          this.form.setFieldsValue({
+          vendorcontacthead: this.selectList[0].vendorhead,
+        })
+          this.form.setFieldsValue({
+          vendorcontactphone: this.selectList[0].vendortel,
+        })
+        
         this.vendorid = this.selectList[0].vendorid
       } else if (this.currentkey == 'businessclasscode') {
         this.typeVisible = false
@@ -415,6 +442,12 @@ export default {
           businessclassname: this.selectList.title,
         })
         this.businessclasscode = this.selectList.key
+      } else if (this.currentkey == 'receiptnoticecode') {
+      
+        this.visible = false
+        this.form.setFieldsValue({
+          receiptnoticecode: this.selectList[0].receiptnoticecode,
+        })
       }
     },
     handleCancel(e) {
@@ -426,6 +459,8 @@ export default {
         this.visible = false
       } else if (this.currentkey == 'businessclasscode') {
         this.typeVisible = false
+      } else if (this.currentkey == 'receiptnoticecode') {
+        this.visible = false
       }
     },
 
@@ -434,6 +469,7 @@ export default {
       this.value = value
     },
     showModal(item) {
+      console.log('this-->', item.key)
       this.currentkey = item.key
       if (this.currentkey == 'departmentid') {
         this.typeVisible = true
@@ -447,6 +483,9 @@ export default {
       } else if (this.currentkey == 'businessclasscode') {
         this.typeVisible = true
         this.name = 'BusinessCategory'
+      } else if (this.currentkey == 'receiptnoticecode') {
+        this.name = 'ReceiptNoticeList'
+        this.visible = true
       }
     },
     handleSubmit(e) {
@@ -491,13 +530,13 @@ export default {
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
 
-
       getForm(columnsParams, this.urlForm).then((res) => {
+        console.log('form--->',JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = []
           this.data = res.result
         } else {
-          console.log('form res-->',JSON.stringify(res))
+          console.log('form res-->', JSON.stringify(res))
           this.$message.warn('EXCEPTION')
         }
 

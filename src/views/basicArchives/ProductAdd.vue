@@ -99,7 +99,7 @@ export default {
       title: '',
       menuname: '',
       spinning: false,
-      typeValue:''
+      typeValue: '',
     }
   },
   created() {
@@ -130,7 +130,6 @@ export default {
     this.form = this.$form.createForm(this, { name: 'form' })
   },
   methods: {
-  
     handleSubmit(e) {
       this.form.validateFields((err, values) => {
         if (!err) {
@@ -172,8 +171,8 @@ export default {
               values.positionstatus = values.positionstatus.join()
             }
           }
-           // this.$store.commit('SET_SELECTKEY',values[])
-           console.log('commit--->',values.materialclassid[values.materialclassid.length-1])
+         
+         
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           console.log('submit url-->', submitUrl)
           console.log('submit params-->', JSON.stringify(values))
@@ -187,6 +186,8 @@ export default {
 
             this.$message.info(res.errorMsg)
           })
+        }else{
+          console.log('error--->',err)
         }
       })
     },
@@ -254,6 +255,7 @@ export default {
       console.log(this.$route.params.menu + ' form params-->', JSON.stringify(columnsParams))
 
       getForm(columnsParams, this.urlForm).then((res) => {
+        console.log(this.$route.params.menu + ' form res-->', JSON.stringify(res))
         this.data = res.result
         this.$multiTab.rename(this.$route.path, this.title)
 

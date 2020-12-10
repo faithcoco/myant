@@ -564,7 +564,7 @@ export function insertRole(parameter) {
   })
 }
 export function updateForm(parameter) {
-  console.log(' updateForm--->', JSON.stringify(parameter))
+ 
   return axios({
     url: '/bd/FormSetting/updateForm',
     method: 'post',

@@ -1,26 +1,8 @@
 <template>
   <div>
     <a-card>
-      <a-row :gutter="10">
-        <a-col :span="4">
-          <span>{{ titleTree }}</span>
-
-          <a-divider type="horizontal" />
-          <a-input-search style="margin-bottom: 8px" placeholder="请输入关键字" @change="treeSearch" />
-          <a-tree
-            v-show="tree_visible"
-            showLine
-            :expanded-keys="expandedKeys"
-            :auto-expand-parent="autoExpandParent"
-            :tree-data="classifyTree"
-            @expand="onExpand"
-            @select="onSelect"
-            :selectedKeys="checkedKeys"
-          >
-          </a-tree>
-        </a-col>
-
-        <a-col :span="20">
+     
+        <a-col :span="24">
           <a-select default-value="全部" style="width: 220px" @change="selectChange">
             <a-select-option v-for="SList in selectList" :key="SList.key" :value="SList.key">{{
               SList.value
@@ -139,7 +121,7 @@ export default {
   watch: {
     name: {
       handler: function (val, oldVal) {
-        console.log('modal-->',val+"/"+oldVal+"/"+this.name)
+        console.log('modal-->', val + '/' + oldVal + '/' + this.name)
         this.initData(this.name)
       },
       // 深度观察监听
@@ -171,67 +153,50 @@ export default {
       const value = e.target.value
       this.classifyTree = this.treeData.filter((item) => JSON.stringify(item).includes(value))
     },
-    delete() {
-      const columnsParams = {}
-      if (this.menuname == 'ProductList') {
-        columnsParams.materialid = this.materialid
-      } else if (this.menuname == 'PersonnelSetting') {
-        columnsParams.personid = this.materialid
-      } else if (this.menuname == 'SupplierList') {
-        columnsParams.vendorid = this.materialid
-      } else if (this.menuname == 'CustomerList') {
-        columnsParams.customerid = this.materialid
-      } else if (this.menuname == 'WarehouseList') {
-        columnsParams.warehouseid = this.materialid
-      }
 
-      console.log('delete url--->', this.urlDelete)
-      console.log('delete params--->', JSON.stringify(columnsParams))
-      getData(columnsParams, this.urlDelete).then((res) => {
-        console.log('delete res-->', JSON.stringify(res))
-        this.getList()
-      })
-    },
     initData(name) {
-      this.selectedRowKeys=[]
+      this.selectedRowKeys = []
       this.menuname = name
       const parameter = {}
       if (name == 'ProductList') {
         this.titleTree = '货品分类'
         this.urlTree = '/bd/product/materialClassTree'
-        this.urlColumns = '/bd/product/productList/columns'
+
         this.urlList = '/bd/product/productList'
         this.urlDelete = '/bd/product/delMaterialById'
         parameter.memucode = '01-02'
       } else if (name == 'PersonnelSetting') {
         this.titleTree = '部门分类'
         this.urlTree = '/bd/Sector'
-        this.urlColumns = '/sys/setting/getSetting'
+
         this.urlList = '/bd/baseperson/PersonnelSettingList'
         this.urlDelete = '/bd/baseperson/deletePerson'
         parameter.memucode = '01-01'
       } else if (name == 'SupplierList') {
         this.titleTree = '供应商分类'
         this.urlTree = '/bd/basevendor/vendorTree'
-        this.urlColumns = '/bd/basevendor/vendorColumns'
+
         this.urlList = '/bd/basevendor/vendorlist'
         this.urlDelete = '/bd/basevendor/delvendorbyid'
         parameter.memucode = '01-03'
       } else if (name == 'CustomerList') {
         this.titleTree = '客户分类'
         this.urlTree = '/bd/customer/CustomerTree'
-        this.urlColumns = '/sys/setting/getSetting'
+
         this.urlList = '/bd/customer/customerlist'
         this.urlDelete = '/bd/customer/delCustomerbyid'
         parameter.memucode = '01-04'
       } else if (name == 'WarehouseList') {
         this.titleTree = '仓位分类'
         this.urlTree = '/bd/warehouse/WarehouseTree'
-        this.urlColumns = '/sys/setting/getSetting'
+
         this.urlList = '/bd/warehouse/warehouselist'
         this.urlDelete = '/bd/warehouse/delWarehousebyid'
         parameter.memucode = '01-05'
-      }else{
+      } else if (name == 'ReceiptNoticeList') {
+        this.urlList = '/bd/docreceiptnotice/list'
+        parameter.memucode = '02-02'
+      } else {
         return
       }
       this.urlColumns = '/sys/setting/getSetting'
@@ -242,7 +207,7 @@ export default {
         console.log('menu id-->', JSON.stringify(res))
 
         this.menuid = res.result
-        this.getTree()
+
         this.getList()
         this.getColumns()
       })
@@ -255,7 +220,7 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-       
+
         this.columns.splice(this.columns.length - 1, 1)
       })
     },
@@ -290,18 +255,6 @@ export default {
     },
     getList() {
       const parameter = {}
-      if (this.menuname == 'PersonnelSetting') {
-        parameter.departmentid = this.materialclassid
-      } else if (this.menuname == 'ProductList') {
-        parameter.materialclassid = this.materialclassid
-      } else if (this.menuname == 'SupplierList') {
-        parameter.vendorclassid = this.materialclassid
-      } else if (this.menuname == 'CustomerList') {
-        parameter.customerclassid = this.materialclassid
-      } else if (this.menuname == 'WarehouseList') {
-        parameter.warehouseclassid = this.materialclassid
-      }
-
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = '1'
       parameter.pageSize = '10'
@@ -314,7 +267,7 @@ export default {
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-        this.selectedRowKeys=[]
+        this.selectedRowKeys = []
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }

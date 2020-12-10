@@ -139,7 +139,7 @@ export default {
   },
   mounted() {
     console.log('test--->', this.selectkey)
-    
+
     this.initData(this.$route.name)
   },
   watch: {
@@ -214,11 +214,11 @@ export default {
       } else {
         return
       }
-    
+
       if (this.menuname == name) {
-        this.isInit=false
-      }else{
-        this.isInit=true
+        this.isInit = false
+      } else {
+        this.isInit = true
       }
       this.menuname = name
 
@@ -227,7 +227,7 @@ export default {
       parameter.memucode = this.$route.meta.permission[0]
 
       var url = '/bd/menu/findallmenu'
-     
+
       console.log('gtmenuid res-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
         console.log('menu id-->', JSON.stringify(res))
@@ -262,6 +262,7 @@ export default {
 
         if (this.isInit) {
           var treekey = res.result[0].key
+          this.$store.commit('SET_SELECTKEY', treekey)
         } else {
           var treekey = this.selectkey
         }
@@ -287,7 +288,7 @@ export default {
       console.log('onselect-->', selectedKeys)
       this.materialclassid = selectedKeys.join()
       this.getList()
-      this.$store.commit('SET_SELECTKEY',this.materialclassid)
+      this.$store.commit('SET_SELECTKEY', this.materialclassid)
     },
     getList() {
       const parameter = {}

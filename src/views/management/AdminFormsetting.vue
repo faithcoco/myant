@@ -230,9 +230,9 @@ export default {
         for (const key in this.formSettingList.data) {
           this.formSettingList.data[key].fieldsort = parseInt(key) + 1
         }
-        this.formSettingList.data.sort(function (a, b) {
-          return a.fieldsort - b.fieldsort
-        })
+          this.formSettingList.data.sort(function (a, b) {
+            return a.fieldsort - b.fieldsort
+          })
       } else {
         //fieldsortlist
         this.formSettingList.data.splice(parseInt(this.currentItem.fieldsortlist) - 1, 1)
@@ -251,9 +251,18 @@ export default {
     sortCancel(e) {
       this.sortVisible = false
     },
-    showSort(text, record) {
+    showSort(name, record) {
+      if(name=='fieldsort'){
+          this.formSettingList.data.sort(function (a, b) {
+          return a.fieldsort - b.fieldsort
+        })
+      }else{
+          this.formSettingList.data.sort(function (a, b) {
+          return a.fieldsortlist - b.fieldsortlist
+        })
+      }
       this.sortVisible = true
-      this.currentId = text
+      this.currentId = name
       this.currentItem = record
     },
     onSubmit(e) {

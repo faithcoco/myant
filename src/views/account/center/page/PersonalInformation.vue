@@ -318,21 +318,13 @@ export default {
   created() {
     this.basepersonPO = Vue.ls.get(logininfo).basepersonPO
     this.enterprisephone = this.basepersonPO.personphone
-    const Params = {}
-
-    Params.id = this.basepersonPO.personid
-    console.log(Params)
-    getBaseenterpriseInfo(Params)
-      .then((res) => {
-        console.log('getBaseenterpriseInfo----->', JSON.stringify(res.result))
-      })
-      .catch((err) => {})
+   
 
     const params = {}
     params.id = this.basepersonPO.personid
     getBasepersonInfo(params)
       .then((res) => {
-        console.log('个人信息返回值--getBasepersonInfo----->', JSON.stringify(res))
+       
         this.form = res.result
         this.form.personcreationdate = PersonCreationdate
         this.form.personbegintime = personbegintime
@@ -481,7 +473,7 @@ export default {
             data.personname = this.form.personname
             data.personlabel = this.form.personlabel
             data.personphone = this.form.personphone
-            console.log('个人信息 修改保存--->', data)
+            console.log('update userinfo-->',JSON.stringify(data))
             updateBaseperson(data)
               .then((res) => {
                 console.log('updateBaseperson--->', res)
@@ -489,7 +481,10 @@ export default {
                   this.$message.info('保存成功！')
                   this.editVisible = false
                   this.visible = true
-                  //   提示用户信息
+                  //提示用户信息
+                } else {
+                 
+                  this.$message.warn(res.errorMsg)
                 }
               })
               .catch((err) => {

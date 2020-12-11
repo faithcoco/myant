@@ -79,7 +79,7 @@
           <a-modal
             title="选择"
             :visible="visible"
-            @ok="handleOk"
+            @ok="archivesOk"
             @cancel="handleCancel"
             width="1300px"
             :destroyOnClose="destroyOnClose"
@@ -166,9 +166,7 @@ export default {
       selectedRow: [],
 
       selectedRowKeys: [],
-      headers: {
-        authorization: 'authorization-text',
-      },
+
       size: 'small',
       labelCol: { span: 2 },
       wrapperCol: { span: 22 },
@@ -393,6 +391,12 @@ export default {
       this.detailVisible = false
     },
     handleOk(e) {
+      this.setform()
+    },
+    archivesOk(e){
+      this.setform()
+    },
+    setform() {
       console.log('select--->', JSON.stringify(this.selectList))
       if (this.currentkey == 'departmentid') {
         this.typeVisible = false
@@ -475,10 +479,10 @@ export default {
         this.form.setFieldsValue({
           personid: this.selectList[0].personname,
         })
-         this.form.setFieldsValue({
+        this.form.setFieldsValue({
           departmentid: this.selectList[0].departmentname,
         })
-        this.billcode=this.selectList[0].receiptnoticeid
+        this.billcode = this.selectList[0].receiptnoticeid
         this.personid = this.selectList[0].personid
         this.departmentid = this.selectList[0].departmentid
         this.businessclasscode = this.selectList[0].businessclassid

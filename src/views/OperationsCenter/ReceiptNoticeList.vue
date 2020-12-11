@@ -112,7 +112,7 @@ export default {
       product: {},
       urlDelete: '',
       treeData: [],
-
+      menu:'',
       isSearch: false,
       searchValue: '',
       searchKey: 'all',

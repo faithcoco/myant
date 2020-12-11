@@ -194,7 +194,7 @@ export default {
       vendorid: '',
       businessclasscode: '',
       spinning: false,
-      
+      name:'',
       approvalVisilbe: false,
       billcode: '',
       destroyOnClose: true,
@@ -355,7 +355,6 @@ export default {
       console.log('listdata url--->', urlColumns)
       console.log('listdata parameter-->', JSON.stringify(columnsParams))
       getData(columnsParams, urlColumns).then((res) => {
-       
         this.deatilData = []
         this.deatilData = res.result.data
         for (const key in this.deatilData) {
@@ -570,8 +569,6 @@ export default {
               this.personid = this.data[i].keyvalue
             } else if (this.data[i].key == 'vendorid') {
               this.vendorid = this.data[i].keyvalue
-
-              console.log('rule--->', JSON.stringify(this.data[i].decorator[1].rules))
             } else if (this.data[i].key == 'businessclasscode') {
               this.businessclasscode = this.data[i].keyvalue
             } else if (this.data[i].key == 'receiptnoticecode') {

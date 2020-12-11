@@ -475,10 +475,11 @@ export default {
         this.form.setFieldsValue({
           personid: this.selectList[0].personname,
         })
-        this.personid = this.selectList[0].personid
-        this.form.setFieldsValue({
+         this.form.setFieldsValue({
           departmentid: this.selectList[0].departmentname,
         })
+        this.billcode=this.selectList[0].receiptnoticeid
+        this.personid = this.selectList[0].personid
         this.departmentid = this.selectList[0].departmentid
         this.businessclasscode = this.selectList[0].businessclassid
         this.vendorid = this.selectList[0].vendorid

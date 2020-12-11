@@ -5,46 +5,49 @@
         <a-card>
           <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
             <a-form-item v-for="item in data" :label="item.title">
-              <a-input
-                v-decorator="item.decorator"
-                :disabled="item.disabled"
-                v-show="item.inputVisible"
-                :maxLength="item.fieldlength"
-              />
-              <a-input-number
-                :style="{ width: '1370px' }"
-                v-decorator="item.decorator"
-                v-show="item.inputnumberVisible"
-                :max="item.fieldmax"
-                :precision="item.fieldprecision"
-                :disabled="item.disabled"
-              />
-              <a-cascader
-                v-decorator="item.decorator"
-                v-show="item.selectVisible"
-                :field-names="{ label: 'title', value: 'key', children: 'children' }"
-                :options="item.selectList"
-                placeholder="请选择"
-                :disabled="item.disabled"
-              />
-
-              <a-date-picker
-                :style="{ width: '100%' }"
-                v-show="item.timepickerVisible"
-                show-time
-                format="YYYY-MM-DD HH:mm:ss"
-                placeholder="选择日期"
-                v-decorator="item.decorator"
-                :disabled="item.disabled"
-              />
-              <a-input
-                v-decorator="item.decorator"
-                v-show="item.listVisible"
-                :maxLength="item.fieldlength"
-                :disabled="disabled"
-              >
-                <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
-              </a-input>
+              <div v-if="item.selectVisible">
+                <a-cascader
+                  v-decorator="item.decorator"
+                  v-show="item.selectVisible"
+                  :field-names="{ label: 'title', value: 'key', children: 'children' }"
+                  :options="item.selectList"
+                  placeholder="请选择"
+                  :disabled="item.disabled"
+                />
+              </div>
+              <div v-else>
+                <a-input
+                  v-decorator="item.decorator"
+                  :disabled="item.disabled"
+                  v-show="item.inputVisible"
+                  :maxLength="item.fieldlength"
+                />
+                <a-input-number
+                  :style="{ width: '1370px' }"
+                  v-decorator="item.decorator"
+                  v-show="item.inputnumberVisible"
+                  :max="item.fieldmax"
+                  :precision="item.fieldprecision"
+                  :disabled="item.disabled"
+                />
+                <a-date-picker
+                  :style="{ width: '100%' }"
+                  v-show="item.timepickerVisible"
+                  show-time
+                  format="YYYY-MM-DD HH:mm:ss"
+                  placeholder="选择日期"
+                  v-decorator="item.decorator"
+                  :disabled="item.disabled"
+                />
+                <a-input
+                  v-decorator="item.decorator"
+                  v-show="item.listVisible"
+                  :maxLength="item.fieldlength"
+                  :disabled="disabled"
+                >
+                  <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
+                </a-input>
+              </div>
             </a-form-item>
             <a-form-item :wrapper-col="{ span: 21, offset: 2 }">
               <a-tabs>
@@ -140,7 +143,7 @@ import { getForm, submitForm, postData, getData } from '@/api/manage'
 import { Form } from 'ant-design-vue'
 Vue.use(Form)
 import { TreeSelect } from 'ant-design-vue'
-import { keys } from 'mockjs2'
+import { keys, type } from 'mockjs2'
 Vue.use(TreeSelect)
 import ArchivesModal from '../other/ArchivesModal'
 import Type from '../other/TypeModal'
@@ -171,7 +174,6 @@ export default {
       wrapperCol: { span: 22 },
       other: '',
       data: [],
-
       menuid: '',
       urlForm: '',
       materialclassid: '',
@@ -192,7 +194,7 @@ export default {
       vendorid: '',
       businessclasscode: '',
       spinning: false,
-      name: '',
+      
       approvalVisilbe: false,
       billcode: '',
       destroyOnClose: true,
@@ -225,7 +227,7 @@ export default {
     },
   },
   beforeCreate() {
-    this.form = this.$form.createForm(this, { name: 'form' })
+    this.form = this.$form.createForm(this, { formname: 'form' })
   },
   methods: {
     submit() {
@@ -353,7 +355,7 @@ export default {
       console.log('listdata url--->', urlColumns)
       console.log('listdata parameter-->', JSON.stringify(columnsParams))
       getData(columnsParams, urlColumns).then((res) => {
-        console.log(this.$route.params.menu + '/list res-->', JSON.stringify(res))
+       
         this.deatilData = []
         this.deatilData = res.result.data
         for (const key in this.deatilData) {
@@ -568,6 +570,8 @@ export default {
               this.personid = this.data[i].keyvalue
             } else if (this.data[i].key == 'vendorid') {
               this.vendorid = this.data[i].keyvalue
+
+              console.log('rule--->', JSON.stringify(this.data[i].decorator[1].rules))
             } else if (this.data[i].key == 'businessclasscode') {
               this.businessclasscode = this.data[i].keyvalue
             } else if (this.data[i].key == 'receiptnoticecode') {

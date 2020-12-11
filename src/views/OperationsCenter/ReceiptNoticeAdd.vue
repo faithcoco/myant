@@ -194,7 +194,7 @@ export default {
       vendorid: '',
       businessclasscode: '',
       spinning: false,
-      name:'',
+      name: '',
       approvalVisilbe: false,
       billcode: '',
       destroyOnClose: true,
@@ -397,7 +397,7 @@ export default {
       if (this.currentkey == 'departmentid') {
         this.typeVisible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList.title,
+          departmentid: this.selectList.title,
         })
         this.form.setFieldsValue({
           personid: '',
@@ -407,7 +407,7 @@ export default {
       } else if (this.currentkey == 'personid') {
         this.visible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList[0].personname,
+          personid: this.selectList[0].personname,
         })
         this.personid = this.selectList[0].personid
         this.form.setFieldsValue({
@@ -436,7 +436,7 @@ export default {
       } else if (this.currentkey == 'businessclasscode') {
         this.typeVisible = false
         this.form.setFieldsValue({
-          [this.currentkey]: this.selectList.businessclasscode,
+          businessclasscode: this.selectList.businessclasscode,
         })
 
         this.form.setFieldsValue({
@@ -465,7 +465,22 @@ export default {
           vendorcontactphone: this.selectList[0].vendorcontactphone,
         })
         this.getList('ReceiptNoticeList', this.selectList[0].receiptnoticeid)
+        this.form.setFieldsValue({
+          businessclasscode: this.selectList[0].businessclasscode,
+        })
 
+        this.form.setFieldsValue({
+          businessclassname: this.selectList[0].businessclassname,
+        })
+        this.form.setFieldsValue({
+          personid: this.selectList[0].personname,
+        })
+        this.personid = this.selectList[0].personid
+        this.form.setFieldsValue({
+          departmentid: this.selectList[0].departmentname,
+        })
+        this.departmentid = this.selectList[0].departmentid
+        this.businessclasscode = this.selectList[0].businessclassid
         this.vendorid = this.selectList[0].vendorid
       }
     },

@@ -315,10 +315,10 @@ export default {
       } else {
         return
       }
-
+      this.materialid = this.$route.params.materialid
+      console.log('route-->', this.$route)
       if (this.$route.params.tag == 2) {
-        this.materialid = this.$route.params.materialid
-        this.getList()
+        this.getList(this.$route.params.menu, this.$route.params.materialid)
       } else {
         this.deatilData = []
       }
@@ -336,18 +336,18 @@ export default {
         this.columns = res.result.columns
       })
     },
-    getList() {
+    getList(menu, id) {
       const columnsParams = {}
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       columnsParams.pageNo = 1
       columnsParams.pageSize = 10
 
-      if (this.$route.params.menu == 'ReceiptNoticeList') {
+      if (menu == 'ReceiptNoticeList') {
         var urlColumns = '/bd/docreceiptnotice/childrenlist'
-        columnsParams.receiptnoticeid = this.materialid
-      } else if (this.$route.params.menu == 'StorageManagementList') {
+        columnsParams.receiptnoticeid = id
+      } else if (menu == 'StorageManagementList') {
         var urlColumns = '/bd/Stockinrecord/stockinrecordlineList'
-        columnsParams.stockinid = this.materialid
+        columnsParams.stockinid = id
       }
 
       console.log('listdata url--->', urlColumns)
@@ -392,7 +392,7 @@ export default {
       this.detailVisible = false
     },
     handleOk(e) {
-      console.log('select--->',JSON.stringify(this.selectList))
+      console.log('select--->', JSON.stringify(this.selectList))
       if (this.currentkey == 'departmentid') {
         this.typeVisible = false
         this.form.setFieldsValue({
@@ -418,19 +418,19 @@ export default {
         this.form.setFieldsValue({
           [this.currentkey]: this.selectList[0].vendorcode,
         })
-          this.form.setFieldsValue({
+        this.form.setFieldsValue({
           vendorcontactenterprise: this.selectList[0].vendorname,
         })
-          this.form.setFieldsValue({
-         vendorcontactaddress: this.selectList[0].vendoraddress,
+        this.form.setFieldsValue({
+          vendorcontactaddress: this.selectList[0].vendoraddress,
         })
-          this.form.setFieldsValue({
+        this.form.setFieldsValue({
           vendorcontacthead: this.selectList[0].vendorhead,
         })
-          this.form.setFieldsValue({
+        this.form.setFieldsValue({
           vendorcontactphone: this.selectList[0].vendortel,
         })
-        
+
         this.vendorid = this.selectList[0].vendorid
       } else if (this.currentkey == 'businessclasscode') {
         this.typeVisible = false
@@ -443,11 +443,29 @@ export default {
         })
         this.businessclasscode = this.selectList.key
       } else if (this.currentkey == 'receiptnoticecode') {
-      
+        //收货通知选择
         this.visible = false
         this.form.setFieldsValue({
           receiptnoticecode: this.selectList[0].receiptnoticecode,
         })
+        this.form.setFieldsValue({
+          vendorid: this.selectList[0].vendorcode,
+        })
+        this.form.setFieldsValue({
+          vendorcontactenterprise: this.selectList[0].vendorcontactenterprise,
+        })
+        this.form.setFieldsValue({
+          vendorcontactaddress: this.selectList[0].vendorcontactaddress,
+        })
+        this.form.setFieldsValue({
+          vendorcontacthead: this.selectList[0].vendorcontacthead,
+        })
+        this.form.setFieldsValue({
+          vendorcontactphone: this.selectList[0].vendorcontactphone,
+        })
+        this.getList('ReceiptNoticeList', this.selectList[0].receiptnoticeid)
+
+        this.vendorid = this.selectList[0].vendorid
       }
     },
     handleCancel(e) {
@@ -529,11 +547,10 @@ export default {
 
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
-
+      this.data = []
       getForm(columnsParams, this.urlForm).then((res) => {
-        console.log('form--->',JSON.stringify(res))
+        console.log('form--->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
-          this.data = []
           this.data = res.result
         } else {
           console.log('form res-->', JSON.stringify(res))

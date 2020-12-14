@@ -368,6 +368,7 @@ export default {
       getData(columnsParams, this.urlForm).then((res) => {
         if (res.status == 'SUCCESS') {
           this.data = []
+          this.descriptions=[]
           this.data = res.result
 
           for (const key in res.result) {
@@ -437,7 +438,7 @@ export default {
         console.log('approval-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.content = ''
-          console.log(JSON.stringify(res))
+        
           this.getTimeline()
         } else {
           this.$message.warn('EXCEPTION')

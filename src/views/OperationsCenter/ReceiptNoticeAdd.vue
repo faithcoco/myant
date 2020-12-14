@@ -256,7 +256,7 @@ export default {
           values.departmentid = this.departmentid
           values.personid = this.personid
           values.vendorid = this.vendorid
-          values.businessclasscode = this.businessclasscode
+         
           values.approvalprocess = values.approvalprocess.join()
           console.log('submit url-->', submitUrl)
           console.log('submit parameter-->', JSON.stringify(values))
@@ -393,7 +393,7 @@ export default {
     handleOk(e) {
       this.setform()
     },
-    archivesOk(e){
+    archivesOk(e) {
       this.setform()
     },
     setform() {
@@ -450,32 +450,20 @@ export default {
       } else if (this.currentkey == 'receiptnoticecode') {
         //收货通知选择
         this.visible = false
-        this.form.setFieldsValue({
-          receiptnoticecode: this.selectList[0].receiptnoticecode,
-        })
+
+        var formdata = this.form.domFields
+        var formkey = Object.keys(formdata)
+
+        for (const key in formkey) {
+        
+          this.form.setFieldsValue({
+            [formkey[key]]: this.selectList[0][formkey[key]],
+          })
+        }
         this.form.setFieldsValue({
           vendorid: this.selectList[0].vendorcode,
         })
-        this.form.setFieldsValue({
-          vendorcontactenterprise: this.selectList[0].vendorcontactenterprise,
-        })
-        this.form.setFieldsValue({
-          vendorcontactaddress: this.selectList[0].vendorcontactaddress,
-        })
-        this.form.setFieldsValue({
-          vendorcontacthead: this.selectList[0].vendorcontacthead,
-        })
-        this.form.setFieldsValue({
-          vendorcontactphone: this.selectList[0].vendorcontactphone,
-        })
-        this.getList('ReceiptNoticeList', this.selectList[0].receiptnoticeid)
-        this.form.setFieldsValue({
-          businessclasscode: this.selectList[0].businessclasscode,
-        })
-
-        this.form.setFieldsValue({
-          businessclassname: this.selectList[0].businessclassname,
-        })
+       
         this.form.setFieldsValue({
           personid: this.selectList[0].personname,
         })
@@ -485,8 +473,9 @@ export default {
         this.billcode = this.selectList[0].receiptnoticeid
         this.personid = this.selectList[0].personid
         this.departmentid = this.selectList[0].departmentid
-        this.businessclasscode = this.selectList[0].businessclassid
+      
         this.vendorid = this.selectList[0].vendorid
+         this.getList('ReceiptNoticeList', this.selectList[0].receiptnoticeid)
       }
     },
     handleCancel(e) {
@@ -570,7 +559,6 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       this.data = []
       getForm(columnsParams, this.urlForm).then((res) => {
-        console.log('form--->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = res.result
         } else {

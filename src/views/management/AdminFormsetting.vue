@@ -230,9 +230,9 @@ export default {
         for (const key in this.formSettingList.data) {
           this.formSettingList.data[key].fieldsort = parseInt(key) + 1
         }
-          this.formSettingList.data.sort(function (a, b) {
-            return a.fieldsort - b.fieldsort
-          })
+        this.formSettingList.data.sort(function (a, b) {
+          return a.fieldsort - b.fieldsort
+        })
       } else {
         //fieldsortlist
         this.formSettingList.data.splice(parseInt(this.currentItem.fieldsortlist) - 1, 1)
@@ -252,12 +252,12 @@ export default {
       this.sortVisible = false
     },
     showSort(name, record) {
-      if(name=='fieldsort'){
-          this.formSettingList.data.sort(function (a, b) {
+      if (name == 'fieldsort') {
+        this.formSettingList.data.sort(function (a, b) {
           return a.fieldsort - b.fieldsort
         })
-      }else{
-          this.formSettingList.data.sort(function (a, b) {
+      } else {
+        this.formSettingList.data.sort(function (a, b) {
           return a.fieldsortlist - b.fieldsortlist
         })
       }
@@ -282,6 +282,7 @@ export default {
         if (res.status == 'FAILED') {
           this.$message.error(res.errorMsg)
         } else {
+          this.$message.info('恢复默认值成功')
           this.getlist()
         }
       })

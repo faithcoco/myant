@@ -256,7 +256,7 @@ export default {
           values.departmentid = this.departmentid
           values.personid = this.personid
           values.vendorid = this.vendorid
-         
+
           values.approvalprocess = values.approvalprocess.join()
           console.log('submit url-->', submitUrl)
           console.log('submit parameter-->', JSON.stringify(values))
@@ -455,7 +455,6 @@ export default {
         var formkey = Object.keys(formdata)
 
         for (const key in formkey) {
-        
           this.form.setFieldsValue({
             [formkey[key]]: this.selectList[0][formkey[key]],
           })
@@ -463,19 +462,28 @@ export default {
         this.form.setFieldsValue({
           vendorid: this.selectList[0].vendorcode,
         })
-       
+
         this.form.setFieldsValue({
           personid: this.selectList[0].personname,
         })
         this.form.setFieldsValue({
           departmentid: this.selectList[0].departmentname,
         })
+        if (this.selectList[0].approvalprocess == '启用') {
+          this.form.setFieldsValue({
+            approvalprocess: ['1'],
+          })
+        } else {
+           this.form.setFieldsValue({
+            approvalprocess: ['2'],
+          })
+        }
         this.billcode = this.selectList[0].receiptnoticeid
         this.personid = this.selectList[0].personid
         this.departmentid = this.selectList[0].departmentid
-      
+
         this.vendorid = this.selectList[0].vendorid
-         this.getList('ReceiptNoticeList', this.selectList[0].receiptnoticeid)
+        this.getList('ReceiptNoticeList', this.selectList[0].receiptnoticeid)
       }
     },
     handleCancel(e) {
@@ -593,7 +601,7 @@ export default {
     },
 
     // 返回到清单页面
-    Back() {
+    Back(e) {
       this.status = 2
       this.submit()
       // 路由跳转

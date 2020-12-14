@@ -277,6 +277,7 @@ export default {
           this.$message.error(res.errorMsg)
         } else {
           this.getlist()
+          this.$message.info('恢复默认值成功')
         }
       })
     },

@@ -11,7 +11,7 @@ const user = {
     avatar: '',
     roles: [],
     info: {},
-    selectkey:'c6d0f290-b045-4851-bcb8-d00b60081d22'
+    selectkey: 'c6d0f290-b045-4851-bcb8-d00b60081d22'
   },
 
   mutations: {
@@ -64,6 +64,10 @@ const user = {
         getInfo(params).then(response => {
 
           const result = response.result
+          if (result.name == '管理员') {
+            result.role.permissions.push({ "permissionId": "admin" })
+          }
+
           if (result.role && result.role.permissions.length > 0) {
             const role = result.role
             role.permissions = result.role.permissions

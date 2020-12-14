@@ -185,6 +185,7 @@ export default {
       currentId: '',
       disabled: true,
       value: 3,
+      isReference:false
     }
   },
   created() {
@@ -209,7 +210,7 @@ export default {
       }
 
       getFormSettingList(parameter).then((res) => {
-        console.log('getFormSettingList-->', JSON.stringify(res))
+        
         if (res.status == 'FAILED') {
           this.$message.error(res.errorMsg)
         } else {
@@ -261,6 +262,7 @@ export default {
     },
     onSubmit(e) {
       updateForm(this.formSettingList).then((res) => {
+       
         this.$message.success('更改成功')
         this.getlist()
       })

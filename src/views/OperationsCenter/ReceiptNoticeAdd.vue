@@ -53,9 +53,9 @@
               <a-tabs>
                 <a-tab-pane tab="明细">
                   <a-button @click="() => detailModal()">选择</a-button>
-                  <a-table :columns="columns" :data-source="deatilData" :scroll="{ x: 1500 }">
+                  <a-table :columns="columns" :data-source="deatilData" :scroll="{ x: 3000 }">
                     <template v-for="col in columns" :slot="col.dataIndex" slot-scope="text, record, index">
-                      <div :key="col.dataIndex">
+                      <div v-if="record.editable">
                         <a-input
                           :value="text"
                           @change="(e) => handleChange(e.target.value, col.dataIndex, record)"
@@ -197,7 +197,8 @@ export default {
       billcode: '',
       destroyOnClose: true,
       menu: '',
-      status: 1, //1continue2back
+      status: 1, //1保存继续2保存返回
+      stockincode:''
     }
   },
   created() {
@@ -334,6 +335,9 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, urlColumns).then((res) => {
         this.columns = res.result.columns
+        this.columns.unshift({title:'行号',dataIndex:'key',key:'key',width:'200px'})
+        console.log('columns-->',JSON.stringify(this.columns))
+        
       })
     },
     getList(menu, id) {
@@ -356,8 +360,13 @@ export default {
         this.deatilData = []
         this.deatilData = res.result.data
         for (const key in this.deatilData) {
-          this.deatilData[key].id = key
+          var data = []
+          data.push({materialcode:'钢铁'})
+         // data.push(this.deatilData[key])
+          this.deatilData[key].editable=true
+        //  this.deatilData[key].children = data
         }
+        console.log('list dta--->', JSON.stringify(this.deatilData))
       })
     },
     detailSelect(list) {
@@ -462,6 +471,11 @@ export default {
         this.form.setFieldsValue({
           vendorid: this.selectList[0].vendorcode,
         })
+        console.log('code--->',this.stockincode)
+         this.form.setFieldsValue({
+          stockincode: this.stockincode,
+        })
+
 
         this.form.setFieldsValue({
           personid: this.selectList[0].personname,
@@ -474,14 +488,14 @@ export default {
             approvalprocess: ['1'],
           })
         } else {
-           this.form.setFieldsValue({
+          this.form.setFieldsValue({
             approvalprocess: ['2'],
           })
         }
         this.billcode = this.selectList[0].receiptnoticeid
         this.personid = this.selectList[0].personid
         this.departmentid = this.selectList[0].departmentid
-
+ 
         this.vendorid = this.selectList[0].vendorid
         this.getList('ReceiptNoticeList', this.selectList[0].receiptnoticeid)
       }
@@ -567,10 +581,11 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       this.data = []
       getForm(columnsParams, this.urlForm).then((res) => {
+          console.log('form res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = res.result
         } else {
-          console.log('form res-->', JSON.stringify(res))
+        
           this.$message.warn('EXCEPTION')
         }
 
@@ -589,6 +604,8 @@ export default {
               this.businessclasscode = this.data[i].keyvalue
             } else if (this.data[i].key == 'receiptnoticecode') {
               this.billcode = this.data[i].keyvalue
+            } else if (this.data[i].key == 'stockincode') {
+              this.stockincode = this.data[i].value
             }
           }
           this.spinning = false

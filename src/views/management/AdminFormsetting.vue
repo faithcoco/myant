@@ -213,7 +213,7 @@ export default {
       }
 
       getFormSettingList(parameter).then((res) => {
-        console.log('getFormSettingList-->', JSON.stringify(res))
+       
         if (res.status == 'FAILED') {
           this.$message.error(res.errorMsg)
         } else {

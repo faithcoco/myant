@@ -13,29 +13,47 @@
       <a-spin :spinning="loading">
         <a-tabs>
           <a-tab-pane tab="通知" key="1">
-            <a-list>
-              <a-list-item>
-                <a-list-item-meta title="你收到了 14 份新周报" description="一年前">
-                  <a-avatar style="background-color: white" slot="avatar" src="https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png"/>
-                </a-list-item-meta>
-              </a-list-item>
-              <a-list-item>
-                <a-list-item-meta title="你推荐的 曲妮妮 已通过第三轮面试" description="一年前">
-                  <a-avatar style="background-color: white" slot="avatar" src="https://gw.alipayobjects.com/zos/rmsportal/OKJXDXrmkNshAMvwtvhu.png"/>
-                </a-list-item-meta>
-              </a-list-item>
-              <a-list-item>
-                <a-list-item-meta title="这种模板可以区分多种通知类型" description="一年前">
-                  <a-avatar style="background-color: white" slot="avatar" src="https://gw.alipayobjects.com/zos/rmsportal/kISTdvpyTAhtGxpovNWd.png"/>
+            <a-list :data-source="noticeList">
+              <a-list-item slot="renderItem" slot-scope="item, index">
+                <a-list-item-meta :title="item.title">
+                  <a slot="description">{{ item.time | formatDate }}</a>
+                  <a-avatar
+                    style="background-color: white"
+                    slot="avatar"
+                    src="https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png"
+                  />
                 </a-list-item-meta>
               </a-list-item>
             </a-list>
           </a-tab-pane>
           <a-tab-pane tab="消息" key="2">
-            123
+            <a-list :data-source="commonList">
+              <a-list-item slot="renderItem" slot-scope="item, index">
+                <a-list-item-meta :title="item.title">
+                  <a slot="description">{{ item.time | formatDate }}</a>
+                  <a-avatar
+                    style="background-color: white"
+                    slot="avatar"
+                    src="https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png"
+                  />
+                </a-list-item-meta>
+              </a-list-item>
+            </a-list>
           </a-tab-pane>
           <a-tab-pane tab="待办" key="3">
-            123
+            <a-list :data-source="workTaskList">
+              <a-list-item slot="renderItem" slot-scope="item, index">
+                <a-list-item-meta :title="item.title">
+                  
+                  <a slot="description">{{ item.time | formatDate }}</a-col></a>
+                  <a-avatar
+                    style="background-color: white"
+                    slot="avatar"
+                    src="https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png"
+                  />
+                </a-list-item-meta>
+              </a-list-item>
+            </a-list>
           </a-tab-pane>
         </a-tabs>
       </a-spin>
@@ -49,42 +67,61 @@
 </template>
 
 <script>
+import { getData } from '@/api/manage'
+
 export default {
   name: 'HeaderNotice',
-  data () {
+  data() {
     return {
       loading: false,
-      visible: false
+      visible: false,
+      commonList: [],
+      noticeList:[],
+      workTaskList:[],
+      
     }
   },
+  created() {
+    this.getData()
+  },
   methods: {
-    fetchNotice () {
+    
+    getData() {
+      const params = {}
+      getData(params, '/desk/getDeskMsgList').then((res) => {
+        console.log('noticelcon res-->', JSON.stringify(res.result))
+        this.commonList = res.result.commonList
+        this.noticeList=res.result.noticeList
+        this.workTaskList=res.result.workTaskList
+      })
+    },
+    fetchNotice() {
       if (!this.visible) {
         this.loading = true
         setTimeout(() => {
           this.loading = false
-        }, 2000)
+        }, 500)
       } else {
         this.loading = false
       }
       this.visible = !this.visible
-    }
-  }
+    },
+  },
 }
 </script>
 
 <style lang="css">
-  .header-notice-wrapper {
-    top: 50px !important;
-  }
+.header-notice-wrapper {
+  top: 50px !important;
+}
 </style>
 <style lang="less" scoped>
-  .header-notice{
-    display: inline-block;
-    transition: all 0.3s;
+.header-notice {
+  display: inline-block;
+  transition: all 0.3s;
 
-    span {
-      vertical-align: initial;
-    }
+  span {
+    vertical-align: initial;
   }
+}
 </style>

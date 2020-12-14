@@ -72,11 +72,7 @@
           />
           <div slot="content">
             <a-form-item>
-              <a-mentions v-model="mentions" :rows="4">
-                <a-mentions-option v-for="item in personnelList" :key="item.key" :value="item.name">{{
-                  item.name
-                }}</a-mentions-option>
-              </a-mentions>
+              <a-textarea  v-model="content" :rows="4" />
 
               <a-upload
                 v-show="isContent"
@@ -208,6 +204,7 @@ export default {
       personIdList: [],
       approvalVisible: true,
       isContent: false,
+      content:''
     }
   },
   components: {},
@@ -283,7 +280,7 @@ export default {
     comment() {
       const parameter = {}
       parameter.bizid = this.materialid
-      parameter.msgcontent = this.mentions
+      parameter.msgcontent = this.content
       parameter.personIdList = this.personIdList
       parameter.sysAttachList = this.upload
       postData(parameter, '/work/sendMsg').then((res) => {
@@ -404,7 +401,7 @@ export default {
       const parameter = {}
       parameter.instanceId = this.instanceId
       parameter.bizid = this.materialid
-      parameter.approveNote = this.approveNote
+      parameter.approveNote = this.content
       getData(parameter, '/work/rejectProcess').then((res) => {
         if (res.status == 'SUCCESS') {
           console.log(JSON.stringify(res))
@@ -435,6 +432,7 @@ export default {
       parameter.instanceId = this.instanceId
       parameter.bizid = this.materialid
       parameter.approveNote = this.content
+      console.log('approval param----->',JSON.stringify(parameter))
       parameter.personIdList = getData(parameter, '/work/approveProcess').then((res) => {
         console.log('approval-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {

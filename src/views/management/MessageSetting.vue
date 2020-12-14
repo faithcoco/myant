@@ -2,17 +2,47 @@
   <a-card :bordered="false">
     <a-row :gutter="8">
       <a-col :span="5">
-        <s-tree
-          :dataSource="MessageSettinTree"
-          :openKeys.sync="openKeys"
-          :search="true"
-          @click="handleClick"
-          @add="handleAdd"
-          @titleClick="handleTitleClick"
-        ></s-tree>
+        <a-menu v-model="currentmenu">
+          <a-menu-item key="1">发送通知</a-menu-item>
+          <a-menu-item key="2">通知历史</a-menu-item>
+        </a-menu>
       </a-col>
       <a-col :span="19">
-        <a-table :columns="columns" :data-source="data" bordered>
+        <a-form
+          layout="horizontal"
+          :form="form"
+          :label-col="{ span: 2 }"
+          :wrapper-col="{ span: 10 }"
+          @submit="handleSubmit"
+        >
+          <a-form-item label="标题">
+            <a-input v-decorator="['msgtitle', { rules: [{ required: true, message: 'Please input your note!' }] }]" />
+          </a-form-item>
+          <a-form-item label="通知内容">
+            <a-input
+              v-decorator="['msgcontent', { rules: [{ required: true, message: 'Please input your note!' }] }]"
+            />
+          </a-form-item>
+          <a-form-item label="发送时间">
+            <a-radio-group v-model="time" @change="onChange">
+              <a-radio :value="1"> 立即</a-radio>
+              <a-radio :value="2"> 定时 </a-radio>
+            </a-radio-group>
+            <a-date-picker mode="time" show-time />
+          </a-form-item>
+          <a-form-item label="选择目标">
+            <a-radio-group v-model="time" @change="onChange">
+              <a-radio :value="1"> 所有人</a-radio>
+              <a-radio :value="2"> 部门 </a-radio>
+              <a-radio :value="3"> 特定人员 </a-radio>
+            </a-radio-group>
+          </a-form-item>
+          <a-form-item :wrapper-col="{ span: 12, offset: 5 }">
+            <a-button type="primary" html-type="submit"> 确定 </a-button>
+          </a-form-item>
+        </a-form>
+
+        <a-table v-show="false" :columns="columns" :data-source="data" bordered>
           <template slot="checked">
             <a-checkbox @change="onChange"></a-checkbox>
           </template>
@@ -28,7 +58,7 @@
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import OrgModal from '../other/modules/OrgModal'
-import { getMessageSettinTree, getMessageSettinList } from '@/api/manage'
+import { postData } from '@/api/manage'
 import Vue from 'vue'
 import { Layout } from 'ant-design-vue'
 import { Descriptions } from 'ant-design-vue'
@@ -36,7 +66,7 @@ Vue.use(Descriptions)
 const renderContent = (value, row, index) => {
   const obj = {
     children: value,
-    attrs: {}
+    attrs: {},
   }
   if (index === 4) {
     obj.attrs.colSpan = 0
@@ -45,35 +75,13 @@ const renderContent = (value, row, index) => {
 }
 
 const data = []
-// const data = [
-//   {
-//     key: '1',
-//     name: '系统将新建合同消息推送给',
-//     address: '消息会实时推送'
-//   },
-//   {
-//     key: '2',
-//     name: 'John Brown',
-//     tel: '0571-22098333',
-//     phone: 18889898888,
-//     age: 42,
-//     address: '消息会实时推送'
-//   },
-//   {
-//     key: '3',
-//     name: 'John Brown',
-//     age: 32,
-//     tel: '0575-22098909',
-//     phone: 18900010002,
-//     address: '消息会实时推送'
-//   }
-// ]
+
 export default {
   name: 'TreeList',
   components: {
     STable,
     STree,
-    OrgModal
+    OrgModal,
   },
   data() {
     const columns = [
@@ -85,7 +93,7 @@ export default {
         customRender: (value, row, index) => {
           const obj = {
             children: value,
-            attrs: {}
+            attrs: {},
           }
           if (index === 0) {
             obj.attrs.rowSpan = 3
@@ -99,7 +107,7 @@ export default {
             obj.attrs.colSpan = 0
           }
           return obj
-        }
+        },
       },
       {
         title: '推送人员或角色',
@@ -123,15 +131,15 @@ export default {
             )
           }
           return {
-            children: <a href="javascript:;">{text}</a>
+            children: <a href="javascript:;">{text}</a>,
           }
-        }
+        },
       },
       {
         title: '是否推送',
         colSpan: 1,
         dataIndex: 'tel',
-        scopedSlots: { customRender: 'checked' }
+        scopedSlots: { customRender: 'checked' },
       },
       {
         title: '推送时间',
@@ -140,7 +148,7 @@ export default {
         customRender: (value, row, index) => {
           const obj = {
             children: value,
-            attrs: {}
+            attrs: {},
           }
           if (index === 0) {
             obj.attrs.rowSpan = 3
@@ -154,8 +162,8 @@ export default {
             obj.attrs.colSpan = 0
           }
           return obj
-        }
-      }
+        },
+      },
     ]
     return {
       openKeys: ['key-01'],
@@ -166,25 +174,47 @@ export default {
       selectedRowKeys: [],
       selectedRows: [],
       data,
-      columns
+      columns,
+      labelCol: { span: 4 },
+      wrapperCol: { span: 14 },
+      other: '',
+      form: this.$form.createForm(this, { name: 'coordinated' }),
+      formLayout: 'horizontal',
+      time: 1,
+      currentmenu: ['1'],
     }
   },
-  created() {
-    getMessageSettinTree().then(res => {
-      this.MessageSettinTree = res.result
-    })
-    getMessageSettinList().then(res => {
-      this.data = res.data
-    })
-  },
+  created() {},
   methods: {
+    handleSubmit(e) {
+      e.preventDefault()
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          values.id=''
+          values.objectType='1'
+          values.personIdList=[]
+          values.sysAttachList=[]
+          postData(values, '/msg/insertMsg').then((res) => {
+            console.log('message res-->', JSON.stringify(res))
+           
+          })
+          
+        }
+      })
+    },
+    handleSelectChange(value) {
+      console.log(value)
+      this.form.setFieldsValue({
+        note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
+      })
+    },
     onChange(e) {
       console.log(`checked = ${e.target.checked}`)
     },
     handleClick(e) {
       console.log('handleClick', e)
       this.queryParam = {
-        key: e.key
+        key: e.key,
       }
       this.$refs.table.refresh(true)
     },
@@ -200,8 +230,8 @@ export default {
       console.log('titleClick', e)
     },
     handleSaveOk() {},
-    handleSaveClose() {}
-  }
+    handleSaveClose() {},
+  },
 }
 </script>
 

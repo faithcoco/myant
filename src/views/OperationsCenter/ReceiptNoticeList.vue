@@ -285,8 +285,8 @@ export default {
     add() {
       console.log('push-->', this.$route.name)
       this.$router.push({
-        name: 'ReceiptNoticeAdd',
-        params: {
+        path: 'ReceiptNoticeAdd',
+        query: {
           menu: this.$route.name,
           menuid: this.menuid,
           materialclassid: this.materialclassid,

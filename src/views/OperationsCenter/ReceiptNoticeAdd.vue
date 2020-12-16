@@ -3,79 +3,81 @@
     <a-spin size="large" :spinning="spinning" tip="正在加载">
       <div>
         <a-card>
-          <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
-            <a-form-item v-for="item in data" :label="item.title">
-              <div v-if="item.selectVisible">
-                <a-cascader
-                  v-decorator="item.decorator"
-                  v-show="item.selectVisible"
-                  :field-names="{ label: 'title', value: 'key', children: 'children' }"
-                  :options="item.selectList"
-                  placeholder="请选择"
-                  :disabled="item.disabled"
-                />
-              </div>
-              <div v-else>
-                <a-input
-                  v-decorator="item.decorator"
-                  :disabled="item.disabled"
-                  v-show="item.inputVisible"
-                  :maxLength="item.fieldlength"
-                />
-                <a-input-number
-                  :style="{ width: '1370px' }"
-                  v-decorator="item.decorator"
-                  v-show="item.inputnumberVisible"
-                  :max="item.fieldmax"
-                  :precision="item.fieldprecision"
-                  :disabled="item.disabled"
-                />
-                <a-date-picker
-                  :style="{ width: '100%' }"
-                  v-show="item.timepickerVisible"
-                  show-time
-                  format="YYYY-MM-DD HH:mm:ss"
-                  placeholder="选择日期"
-                  v-decorator="item.decorator"
-                  :disabled="item.disabled"
-                />
-                <a-input
-                  v-decorator="item.decorator"
-                  v-show="item.listVisible"
-                  :maxLength="item.fieldlength"
-                  :disabled="disabled"
-                >
-                  <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
-                </a-input>
-              </div>
-            </a-form-item>
-            <a-form-item :wrapper-col="{ span: 21, offset: 2 }">
-              <a-tabs>
-                <a-tab-pane tab="明细">
-                  <a-button @click="() => detailModal()">选择</a-button>
-                  <a-table :columns="columns" :data-source="deatilData" :scroll="{ x: 3000 }">
-                    <template v-for="col in columns" :slot="col.dataIndex" slot-scope="text, record, index">
-                      <div v-if="record.editable">
-                        <a-input
-                          :value="text"
-                          @change="(e) => handleChange(e.target.value, col.dataIndex, record)"
-                          v-if="col.isEdit"
-                        />
-                        <template v-else>
-                          {{ text }}
-                        </template>
-                      </div>
-                    </template>
-                    <span slot="action" slot-scope="text, record">
-                      <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
-                        <a href="javascript:;">删除</a>
-                      </a-popconfirm>
-                    </span>
-                  </a-table>
-                </a-tab-pane>
-              </a-tabs>
-            </a-form-item>
-          </a-form>
+          <div id="printTest">
+            <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
+              <a-form-item v-for="item in data" :label="item.title">
+                <div v-if="item.selectVisible">
+                  <a-cascader
+                    v-decorator="item.decorator"
+                    v-show="item.selectVisible"
+                    :field-names="{ label: 'title', value: 'key', children: 'children' }"
+                    :options="item.selectList"
+                    placeholder="请选择"
+                    :disabled="item.disabled"
+                  />
+                </div>
+                <div v-else>
+                  <a-input
+                    v-decorator="item.decorator"
+                    :disabled="item.disabled"
+                    v-show="item.inputVisible"
+                    :maxLength="item.fieldlength"
+                  />
+                  <a-input-number
+                    :style="{ width: '1370px' }"
+                    v-decorator="item.decorator"
+                    v-show="item.inputnumberVisible"
+                    :max="item.fieldmax"
+                    :precision="item.fieldprecision"
+                    :disabled="item.disabled"
+                  />
+                  <a-date-picker
+                    :style="{ width: '100%' }"
+                    v-show="item.timepickerVisible"
+                    show-time
+                    format="YYYY-MM-DD HH:mm:ss"
+                    placeholder="选择日期"
+                    v-decorator="item.decorator"
+                    :disabled="item.disabled"
+                  />
+                  <a-input
+                    v-decorator="item.decorator"
+                    v-show="item.listVisible"
+                    :maxLength="item.fieldlength"
+                    :disabled="disabled"
+                  >
+                    <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
+                  </a-input>
+                </div>
+              </a-form-item>
+              <a-form-item :wrapper-col="{ span: 21, offset: 2 }">
+                <a-tabs>
+                  <a-tab-pane tab="明细">
+                    <a-button @click="() => detailModal()">选择</a-button>
+                    <a-table :columns="columns" :data-source="detailsData" :scroll="{ x: 3000 }">
+                      <template v-for="col in columns" :slot="col.dataIndex" slot-scope="text, record, index">
+                        <div>
+                          <a-input
+                            :value="text"
+                            @change="(e) => handleChange(e.target.value, col.dataIndex, record)"
+                            v-if="record.editable"
+                          />
+                          <template v-else>
+                            {{ text }}
+                          </template>
+                        </div>
+                      </template>
+                      <span slot="action" slot-scope="text, record">
+                        <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
+                          <a href="javascript:;">删除</a>
+                        </a-popconfirm>
+                      </span>
+                    </a-table>
+                  </a-tab-pane>
+                </a-tabs>
+              </a-form-item>
+            </a-form>
+          </div>
           <a-modal
             title="选择"
             :visible="visible"
@@ -94,6 +96,7 @@
             width="1300px"
             :destroyOnClose="destroyOnClose"
           >
+            //单选种类
             <type :menuname="name" @onSelect="typeSelect"></type>
           </a-modal>
           <a-modal
@@ -151,7 +154,9 @@ import SelectModal from '../other/SelectModal'
 import { getProductListColumns } from '@/api/manage'
 import { Empty } from 'ant-design-vue'
 Vue.use(Empty)
+import Print from 'vue-print-nb'
 
+Vue.use(Print) //注册
 const numberRow = []
 export default {
   components: {
@@ -185,7 +190,7 @@ export default {
       currentkey: '',
       detailVisible: false,
       columns: [],
-      deatilData: [],
+      detailsData: [],
       menuid: '',
       departmentid: '',
       personid: '',
@@ -198,7 +203,7 @@ export default {
       destroyOnClose: true,
       menu: '',
       status: 1, //1保存继续2保存返回
-      stockincode:''
+      stockincode: '',
     }
   },
   created() {
@@ -247,13 +252,13 @@ export default {
               values.stockinid = this.materialid
             }
           }
-          if (this.deatilData.length == 0) {
+          if (this.detailsData.length == 0) {
             this.$message.warn('请添加明细')
             return
           }
 
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-          values.details = this.deatilData
+          values.details = this.detailsData
           values.departmentid = this.departmentid
           values.personid = this.personid
           values.vendorid = this.vendorid
@@ -266,7 +271,7 @@ export default {
               console.log('submit--->', JSON.stringify(res))
               if (this.$route.params.tag == 1) {
                 if (res.status == 'SUCCESS') {
-                  this.deatilData = []
+                  this.detailsData = []
                   if (this.status == 1) {
                     this.getFormdata()
                   } else if (this.status == 2) {
@@ -285,6 +290,14 @@ export default {
     },
     handleChange(value, key, record) {
       record[key] = value
+      // if (key == 'stockinlinequantity') {
+      //   if (record.children !== null) {
+      //     record.children[0].stockinlinequantity = '50'
+      //     record.children[1].stockinlinequantity = '50'
+      //   }
+      // }
+      console.log('key-->', JSON.stringify(key))
+      console.log('record-->', JSON.stringify(record))
     },
 
     submitApproval(e) {
@@ -302,8 +315,14 @@ export default {
       })
     },
     deleteItem(record) {
+     
       console.log('on delect', JSON.stringify(record))
-      this.deatilData = this.deatilData.filter((item) => item.id !== record.id)
+      if (record.children == null) {
+          this.detailsData[record.index].children = this.detailsData[record.index].children.filter((item) => item.key !== record.key)
+         
+      } else {
+        this.detailsData = this.detailsData.filter((item) => item.key !== record.key)
+      }
     },
     initdata() {
       this.spinning = true
@@ -321,7 +340,7 @@ export default {
       if (this.$route.params.tag == 2) {
         this.getList(this.$route.params.menu, this.$route.params.materialid)
       } else {
-        this.deatilData = []
+        this.detailsData = []
       }
       this.getFormdata()
       this.getColumns()
@@ -335,9 +354,8 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, urlColumns).then((res) => {
         this.columns = res.result.columns
-        this.columns.unshift({title:'行号',dataIndex:'key',key:'key',width:'200px'})
-        console.log('columns-->',JSON.stringify(this.columns))
-        
+        this.columns.unshift({ title: '行号', dataIndex: 'key', key: 'key', width: '200px' })
+        console.log('columns-->', JSON.stringify(this.columns))
       })
     },
     getList(menu, id) {
@@ -357,21 +375,16 @@ export default {
       console.log('listdata url--->', urlColumns)
       console.log('listdata parameter-->', JSON.stringify(columnsParams))
       getData(columnsParams, urlColumns).then((res) => {
-        this.deatilData = []
-        this.deatilData = res.result.data
-        for (const key in this.deatilData) {
-          var data = []
-          data.push({materialcode:'钢铁'})
-         // data.push(this.deatilData[key])
-          this.deatilData[key].editable=true
-        //  this.deatilData[key].children = data
+        this.detailsData = []
+        this.detailsData = res.result.data
+        for (const key in this.detailsData) {
+          this.detailsData[key].editable = true
         }
-        console.log('list dta--->', JSON.stringify(this.deatilData))
       })
     },
     detailSelect(list) {
-      console.log('detail-->', JSON.stringify(list))
       this.selectList = list
+      console.log('detail-->', JSON.stringify(this.selectList))
     },
     getSelect(list) {
       this.selectList = list
@@ -382,8 +395,8 @@ export default {
     },
     detailModal(e) {
       this.selectedRowKeys = []
-      for (const key in this.deatilData) {
-        this.selectedRowKeys.push(this.deatilData[key].materialid)
+      for (const key in this.detailsData) {
+        this.selectedRowKeys.push(this.detailsData[key].materialid)
       }
 
       this.detailVisible = true
@@ -391,10 +404,25 @@ export default {
     },
     detailOk(e) {
       this.detailVisible = false
-      this.deatilData = this.deatilData.concat(this.selectList)
-      for (const key in this.deatilData) {
-        this.deatilData[key].id = key
+
+      for (const key in this.selectList) {
+        this.selectList[key].editable = true
+        if (this.$route.params.menu == 'StorageManagementList') {
+          var child = []
+          child.push(JSON.parse(JSON.stringify(this.selectList[key])), JSON.parse(JSON.stringify(this.selectList[key])))
+          child[0].key = this.selectList[key].key + '-1'
+          child[0].index = '0'
+          child[1].key = this.selectList[key].key + '-2'
+          child[1].index = '0'
+          this.selectList[key].children = child
+        }
       }
+
+      this.detailsData = this.detailsData.concat(this.selectList)
+      for (const key in this.detailsData) {
+        this.detailsData[key].key = key
+      }
+      console.log('details-->', JSON.stringify(this.detailsData))
     },
     detailCancel(e) {
       this.detailVisible = false
@@ -471,11 +499,10 @@ export default {
         this.form.setFieldsValue({
           vendorid: this.selectList[0].vendorcode,
         })
-        console.log('code--->',this.stockincode)
-         this.form.setFieldsValue({
+        console.log('code--->', this.stockincode)
+        this.form.setFieldsValue({
           stockincode: this.stockincode,
         })
-
 
         this.form.setFieldsValue({
           personid: this.selectList[0].personname,
@@ -495,7 +522,7 @@ export default {
         this.billcode = this.selectList[0].receiptnoticeid
         this.personid = this.selectList[0].personid
         this.departmentid = this.selectList[0].departmentid
- 
+
         this.vendorid = this.selectList[0].vendorid
         this.getList('ReceiptNoticeList', this.selectList[0].receiptnoticeid)
       }
@@ -581,11 +608,9 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       this.data = []
       getForm(columnsParams, this.urlForm).then((res) => {
-          console.log('form res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = res.result
         } else {
-        
           this.$message.warn('EXCEPTION')
         }
 

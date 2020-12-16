@@ -253,7 +253,7 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       getForm(columnsParams, this.urlForm).then((res) => {
         this.data = res.result
-        console.log('form res-->', JSON.stringify(this.data))
+       
         setTimeout(() => {
           for (const i in this.data) {
             if (this.data[i].value !== '') {

@@ -290,7 +290,7 @@ export default {
     },
     handleChange(value, key, record) {
       record[key] = value
-   
+
       console.log('key-->', JSON.stringify(key))
       console.log('record-->', JSON.stringify(record))
     },
@@ -310,11 +310,11 @@ export default {
       })
     },
     deleteItem(record) {
-     
       console.log('on delect', JSON.stringify(record))
       if (record.children == null) {
-          this.detailsData[record.index].children = this.detailsData[record.index].children.filter((item) => item.key !== record.key)
-         
+        this.detailsData[record.index].children = this.detailsData[record.index].children.filter(
+          (item) => item.key !== record.key
+        )
       } else {
         this.detailsData = this.detailsData.filter((item) => item.key !== record.key)
       }
@@ -374,6 +374,18 @@ export default {
         this.detailsData = res.result.data
         for (const key in this.detailsData) {
           this.detailsData[key].editable = true
+          if (this.$route.query.menu == 'StorageManagementList') {
+            var child = []
+            child.push(
+              JSON.parse(JSON.stringify(this.detailsData[key])),
+              JSON.parse(JSON.stringify(this.detailsData[key]))
+            )
+            child[0].key = this.detailsData[key].key + '-1'
+            child[0].index = '0'
+            child[1].key = this.detailsData[key].key + '-2'
+            child[1].index = '0'
+            this.detailsData[key].children = child
+          }
         }
       })
     },

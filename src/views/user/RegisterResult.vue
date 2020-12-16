@@ -31,13 +31,13 @@ export default {
   computed: {
     EnterpriseName () {
       
-      const v = this.$route.params.EnterpriseName
+      const v = this.$route.query.EnterpriseName
       const title = `你的账户：${v} 注册成功`
       return title
     }
   },
   created () {
-    this.form = this.$route.params.data
+    this.form = this.$route.query.data
    
   },
   methods: {

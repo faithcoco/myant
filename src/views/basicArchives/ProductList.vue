@@ -335,8 +335,8 @@ export default {
 
     classify(e) {
       this.$router.push({
-        name: 'Type',
-        params: {
+        path: 'Type',
+        query: {
           menu: this.$route.name,
           baseTitle: this.$route.meta.title,
         },
@@ -344,8 +344,8 @@ export default {
     },
     add() {
       this.$router.push({
-        name: 'ProductAdd',
-        params: {
+        path: 'ProductAdd',
+        query: {
           menu: this.$route.name,
           menuid: this.menuid,
           materialclassid: this.materialclassid,
@@ -369,8 +369,8 @@ export default {
       }
 
       this.$router.push({
-        name: 'ProductAdd',
-        params: {
+        path: 'ProductAdd',
+        query: {
           menu: this.$route.name,
           materialid: this.materialid,
           tag: 2,

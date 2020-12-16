@@ -92,13 +92,13 @@ export default {
     }
   },
   created() {
-    this.initData(this.$route.params.menu)
+    this.initData(this.$route.query.menu)
   },
   watch: {
     $route: {
       handler: function (val, oldVal) {
         if (val.params.baseTitle !== undefined) {
-          this.initData(this.$route.params.menu)
+          this.initData(this.$route.query.menu)
         }
       },
       // 深度观察监听
@@ -107,7 +107,7 @@ export default {
   methods: {
     initData(name) {
       this.name = name
-      this.title = this.$route.params.baseTitle + '分类'
+      this.title = this.$route.query.baseTitle + '分类'
       if (name == 'PersonnelSetting') {
         this.url = '/bd/Sector'
         this.urlAdd = '/bd/insertDepartment'

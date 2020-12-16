@@ -223,7 +223,7 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-        if (val.params.storageTitle !== undefined) {
+        if (val.query.storageTitle !== undefined) {
           this.initdata()
         }
       },
@@ -237,17 +237,17 @@ export default {
     submit() {
       this.form.validateFields((err, values) => {
         if (!err) {
-          if (this.$route.params.tag == 1) {
-            if (this.$route.params.menu == 'ReceiptNoticeList') {
+          if (this.$route.query.tag == 1) {
+            if (this.$route.query.menu == 'ReceiptNoticeList') {
               var submitUrl = '/bd/docreceiptnotice/instersave'
-            } else if (this.$route.params.menu == 'StorageManagementList') {
+            } else if (this.$route.query.menu == 'StorageManagementList') {
               var submitUrl = '/bd/Stockinrecord/insterSave'
             }
           } else {
-            if (this.$route.params.menu == 'ReceiptNoticeList') {
+            if (this.$route.query.menu == 'ReceiptNoticeList') {
               var submitUrl = '/bd/docreceiptnotice/updatesave'
               values.receiptnoticeid = this.materialid
-            } else if (this.$route.params.menu == 'StorageManagementList') {
+            } else if (this.$route.query.menu == 'StorageManagementList') {
               var submitUrl = '/bd/Stockinrecord/updateSave'
               values.stockinid = this.materialid
             }
@@ -269,7 +269,7 @@ export default {
           submitForm(values, submitUrl)
             .then((res) => {
               console.log('submit--->', JSON.stringify(res))
-              if (this.$route.params.tag == 1) {
+              if (this.$route.query.tag == 1) {
                 if (res.status == 'SUCCESS') {
                   this.detailsData = []
                   if (this.status == 1) {
@@ -290,12 +290,7 @@ export default {
     },
     handleChange(value, key, record) {
       record[key] = value
-      // if (key == 'stockinlinequantity') {
-      //   if (record.children !== null) {
-      //     record.children[0].stockinlinequantity = '50'
-      //     record.children[1].stockinlinequantity = '50'
-      //   }
-      // }
+   
       console.log('key-->', JSON.stringify(key))
       console.log('record-->', JSON.stringify(record))
     },
@@ -326,19 +321,19 @@ export default {
     },
     initdata() {
       this.spinning = true
-      this.menu = this.$route.params.menu
+      this.menu = this.$route.query.menu
       console.log('add menu-->', this.$route)
-      if (this.$route.params.menu == 'ReceiptNoticeList') {
+      if (this.$route.query.menu == 'ReceiptNoticeList') {
         this.memuid = '03bf0fb1-e9fb-4014-92e7-7121f4f72003'
-      } else if (this.$route.params.menu == 'StorageManagementList') {
+      } else if (this.$route.query.menu == 'StorageManagementList') {
         this.memuid = '03bf0fb1-e9fb-4014-92e7-7121f4f72002'
       } else {
         return
       }
-      this.materialid = this.$route.params.materialid
+      this.materialid = this.$route.query.materialid
       console.log('route-->', this.$route)
-      if (this.$route.params.tag == 2) {
-        this.getList(this.$route.params.menu, this.$route.params.materialid)
+      if (this.$route.query.tag == 2) {
+        this.getList(this.$route.query.menu, this.$route.query.materialid)
       } else {
         this.detailsData = []
       }
@@ -407,7 +402,7 @@ export default {
 
       for (const key in this.selectList) {
         this.selectList[key].editable = true
-        if (this.$route.params.menu == 'StorageManagementList') {
+        if (this.$route.query.menu == 'StorageManagementList') {
           var child = []
           child.push(JSON.parse(JSON.stringify(this.selectList[key])), JSON.parse(JSON.stringify(this.selectList[key])))
           child[0].key = this.selectList[key].key + '-1'
@@ -575,29 +570,29 @@ export default {
     },
 
     getFormdata() {
-      this.modalname = this.$route.params.menu
-      this.menuid = this.$route.params.menuid
+      this.modalname = this.$route.query.menu
+      this.menuid = this.$route.query.menuid
       const columnsParams = {}
       columnsParams.memuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
 
-      if (this.$route.params.tag == 1) {
+      if (this.$route.query.tag == 1) {
         this.approvalVisilbe = false
-        this.title = this.$route.params.storageTitle + '新增'
-        this.materialclassid = this.$route.params.materialclassid
-        if (this.$route.params.menu == 'ReceiptNoticeList') {
+        this.title = this.$route.query.storageTitle + '新增'
+        this.materialclassid = this.$route.query.materialclassid
+        if (this.$route.query.menu == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/insterform'
-        } else if (this.$route.params.menu == 'StorageManagementList') {
+        } else if (this.$route.query.menu == 'StorageManagementList') {
           this.urlForm = '/bd/Stockinrecord/insterForm'
         }
-      } else if (this.$route.params.tag == 2) {
+      } else if (this.$route.query.tag == 2) {
         this.approvalVisilbe = true
-        this.title = this.$route.params.storageTitle + '编辑'
+        this.title = this.$route.query.storageTitle + '编辑'
 
-        if (this.$route.params.menu == 'ReceiptNoticeList') {
+        if (this.$route.query.menu == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/updateform'
           columnsParams.receiptnoticeid = this.materialid
-        } else if (this.$route.params.menu == 'StorageManagementList') {
+        } else if (this.$route.query.menu == 'StorageManagementList') {
           this.urlForm = '/bd/Stockinrecord/updateForm'
           columnsParams.stockinid = this.materialid
         }

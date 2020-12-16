@@ -140,36 +140,36 @@ export default {
     handleSubmit(e) {
       this.form.validateFields((err, values) => {
         if (!err) {
-          if (this.$route.params.tag == 1) {
-            if (this.$route.params.menu == 'ProductList') {
+          if (this.$route.query.tag == 1) {
+            if (this.$route.query.menu == 'ProductList') {
               var submitUrl = '/bd/product/insterMaterial'
-            } else if (this.$route.params.menu == 'PersonnelSetting') {
+            } else if (this.$route.query.menu == 'PersonnelSetting') {
               var submitUrl = '/bd/baseperson/personinstersave'
-            } else if (this.$route.params.menu == 'SupplierList') {
+            } else if (this.$route.query.menu == 'SupplierList') {
               var submitUrl = '/bd/basevendor/vendorinstersave'
-            } else if (this.$route.params.menu == 'CustomerList') {
+            } else if (this.$route.query.menu == 'CustomerList') {
               var submitUrl = '/bd/customer/customerinstersave'
-            } else if (this.$route.params.menu == 'WarehouseList') {
+            } else if (this.$route.query.menu == 'WarehouseList') {
               var submitUrl = '/bd/warehouse/warehouseinstersave'
-            } else if (this.$route.params.menu == 'CargoSpace') {
+            } else if (this.$route.query.menu == 'CargoSpace') {
               var submitUrl = '/bd/warehouse/positioninsterSave'
             }
           } else {
-            if (this.$route.params.menu == 'ProductList') {
+            if (this.$route.query.menu == 'ProductList') {
               var submitUrl = '/bd/product/updateMaterial'
               values.materialid = this.materialid
-            } else if (this.$route.params.menu == 'PersonnelSetting') {
+            } else if (this.$route.query.menu == 'PersonnelSetting') {
               var submitUrl = '/bd/baseperson/personupdatesave'
-            } else if (this.$route.params.menu == 'SupplierList') {
+            } else if (this.$route.query.menu == 'SupplierList') {
               var submitUrl = '/bd/basevendor/vendorupdatesave'
               values.vendorid = this.materialid
-            } else if (this.$route.params.menu == 'CustomerList') {
+            } else if (this.$route.query.menu == 'CustomerList') {
               var submitUrl = '/bd/customer/customerupdatesave'
               values.customerid = this.materialid
-            } else if (this.$route.params.menu == 'WarehouseList') {
+            } else if (this.$route.query.menu == 'WarehouseList') {
               var submitUrl = '/bd/warehouse/warehouseupdatesave'
               values.warehouseid = this.materialid
-            } else if (this.$route.params.menu == 'CargoSpace') {
+            } else if (this.$route.query.menu == 'CargoSpace') {
               var submitUrl = '/bd/warehouse/positionupdateSave'
               values.positionid = this.materialid
             }
@@ -194,56 +194,56 @@ export default {
     },
 
     getFormdata() {
-      this.menuid = this.$route.params.menuid
+      this.menuid = this.$route.query.menuid
       const columnsParams = {}
       columnsParams.memuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
 
-      if (this.$route.params.tag == 1) {
-        this.title = this.$route.params.title + '新增'
-        this.materialclassid = this.$route.params.materialclassid
-        if (this.$route.params.menu == 'PersonnelSetting') {
+      if (this.$route.query.tag == 1) {
+        this.title = this.$route.query.title + '新增'
+        this.materialclassid = this.$route.query.materialclassid
+        if (this.$route.query.menu == 'PersonnelSetting') {
           this.urlForm = '/bd/baseperson/insterForm'
           columnsParams.departmentid = this.materialclassid
-        } else if (this.$route.params.menu == 'ProductList') {
+        } else if (this.$route.query.menu == 'ProductList') {
           this.urlForm = '/bd/product/materialList'
           columnsParams.materialclassid = this.materialclassid
-        } else if (this.$route.params.menu == 'SupplierList') {
+        } else if (this.$route.query.menu == 'SupplierList') {
           this.urlForm = '/bd/basevendor/insterForm'
           columnsParams.vendorclassid = this.materialclassid
-        } else if (this.$route.params.menu == 'CustomerList') {
+        } else if (this.$route.query.menu == 'CustomerList') {
           this.urlForm = '/bd/customer/insterForm'
           columnsParams.customerclassid = this.materialclassid
-        } else if (this.$route.params.menu == 'WarehouseList') {
+        } else if (this.$route.query.menu == 'WarehouseList') {
           this.urlForm = '/bd/warehouse/insterForm'
           columnsParams.warehouseclassid = this.materialclassid
-        } else if (this.$route.params.menu == 'CargoSpace') {
+        } else if (this.$route.query.menu == 'CargoSpace') {
           this.urlForm = '/bd/warehouse/positioninsterForm'
           columnsParams.positionid = this.materialid
           columnsParams.warehouseid = this.materialclassid
-        } else if (this.$route.params.menu == 'ReceiptNoticeList') {
+        } else if (this.$route.query.menu == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/insterform'
         }
-      } else if (this.$route.params.tag == 2) {
-        this.title = this.$route.params.title + '编辑'
-        this.materialid = this.$route.params.materialid
+      } else if (this.$route.query.tag == 2) {
+        this.title = this.$route.query.title + '编辑'
+        this.materialid = this.$route.query.materialid
         console.log('materialid', this.materialid)
-        if (this.$route.params.menu == 'ProductList') {
+        if (this.$route.query.menu == 'ProductList') {
           this.urlForm = '/bd/product/updateform'
           columnsParams.materialid = this.materialid
-        } else if (this.$route.params.menu == 'PersonnelSetting') {
+        } else if (this.$route.query.menu == 'PersonnelSetting') {
           this.urlForm = '/bd/baseperson/updateForm'
           columnsParams.personid = this.materialid
-        } else if (this.$route.params.menu == 'SupplierList') {
+        } else if (this.$route.query.menu == 'SupplierList') {
           this.urlForm = '/bd/basevendor/updateForm'
           columnsParams.vendorid = this.materialid
-        } else if (this.$route.params.menu == 'CustomerList') {
+        } else if (this.$route.query.menu == 'CustomerList') {
           this.urlForm = '/bd/customer/updateForm'
           columnsParams.customerid = this.materialid
-        } else if (this.$route.params.menu == 'WarehouseList') {
+        } else if (this.$route.query.menu == 'WarehouseList') {
           this.urlForm = '/bd/warehouse/updateForm'
           columnsParams.warehouseid = this.materialid
-        } else if (this.$route.params.menu == 'CargoSpace') {
+        } else if (this.$route.query.menu == 'CargoSpace') {
           this.urlForm = '/bd/warehouse/positionupdateForm'
           columnsParams.positionid = this.materialid
         }

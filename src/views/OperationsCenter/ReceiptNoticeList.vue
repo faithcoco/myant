@@ -184,6 +184,8 @@ export default {
       } else if (this.menu == 'ReceiptNoticeList') {
         this.urlList = '/bd/docreceiptnotice/list'
         this.urlDelete = '/bd/docreceiptnotice/del'
+      }else{
+        return
       }
       this.urlColumns = '/sys/setting/getSetting'
       const parameter = {}
@@ -304,8 +306,8 @@ export default {
       }
 
       this.$router.push({
-        name: 'ReceiptNoticeAdd',
-        params: {
+        path: 'ReceiptNoticeAdd',
+        query: {
           menu: this.$route.name,
           materialid: this.materialid,
           tag: 2,

@@ -81,7 +81,7 @@ export default {
       this.pageURI && this.$router.push({
         ...this.$route,
         name: this.$route.name,
-        params: Object.assign({}, this.$route.params, {
+        params: Object.assign({}, this.$route.query, {
           pageNo: val
         })
       })
@@ -103,7 +103,7 @@ export default {
     }
   },
   created () {
-    const { pageNo } = this.$route.params
+    const { pageNo } = this.$route.query
     const localPageNum = this.pageURI && (pageNo && parseInt(pageNo)) || this.pageNum
     this.localPagination = ['auto', true].includes(this.showPagination) && Object.assign({}, this.localPagination, {
       current: localPageNum,

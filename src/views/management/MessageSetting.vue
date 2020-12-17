@@ -2,13 +2,14 @@
   <a-card :bordered="false">
     <a-row :gutter="8">
       <a-col :span="5">
-        <a-menu v-model="currentmenu">
+        <a-menu v-model="currentmenu" @click="handleClick">
           <a-menu-item key="1">发送通知</a-menu-item>
           <a-menu-item key="2">通知历史</a-menu-item>
         </a-menu>
       </a-col>
       <a-col :span="19">
         <a-form
+          v-show="formVisible"
           layout="horizontal"
           :form="form"
           :label-col="{ span: 2 }"
@@ -23,7 +24,7 @@
               v-decorator="['msgcontent', { rules: [{ required: true, message: 'Please input your note!' }] }]"
             />
           </a-form-item>
-          <a-form-item label="发送时间">
+          <a-form-item label="发送时间" v-show="false">
             <a-radio-group v-model="time" @change="onChange">
               <a-radio :value="1"> 立即</a-radio>
               <a-radio :value="2"> 定时 </a-radio>
@@ -42,10 +43,9 @@
           </a-form-item>
         </a-form>
 
-        <a-table v-show="false" :columns="columns" :data-source="data" bordered>
-          <template slot="checked">
-            <a-checkbox @change="onChange"></a-checkbox>
-          </template>
+        <a-table v-show="tableVisible" :columns="columns" :data-source="data" bordered>
+         
+            <a slot="sendtime" slot-scope="text, record">{{ record.sendtime | formatDate }}</a>
         </a-table>
       </a-col>
     </a-row>
@@ -58,7 +58,7 @@
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import OrgModal from '../other/modules/OrgModal'
-import { postData } from '@/api/manage'
+import { postData, getData } from '@/api/manage'
 import Vue from 'vue'
 import { Layout } from 'ant-design-vue'
 import { Descriptions } from 'ant-design-vue'
@@ -86,85 +86,35 @@ export default {
   data() {
     const columns = [
       {
-        colSpan: 1,
-        title: '推送内容',
-        dataIndex: 'name',
-
-        customRender: (value, row, index) => {
-          const obj = {
-            children: value,
-            attrs: {},
-          }
-          if (index === 0) {
-            obj.attrs.rowSpan = 3
-          }
-
-          if (index === 1) {
-            obj.attrs.rowSpan = 0
-          }
-
-          if (index === 2) {
-            obj.attrs.colSpan = 0
-          }
-          return obj
-        },
+        title: '标题',
+        dataIndex: 'msgtitle',
+        key: 'msgtitle',
       },
       {
-        title: '推送人员或角色',
-        dataIndex: 'age',
-        customRender: (text, row, index) => {
-          if (index == 0) {
-            return <p>合同推送人</p>
-          }
-          if (index == 1) {
-            return (
-              <p>
-                人员： <a-input style="width: 400px" />
-              </p>
-            )
-          }
-          if (index == 2) {
-            return (
-              <p>
-                角色： <a-input style="width: 400px" />
-              </p>
-            )
-          }
-          return {
-            children: <a href="javascript:;">{text}</a>,
-          }
-        },
+        title: '内容',
+        dataIndex: 'msgcontent',
+        key: 'msgcontent',
+      },
+      {
+        title: '推送对象',
+        key: 'objectType',
+        dataIndex: 'objectType',
+        scopedSlots: { customRender: 'objectType' },
       },
       {
         title: '是否推送',
-        colSpan: 1,
-        dataIndex: 'tel',
-        scopedSlots: { customRender: 'checked' },
+        key: 'pushType',
+        dataIndex: 'pushType',
+        scopedSlots: { customRender: 'pushType' },
       },
       {
         title: '推送时间',
-        dataIndex: 'address',
-        customRender: renderContent,
-        customRender: (value, row, index) => {
-          const obj = {
-            children: value,
-            attrs: {},
-          }
-          if (index === 0) {
-            obj.attrs.rowSpan = 3
-          }
-          // These two are merged into above cell
-          if (index === 1) {
-            obj.attrs.rowSpan = 0
-          }
-
-          if (index === 2) {
-            obj.attrs.colSpan = 0
-          }
-          return obj
-        },
+        key: 'sendtime',
+        dataIndex: 'sendtime',
+        scopedSlots: { customRender: 'sendtime' },
       },
     ]
+
     return {
       openKeys: ['key-01'],
       // 查询参数
@@ -173,7 +123,7 @@ export default {
       MessageSettinTree: [],
       selectedRowKeys: [],
       selectedRows: [],
-      data,
+      data: [],
       columns,
       labelCol: { span: 4 },
       wrapperCol: { span: 14 },
@@ -182,42 +132,50 @@ export default {
       formLayout: 'horizontal',
       time: 1,
       currentmenu: ['1'],
+      formVisible: true,
+      tableVisible: false,
     }
   },
   created() {},
   methods: {
+    getTable() {
+      const param = {}
+      param.pageNo = 1
+      param.pageSize = 10
+      getData(param, '/msg/getMsgListData').then((res) => {
+     
+        this.data = res.result.data
+      })
+    },
+    handleClick(e) {
+      if (e.key == '1') {
+        this.formVisible = true
+        this.tableVisible = false
+      } else {
+        this.tableVisible = true
+        this.formVisible = false
+        this.getTable()
+      }
+    },
     handleSubmit(e) {
       e.preventDefault()
       this.form.validateFields((err, values) => {
         if (!err) {
-          values.id=''
-          values.objectType='1'
-          values.personIdList=[]
-          values.sysAttachList=[]
+          values.id = ''
+          values.objectType = '1'
+          values.personIdList = []
+          values.sysAttachList = []
           postData(values, '/msg/insertMsg').then((res) => {
             console.log('message res-->', JSON.stringify(res))
-           
           })
-          
         }
       })
     },
-    handleSelectChange(value) {
-      console.log(value)
-      this.form.setFieldsValue({
-        note: `Hi, ${value === 'male' ? 'man' : 'lady'}!`,
-      })
-    },
+
     onChange(e) {
       console.log(`checked = ${e.target.checked}`)
     },
-    handleClick(e) {
-      console.log('handleClick', e)
-      this.queryParam = {
-        key: e.key,
-      }
-      this.$refs.table.refresh(true)
-    },
+
     handleAdd(item) {
       console.log('add button, item', item)
       this.$message.info(`提示：你点了 ${item.key} - ${item.title} `)

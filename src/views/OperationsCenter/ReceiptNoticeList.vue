@@ -112,7 +112,7 @@ export default {
       product: {},
       urlDelete: '',
       treeData: [],
-      menu:'',
+      menu: '',
       isSearch: false,
       searchValue: '',
       searchKey: 'all',
@@ -150,9 +150,7 @@ export default {
     },
     showApproval(record) {
       this.approval_visible = true
-      if (this.menuname == 'ReceiptNoticeList') {
-        this.materialid = record.receiptnoticeid
-      }
+      this.materialid = record.docid
     },
     treeSearch(e) {
       const value = e.target.value
@@ -160,11 +158,8 @@ export default {
     },
     delete() {
       const columnsParams = {}
-      if (this.menuname == 'ReceiptNoticeList') {
-        columnsParams.receiptnoticeid = this.materialid
-      } else if (this.menu == 'StorageManagementList') {
-        columnsParams.stockinid = this.materialid
-      }
+    
+      columnsParams.docid=this.materialid
 
       console.log('delete url--->', this.urlDelete)
       console.log('delete params--->', JSON.stringify(columnsParams))
@@ -184,7 +179,7 @@ export default {
       } else if (this.menu == 'ReceiptNoticeList') {
         this.urlList = '/bd/docreceiptnotice/list'
         this.urlDelete = '/bd/docreceiptnotice/del'
-      }else{
+      } else {
         return
       }
       this.urlColumns = '/sys/setting/getSetting'
@@ -245,7 +240,7 @@ export default {
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
-       
+        console.log('list--->', JSON.stringify(res.result.data[0]))
         this.listdata = []
         if (res.status == 'SUCCESS') {
           this.pagination.current = res.result.pageNo
@@ -299,11 +294,7 @@ export default {
     },
 
     handleEdit(record) {
-      if (this.menuname == 'ReceiptNoticeList') {
-        this.materialid = record.receiptnoticeid
-      } else if (this.menuname == 'StorageManagementList') {
-        this.materialid = record.stockinid
-      }
+      this.materialid = record.docid
 
       this.$router.push({
         path: 'ReceiptNoticeAdd',
@@ -317,11 +308,7 @@ export default {
       })
     },
     deleteItem(record) {
-      if (this.menuname == 'ReceiptNoticeList') {
-        this.materialid = record.receiptnoticeid
-      } else if (this.menuname == 'StorageManagementList') {
-        this.materialid = record.stockinid
-      }
+      this.materialid = record.docid
       this.delete()
     },
     handleSub(record) {

@@ -67,9 +67,9 @@
                           </template>
                         </div>
                       </template>
-                      <span slot="action" slot-scope="text, record">
+                      <span slot="action" slot-scope="text, record" >
                         <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
-                          <a href="javascript:;">删除</a>
+                          <a href="javascript:;" v-show="record.children">删除</a>
                         </a-popconfirm>
                       </span>
                     </a-table>
@@ -246,11 +246,12 @@ export default {
           } else {
             if (this.$route.query.menu == 'ReceiptNoticeList') {
               var submitUrl = '/bd/docreceiptnotice/updatesave'
-              values.receiptnoticeid = this.materialid
+             
             } else if (this.$route.query.menu == 'StorageManagementList') {
               var submitUrl = '/bd/Stockinrecord/updateSave'
-              values.stockinid = this.materialid
+             
             }
+            values.docid=this.materialid
           }
           if (this.detailsData.length == 0) {
             this.$message.warn('请添加明细')
@@ -350,7 +351,6 @@ export default {
       getProductListColumns(columnsParams, urlColumns).then((res) => {
         this.columns = res.result.columns
         this.columns.unshift({ title: '行号', dataIndex: 'key', key: 'key', width: '200px' })
-        console.log('columns-->', JSON.stringify(this.columns))
       })
     },
     getList(menu, id) {
@@ -361,11 +361,10 @@ export default {
 
       if (menu == 'ReceiptNoticeList') {
         var urlColumns = '/bd/docreceiptnotice/childrenlist'
-        columnsParams.receiptnoticeid = id
       } else if (menu == 'StorageManagementList') {
         var urlColumns = '/bd/Stockinrecord/stockinrecordlineList'
-        columnsParams.stockinid = id
       }
+      columnsParams.docid = id
 
       console.log('listdata url--->', urlColumns)
       console.log('listdata parameter-->', JSON.stringify(columnsParams))
@@ -526,12 +525,12 @@ export default {
             approvalprocess: ['2'],
           })
         }
-        this.billcode = this.selectList[0].receiptnoticeid
+        this.billcode = this.selectList[0].docid
         this.personid = this.selectList[0].personid
         this.departmentid = this.selectList[0].departmentid
 
         this.vendorid = this.selectList[0].vendorid
-        this.getList('ReceiptNoticeList', this.selectList[0].receiptnoticeid)
+        this.getList('ReceiptNoticeList', this.selectList[0].docid)
       }
     },
     handleCancel(e) {
@@ -603,12 +602,12 @@ export default {
 
         if (this.$route.query.menu == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/updateform'
-          columnsParams.receiptnoticeid = this.materialid
         } else if (this.$route.query.menu == 'StorageManagementList') {
           this.urlForm = '/bd/Stockinrecord/updateForm'
-          columnsParams.stockinid = this.materialid
         }
+        columnsParams.docid = this.materialid
       }
+      
       this.$multiTab.rename(this.$route.path, this.title)
 
       console.log('form url--->', this.urlForm)

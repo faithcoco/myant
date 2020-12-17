@@ -5,7 +5,7 @@
         <div class="approvalTree">
           <s-tree
             :dataSource="approvalSettinTree"
-            :openKeys.sync="openKeys"
+           
             :search="true"
             @click="handleClick"
             @add="handleAdd"

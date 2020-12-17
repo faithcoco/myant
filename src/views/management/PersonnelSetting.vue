@@ -331,7 +331,7 @@
         columnsParams.menuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
         columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         getPersonnelSettingColumns(columnsParams).then((res) => {
-          console.log("getPersonnelSettingColumns-->",JSON.stringify(res))
+          
           this.columns = res.result.columns
         })
       },

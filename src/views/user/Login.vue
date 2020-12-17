@@ -174,7 +174,7 @@ export default {
       .then((res) => {
         console.log('2step-code-->', JSON.stringify(res))
 
-        this.requiredTwoStepCaptcha = res.result.stepCode
+        this.requiredTwoStepCaptcha = res.result.errorCode
       })
       .catch(() => {
         this.requiredTwoStepCaptcha = false

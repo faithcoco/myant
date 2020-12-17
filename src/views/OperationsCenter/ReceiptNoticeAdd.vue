@@ -68,7 +68,7 @@
                     </template>
                     <span slot="action" slot-scope="text, record">
                       <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
-                        <a href="javascript:;" >删除</a>
+                        <a href="javascript:;">删除</a>
                       </a-popconfirm>
                     </span>
                   </a-table>
@@ -338,7 +338,7 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, urlColumns).then((res) => {
         this.columns = res.result.columns
-        //this.columns.unshift({ title: '行号', dataIndex: 'key', key: 'key', width: '200px' })
+        this.columns.unshift({ title: '行号', dataIndex: 'key', key: 'key', width: '200px' })
       })
     },
     getList(menu, id) {
@@ -365,16 +365,16 @@ export default {
           var temp = {}
           temp = JSON.parse(JSON.stringify(this.detailsData[key]))
           temp.editable = true
-          
+
           if (this.detailsData[key].doclinequantity) {
             temp.doclinequantity = parseInt(this.detailsData[key].doclinequantity) / 2
           }
           this.detailsData.push(temp)
           this.detailsData.push(temp)
         }
-      
-        
-
+        this.detailsData = this.detailsData.map((item, index) => {
+          return { ...item, key: index }
+        })
       })
     },
     detailSelect(list) {
@@ -410,7 +410,10 @@ export default {
 
       this.detailsData = this.detailsData.concat(this.selectList)
 
-      
+      this.detailsData = this.detailsData.map((item, index) => {
+        return { ...item, key: index }
+      })
+      console.log('details ok-->', JSON.stringify(this.detailsData))
     },
     detailCancel(e) {
       this.detailVisible = false

@@ -98,7 +98,7 @@
             width="1300px"
             :destroyOnClose="destroyOnClose"
           >
-            //单选种类
+          
             <type :menuname="name" @onSelect="typeSelect"></type>
           </a-modal>
           <a-modal
@@ -291,6 +291,7 @@ export default {
           values.departmentid = this.departmentid
           values.personid = this.personid
           values.vendorid = this.vendorid
+          values.businessclasscode=this.businessclasscode
 
           values.approvalprocess = values.approvalprocess.join()
           console.log('submit url-->', submitUrl)
@@ -539,7 +540,7 @@ export default {
 
         this.personid = this.selectList[0].personid
         this.departmentid = this.selectList[0].departmentid
-
+        this.businessclasscode=this.selectList[0].businessclassid
         this.vendorid = this.selectList[0].vendorid
         this.getList('ReceiptNoticeList', this.selectList[0].docid)
         this.isReference = true
@@ -614,6 +615,8 @@ export default {
 
       if (this.$route.query.tag == 1) {
         this.approvalVisilbe = false
+        this.continueVisible=true
+        this.saveVisible=true
         this.title = this.$route.query.storageTitle + '新增'
         this.materialclassid = this.$route.query.materialclassid
         if (this.$route.query.menu == 'ReceiptNoticeList') {

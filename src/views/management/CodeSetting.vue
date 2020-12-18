@@ -118,7 +118,8 @@ export default {
     },
     ruleChange(value, record) {
       console.log(`selected ${value}`)
-      record.prefix2 = value
+      record.ismanual = value
+     
     },
   },
 }

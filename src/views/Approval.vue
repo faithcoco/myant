@@ -42,11 +42,12 @@
         </a-timeline-item>
       </a-timeline>
       <a-row type="flex" justify="center">
-        <a-col :span="9">
+        <a-col :span="12">
           <a-button type="primary" v-show="approvalVisible" style="margin-right: 10px" @click="approvalClick"
             >同意</a-button
           >
-          <a-button type="danger" v-show="approvalVisible" style="margin-right: 10px" @click="cancelClick"
+          
+          <a-button type="danger" v-show="approvalVisible" style="margin-right: 10px" @click="refuceClick"
             >拒绝</a-button
           >
           <a-button type="primary" style="margin-right: 10px" @click="chatClick">评论</a-button>
@@ -72,7 +73,7 @@
           />
           <div slot="content">
             <a-form-item>
-              <a-textarea  v-model="content" :rows="4" />
+              <a-textarea v-model="content" :rows="4" />
 
               <a-upload
                 v-show="isContent"
@@ -204,7 +205,7 @@ export default {
       personIdList: [],
       approvalVisible: true,
       isContent: false,
-      content:''
+      content: '',
     }
   },
   components: {},
@@ -359,16 +360,15 @@ export default {
       console.log('materialid', this.materialid)
       if (this.menu == 'ReceiptNoticeList') {
         this.urlForm = '/bd/docreceiptnotice/updateform'
-        columnsParams.receiptnoticeid = this.materialid
       }
-
+      columnsParams.docid = this.materialid
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
 
       getData(columnsParams, this.urlForm).then((res) => {
         if (res.status == 'SUCCESS') {
           this.data = []
-          this.descriptions=[]
+          this.descriptions = []
           this.data = res.result
 
           for (const key in res.result) {
@@ -379,7 +379,7 @@ export default {
             }
           }
         } else {
-          this.$message.warn('EXCEPTION')
+          this.$message.warn(res.errorMsg)
         }
       })
     },
@@ -420,7 +420,8 @@ export default {
       this.title = '审批'
       this.isContent = false
     },
-    cancelClick() {
+  
+    refuceClick() {
       this.currtent = 2
       this.content = ''
       this.chat_visible = true
@@ -433,15 +434,16 @@ export default {
       parameter.instanceId = this.instanceId
       parameter.bizid = this.materialid
       parameter.approveNote = this.content
-      console.log('approval param----->',JSON.stringify(parameter))
-      parameter.personIdList = getData(parameter, '/work/approveProcess').then((res) => {
+
+      console.log('approval param----->', JSON.stringify(parameter))
+      getData(parameter, '/work/approveProcess').then((res) => {
         console.log('approval-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.content = ''
-        
+
           this.getTimeline()
         } else {
-          this.$message.warn('EXCEPTION')
+          this.$message.warn(res.errorMsg)
         }
       })
     },

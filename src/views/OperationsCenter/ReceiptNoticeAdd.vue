@@ -58,8 +58,8 @@
                       <div>
                         <a-input
                           :value="text"
-                          @change="(e) => handleChange(e.target.value, col.dataIndex, record)"
-                          v-if="record.editable"
+                          @pressEnter="(e) => handleChange(e.target.value, col.dataIndex, record)"
+                          v-if="col.isEdit"
                         />
                         <template v-else>
                           {{ text }}
@@ -67,6 +67,9 @@
                       </div>
                     </template>
                     <span slot="action" slot-scope="text, record">
+                      <a @click="handleEdit(record)">编辑</a>
+                      <a-divider type="vertical" />
+
                       <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
                         <a href="javascript:;">删除</a>
                       </a-popconfirm>
@@ -116,14 +119,11 @@
     >
       <a-card>
         <a-row type="flex" justify="center" align="top">
-          <a-col :span="2">
-            <a-button type="primary" ref="submit" v-show="approvalVisilbe" @click="submitApproval">提交审批</a-button>
-          </a-col>
-          <a-col :span="2">
-            <a-button type="primary" ref="submit" @click="handleSubmit">保存继续</a-button>
-          </a-col>
-          <a-col :span="2">
-            <a-button type @click="Back">保存返回</a-button>
+          <a-col :span="12">
+            <a-button type="primary" style="margin-right: 10px" v-show="approvalVisilbe" @click="submitApproval">提交审批</a-button>
+            <a-button type="primary"  style="margin-right: 10px" v-show="cancelVisilbe" @click="cancelClick">撤回审批</a-button>
+            <a-button type="primary" ref="submit" style="margin-right: 10px" v-show="continueVisible" @click="handleSubmit">保存继续</a-button>
+            <a-button type @click="Back"  style="margin-right: 10px" v-show="saveVisible">保存返回</a-button>
           </a-col>
         </a-row>
       </a-card>
@@ -152,6 +152,7 @@ import Type from '../other/TypeModal'
 import SelectModal from '../other/SelectModal'
 import { getProductListColumns } from '@/api/manage'
 import { Empty } from 'ant-design-vue'
+import { isRendered } from 'nprogress'
 Vue.use(Empty)
 
 const numberRow = []
@@ -196,11 +197,17 @@ export default {
       spinning: false,
       name: '',
       approvalVisilbe: false,
-      billcode: '',
+      approveStatus: 8,
       destroyOnClose: true,
       menu: '',
       status: 1, //1保存继续2保存返回
       stockincode: '',
+      isReference: false,
+      billcode: '',
+      currentRecord: '',
+      saveVisible: true,
+      cancelVisilbe: false,
+      continueVisible:true
     }
   },
   created() {
@@ -231,6 +238,32 @@ export default {
     this.form = this.$form.createForm(this, { formname: 'form' })
   },
   methods: {
+    cancelClick(e) {
+      const parameter = {}
+      parameter.memuid = this.menuid
+      parameter.bizid = this.materialid
+      console.log('cancel-->', JSON.stringify(parameter))
+      getData(parameter, '/work/recallProcess').then((res) => {
+        if (res.status == 'SUCCESS') {
+          this.$message.info('撤销成功')
+          this.getFormdata()
+        } else {
+          this.$message.warn(res.errorMsg)
+        }
+      })
+    },
+    handleEdit(record) {
+      console.log(JSON.stringify(record.doclineid))
+      if (record.docid) {
+        this.$message.info('参照明细不能修改')
+      } else {
+        this.name = 'ProductList'
+        this.currentkey = 'detail'
+        this.visible = true
+
+        this.currentRecord = record
+      }
+    },
     submit() {
       this.form.validateFields((err, values) => {
         if (!err) {
@@ -285,10 +318,21 @@ export default {
       })
     },
     handleChange(value, key, record) {
+      if (key == 'doclinequantity') {
+        if (this.$route.query.menu == 'StorageManagementList') {
+          if (record.doclinequantity) {
+            if (parseInt(record.doclinequantity) > parseInt(value)) {
+              var temp = JSON.parse(JSON.stringify(record))
+              temp.doclinequantity = parseInt(record.doclinequantity) - parseInt(value)
+              this.detailsData.push(temp)
+            }
+          }
+        }
+      }
       record[key] = value
-
-      console.log('key-->', JSON.stringify(key))
-      console.log('record-->', JSON.stringify(record))
+      this.detailsData = this.detailsData.map((item, index) => {
+        return { ...item, key: index + 1 }
+      })
     },
 
     submitApproval(e) {
@@ -296,12 +340,13 @@ export default {
       parameter.bizid = this.materialid
       parameter.billcode = this.billcode
       parameter.memuid = this.menuid
-
+      console.log('submit approval-->', JSON.stringify(parameter))
       getData(parameter, '/work/submitProcess').then((res) => {
         if (res.status == 'SUCCESS') {
           this.$message.info('提交审批成功')
+          this.getFormdata()
         } else {
-          this.$message.warn('EXCEPTION')
+          this.$message.info(res.errorMsg)
         }
       })
     },
@@ -359,21 +404,10 @@ export default {
       getData(columnsParams, urlColumns).then((res) => {
         this.detailsData = []
         this.detailsData = res.result.data
+        console.log('menu--->', menu)
 
-        for (const key in this.detailsData) {
-          this.detailsData[key].editable = false
-          var temp = {}
-          temp = JSON.parse(JSON.stringify(this.detailsData[key]))
-          temp.editable = true
-
-          if (this.detailsData[key].doclinequantity) {
-            temp.doclinequantity = parseInt(this.detailsData[key].doclinequantity) / 2
-          }
-          this.detailsData.push(temp)
-          this.detailsData.push(temp)
-        }
         this.detailsData = this.detailsData.map((item, index) => {
-          return { ...item, key: index }
+          return { ...item, key: index + 1 }
         })
       })
     },
@@ -399,21 +433,11 @@ export default {
     },
     detailOk(e) {
       this.detailVisible = false
-
-      for (const key in this.selectList) {
-        this.selectList[key].editable = true
-        var temp = {}
-        temp = JSON.parse(JSON.stringify(this.selectList[key]))
-
-        this.selectList.push(temp, temp)
-      }
-
       this.detailsData = this.detailsData.concat(this.selectList)
 
       this.detailsData = this.detailsData.map((item, index) => {
-        return { ...item, key: index }
+        return { ...item, key: parseInt(index) + 1 }
       })
-      console.log('details ok-->', JSON.stringify(this.detailsData))
     },
     detailCancel(e) {
       this.detailVisible = false
@@ -512,12 +536,24 @@ export default {
             approvalprocess: ['2'],
           })
         }
-        this.billcode = this.selectList[0].doccode
+
         this.personid = this.selectList[0].personid
         this.departmentid = this.selectList[0].departmentid
 
         this.vendorid = this.selectList[0].vendorid
         this.getList('ReceiptNoticeList', this.selectList[0].docid)
+        this.isReference = true
+      } else if (this.currentkey == 'detail') {
+        this.visible = false
+
+        var formkey = Object.keys(this.currentRecord)
+        for (const key in formkey) {
+          if (this.selectList[0][formkey[key]]) {
+            if (formkey[key] !== 'key') {
+              this.currentRecord[formkey[key]] = this.selectList[0][formkey[key]]
+            }
+          }
+        }
       }
     },
     handleCancel(e) {
@@ -530,6 +566,8 @@ export default {
       } else if (this.currentkey == 'businessclasscode') {
         this.typeVisible = false
       } else if (this.currentkey == 'receiptnoticecode') {
+        this.visible = false
+      } else if (this.currentkey == 'detail') {
         this.visible = false
       }
     },
@@ -604,8 +642,9 @@ export default {
         if (res.status == 'SUCCESS') {
           this.data = res.result
         } else {
-          this.$message.warn('EXCEPTION')
+          this.$message.info(res)
         }
+        console.log('form res-->', JSON.stringify(res))
 
         setTimeout(() => {
           for (const i in this.data) {
@@ -620,6 +659,25 @@ export default {
               this.vendorid = this.data[i].keyvalue
             } else if (this.data[i].key == 'businessclasscode') {
               this.businessclasscode = this.data[i].keyvalue
+            } else if (this.data[i].key == 'doccode') {
+              this.billcode = this.data[i].value
+            } else if (this.data[i].key == 'ApproveStatus') {
+              if (this.$route.query.tag == 2) {
+                this.continueVisible=false
+                if (this.data[i].value == 3) {
+                  this.cancelVisilbe = true
+                  this.approvalVisilbe = false
+                  this.saveVisible = false
+                } else if (this.data[i].value == 8) {
+                  this.cancelVisilbe = false
+                  this.approvalVisilbe = true
+                  this.saveVisible = true
+                } else {
+                  this.cancelVisilbe = false
+                  this.approvalVisilbe = false
+                  this.saveVisible = false
+                }
+              }
             }
           }
           this.spinning = false

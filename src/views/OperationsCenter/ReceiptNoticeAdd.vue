@@ -506,7 +506,7 @@ export default {
 
         var formdata = this.form.domFields
         var formkey = Object.keys(formdata)
-        console.log('formkey-->', formkey)
+       
         for (const key in formkey) {
           this.form.setFieldsValue({
             [formkey[key]]: this.selectList[0][formkey[key]],
@@ -517,6 +517,9 @@ export default {
         })
         this.form.setFieldsValue({
           receiptnoticecode: this.selectList[0].doccode,
+        })
+         this.form.setFieldsValue({
+         doccode: this.billcode,
         })
         this.form.setFieldsValue({
           receiptnoticeid: this.selectList[0].docid,
@@ -647,7 +650,7 @@ export default {
         } else {
           this.$message.info(res)
         }
-        console.log('form res-->', JSON.stringify(res))
+      
 
         setTimeout(() => {
           for (const i in this.data) {

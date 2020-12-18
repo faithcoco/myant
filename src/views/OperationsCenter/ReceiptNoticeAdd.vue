@@ -193,7 +193,7 @@ export default {
       departmentid: '',
       personid: '',
       vendorid: '',
-      businessclasscode: '',
+      businessclassid: '',
       spinning: false,
       name: '',
       approvalVisilbe: false,
@@ -291,7 +291,7 @@ export default {
           values.departmentid = this.departmentid
           values.personid = this.personid
           values.vendorid = this.vendorid
-          values.businessclasscode=this.businessclasscode
+          values.businessclasscode=this.businessclassid
 
           values.approvalprocess = values.approvalprocess.join()
           console.log('submit url-->', submitUrl)
@@ -499,7 +499,7 @@ export default {
         this.form.setFieldsValue({
           businessclassname: this.selectList.title,
         })
-        this.businessclasscode = this.selectList.key
+        this.businessclassid = this.selectList.key
       } else if (this.currentkey == 'receiptnoticecode') {
         //收货通知选择
         this.visible = false
@@ -543,7 +543,7 @@ export default {
 
         this.personid = this.selectList[0].personid
         this.departmentid = this.selectList[0].departmentid
-        this.businessclasscode=this.selectList[0].businessclassid
+        this.businessclassid=this.selectList[0].businessclassid
         this.vendorid = this.selectList[0].vendorid
         this.getList('ReceiptNoticeList', this.selectList[0].docid)
         this.isReference = true
@@ -663,9 +663,7 @@ export default {
               this.personid = this.data[i].keyvalue
             } else if (this.data[i].key == 'vendorid') {
               this.vendorid = this.data[i].keyvalue
-            } else if (this.data[i].key == 'businessclasscode') {
-              this.businessclasscode = this.data[i].keyvalue
-            } else if (this.data[i].key == 'doccode') {
+            }  else if (this.data[i].key == 'doccode') {
               this.billcode = this.data[i].value
             } else if (this.data[i].key == 'ApproveStatus') {
               if (this.$route.query.tag == 2) {

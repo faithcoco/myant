@@ -15,7 +15,7 @@
           </div>
         </template>
         <span slot="ismanual" slot-scope="text, record">
-          <a-select :value="record.ismanual" @change="(value) => ruleChange(value, record)" style="width: 150px">
+          <a-select :value="record.ismanual" @change="(value) => manualChange(value, record)" style="width: 150px">
             <a-select-option value="0"> 否</a-select-option>
             <a-select-option value="1"> 是 </a-select-option>
           </a-select>
@@ -116,10 +116,14 @@ export default {
         this.data = res.result
       })
     },
-    ruleChange(value, record) {
+    manualChange(value, record) {
       console.log(`selected ${value}`)
       record.ismanual = value
-     
+    },
+    ruleChange(value, record) {
+      console.log(`selected ${value}`)
+
+      record.prefix2 = value
     },
   },
 }

@@ -8,7 +8,6 @@
             <a-form-item v-for="item in data" :label="item.title">
               <div v-if="item.selectVisible">
                 <a-cascader
-                 
                   v-decorator="item.decorator"
                   v-show="item.selectVisible"
                   :field-names="{ label: 'title', value: 'key', children: 'children' }"
@@ -259,7 +258,6 @@ export default {
       console.log(this.$route.query.menu + ' form params-->', JSON.stringify(columnsParams))
 
       getForm(columnsParams, this.urlForm).then((res) => {
-      
         this.data = res.result
         this.$multiTab.rename(this.$route.path, this.title)
 
@@ -341,7 +339,9 @@ export default {
             console.log('submit--->', JSON.stringify(res))
 
             if (res.status == 'SUCCESS') {
-              this.$router.go(-1)
+              this.$multiTab.closeCurrentPage()
+              
+
               this.form.resetFields()
             }
             this.$message.info(res.errorMsg)

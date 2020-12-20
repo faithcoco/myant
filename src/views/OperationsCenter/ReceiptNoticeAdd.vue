@@ -305,7 +305,8 @@ export default {
                   if (this.status == 1) {
                     this.getFormdata()
                   } else if (this.status == 2) {
-                    this.$router.go(-1)
+                  
+                     this.$multiTab.closeCurrentPage()
                   }
                 }
               }
@@ -384,7 +385,7 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, urlColumns).then((res) => {
         this.columns = res.result.columns
-        this.columns.unshift({ title: '行号', dataIndex: 'key', key: 'key', width: '200px' })
+        this.columns.unshift({ title: '序号', dataIndex: 'key', key: 'key', width: '200px' })
       })
     },
     getList(menu, id) {

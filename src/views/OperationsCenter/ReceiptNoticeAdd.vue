@@ -305,14 +305,14 @@ export default {
           submitForm(values, submitUrl)
             .then((res) => {
               console.log('submit--->', JSON.stringify(res))
-              if (this.$route.query.tag == 1) {
-                if (res.status == 'SUCCESS') {
-                  this.detailsData = []
-                  if (this.status == 1) {
-                    this.getFormdata()
-                  } else if (this.status == 2) {
-                    this.$multiTab.closeCurrentPage()
-                  }
+
+              if (res.status == 'SUCCESS') {
+                this.detailsData = []
+                if (this.status == 1) {
+                  this.getFormdata()
+                } else if (this.status == 2) {
+                  console.log('is run--->')
+                  this.$multiTab.closeCurrentPage()
                 }
               }
 

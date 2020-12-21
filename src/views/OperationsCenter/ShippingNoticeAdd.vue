@@ -1,455 +1,720 @@
 <template>
   <a-layout>
-    <a-card>
-      <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-        <a-form-model-item label="发货单编码" required prop="ShippingNoticeCode">
-          <a-input v-model="form.ShippingNoticeCode" placeholder="请输入发货通知单编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="elect">自动获取</a-button>
-          </a-input>
-        </a-form-model-item>
+    <a-spin size="large" :spinning="spinning" tip="正在加载">
+      <div>
+        <a-card>
+          <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
+            <a-form-item v-for="item in data" :label="item.title">
+              <div v-if="item.selectVisible">
+                <a-cascader
+                  v-decorator="item.decorator"
+                  v-show="item.selectVisible"
+                  :field-names="{ label: 'title', value: 'key', children: 'children' }"
+                  :options="item.selectList"
+                  placeholder="请选择"
+                  :disabled="item.disabled"
+                />
+              </div>
+              <div v-else>
+                <a-input
+                  v-decorator="item.decorator"
+                  :disabled="item.disabled"
+                  v-show="item.inputVisible"
+                  :maxLength="item.fieldlength"
+                />
+                <a-input-number
+                  :style="{ width: '1370px' }"
+                  v-decorator="item.decorator"
+                  v-show="item.inputnumberVisible"
+                  :max="item.fieldmax"
+                  :precision="item.fieldprecision"
+                  :disabled="item.disabled"
+                />
+                <a-date-picker
+                  :style="{ width: '100%' }"
+                  v-show="item.timepickerVisible"
+                  show-time
+                  format="YYYY-MM-DD HH:mm:ss"
+                  placeholder="选择日期"
+                  v-decorator="item.decorator"
+                  :disabled="item.disabled"
+                />
+                <a-input
+                  v-decorator="item.decorator"
+                  v-show="item.listVisible"
+                  :maxLength="item.fieldlength"
+                  :disabled="disabled"
+                >
+                  <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
+                </a-input>
+              </div>
+            </a-form-item>
+            <a-form-item :wrapper-col="{ span: 21, offset: 2 }">
+              <a-tabs>
+                <a-tab-pane tab="明细">
+                  <a-button @click="() => detailModal()">选择</a-button>
+                  <a-table :columns="columns" :data-source="detailsData" :scroll="{ x: 3000 }">
+                    <template v-for="col in columns" :slot="col.dataIndex" slot-scope="text, record, index">
+                      <div>
+                        <a-input
+                          :value="text"
+                          @pressEnter="(e) => handleChange(e.target.value, col.dataIndex, record)"
+                          v-if="col.isEdit"
+                        />
+                        <template v-else>
+                          {{ text }}
+                        </template>
+                      </div>
+                    </template>
+                    <span slot="action" slot-scope="text, record">
+                      <a @click="handleEdit(record)">编辑</a>
+                      <a-divider type="vertical" />
 
-        <a-modal v-model="visible" title="选择编码" width="1200px" @ok="handleOk">
-          <a-input-search placeholder="搜索" style="width: 400px;margin-bottom:20px" @search="onSearch" />
-          <a-table :columns="columns" :data-source="data" :scroll="{ x: 1500 }" :pagination="false" bordered>
-            <span slot="checked" style="margin: 0" slot-scope="text, record">
-              <a-checkbox v-model="record.checked" @change="onChange(record)" />
-            </span>
-            <a slot="name" slot-scope="text">{{ text }}</a>
-          </a-table>
-        </a-modal>
+                      <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
+                        <a href="javascript:;">删除</a>
+                      </a-popconfirm>
+                    </span>
+                  </a-table>
+                </a-tab-pane>
+              </a-tabs>
+            </a-form-item>
+          </a-form>
 
-        <a-form-model-item ref="name" label="客户编码" prop="CustomerCode">
-          <a-input v-model="form.CustomerCode" placeholder="请输入客户编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-          </a-input>
-        </a-form-model-item>
-        <a-form-model-item label="客户地址编码" prop="CustomerAddressCode">
-          <a-input v-model="form.CustomerAddressCode" placeholder="请输入客户地址编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-          </a-input>
-        </a-form-model-item>
-        <a-form-model-item label="联系人编码" prop="ContactCode">
-          <a-input v-model="form.ContactCode" placeholder="请输入联系人编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-          </a-input>
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="部门编码" prop="DepartmentCode">
-          <a-input v-model="form.DepartmentCode" placeholder="请输入部门编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-          </a-input>
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="业务员编码" prop="SalesmanCode">
-          <a-input v-model="form.SalesmanCode" placeholder="请输入业务员编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-          </a-input>
-        </a-form-model-item>
-        <a-form-model-item ref="name" label="预计出库日期" prop="ExpectedOutWarehouseDate">
-          <a-date-picker
-            v-model="form.ExpectedOutWarehouseDate"
-            show-time
-            type="date"
-            placeholder="请选择预计出库日期"
-            style="width: 100%;"
-          />
-        </a-form-model-item>
-        <a-form-model-item ref="Principal" label="商品清单" prop="Principal">
-          <a-input v-model="form.Principal" placeholder="请选择存货编码" @blur="() => {}">
-            <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
-          </a-input>
-          <a-table
-            :locale="{emptyText: '暂无数据'}"
-            :columns="selectcolumns"
-            :data-source="numberRow"
-            :scroll="{ x: 1500 }"
-            :pagination="false"
-            bordered
-          ></a-table>
-        </a-form-model-item>
-      </a-form-model>
-    </a-card>
-    <a-layout-footer :style="{ position: 'fixed',width: '100%', bottom: '0px',marginLeft: '-25px',zIndex:'999'}">
+          <a-modal
+            title="选择"
+            :visible="visible"
+            @ok="archivesOk"
+            @cancel="handleCancel"
+            width="1300px"
+            :destroyOnClose="destroyOnClose"
+          >
+            <archives-modal :name="name" @onSelect="getSelect"></archives-modal>
+          </a-modal>
+          <a-modal
+            title="选择"
+            :visible="typeVisible"
+            @ok="handleOk"
+            @cancel="handleCancel"
+            width="1300px"
+            :destroyOnClose="destroyOnClose"
+          >
+            <type :menuname="name" @onSelect="typeSelect"></type>
+          </a-modal>
+          <a-modal
+            title="选择"
+            :visible="detailVisible"
+            @ok="detailOk"
+            @cancel="detailCancel"
+            :destroyOnClose="destroyOnClose"
+            width="1300px"
+          >
+            <select-modal :name="name" :visible="visible" @onSelect="detailSelect"></select-modal>
+          </a-modal>
+        </a-card>
+      </div>
+    </a-spin>
+    <a-layout-footer
+      :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-10px', zIndex: '999' }"
+    >
       <a-card>
-        <a-row>
-          <a-col :span='1' :offset='4'>
-            <a-button type='primary' @click="resetForm">重置表单</a-button>
-          </a-col>
-          <a-col :span='1' :offset='1'>
-            <a-button type='primary' @click="onSubmit">保存</a-button>
-          </a-col>
-          <a-col :span='1' :offset='1'>
-            <a-button type @click="Back">返回</a-button>
+        <a-row type="flex" justify="center" align="top">
+          <a-col :span="12">
+            <a-button type="primary" style="margin-right: 10px" v-show="approvalVisilbe" @click="submitApproval"
+              >提交审批</a-button
+            >
+            <a-button type="primary" style="margin-right: 10px" v-show="cancelVisilbe" @click="cancelClick"
+              >撤回审批</a-button
+            >
+            <a-button type="primary" ref="submit" style="margin-right: 10px" v-show="saveVisible" @click="handleSubmit"
+              >保存继续</a-button
+            >
+            <a-button type @click="Back" style="margin-right: 10px" v-show="saveVisible">保存返回</a-button>
           </a-col>
         </a-row>
       </a-card>
     </a-layout-footer>
   </a-layout>
 </template>
+
 <script>
 import Vue from 'vue'
-import { formModel, Button } from 'ant-design-vue'
+import { formModel, Button, Tree } from 'ant-design-vue'
+import { Cascader } from 'ant-design-vue'
+Vue.use(Cascader)
+import { PageHeader } from 'ant-design-vue'
+Vue.use(PageHeader)
 Vue.use(formModel, Button)
-import { postShippingNoticeAdd } from '@/api/manage'
+import { postProductAdd } from '@/api/manage'
+import { logininfo, menuname } from '@/store/mutation-types'
+import { getForm, submitForm, postData, getData } from '@/api/manage'
+import { Form } from 'ant-design-vue'
+Vue.use(Form)
+import { TreeSelect } from 'ant-design-vue'
+import { keys, type } from 'mockjs2'
+Vue.use(TreeSelect)
+import ArchivesModal from '../other/ArchivesModal'
+import Type from '../other/TypeModal'
+import SelectModal from '../other/SelectModal'
+import { getProductListColumns } from '@/api/manage'
+import { Empty } from 'ant-design-vue'
+import { isRendered } from 'nprogress'
+Vue.use(Empty)
 
-const columns = [
-  {
-    title: '选择',
-    dataIndex: 'checked',
-    key: 'checked',
-    width: 80,
-    scopedSlots: { customRender: 'checked' }
-  },
-  {
-    title: '发货单编码',
-    dataIndex: 'ShippingNoticeCode',
-    width: 155,
-    key: 'ShippingNoticeCode',
-    scopedSlots: { customRender: 'ShippingNoticeCode' }
-  },
-  {
-    title: '发货仓库编码',
-    dataIndex: 'ShippingWarehouseCode',
-    width: 155,
-    key: 'ShippingWarehouseCode'
-  },
-  {
-    title: '存货编码',
-    dataIndex: 'InventoryCode',
-    width: 155,
-    key: 'InventoryCode'
-  },
-  {
-    title: '存货名称',
-    dataIndex: 'InventoryName',
-    width: 155,
-    key: 'InventoryName'
-  },
-  {
-    title: '批次编码',
-    dataIndex: 'BatchCode',
-    width: 155,
-    key: 'BatchCode'
-  },
-  {
-    title: '数量',
-    dataIndex: 'Quantity',
-    width: 155,
-    key: 'Quantity'
-  },
-  {
-    title: '计量单位',
-    dataIndex: 'Unit',
-    width: 155,
-    key: 'Unit'
-  },
-  {
-    title: '包装数量',
-    dataIndex: 'PackingQuantity',
-    width: 155,
-    key: 'PackingQuantity'
-  },
-  {
-    title: '包装单位',
-    dataIndex: 'PackingUnit',
-    width: 155,
-    key: 'PackingUnit'
-  },
-  {
-    title: '单价',
-    dataIndex: 'UnitPrice',
-    width: 155,
-    key: 'UnitPrice'
-  },
-  {
-    title: '含税单价',
-    dataIndex: 'TaxIncludedUnitPrice',
-    width: 155,
-    key: 'TaxIncludedUnitPrice'
-  },
-  {
-    title: '税率',
-    dataIndex: 'TaxRate',
-    width: 155,
-    key: 'TaxRate'
-  },
-  {
-    title: '金额',
-    dataIndex: 'Amount',
-    width: 155,
-    key: 'Amount'
-  },
-  {
-    title: '含税金额',
-    dataIndex: 'TaxIncludedAmount',
-    width: 155,
-    key: 'TaxIncludedAmount'
-  },
-  {
-    title: '税额',
-    dataIndex: 'Tax',
-    width: 155,
-    key: 'Tax'
-  }
-]
-const selectcolumns = [
-  {
-    title: '发货单编码',
-    dataIndex: 'ShippingNoticeCode',
-    width: 155,
-    key: 'ShippingNoticeCode',
-    scopedSlots: { customRender: 'ShippingNoticeCode' }
-  },
-  {
-    title: '发货仓库编码',
-    dataIndex: 'ShippingWarehouseCode',
-    width: 155,
-    key: 'ShippingWarehouseCode'
-  },
-  {
-    title: '存货编码',
-    dataIndex: 'InventoryCode',
-    width: 155,
-    key: 'InventoryCode'
-  },
-  {
-    title: '存货名称',
-    dataIndex: 'InventoryName',
-    width: 155,
-    key: 'InventoryName'
-  },
-  {
-    title: '批次编码',
-    dataIndex: 'BatchCode',
-    width: 155,
-    key: 'BatchCode'
-  },
-  {
-    title: '数量',
-    dataIndex: 'Quantity',
-    width: 155,
-    key: 'Quantity'
-  },
-  {
-    title: '计量单位',
-    dataIndex: 'Unit',
-    width: 155,
-    key: 'Unit'
-  },
-  {
-    title: '包装数量',
-    dataIndex: 'PackingQuantity',
-    width: 155,
-    key: 'PackingQuantity'
-  },
-  {
-    title: '包装单位',
-    dataIndex: 'PackingUnit',
-    width: 155,
-    key: 'PackingUnit'
-  },
-  {
-    title: '单价',
-    dataIndex: 'UnitPrice',
-    width: 155,
-    key: 'UnitPrice'
-  },
-  {
-    title: '含税单价',
-    dataIndex: 'TaxIncludedUnitPrice',
-    width: 155,
-    key: 'TaxIncludedUnitPrice'
-  },
-  {
-    title: '税率',
-    dataIndex: 'TaxRate',
-    width: 155,
-    key: 'TaxRate'
-  },
-  {
-    title: '金额',
-    dataIndex: 'Amount',
-    width: 155,
-    key: 'Amount'
-  },
-  {
-    title: '含税金额',
-    dataIndex: 'TaxIncludedAmount',
-    width: 155,
-    key: 'TaxIncludedAmount'
-  },
-  {
-    title: '税额',
-    dataIndex: 'Tax',
-    width: 155,
-    key: 'Tax'
-  }
-]
-
-const data = [
-  {
-    key: '1',
-    ShippingNoticeCode: 'a121345',
-    CustomerCode: 'a121345',
-    CustomerAddressCode: 'a121345',
-    DepartmentCode: 'a121345',
-    SalesmanCode: 'a121345',
-    ShippingWarehouseCode: 'a121345',
-    InventoryCode: 'a121345',
-    BatchCode: 'a121345'
-  },
-  {
-    key: '2',
-    ShippingNoticeCode: 'a121345',
-    CustomerCode: 'a121345',
-    CustomerAddressCode: 'a121345',
-    DepartmentCode: 'a121345',
-    SalesmanCode: 'a121345',
-    ShippingWarehouseCode: 'a121345',
-    InventoryCode: 'a121345',
-    BatchCode: 'a121345'
-  },
-  {
-    key: '3',
-    ShippingNoticeCode: 'a121345',
-    CustomerCode: 'a121345',
-    CustomerAddressCode: 'a121345',
-    DepartmentCode: 'a121345',
-    SalesmanCode: 'a121345',
-    ShippingWarehouseCode: 'a121345',
-    InventoryCode: 'a121345',
-    BatchCode: 'a121345'
-  }
-]
 const numberRow = []
 export default {
+  components: {
+    Type,
+    ArchivesModal,
+    SelectModal,
+  },
   data() {
     return {
+      disabled: true,
       numberRow,
       selectedRow: [],
-      selectcolumns,
-      visible: false,
+
       selectedRowKeys: [],
-      data,
-      columns,
-      headers: {
-        authorization: 'authorization-text'
-      },
+
       size: 'small',
       labelCol: { span: 2 },
       wrapperCol: { span: 22 },
       other: '',
-      form: {
-        ShippingNoticeCode: '', //发货单编码
-        CustomerCode: '', //客户编码
-        CustomerAddressCode: '', //客户地址编码
-        ContactCode: '', //联系人编码
-        DepartmentCode: '', //部门编码
-        SalesmanCode: '', //业务员编码
-        ExpectedOutWarehouseDate: '', //日期
-        ShippingWarehouseCode: '', //发货仓库编码
-        InventoryCode: '', //存货编码
-        InventoryName: '', //存货名称
-        BatchCode: '', //批次编码
-        Quantity: '', //数量
-        Unit: '', //单位
-        PackingQuantity: '', //包装数量
-        PackingUnit: '', //包装单位
-        UnitPrice: '', //单价
-        TaxIncludedUnitPrice: '', //含税单价
-        TaxRate: '', //税率
-        Amount: '', //金额
-        TaxIncludedAmount: '', //含税金额
-        Tax: '' //税额
-      },
-      rules: {
-        ShippingNoticeCode: [{ required: true, message: '请输入发货单编码', trigger: 'blur' }],
-        CustomerCode: [{ required: true, message: '请输入客户编码', trigger: 'change' }]
-      }
+      data: [],
+      menuid: '',
+      urlForm: '',
+      materialclassid: '',
+      materialid: '',
+      tag: 0, //1 add 2update
+      title: '',
+      visible: false,
+      modalname: '',
+      selectList: [],
+      typeVisible: false,
+      currentkey: '',
+      detailVisible: false,
+      columns: [],
+      detailsData: [],
+      menuid: '',
+      departmentid: '',
+      personid: '',
+      vendorid: '',
+      businessclassid: '',
+      spinning: false,
+      name: '',
+      approvalVisilbe: false,
+      approveStatus: 8,
+      destroyOnClose: true,
+      menu: '',
+      status: 1, //1保存继续2保存返回
+      stockincode: '',
+      isReference: false,
+      billcode: '',
+      currentRecord: '',
+      saveVisible: true,
+      cancelVisilbe: false,
+      continueVisible: true,
+      approvalprocess: '',
     }
   },
+  created() {
+    this.initdata()
+  },
+
   computed: {
     rowSelection() {
       const { selectedRowKeys } = this
       return {
         selectedRowKeys,
-        onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
 
+  activated() {
+    this.initdata()
+  },
+  beforeCreate() {
+    this.form = this.$form.createForm(this, { formname: 'form' })
+  },
   methods: {
-    onSearch(value) {
-      console.log(value)
-    },
-    handleChange(info) {
-      if (info.file.status !== 'uploading') {
-        console.log(info.file, info.fileList)
+    cancelClick(e) {
+      const parameter = {}
+      parameter.memuid = this.menuid
+      parameter.bizid = this.materialid
+      var url = ''
+      if (this.approvalprocess == 1) {
+        url = '/work/recallProcess'
+      } else {
+        url = '/work/directApproval'
       }
-      if (info.file.status === 'done') {
-        this.$message.success(`${info.file.name} file uploaded successfully`)
-      } else if (info.file.status === 'error') {
-        this.$message.error(`${info.file.name} file upload failed.`)
-      }
-    },
-    handleSearchChange(value) {
-      console.log(`selected ${value}`)
-    },
-    onSubmit() {
-      this.$refs.ruleForm.validate(valid => {
-        console.log('name--->', this.form)
-        if (valid) {
-          postShippingNoticeAdd(this.form).then(res => {
-            console.log('res', res)
-          })
-          alert('保存成功，点击确认回到档案界面!')
-          this.$router.push({ name: 'ShippingNoticeList' })
+      console.log('cancel-->', JSON.stringify(parameter))
+      getData(parameter, url).then((res) => {
+        if (res.status == 'SUCCESS') {
+          this.$message.info('撤销成功')
+          this.getFormdata()
         } else {
-          console.log('error submit!!')
-          alert('亲，您的填写内容不符合要求，请重新填写！！！')
-          return false
+          this.$message.warn(res.errorMsg)
         }
       })
     },
-    Back() {
-      this.$router.push({ name: 'ShippingNoticeList' })
+    handleEdit(record) {
+      console.log(JSON.stringify(record.doclineid))
+      if (record.docid) {
+        this.$message.info('参照明细不能修改')
+      } else {
+        this.name = 'ProductList'
+        this.currentkey = 'detail'
+        this.visible = true
+
+        this.currentRecord = record
+      }
     },
-    resetForm() {
-      this.$refs.ruleForm.resetFields()
+    submit() {
+      this.form.validateFields((err, values) => {
+        if (!err) {
+          if (this.$route.query.tag == 1) {
+            if (this.$route.query.menu == 'ShippingNoticeList') {
+              var submitUrl = '/bd/dispatchnotice/insterSave'
+            } 
+          } else {
+            if (this.$route.query.menu == 'ShippingNoticeList') {
+              var submitUrl = '/bd/dispatchnotice/updateSave'
+            }
+            values.docid = this.materialid
+          }
+          if (this.detailsData.length == 0) {
+            this.$message.warn('请添加明细')
+            return
+          }
+
+          values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+          values.details = this.detailsData
+          values.departmentid = this.departmentid
+          values.personid = this.personid
+          values.vendorid = this.vendorid
+          values.businessclasscode = this.businessclassid
+
+          values.approvalprocess = values.approvalprocess.join()
+          console.log('submit url-->', submitUrl)
+          console.log('submit parameter-->', JSON.stringify(values))
+          submitForm(values, submitUrl)
+            .then((res) => {
+              console.log('submit--->', JSON.stringify(res))
+              if (this.$route.query.tag == 1) {
+                if (res.status == 'SUCCESS') {
+                  this.detailsData = []
+                  if (this.status == 1) {
+                    this.getFormdata()
+                  } else if (this.status == 2) {
+                    this.$multiTab.closeCurrentPage()
+                  }
+                }
+              }
+
+              this.$message.info(res.errorMsg)
+            })
+            .catch((err) => {
+              this.$message.error(err.message)
+            })
+        }
+      })
     },
+    handleChange(value, key, record) {
+      if (key == 'doclinequantity') {
+        if (this.$route.query.menu == 'StorageManagementList') {
+          if (record.doclinequantity) {
+            if (parseInt(record.doclinequantity) > parseInt(value)) {
+              var temp = JSON.parse(JSON.stringify(record))
+              temp.doclinequantity = parseInt(record.doclinequantity) - parseInt(value)
+              this.detailsData.push(temp)
+            }
+          }
+        }
+      }
+      record[key] = value
+      this.detailsData = this.detailsData.map((item, index) => {
+        return { ...item, key: index + 1 }
+      })
+    },
+
+    submitApproval(e) {
+      const parameter = {}
+      parameter.bizid = this.materialid
+
+      parameter.memuid = this.menuid
+      var url = ''
+      if (this.approvalprocess == 1) {
+        url = '/work/submitProcess'
+        parameter.billcode = this.billcode
+      } else {
+        url = '/work/directApproval'
+      }
+      console.log('submit approval-->', JSON.stringify(parameter))
+      getData(parameter, url).then((res) => {
+        if (res.status == 'SUCCESS') {
+          this.$message.info('提交审批成功')
+          this.getFormdata()
+        } else {
+          this.$message.info(res.errorMsg)
+        }
+      })
+    },
+    deleteItem(record) {
+      this.detailsData = this.detailsData.filter((item) => item.key !== record.key)
+    },
+    initdata() {
+      this.spinning = true
+      this.menu = this.$route.query.menu
+      console.log('add menu-->', this.$route)
+      if (this.$route.query.menu == 'ShippingNoticeList') {
+        this.memuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
+      } else {
+        return
+      }
+      this.materialid = this.$route.query.materialid
+      console.log('route-->', this.$route)
+      if (this.$route.query.tag == 2) {
+        this.getList(this.$route.query.menu, this.$route.query.materialid)
+      } else {
+        this.detailsData = []
+      }
+      this.getFormdata()
+      this.getColumns()
+    },
+    getColumns() {
+      const columnsParams = {}
+      columnsParams.menuid = this.menuid
+      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      var urlColumns = '/sys/setting/getChildrenSetting'
+      console.log('columns url--->', urlColumns)
+      console.log('columns parameter-->', JSON.stringify(columnsParams))
+      getProductListColumns(columnsParams, urlColumns).then((res) => {
+        this.columns = res.result.columns
+        this.columns.unshift({ title: '序号', dataIndex: 'key', key: 'key', width: '200px' })
+      })
+    },
+    getList(menu, id) {
+      const columnsParams = {}
+      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      columnsParams.pageNo = 1
+      columnsParams.pageSize = 10
+
+      if (menu == 'ShippingNoticeList') {
+        var urlColumns = '/bd/dispatchnotice/dispatchnoticelineList'
+      } 
+      columnsParams.docid = id
+
+      console.log('listdata url--->', urlColumns)
+      console.log('listdata parameter-->', JSON.stringify(columnsParams))
+      getData(columnsParams, urlColumns).then((res) => {
+        this.detailsData = []
+        this.detailsData = res.result.data
+
+        this.detailsData = this.detailsData.map((item, index) => {
+          return { ...item, key: index + 1 }
+        })
+      })
+    },
+    detailSelect(list) {
+      this.selectList = list
+      console.log('detail-->', JSON.stringify(this.selectList))
+    },
+    getSelect(list) {
+      this.selectList = list
+    },
+    typeSelect(list) {
+      console.log('type-->', JSON.stringify(list))
+      this.selectList = list
+    },
+    detailModal(e) {
+      this.selectedRowKeys = []
+      for (const key in this.detailsData) {
+        this.selectedRowKeys.push(this.detailsData[key].materialid)
+      }
+
+      this.detailVisible = true
+      this.name = 'ProductList'
+    },
+    detailOk(e) {
+      this.detailVisible = false
+      this.detailsData = this.detailsData.concat(this.selectList)
+
+      this.detailsData = this.detailsData.map((item, index) => {
+        return { ...item, key: parseInt(index) + 1 }
+      })
+    },
+    detailCancel(e) {
+      this.detailVisible = false
+    },
+    handleOk(e) {
+      this.setform()
+    },
+    archivesOk(e) {
+      this.setform()
+    },
+    setform() {
+      console.log('select--->', JSON.stringify(this.selectList))
+      if (this.currentkey == 'departmentid') {
+        this.typeVisible = false
+        this.form.setFieldsValue({
+          departmentid: this.selectList.title,
+        })
+        this.form.setFieldsValue({
+          personid: '',
+        })
+        this.personid = ''
+        this.departmentid = this.selectList.departmentid
+      } else if (this.currentkey == 'personid') {
+        this.visible = false
+        this.form.setFieldsValue({
+          personid: this.selectList[0].personname,
+        })
+        this.personid = this.selectList[0].personid
+        this.form.setFieldsValue({
+          departmentid: this.selectList[0].departmentname,
+        })
+        this.departmentid = this.selectList[0].departmentid
+      } else if (this.currentkey == 'vendorid') {
+        this.visible = false
+        this.form.setFieldsValue({
+          [this.currentkey]: this.selectList[0].vendorcode,
+        })
+        this.form.setFieldsValue({
+          vendorcontactenterprise: this.selectList[0].vendorname,
+        })
+        this.form.setFieldsValue({
+          vendorcontactaddress: this.selectList[0].vendoraddress,
+        })
+        this.form.setFieldsValue({
+          vendorcontacthead: this.selectList[0].vendorhead,
+        })
+        this.form.setFieldsValue({
+          vendorcontactphone: this.selectList[0].vendortel,
+        })
+
+        this.vendorid = this.selectList[0].vendorid
+      } else if (this.currentkey == 'businessclasscode') {
+        this.typeVisible = false
+        this.form.setFieldsValue({
+          businessclasscode: this.selectList.businessclasscode,
+        })
+
+        this.form.setFieldsValue({
+          businessclassname: this.selectList.title,
+        })
+        this.businessclassid = this.selectList.key
+      } else if (this.currentkey == 'receiptnoticecode') {
+        //收货通知选择
+        this.visible = false
+
+        var formdata = this.form.domFields
+        var formkey = Object.keys(formdata)
+
+        for (const key in formkey) {
+          this.form.setFieldsValue({
+            [formkey[key]]: this.selectList[0][formkey[key]],
+          })
+        }
+        this.form.setFieldsValue({
+          vendorid: this.selectList[0].vendorcode,
+        })
+        this.form.setFieldsValue({
+          receiptnoticecode: this.selectList[0].doccode,
+        })
+        this.form.setFieldsValue({
+          doccode: this.billcode,
+        })
+        this.form.setFieldsValue({
+          receiptnoticeid: this.selectList[0].docid,
+        })
+
+        this.form.setFieldsValue({
+          personid: this.selectList[0].personname,
+        })
+        this.form.setFieldsValue({
+          departmentid: this.selectList[0].departmentname,
+        })
+        if (this.selectList[0].approvalprocess == '启用') {
+          this.form.setFieldsValue({
+            approvalprocess: ['1'],
+          })
+        } else {
+          this.form.setFieldsValue({
+            approvalprocess: ['2'],
+          })
+        }
+
+        this.personid = this.selectList[0].personid
+        this.departmentid = this.selectList[0].departmentid
+        this.businessclassid = this.selectList[0].businessclassid
+        this.vendorid = this.selectList[0].vendorid
+        this.getList('ReceiptNoticeList', this.selectList[0].docid)
+        this.isReference = true
+      } else if (this.currentkey == 'detail') {
+        this.visible = false
+
+        var formkey = Object.keys(this.currentRecord)
+        for (const key in formkey) {
+          if (this.selectList[0][formkey[key]]) {
+            if (formkey[key] !== 'key') {
+              this.currentRecord[formkey[key]] = this.selectList[0][formkey[key]]
+            }
+          }
+        }
+      }
+    },
+    handleCancel(e) {
+      if (this.currentkey == 'departmentid') {
+        this.typeVisible = false
+      } else if (this.currentkey == 'personid') {
+        this.visible = false
+      } else if (this.currentkey == 'vendorid') {
+        this.visible = false
+      } else if (this.currentkey == 'businessclasscode') {
+        this.typeVisible = false
+      } else if (this.currentkey == 'receiptnoticecode') {
+        this.visible = false
+      } else if (this.currentkey == 'detail') {
+        this.visible = false
+      }
+    },
+
+    onChange(value) {
+      console.log(value)
+      this.value = value
+    },
+    showModal(item) {
+      console.log('this-->', item.key)
+      this.currentkey = item.key
+      if (this.currentkey == 'departmentid') {
+        this.typeVisible = true
+        this.name = 'PersonnelSetting'
+      } else if (this.currentkey == 'personid') {
+        this.name = 'PersonnelSetting'
+        this.visible = true
+      } else if (this.currentkey == 'vendorid') {
+        this.name = 'SupplierList'
+        this.visible = true
+      } else if (this.currentkey == 'businessclasscode') {
+        this.typeVisible = true
+        this.name = 'BusinessCategory'
+      } else if (this.currentkey == 'receiptnoticecode') {
+        this.name = 'ReceiptNoticeList'
+        this.visible = true
+      }
+    },
+    handleSubmit(e) {
+      this.status = 1
+      this.submit()
+    },
+
+    onCascaderChange(value) {
+      console.log(this.test)
+    },
+
+    getFormdata() {
+      this.modalname = this.$route.query.menu
+      this.menuid = this.$route.query.menuid
+      const columnsParams = {}
+      columnsParams.memuid = this.menuid
+      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+
+      if (this.$route.query.tag == 1) {
+        this.approvalVisilbe = false
+        this.continueVisible = true
+        this.saveVisible = true
+        this.title = this.$route.query.storageTitle + '新增'
+        this.materialclassid = this.$route.query.materialclassid
+        if (this.$route.query.menu == 'ShippingNoticeList') {
+          this.urlForm = '/pc/bd/dispatchnotice/insterForm'
+        } 
+      } else if (this.$route.query.tag == 2) {
+        this.approvalVisilbe = true
+        this.title = this.$route.query.storageTitle + '编辑'
+
+        if (this.$route.query.menu == 'ShippingNoticeList') {
+          this.urlForm = '/bd/dispatchnotice/updateForm'
+        } 
+        columnsParams.docid = this.materialid
+      }
+
+      this.$multiTab.rename(this.$route.path, this.title)
+
+      console.log('form url--->', this.urlForm)
+      console.log('form params-->', JSON.stringify(columnsParams))
+      this.data = []
+      getForm(columnsParams, this.urlForm).then((res) => {
+        // console.log('form--->',JSON.stringify(res))
+        if (res.status == 'SUCCESS') {
+          this.data = res.result
+        } else {
+          this.$message.info(res)
+        }
+
+        setTimeout(() => {
+          for (const i in this.data) {
+            this.form.setFieldsValue({
+              [this.data[i].key]: this.data[i].value,
+            })
+            if (this.data[i].key == 'departmentid') {
+              this.departmentid = this.data[i].keyvalue
+            } else if (this.data[i].key == 'personid') {
+              this.personid = this.data[i].keyvalue
+            } else if (this.data[i].key == 'vendorid') {
+              this.vendorid = this.data[i].keyvalue
+            } else if (this.data[i].key == 'doccode') {
+              this.billcode = this.data[i].value
+            } else if (this.data[i].key == 'ApproveStatus') {
+              if (this.$route.query.tag == 2) {
+                this.continueVisible = false
+                if (this.data[i].value == 3) {
+                  this.cancelVisilbe = true
+                  this.approvalVisilbe = false
+                  this.saveVisible = false
+                } else if (this.data[i].value == 8) {
+                  this.cancelVisilbe = false
+                  this.approvalVisilbe = true
+                  this.saveVisible = true
+                } else {
+                  this.cancelVisilbe = false
+                  this.approvalVisilbe = false
+                  this.saveVisible = false
+                }
+              }
+            } else if (this.data[i].key == 'approvalprocess') {
+              this.approvalprocess = this.data[i].value.join()
+            }
+          }
+          this.spinning = false
+        }, 500)
+      })
+    },
+
+    handleSearchChange(value) {
+      console.log(`selected ${value}`)
+    },
+
+    // 返回到清单页面
+    Back(e) {
+      this.status = 2
+      this.submit()
+      // 路由跳转
+    },
+    // 重置表单
+
     handleBlur() {
       console.log('blur')
     },
     handleFocus() {
       console.log('focus')
     },
-    filterOption(input, option) {
-      return option.componentOptions.children[0].text.toLowerCase().indexOf(input.toLowerCase()) >= 0
-    },
-    onSelectChange(selectedRowKeys) {
-      this.selectedRowKeys = selectedRowKeys
-    },
 
-    elect() {
-      this.form.ShippingNoticeCode = 'PT2020062200001'
+    onSearch(value) {
+      console.log(value)
     },
-    showModal() {
-      this.visible = true
-    },
-
-    handleOk(e) {
-      console.log(e)
-      this.visible = false
-      this.numberRow = this.selectedRow
-      console.log(this.numberRow)
-    },
-    onChange(record) {
-      console.log('check', record)
-      if (record.checked) {
-        this.selectedRow.push(record)
-        console.log(this.selectedRow)
-      }
-    }
-  }
+  },
 }
 </script>
+<style lang="less">
+</style>

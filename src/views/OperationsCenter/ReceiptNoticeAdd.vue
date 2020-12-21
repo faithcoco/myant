@@ -98,7 +98,6 @@
             width="1300px"
             :destroyOnClose="destroyOnClose"
           >
-          
             <type :menuname="name" @onSelect="typeSelect"></type>
           </a-modal>
           <a-modal
@@ -120,10 +119,16 @@
       <a-card>
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
-            <a-button type="primary" style="margin-right: 10px" v-show="approvalVisilbe" @click="submitApproval">提交审批</a-button>
-            <a-button type="primary"  style="margin-right: 10px" v-show="cancelVisilbe" @click="cancelClick">撤回审批</a-button>
-            <a-button type="primary" ref="submit" style="margin-right: 10px" v-show="continueVisible" @click="handleSubmit">保存继续</a-button>
-            <a-button type @click="Back"  style="margin-right: 10px" v-show="saveVisible">保存返回</a-button>
+            <a-button type="primary" style="margin-right: 10px" v-show="approvalVisilbe" @click="submitApproval"
+              >提交审批</a-button
+            >
+            <a-button type="primary" style="margin-right: 10px" v-show="cancelVisilbe" @click="cancelClick"
+              >撤回审批</a-button
+            >
+            <a-button type="primary" ref="submit" style="margin-right: 10px" v-show="saveVisible" @click="handleSubmit"
+              >保存继续</a-button
+            >
+            <a-button type @click="Back" style="margin-right: 10px" v-show="saveVisible">保存返回</a-button>
           </a-col>
         </a-row>
       </a-card>
@@ -207,7 +212,8 @@ export default {
       currentRecord: '',
       saveVisible: true,
       cancelVisilbe: false,
-      continueVisible:true
+      continueVisible: true,
+      approvalprocess: '',
     }
   },
   created() {
@@ -224,15 +230,9 @@ export default {
       }
     },
   },
-  watch: {
-    $route: {
-      handler: function (val, oldVal) {
-        if (val.query.storageTitle !== undefined) {
-          this.initdata()
-        }
-      },
-      // 深度观察监听
-    },
+
+  activated() {
+    this.initdata()
   },
   beforeCreate() {
     this.form = this.$form.createForm(this, { formname: 'form' })
@@ -242,8 +242,14 @@ export default {
       const parameter = {}
       parameter.memuid = this.menuid
       parameter.bizid = this.materialid
+      var url = ''
+      if (this.approvalprocess == 1) {
+        url = '/work/recallProcess'
+      } else {
+        url = '/work/directApproval'
+      }
       console.log('cancel-->', JSON.stringify(parameter))
-      getData(parameter, '/work/recallProcess').then((res) => {
+      getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
           this.$message.info('撤销成功')
           this.getFormdata()
@@ -291,7 +297,7 @@ export default {
           values.departmentid = this.departmentid
           values.personid = this.personid
           values.vendorid = this.vendorid
-          values.businessclasscode=this.businessclassid
+          values.businessclasscode = this.businessclassid
 
           values.approvalprocess = values.approvalprocess.join()
           console.log('submit url-->', submitUrl)
@@ -305,8 +311,7 @@ export default {
                   if (this.status == 1) {
                     this.getFormdata()
                   } else if (this.status == 2) {
-                  
-                     this.$multiTab.closeCurrentPage()
+                    this.$multiTab.closeCurrentPage()
                   }
                 }
               }
@@ -340,10 +345,17 @@ export default {
     submitApproval(e) {
       const parameter = {}
       parameter.bizid = this.materialid
-      parameter.billcode = this.billcode
+
       parameter.memuid = this.menuid
+      var url = ''
+      if (this.approvalprocess == 1) {
+        url = '/work/submitProcess'
+        parameter.billcode = this.billcode
+      } else {
+        url = '/work/directApproval'
+      }
       console.log('submit approval-->', JSON.stringify(parameter))
-      getData(parameter, '/work/submitProcess').then((res) => {
+      getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
           this.$message.info('提交审批成功')
           this.getFormdata()
@@ -406,7 +418,6 @@ export default {
       getData(columnsParams, urlColumns).then((res) => {
         this.detailsData = []
         this.detailsData = res.result.data
-        console.log('menu--->', menu)
 
         this.detailsData = this.detailsData.map((item, index) => {
           return { ...item, key: index + 1 }
@@ -507,7 +518,7 @@ export default {
 
         var formdata = this.form.domFields
         var formkey = Object.keys(formdata)
-       
+
         for (const key in formkey) {
           this.form.setFieldsValue({
             [formkey[key]]: this.selectList[0][formkey[key]],
@@ -519,8 +530,8 @@ export default {
         this.form.setFieldsValue({
           receiptnoticecode: this.selectList[0].doccode,
         })
-         this.form.setFieldsValue({
-         doccode: this.billcode,
+        this.form.setFieldsValue({
+          doccode: this.billcode,
         })
         this.form.setFieldsValue({
           receiptnoticeid: this.selectList[0].docid,
@@ -544,7 +555,7 @@ export default {
 
         this.personid = this.selectList[0].personid
         this.departmentid = this.selectList[0].departmentid
-        this.businessclassid=this.selectList[0].businessclassid
+        this.businessclassid = this.selectList[0].businessclassid
         this.vendorid = this.selectList[0].vendorid
         this.getList('ReceiptNoticeList', this.selectList[0].docid)
         this.isReference = true
@@ -619,8 +630,8 @@ export default {
 
       if (this.$route.query.tag == 1) {
         this.approvalVisilbe = false
-        this.continueVisible=true
-        this.saveVisible=true
+        this.continueVisible = true
+        this.saveVisible = true
         this.title = this.$route.query.storageTitle + '新增'
         this.materialclassid = this.$route.query.materialclassid
         if (this.$route.query.menu == 'ReceiptNoticeList') {
@@ -646,12 +657,12 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       this.data = []
       getForm(columnsParams, this.urlForm).then((res) => {
+        // console.log('form--->',JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = res.result
         } else {
           this.$message.info(res)
         }
-      
 
         setTimeout(() => {
           for (const i in this.data) {
@@ -664,11 +675,11 @@ export default {
               this.personid = this.data[i].keyvalue
             } else if (this.data[i].key == 'vendorid') {
               this.vendorid = this.data[i].keyvalue
-            }  else if (this.data[i].key == 'doccode') {
+            } else if (this.data[i].key == 'doccode') {
               this.billcode = this.data[i].value
             } else if (this.data[i].key == 'ApproveStatus') {
               if (this.$route.query.tag == 2) {
-                this.continueVisible=false
+                this.continueVisible = false
                 if (this.data[i].value == 3) {
                   this.cancelVisilbe = true
                   this.approvalVisilbe = false
@@ -683,6 +694,8 @@ export default {
                   this.saveVisible = false
                 }
               }
+            } else if (this.data[i].key == 'approvalprocess') {
+              this.approvalprocess = this.data[i].value.join()
             }
           }
           this.spinning = false

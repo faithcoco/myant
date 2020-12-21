@@ -1,126 +1,51 @@
 <template>
   <div>
     <a-card>
-      <a-row>
-        <a-col :span="16">
-          <a-select default-value="全部" style="width:220px" @change="selectChange(value)">
-            <a-select-option v-for="SList in selectList" :key="SList.value" :value="SList.value">{{
+      <a-row :gutter="10">
+        <a-col>
+          <a-select default-value="全部" style="width: 220px" @change="selectChange">
+            <a-select-option v-for="SList in selectList" :key="SList.key" :value="SList.key">{{
               SList.value
             }}</a-select-option>
           </a-select>
-          <a-input-search @search="onSearch" style="width:220px;margin-left:20px" placeholder="请输入搜索内容" />
-        </a-col>
-        <a-col :span="8">
+
+          <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容" />
+
           <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
             <a-button style="margin-left: 5px" type="primary" @click="add()">新增</a-button>
-            <a-button style="margin-left: 5px" type="primary" @click="handleSetting()">设置</a-button>
+
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
           </span>
+
+          <a-table
+            ref="table"
+            size="default"
+            :columns="columns"
+            :data-source="listdata"
+            :alert="false"
+            :scroll="{ x: 1500, y: 525 }"
+            bordered
+            style="margin-top: 20px"
+            :pagination="pagination"
+            @change="handleTableChange"
+          >
+            <span slot="action" slot-scope="text, record">
+              <a @click="showApproval(record)">查审</a>
+              <a-divider type="vertical" />
+              <a @click="handleEdit(record)">编辑</a>
+              <a-divider type="vertical" />
+
+              <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
+                <a href="javascript:;">删除</a>
+              </a-popconfirm>
+            </span>
+          </a-table>
         </a-col>
       </a-row>
-      <br />
-      <s-table
-        ref="table"
-        size="default"
-        :columns="targetTitle"
-        :data="loadData"
-        :alert="false"
-        :scroll="{ x: 1500 }"
-        bordered
-      >
-        <a slot="name" slot-scope="text, record" @click="handleDetail(record)">{{ text }}</a>
-        <span slot="customTitle">
-          {{ Operation }}
-          <a-icon :type="isfold" :style="{ fontSize: '18px' }" @click="WidthChange()" />
-        </span>
-        <span slot="action" v-show="Operat_visible" slot-scope="text, record">
-          <a @click="handleDetail(record)">审批</a>
-          <a-divider type="vertical" />
-          <a @click="handleEdit(record)">编辑</a>
-          <a-divider type="vertical" />
-          <a @click="handleEdit(record)">删除</a>
-        </span>
-      </s-table>
     </a-card>
-    <approval :visible="approval_visible" :product="product" @change="change"></approval>
-    <!-- <a-drawer
-      title="产品详情"
-      placement="right"
-      :width="720"
-      :closable="false"
-      :visible="visible"
-      :after-visible-change="afterVisibleChange"
-      @close="onClose"
-    >
-      <a-descriptions title :column="1">
-        <a-descriptions-item label="发货单号">{{ product.ShipingNumber }}</a-descriptions-item>
-        <a-descriptions-item label="存货编码">{{ product.InventoryCode }}</a-descriptions-item>
-        <a-descriptions-item label="存货名称">{{ product.InventoryName }}</a-descriptions-item>
-        <a-descriptions-item label="颜色">{{ product.Color }}</a-descriptions-item>
-        <a-descriptions-item label="批号">{{ product.BatchCumber }}</a-descriptions-item>
-        <a-descriptions-item label="数量">{{ product.Quantity }}</a-descriptions-item>
-        <a-descriptions-item label="累计出库数量">{{ product.CumulativeOutQuantity }}</a-descriptions-item>
-        <a-descriptions-item label="工厂编码">{{ product.FactoryCode }}</a-descriptions-item>
-        <a-descriptions-item label="工厂名称">{{ product.FactoryName }}</a-descriptions-item>
-        <a-descriptions-item label="审批状态">
-          <a-tag :color="color">{{ status }}</a-tag>
-        </a-descriptions-item>
-      </a-descriptions>
-      <a-divider>审批详情</a-divider>
-      <a-timeline>
-        <a-timeline-item v-for="item in timelinelist" :key="item.key">
-          <p>
-            <a-row>
-              <a-col :span="5">
-                <b>{{ item.title }}</b>
-              </a-col>
-              <a-col :span="12">{{ item.time }}</a-col>
-            </a-row>
-          </p>
-          <p>
-            <a href="#" v-for="item in item.mentions" :key="item.name">@{{ item.name }}</a>
-            {{ item.content }}
-          </p>
-          <p v-show="item.isShow">
-            <a-card v-for="item in item.img" :key="item.src" :bordered="false">
-              <img slot="extra" alt="logo" :src="item.src" />
-              <br />
-            </a-card>
-          </p>
-        </a-timeline-item>
-      </a-timeline>
-      <a-row>
-        <a-col :span="3">
-          <a-button type="primary" @click="approvalClick">审批</a-button>
-        </a-col>
-        <a-col :span="3">
-          <a-button type="danger" @click="cancelClick">撤销</a-button>
-        </a-col>
-        <a-col :span="3">
-          <a-button type="primary" @click="chatClick">评论</a-button>
-        </a-col>
-      </a-row>
-    </a-drawer>-->
-    <a-modal
-      title="设置"
-      :visible="visible_transfer"
-      :confirm-loading="confirmLoading"
-      @ok="handleOk"
-      @cancel="handleCancel"
-    >
-      <a-transfer
-        :data-source="columns"
-        :titles="['选择显示字段', '已选择字段']"
-        :target-keys="targetKeys"
-        :selected-keys="selectedKeys"
-        :render="item => item.title"
-        :disabled="disabled"
-        @change="handleChange"
-        @selectChange="handleSelectChange"
-        @scroll="handleScroll"
-      />
-    </a-modal>
+
+    <approval :visible="approval_visible" :materialid="materialid" :menu="menu" @change="change"></approval>
   </div>
 </template>
 
@@ -133,216 +58,78 @@ import { Comment } from 'ant-design-vue'
 Vue.use(Descriptions)
 Vue.use(Transfer)
 Vue.use(Comment)
+import { Tree } from 'ant-design-vue'
+Vue.use(Tree)
 import { Timeline } from 'ant-design-vue'
 Vue.use(Timeline)
 import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getShippingNoticeList, getShippingNoticeListColumns } from '@/api/manage'
+import { getProductList, getProductListColumns, getclassificationGoodsList, postData, getData } from '@/api/manage'
 import action from '../../core/directives/action'
 import Approval from '../Approval'
+import SelectModal from '../other/SelectModal'
+import { logininfo, menuname } from '@/store/mutation-types'
 
-const selectList = [
-  { value: '全部' },
-  { value: '发货单号' },
-  { value: '存货编码' },
-  { value: '存货名称' },
-  { value: '颜色' },
-  { value: '批号' },
-  { value: '数量' },
-  { value: '累计出库数量' },
-  { value: '工厂编码' },
-  { value: '工厂名称' }
-]
 const columns = []
-const product = {}
-const targetTitle = columns
-const Operat_visible = true
+const selectList = [{ value: '全部', key: 'all' }]
+
+const dataList = []
 export default {
   components: {
     STable,
     STree,
-    Approval
+    Approval,
+    SelectModal,
   },
   data() {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
       selectList,
-      approval_visible: false,
-      Operat_visible,
-      Operation: '操作',
-      visible_transfer: false,
       confirmLoading: false,
-      product,
       columns,
-      targetTitle,
       queryParam: {},
       selectedRowKeys: [],
-      isfold: 'menu-unfold',
-      size: 'small',
-      targetKeys: [],
       selectedKeys: [],
-      disabled: false,
+      listdata: [],
+      classifyTree: [],
       moment,
-      loadData: parameter => {
-        return getShippingNoticeList(Object.assign(parameter, this.queryParam)).then(res => {
-          return res.result
-        })
-      }
+      menuid: '',
+      expandedKeys: [],
+      autoExpandParent: true,
+      checkedKeys: [],
+      titleTree: '',
+      urlTree: '',
+      urlColumns: '',
+      urlList: '',
+      materialclassid: '',
+      menuname: '',
+      materialid: '',
+      approval_visible: false,
+      tree_visible: true,
+      product: {},
+      urlDelete: '',
+      treeData: [],
+      menu: '',
+      isSearch: false,
+      searchValue: '',
+      searchKey: 'all',
+      pagination: { current: 1, pageSize: 10, total: 10 },
+      pageNo: 1,
     }
   },
-  created() {
-    getShippingNoticeListColumns().then(res => {
-      this.columns = res.result
-      this.columns = [
-        {
-          key: '0',
-          title: '发货单号',
-          dataIndex: 'ShipingNumber',
-          defaultSortOrder: 'descend',
-          sorter: true,
-          width: 155,
-          fixed: '',
-          isShow: true,
-          scopedSlots: {
-            customRender: 'name'
-          }
-        },
-        {
-          key: '1',
-          title: '存货编码',
-          dataIndex: 'InventoryCode',
-          defaultSortOrder: 'descend',
-          sorter: '',
-          width: 155,
-          fixed: '',
-          isShow: true,
-          scopedSlots: {
-            customRender: ''
-          }
-        },
-        {
-          key: '2',
-          title: '存货名称',
-          dataIndex: 'InventoryName',
-          defaultSortOrder: 'descend',
-          sorter: '',
-          width: 155,
-          fixed: '',
-          isShow: true,
-          scopedSlots: {
-            customRender: ''
-          }
-        },
-        {
-          key: '3',
-          title: '颜色',
-          dataIndex: 'Color',
-          defaultSortOrder: 'descend',
-          sorter: '',
-          width: 155,
-          fixed: '',
-          isShow: true,
-          scopedSlots: {
-            customRender: ''
-          }
-        },
-        {
-          key: '4',
-          title: '批号',
-          dataIndex: 'BatchCumber',
-          defaultSortOrder: 'descend',
-          sorter: '',
-          width: 155,
-          fixed: '',
-          isShow: true,
-          scopedSlots: {
-            customRender: ''
-          }
-        },
-        {
-          key: '5',
-          title: '数量',
-          dataIndex: 'Quantity',
-          defaultSortOrder: 'descend',
-          sorter: '',
-          width: 155,
-          fixed: '',
-          isShow: true,
-          scopedSlots: {
-            customRender: ''
-          }
-        },
-        {
-          key: '6',
-          title: '累计出库数量',
-          dataIndex: 'CumulativeOutQuantity',
-          defaultSortOrder: 'descend',
-          sorter: '',
-          width: 155,
-          fixed: '',
-          isShow: true,
-          scopedSlots: {
-            customRender: ''
-          }
-        },
-        {
-          key: '7',
-          title: '工厂编码',
-          dataIndex: 'FactoryCode',
-          defaultSortOrder: 'descend',
-          sorter: '',
-          width: 155,
-          fixed: '',
-          isShow: true,
-          scopedSlots: {
-            customRender: ''
-          }
-        },
-        {
-          key: '8',
-          title: '工厂名称',
-          dataIndex: 'FactoryName',
-          defaultSortOrder: 'descend',
-          sorter: '',
-          width: 155,
-          fixed: '',
-          isShow: true,
-          scopedSlots: {
-            customRender: ''
-          }
-        },
-        {
-          key: '9',
-          slots: { title: 'customTitle' },
-          dataIndex: 'action',
-          defaultSortOrder: '',
-          sorter: '',
-          width: 155,
-          fixed: 'right',
-          isShow: true,
-          scopedSlots: {
-            customRender: 'action'
-          }
-        }
-      ]
-      this.targetTitle = []
-      for (const key in this.columns) {
-        if (this.columns[key].isShow == true) {
-          this.targetKeys.push(this.columns[key].key)
-          this.targetTitle.push(this.columns[key])
-        }
-      }
-    })
-    for (const key in this.columns) {
-      if (this.columns[key].dataIndex == 'action' && this.columns[key].width == 35) {
-        this.Operat_visible = false
-        this.Operation = ''
-        this.isfold = 'menu-fold'
-      }
-    }
+  mounted() {
+    this.initData(this.$route.name)
+  },
+  watch: {
+    $route: {
+      handler: function (val, oldVal) {
+        this.initData(val.name)
+      },
+      // 深度观察监听
+    },
   },
   computed: {
     rowSelection() {
@@ -351,99 +138,193 @@ export default {
         selectedRowKeys,
         onChange: this.onSelectChange,
         hideDefaultSelections: true,
-        onSelection: this.onSelection
+        onSelection: this.onSelection,
       }
-    }
+    },
   },
   methods: {
-    onSearch(value) {
-      console.log(value)
-      this.queryParam = {
-        key: value
+    handleTableChange(pagination, filters, sorter) {
+      console.log('pagination', pagination)
+      this.pageNo = pagination.current
+      this.getList()
+    },
+    showApproval(record) {
+      this.approval_visible = true
+      this.materialid = record.docid
+    },
+    treeSearch(e) {
+      const value = e.target.value
+      this.classifyTree = this.treeData.filter((item) => JSON.stringify(item).includes(value))
+    },
+    delete() {
+      const columnsParams = {}
+    
+      columnsParams.docid=this.materialid
+
+      console.log('delete url--->', this.urlDelete)
+      console.log('delete params--->', JSON.stringify(columnsParams))
+      getData(columnsParams, this.urlDelete).then((res) => {
+        console.log('delete res-->', JSON.stringify(res))
+        this.getList()
+      })
+    },
+    initData(name) {
+      this.menu = this.$route.name
+      this.menuname = name
+      this.titleTree = '仓位分类'
+      console.log('menu-->', this.menu)
+      if (this.menu == 'ShippingNoticeList') {
+        this.urlList = '/bd/dispatchnotice/dispatchnoticeList'
+        this.urlDelete = '/bd/dispatchnotice/delDispatchnotice'
+      } else {
+        return
       }
-      this.$refs.table.refresh(true) //用refresh方法刷新表格
+      this.urlColumns = '/sys/setting/getSetting'
+      const parameter = {}
+      parameter.memucode = this.$route.meta.permission[0]
+      var url = '/bd/menu/findallmenu'
+      console.log('gtmenuid res-->', JSON.stringify(parameter))
+      getData(parameter, url).then((res) => {
+        console.log('menu id-->', JSON.stringify(res))
+
+        this.menuid = res.result
+
+        this.getList()
+        this.getColumns()
+      })
     },
-    selectChange() {},
-    handleDetail(record) {
-      console.log(record), (this.approval_visible = true), (this.product = record)
-    },
-    WidthChange() {
-      for (const key in this.columns) {
-        if (this.columns[key].dataIndex == 'action') {
-          if (this.Operat_visible) {
-            this.Operat_visible = false
-            this.columns[key].width = 35
-            this.Operation = ''
-            this.isfold = 'menu-fold'
+    getColumns() {
+      const columnsParams = {}
+      columnsParams.menuid = this.menuid
+      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      console.log('columns url--->', this.urlColumns)
+      console.log('columns parameter-->', JSON.stringify(columnsParams))
+      getProductListColumns(columnsParams, this.urlColumns).then((res) => {
+        this.columns = res.result.columns
+
+        for (let i = 0; i < this.columns.length; i++) {
+          if (i < this.columns.length - 1) {
+            this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
           } else {
-            this.Operat_visible = true
-            this.columns[key].width = 155
-            this.Operation = '操作'
-            this.isfold = 'menu-unfold'
+            this.columns[i].width = 155
           }
         }
+      })
+    },
+
+    onExpand(expandedKeys) {
+      this.expandedKeys = expandedKeys
+      this.autoExpandParent = false
+    },
+
+    onSelect(selectedKeys, info) {
+      this.checkedKeys = []
+      this.checkedKeys.push(selectedKeys[0])
+      this.materialclassid = selectedKeys.join()
+      this.getList()
+    },
+    getList() {
+      const parameter = {}
+
+      parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      parameter.pageNo = this.pageNo
+      parameter.pageSize = '10'
+      if (this.isSearch) {
+        console.log('search-->', this.searchKey + '/' + this.searchValue)
+        parameter[`${this.searchKey}`] = this.searchValue
       }
+
+      console.log('list url-->', this.urlList)
+      console.log('list params-->', JSON.stringify(parameter))
+      getProductList(parameter, this.urlList).then((res) => {
+        console.log('list res--->', JSON.stringify(res.result.data[0]))
+        this.listdata = []
+        if (res.status == 'SUCCESS') {
+          this.pagination.current = res.result.pageNo
+          this.pagination.pageSize = res.result.pageSize
+          this.pagination.total = res.result.totalCount
+
+          this.listdata = res.result.data
+
+          for (const key in this.listdata) {
+            this.listdata[key].key = key
+          }
+          this.isSearch = false
+        } else {
+          this.$message.warning(res.errorMsg)
+        }
+
+        // Read total count from server
+        // pagination.total = data.totalCount;
+      })
+    },
+    onSearch(value) {
+      this.isSearch = true
+      this.searchValue = value
+      this.getList()
+    },
+    selectChange(value) {
+      this.searchKey = value
+    },
+
+    Classify() {
+      Vue.ls.set(menuname, this.$route.name)
+      this.$router.push({
+        name: 'ClassificationGoods',
+        params: {
+          menu: this.$route.name,
+        },
+      })
     },
     add() {
-      this.$router.push({ name: 'ShippingNoticeAdd' })
+      console.log('push-->', this.$route.name)
+      this.$router.push({
+        path: 'ShippingNoticeAdd',
+        query: {
+          menu: this.$route.name,
+          menuid: this.menuid,
+          materialclassid: this.materialclassid,
+          tag: 1,
+          storageTitle: this.$route.meta.title,
+        },
+      })
     },
-    handleSetting(record) {
-      console.log(record), (this.visible_transfer = true)
-    },
+
     handleEdit(record) {
-      console.log(record), this.$router.push({ path: '/add' })
+      this.materialid = record.docid
+
+      this.$router.push({
+        path: 'ShippingNoticeAdd',
+        query: {
+          menu: this.$route.name,
+          materialid: this.materialid,
+          tag: 2,
+          menuid: this.menuid,
+          storageTitle: this.$route.meta.title,
+        },
+      })
+    },
+    deleteItem(record) {
+      this.materialid = record.docid
+      this.delete()
     },
     handleSub(record) {
       console.log(record)
     },
-    onDelete(key) {
-      const data = [...this.data]
-      this.data = data.filter(item => item.key !== key)
-    },
-    onSelectChange(selectedRowKeys) {
-      this.selectedRowKeys = selectedRowKeys
-    },
-    handleChange(nextTargetKeys, direction, moveKeys) {
-      console.log(nextTargetKeys)
-      for (const key in moveKeys) {
-        if (direction == 'right') {
-          this.targetKeys.push(moveKeys[key])
-        } else {
-          for (const item in this.targetKeys) {
-            // console.log(this.targetKeys[item])
-            if (this.targetKeys[item] == moveKeys[key]) {
-              this.targetKeys.splice(item, 1)
-            }
-          }
-        }
-      }
-    },
-    handleScroll(direction, e) {},
-    handleSelectChange(sourceSelectedKeys, targetSelectedKeys) {
-      this.selectedKeys = [...sourceSelectedKeys, ...targetSelectedKeys]
-    },
-    handleCancel(e) {
-      this.visible_transfer = false
-    },
-    handleOk(e) {
-      this.visible_transfer = false
-      this.confirmLoading = false
-      const columns = [...this.columns]
 
-      this.targetTitle = []
-      for (let i = 0; i < this.targetKeys.length; i++) {
-        for (let j = 0; j < columns.length; j++) {
-          if (columns[j].key == this.targetKeys[i]) {
-            columns[j].isShow = true
-            this.targetTitle.push(columns[j])
-          }
-        }
-      }
-    },
     change(visible) {
       this.approval_visible = visible
-    }
-  }
+    },
+    handleAdd(item) {
+      console.log('add button, item', item)
+      //   this.$message.info(`提示：你点了 ${item.key} - ${item.title} `)
+      this.$refs.modal.add(item.key)
+    },
+    handleTitleClick(item) {
+      console.log('handleTitleClick', item)
+    },
+  },
 }
 </script>
-<style lang="less" scoped></style>
+<style lang="less" scoped>
+</style>

@@ -67,7 +67,11 @@
                       </div>
                     </template>
                     <span slot="doclinequantity" slot-scope="text, record">
-                      <a-input :value="text" @pressEnter="(e) => quantityChange(e.target.value, record)"  type="number"/>
+                      <a-input
+                        :value="text"
+                        @pressEnter="(e) => quantityChange(e.target.value, record)"
+                        type="number"
+                      />
                     </span>
                     <span slot="action" slot-scope="text, record">
                       <a @click="handleEdit(record)">编辑</a>
@@ -210,7 +214,7 @@ export default {
       menu: '',
       status: 1, //1保存继续2保存返回
       stockincode: '',
-      isReference: false,
+
       billcode: '',
       currentRecord: '',
       saveVisible: true,
@@ -385,7 +389,7 @@ export default {
       this.materialid = this.$route.query.materialid
       console.log('route-->', this.$route)
       if (this.$route.query.tag == 2) {
-        this.getList(this.$route.query.menu, this.$route.query.materialid)
+        this.getList(this.$route.query.menu, this.$route.query.materialid, 0)
       } else {
         this.detailsData = []
       }
@@ -404,7 +408,7 @@ export default {
         this.columns.unshift({ title: '序号', dataIndex: 'key', key: 'key', width: '200px' })
       })
     },
-    getList(menu, id) {
+    getList(menu, id, type) {
       const columnsParams = {}
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       columnsParams.pageNo = 1
@@ -420,8 +424,13 @@ export default {
       console.log('listdata url--->', urlColumns)
       console.log('listdata parameter-->', JSON.stringify(columnsParams))
       getData(columnsParams, urlColumns).then((res) => {
-        this.detailsData = []
-        this.detailsData = res.result.data
+        if (type == 0) {
+          this.detailsData = []
+          this.detailsData = res.result.data
+        }else{
+          this.detailsData=this.detailsData.concat(res.result.data)
+           
+        }
 
         this.detailsData = this.detailsData.map((item, index) => {
           return { ...item, key: index + 1 }
@@ -561,8 +570,7 @@ export default {
         this.departmentid = this.selectList[0].departmentid
         this.businessclassid = this.selectList[0].businessclassid
         this.vendorid = this.selectList[0].vendorid
-        this.getList('ReceiptNoticeList', this.selectList[0].docid)
-        this.isReference = true
+        this.getList('ReceiptNoticeList', this.selectList[0].docid, 1)
       } else if (this.currentkey == 'detail') {
         this.visible = false
 

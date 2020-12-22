@@ -58,7 +58,7 @@
                       <div>
                         <a-input
                           :value="text"
-                          @pressEnter="(e) => handleChange(e.target.value, col.dataIndex, record)"
+                          @change="(e) => handleChange(e.target.value, col.dataIndex, record)"
                           v-if="col.isEdit"
                         />
                         <template v-else>
@@ -66,6 +66,9 @@
                         </template>
                       </div>
                     </template>
+                    <span slot="doclinequantity" slot-scope="text, record">
+                      <a-input :value="text" @pressEnter="(e) => quantityChange(e.target.value, record)"  type="number"/>
+                    </span>
                     <span slot="action" slot-scope="text, record">
                       <a @click="handleEdit(record)">编辑</a>
                       <a-divider type="vertical" />
@@ -324,22 +327,23 @@ export default {
         }
       })
     },
-    handleChange(value, key, record) {
-      if (key == 'doclinequantity') {
-        if (this.$route.query.menu == 'StorageManagementList') {
-          if (record.doclinequantity) {
-            if (parseInt(record.doclinequantity) > parseInt(value)) {
-              var temp = JSON.parse(JSON.stringify(record))
-              temp.doclinequantity = parseInt(record.doclinequantity) - parseInt(value)
-              this.detailsData.push(temp)
-            }
+    quantityChange(value, record) {
+      if (this.$route.query.menu == 'StorageManagementList') {
+        if (record.doclinequantity) {
+          if (parseInt(record.doclinequantity) > parseInt(value)) {
+            var temp = JSON.parse(JSON.stringify(record))
+            temp.doclinequantity = parseInt(record.doclinequantity) - parseInt(value)
+            this.detailsData.push(temp)
           }
         }
       }
-      record[key] = value
+      record.doclinequantity = value
       this.detailsData = this.detailsData.map((item, index) => {
         return { ...item, key: index + 1 }
       })
+    },
+    handleChange(value, key, record) {
+      record[key] = value
     },
 
     submitApproval(e) {

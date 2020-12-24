@@ -1,8 +1,7 @@
 <template>
   <div>
     <a-card>
-       
-      <a-form-model class="ant-advanced-search-form" :model="form" @submit="handleSearch" ref="ruleForm">
+      <a-form-model class="ant-advanced-search-form" :model="form" @submit="onSubmit" ref="ruleForm">
         <a-row :gutter="24">
           <a-col :span="8">
             <a-form-model-item label="供应商" prop="supplier">
@@ -24,7 +23,7 @@
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="日 期" prop="date">
-              <a-range-picker @change="timeChange" v-model="form.date" style="width: 100%" />
+              <a-range-picker  v-model="form.date" style="width: 100%" />
             </a-form-model-item>
           </a-col>
 
@@ -58,9 +57,9 @@
           </a-col>
         </a-row>
       </a-form-model>
-       
+
       <a-divider></a-divider>
-      <a-col :span="4" :offset="20" style="margin-bottom: 10px">
+      <a-col :span="4" :offset="21" style="margin-bottom: 10px">
         <a-button style="" type="primary" @click="add()">新增</a-button>
 
         <a-button style="margin-left: 10px" @click="() => (queryParam = {})">导入</a-button>
@@ -170,7 +169,7 @@ export default {
       form: {
         supplier: undefined,
         department: undefined,
-        date: undefined,
+        date: [],
         personnel: undefined,
         approveStatus: undefined,
         key: undefined,
@@ -196,7 +195,8 @@ export default {
 
   methods: {
     onSubmit() {
-      console.log('form submit-->', JSON.stringify(this.form))
+      this.form.date=this.form.date.map((item) => moment(item).valueOf())
+     
       this.getList()
     },
     resetForm() {
@@ -230,16 +230,8 @@ export default {
         this.department = res.result
       })
     },
-    handleSearch(e) {
-      e.preventDefault()
-      this.form.validateFields((error, values) => {
-        console.log('error', error)
-        console.log('Received values of form: ', values)
-      })
-    },
-    timeChange(date, dateString) {
-      console.log(date, dateString)
-    },
+
+
     handleTableChange(pagination, filters, sorter) {
       console.log('pagination', pagination)
       this.pageNo = pagination.current
@@ -249,10 +241,7 @@ export default {
       this.approval_visible = true
       this.materialid = record.docid
     },
-    treeSearch(e) {
-      const value = e.target.value
-      this.classifyTree = this.treeData.filter((item) => JSON.stringify(item).includes(value))
-    },
+
     delete() {
       const columnsParams = {}
 
@@ -326,6 +315,7 @@ export default {
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = this.pageNo
       parameter.pageSize = '10'
+
       parameter.form = this.form
 
       console.log('list url-->', this.urlList)
@@ -415,8 +405,6 @@ export default {
 }
 </script>
 <style>
-
-
 .ant-advanced-search-form .ant-form-item {
   display: flex;
 }
@@ -424,6 +412,4 @@ export default {
 .ant-advanced-search-form .ant-form-item-control-wrapper {
   flex: 1;
 }
-
-
 </style>

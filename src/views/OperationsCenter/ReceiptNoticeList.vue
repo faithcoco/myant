@@ -1,48 +1,95 @@
 <template>
   <div>
     <a-card>
-      <a-row :gutter="10">
-        <a-col>
-          <a-select default-value="全部" style="width: 220px" @change="selectChange">
-            <a-select-option v-for="SList in selectList" :key="SList.key" :value="SList.key">{{
-              SList.value
-            }}</a-select-option>
-          </a-select>
+       
+      <a-form-model class="ant-advanced-search-form" :model="form" @submit="handleSearch" ref="ruleForm">
+        <a-row :gutter="24">
+          <a-col :span="8">
+            <a-form-model-item label="供应商" prop="supplier">
+              <a-select placeholder="请选择供应商" v-model="form.supplier" style="width: 100%">
+                <a-select-option v-for="(item, index) in supplier" :value="item.vendorid"
+                  >{{ item.vendorname }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="部 门" prop="department">
+              <a-select style="width: 100%" placeholder="请选择部门" v-model="form.department">
+                <a-select-option v-for="(item, index) in department" :value="item.departmentid"
+                  >{{ item.title }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="日 期" prop="date">
+              <a-range-picker @change="timeChange" v-model="form.date" style="width: 100%" />
+            </a-form-model-item>
+          </a-col>
 
-          <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容" />
+          <a-col :span="8">
+            <a-form-model-item label="业务员" prop="personnel">
+              <a-select style="width: 100%" placeholder="请选择人员" v-model="form.personnel">
+                <a-select-option v-for="(item, index) in personnel" :value="item.personid"
+                  >{{ item.personname }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="审核状态" prop="approveStatus">
+              <a-select style="width: 100%" placeholder="请选择审核状态" v-model="form.approveStatus">
+                <a-select-option value="1"> 已审核 </a-select-option>
+                <a-select-option value="0"> 未审核 </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8">
+            <a-form-model-item label="关键字" prop="key">
+              <a-input-search style="width: 100%" placeholder="请输入搜索内容" v-model="form.key" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="3" :offset="21">
+            <a-form-model-item>
+              <a-button type="primary" @click="onSubmit"> 搜索 </a-button>
+              <a-button style="margin-left: 10px" @click="resetForm"> 重置 </a-button>
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+      </a-form-model>
+       
+      <a-divider></a-divider>
+      <a-col :span="4" :offset="20" style="margin-bottom: 10px">
+        <a-button style="" type="primary" @click="add()">新增</a-button>
 
-          <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
-            <a-button style="margin-left: 5px" type="primary" @click="add()">新增</a-button>
+        <a-button style="margin-left: 10px" @click="() => (queryParam = {})">导入</a-button>
+        <a-button style="margin-left: 10px" @click="() => (queryParam = {})">导出</a-button>
+      </a-col>
 
-            <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
-            <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
-          </span>
+      <a-table
+        ref="table"
+        size="default"
+        :columns="columns"
+        :data-source="listdata"
+        :alert="false"
+        :scroll="{ x: 1500, y: 525 }"
+        bordered
+        style="margin-top: 20px"
+        :pagination="pagination"
+        @change="handleTableChange"
+      >
+        <span slot="action" slot-scope="text, record">
+          <a @click="showApproval(record)">查审</a>
+          <a-divider type="vertical" />
+          <a @click="handleEdit(record)">编辑</a>
+          <a-divider type="vertical" />
 
-          <a-table
-            ref="table"
-            size="default"
-            :columns="columns"
-            :data-source="listdata"
-            :alert="false"
-            :scroll="{ x: 1500, y: 525 }"
-            bordered
-            style="margin-top: 20px"
-            :pagination="pagination"
-            @change="handleTableChange"
-          >
-            <span slot="action" slot-scope="text, record">
-              <a @click="showApproval(record)">查审</a>
-              <a-divider type="vertical" />
-              <a @click="handleEdit(record)">编辑</a>
-              <a-divider type="vertical" />
-
-              <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
-                <a href="javascript:;">删除</a>
-              </a-popconfirm>
-            </span>
-          </a-table>
-        </a-col>
-      </a-row>
+          <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
+            <a href="javascript:;">删除</a>
+          </a-popconfirm>
+        </span>
+      </a-table>
     </a-card>
 
     <approval :visible="approval_visible" :materialid="materialid" :menu="menu" @change="change"></approval>
@@ -64,13 +111,15 @@ import { Timeline } from 'ant-design-vue'
 Vue.use(Timeline)
 import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
+import { FormModel } from 'ant-design-vue'
+Vue.use(FormModel)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
 import { getProductList, getProductListColumns, getclassificationGoodsList, postData, getData } from '@/api/manage'
 import action from '../../core/directives/action'
 import Approval from '../Approval'
 import SelectModal from '../other/SelectModal'
-import { logininfo, menuname } from '@/store/mutation-types'
+import { logininfo } from '@/store/mutation-types'
 
 const columns = []
 const selectList = [{ value: '全部', key: 'all' }]
@@ -105,7 +154,7 @@ export default {
       urlColumns: '',
       urlList: '',
       materialclassid: '',
-      menuname: '',
+
       materialid: '',
       approval_visible: false,
       tree_visible: true,
@@ -113,36 +162,84 @@ export default {
       urlDelete: '',
       treeData: [],
       menu: '',
-      isSearch: false,
+
       searchValue: '',
       searchKey: 'all',
       pagination: { current: 1, pageSize: 10, total: 10 },
       pageNo: 1,
+      form: {
+        supplier: undefined,
+        department: undefined,
+        date: undefined,
+        personnel: undefined,
+        approveStatus: undefined,
+        key: undefined,
+      },
+      supplier: [],
+      department: [],
+      personnel: [],
     }
   },
   mounted() {
+    console.log('mounted', 'is run')
     this.initData(this.$route.name)
   },
   watch: {
     $route: {
       handler: function (val, oldVal) {
+        console.log('is run', 'watch')
         this.initData(val.name)
       },
       // 深度观察监听
     },
   },
-  computed: {
-    rowSelection() {
-      const { selectedRowKeys } = this
-      return {
-        selectedRowKeys,
-        onChange: this.onSelectChange,
-        hideDefaultSelections: true,
-        onSelection: this.onSelection,
-      }
-    },
-  },
+
   methods: {
+    onSubmit() {
+      console.log('form submit-->', JSON.stringify(this.form))
+      this.getList()
+    },
+    resetForm() {
+      this.$refs.ruleForm.resetFields()
+    },
+    getPersonnel() {
+      const params = {}
+      params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      params.pageNo = 1
+      params.pageSize = 10
+      console.log('supplier params-->', JSON.stringify(params))
+      getData(params, '/bd/baseperson/PersonnelSettingList').then((res) => {
+        this.personnel = res.result.data
+      })
+    },
+    getSupplier() {
+      const params = {}
+      params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      params.pageNo = 1
+      params.pageSize = 10
+      console.log('supplier params-->', JSON.stringify(params))
+      getData(params, '/bd/basevendor/vendorlist').then((res) => {
+        this.supplier = res.result.data
+      })
+    },
+    getDepartment() {
+      const params = {}
+      params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      console.log('department params-->', JSON.stringify(params))
+      getData(params, '/bd/Sector').then((res) => {
+        this.department = res.result
+      })
+    },
+    handleSearch(e) {
+      e.preventDefault()
+      this.form.validateFields((error, values) => {
+        console.log('error', error)
+        console.log('Received values of form: ', values)
+      })
+    },
+    timeChange(date, dateString) {
+      console.log(date, dateString)
+    },
     handleTableChange(pagination, filters, sorter) {
       console.log('pagination', pagination)
       this.pageNo = pagination.current
@@ -158,8 +255,8 @@ export default {
     },
     delete() {
       const columnsParams = {}
-    
-      columnsParams.docid=this.materialid
+
+      columnsParams.docid = this.materialid
 
       console.log('delete url--->', this.urlDelete)
       console.log('delete params--->', JSON.stringify(columnsParams))
@@ -170,7 +267,7 @@ export default {
     },
     initData(name) {
       this.menu = this.$route.name
-      this.menuname = name
+
       this.titleTree = '仓位分类'
       console.log('menu-->', this.menu)
       if (this.menu == 'StorageManagementList') {
@@ -194,6 +291,9 @@ export default {
 
         this.getList()
         this.getColumns()
+        this.getSupplier()
+        this.getDepartment()
+        this.getPersonnel()
       })
     },
     getColumns() {
@@ -220,22 +320,13 @@ export default {
       this.autoExpandParent = false
     },
 
-    onSelect(selectedKeys, info) {
-      this.checkedKeys = []
-      this.checkedKeys.push(selectedKeys[0])
-      this.materialclassid = selectedKeys.join()
-      this.getList()
-    },
     getList() {
       const parameter = {}
 
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = this.pageNo
       parameter.pageSize = '10'
-      if (this.isSearch) {
-        console.log('search-->', this.searchKey + '/' + this.searchValue)
-        parameter[`${this.searchKey}`] = this.searchValue
-      }
+      parameter.form = this.form
 
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
@@ -252,7 +343,6 @@ export default {
           for (const key in this.listdata) {
             this.listdata[key].key = key
           }
-          this.isSearch = false
         } else {
           this.$message.warning(res.errorMsg)
         }
@@ -261,17 +351,12 @@ export default {
         // pagination.total = data.totalCount;
       })
     },
-    onSearch(value) {
-      this.isSearch = true
-      this.searchValue = value
-      this.getList()
-    },
+
     selectChange(value) {
       this.searchKey = value
     },
 
     Classify() {
-      Vue.ls.set(menuname, this.$route.name)
       this.$router.push({
         name: 'ClassificationGoods',
         params: {
@@ -329,5 +414,16 @@ export default {
   },
 }
 </script>
-<style lang="less" scoped>
+<style>
+
+
+.ant-advanced-search-form .ant-form-item {
+  display: flex;
+}
+
+.ant-advanced-search-form .ant-form-item-control-wrapper {
+  flex: 1;
+}
+
+
 </style>

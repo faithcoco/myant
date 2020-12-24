@@ -12,7 +12,7 @@
               </a-select>
             </a-form-model-item>
           </a-col>
-          <a-col :span="8">
+          <a-col :span="8" v-if="menu == 'ReceiptNoticeList'">
             <a-form-model-item label="部 门" prop="department">
               <a-select style="width: 100%" placeholder="请选择部门" v-model="form.department">
                 <a-select-option v-for="(item, index) in department" :value="item.departmentid"
@@ -23,12 +23,20 @@
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="日 期" prop="date">
-              <a-range-picker  v-model="form.date" style="width: 100%" />
+              <a-range-picker v-model="form.date" style="width: 100%" />
             </a-form-model-item>
           </a-col>
-
-          <a-col :span="8">
-            <a-form-model-item label="业务员" prop="personnel">
+          <a-col :span="8" v-if="menu == 'StorageManagementList'">
+            <a-form-model-item label="仓 库" prop="warehouse">
+              <a-select style="width: 100%" placeholder="请选择仓库" v-model="form.warehouse">
+                <a-select-option v-for="(item, index) in warehouse" :value="item.warehouseid"
+                  >{{ item.warehousename }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="8" v-if="menu == 'ReceiptNoticeList'">
+            <a-form-model-item label="业务员" prop="personnel" >
               <a-select style="width: 100%" placeholder="请选择人员" v-model="form.personnel">
                 <a-select-option v-for="(item, index) in personnel" :value="item.personid"
                   >{{ item.personname }}
@@ -173,10 +181,12 @@ export default {
         personnel: undefined,
         approveStatus: undefined,
         key: undefined,
+        warehouse: undefined,
       },
       supplier: [],
       department: [],
       personnel: [],
+      warehouse: [],
     }
   },
   mounted() {
@@ -194,9 +204,20 @@ export default {
   },
 
   methods: {
+    getWarehouse() {
+      const params = {}
+      params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      params.pageNo = 1
+      params.pageSize = 10
+      console.log('supplier params-->', JSON.stringify(params))
+      getData(params, '/bd/warehouse/warehouselist').then((res) => {
+        console.log('Warehouse', JSON.stringify(res))
+        this.warehouse = res.result.data
+      })
+    },
     onSubmit() {
-      this.form.date=this.form.date.map((item) => moment(item).valueOf())
-     
+      this.form.date = this.form.date.map((item) => moment(item).valueOf())
+
       this.getList()
     },
     resetForm() {
@@ -230,7 +251,6 @@ export default {
         this.department = res.result
       })
     },
-
 
     handleTableChange(pagination, filters, sorter) {
       console.log('pagination', pagination)
@@ -283,6 +303,7 @@ export default {
         this.getSupplier()
         this.getDepartment()
         this.getPersonnel()
+        this.getWarehouse()
       })
     },
     getColumns() {

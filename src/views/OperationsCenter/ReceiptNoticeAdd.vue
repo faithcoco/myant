@@ -66,13 +66,14 @@
                         </template>
                       </div>
                     </template>
-                    <span slot="doclinequantity" slot-scope="text, record">
+                    <span slot="doclinenotputquantity" slot-scope="text, record">
                       <a-input
                         :value="text"
-                        @pressEnter="(e) => quantityChange(e.target.value, record)"
+                        @pressEnter="(e) => waitquantityChange(e.target.value, record)"
                         type="number"
                       />
                     </span>
+
                     <span slot="action" slot-scope="text, record">
                       <a @click="handleEdit(record)">编辑</a>
                       <a-divider type="vertical" />
@@ -331,17 +332,16 @@ export default {
         }
       })
     },
-    quantityChange(value, record) {
+
+    waitquantityChange(value, record) {
       if (this.$route.query.menu == 'StorageManagementList') {
-        if (record.doclinequantity) {
-          if (parseInt(record.doclinequantity) > parseInt(value)) {
-            var temp = JSON.parse(JSON.stringify(record))
-            temp.doclinequantity = parseInt(record.doclinequantity) - parseInt(value)
-            this.detailsData.push(temp)
-          }
+        if (parseInt(record.doclinenotputquantity) > parseInt(value)) {
+          var temp = JSON.parse(JSON.stringify(record))
+          temp.doclinenotputquantity = parseInt(record.doclinenotputquantity) - parseInt(value)
+          this.detailsData.push(temp)
         }
       }
-      record.doclinequantity = value
+      record.doclinenotputquantity = value
       this.detailsData = this.detailsData.map((item, index) => {
         return { ...item, key: index + 1 }
       })
@@ -424,12 +424,12 @@ export default {
       console.log('listdata url--->', urlColumns)
       console.log('listdata parameter-->', JSON.stringify(columnsParams))
       getData(columnsParams, urlColumns).then((res) => {
+        console.log('list--->', JSON.stringify(res.result.data[0]))
         if (type == 0) {
           this.detailsData = []
           this.detailsData = res.result.data
-        }else{
-          this.detailsData=this.detailsData.concat(res.result.data)
-           
+        } else {
+          this.detailsData = this.detailsData.concat(res.result.data)
         }
 
         this.detailsData = this.detailsData.map((item, index) => {

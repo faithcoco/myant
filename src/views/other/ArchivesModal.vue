@@ -194,7 +194,7 @@ export default {
         this.urlDelete = '/bd/warehouse/delWarehousebyid'
         parameter.memucode = '01-05'
       } else if (name == 'ReceiptNoticeList') {
-        this.urlList = '/bd/docreceiptnotice/list'
+        this.urlList = '/bd/docreceiptnotice/selectlist'
         parameter.memucode = '02-02'
       } else {
         return
@@ -307,30 +307,7 @@ export default {
       })
     },
 
-    handleEdit(record) {
-      Vue.ls.set(menuname, this.$route.name)
-      if (this.menuname == 'ProductList') {
-        this.materialid = record.materialid
-      } else if (this.menuname == 'PersonnelSetting') {
-        this.materialid = record.personid
-      } else if (this.menuname == 'SupplierList') {
-        this.materialid = record.vendorid
-      } else if (this.menuname == 'CustomerList') {
-        this.materialid = record.customerid
-      } else if (this.menuname == 'WarehouseList') {
-        this.materialid = record.warehouseid
-      }
-      console.log('add materialid-->', this.materialid)
-      this.$router.push({
-        name: 'ProductAdd',
-        params: {
-          menu: this.$route.name,
-          materialid: this.materialid,
-          tag: 2,
-          menuid: this.menuid,
-        },
-      })
-    },
+   
     deleteItem(record) {
       if (this.menuname == 'ProductList') {
         this.materialid = record.materialid

@@ -36,7 +36,7 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="8" v-if="menu == 'ReceiptNoticeList'">
-            <a-form-model-item label="业务员" prop="personnel" >
+            <a-form-model-item label="业务员" prop="personnel">
               <a-select style="width: 100%" placeholder="请选择人员" v-model="form.personnel">
                 <a-select-option v-for="(item, index) in personnel" :value="item.personid"
                   >{{ item.personname }}
@@ -67,12 +67,14 @@
       </a-form-model>
 
       <a-divider></a-divider>
-      <a-col :span="4" :offset="21" style="margin-bottom: 10px">
-        <a-button style="" type="primary" @click="add()">新增</a-button>
+      <a-row>
+        <a-col :span="4" :offset="21">
+          <a-button type="primary" @click="handleAdd">新增</a-button>
 
-        <a-button style="margin-left: 10px" @click="() => (queryParam = {})">导入</a-button>
-        <a-button style="margin-left: 10px" @click="() => (queryParam = {})">导出</a-button>
-      </a-col>
+          <a-button style="margin-left: 10px" @click="() => (queryParam = {})">导入</a-button>
+          <a-button style="margin-left: 10px" @click="() => (queryParam = {})">导出</a-button>
+        </a-col>
+      </a-row>
 
       <a-table
         ref="table"
@@ -375,7 +377,7 @@ export default {
         },
       })
     },
-    add() {
+    handleAdd(e) {
       console.log('push-->', this.$route.name)
       this.$router.push({
         path: 'ReceiptNoticeAdd',
@@ -414,11 +416,7 @@ export default {
     change(visible) {
       this.approval_visible = visible
     },
-    handleAdd(item) {
-      console.log('add button, item', item)
-      //   this.$message.info(`提示：你点了 ${item.key} - ${item.title} `)
-      this.$refs.modal.add(item.key)
-    },
+
     handleTitleClick(item) {
       console.log('handleTitleClick', item)
     },

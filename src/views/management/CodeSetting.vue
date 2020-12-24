@@ -77,6 +77,18 @@ export default {
       }
     },
   },
+  watch: {
+    $route: {
+      handler: function (val, oldVal) {
+       
+        if (val.name == 'code-setting') {
+           console.log('is run', val)
+          this.getDataSource()
+        }
+      },
+      // 深度观察监听
+    },
+  },
   methods: {
     handleChange(value, key, record) {
       record[key] = value
@@ -112,7 +124,6 @@ export default {
       const params = {}
       params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getData(params, '/bd/numbersettings/numbersettingslist').then((res) => {
-        console.log('data--->', JSON.stringify(res))
         this.data = res.result
       })
     },

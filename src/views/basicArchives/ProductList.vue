@@ -146,7 +146,7 @@ export default {
     $route: {
       handler: function (val, oldVal) {
         this.initData(val.name)
-        console.log('watch--->', val)
+       
       },
       // 深度观察监听
     },
@@ -258,7 +258,7 @@ export default {
       this.classifyTree = []
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
-        console.log(this.menuname + 'tree-->', JSON.stringify(res))
+
 
         if (this.isInit) {
           var treekey = res.result[0].key

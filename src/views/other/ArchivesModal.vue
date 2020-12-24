@@ -22,14 +22,7 @@
             style="margin-top: 20px"
             :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: 'radio' }"
           >
-            <span slot="action" v-show="Operat_visible" slot-scope="text, record">
-              <a @click="handleEdit(record)">编辑</a>
-              <a-divider type="vertical" />
-
-              <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
-                <a href="javascript:;">删除</a>
-              </a-popconfirm>
-            </span>
+           
           </a-table>
         </a-col>
       </a-row>
@@ -196,6 +189,9 @@ export default {
       } else if (name == 'ReceiptNoticeList') {
         this.urlList = '/bd/docreceiptnotice/selectlist'
         parameter.memucode = '02-02'
+      } else if (name == 'WarehouseList') {
+         this.urlList = '/bd/warehouse/warehouselist'
+        parameter.memucode = '01-05'
       } else {
         return
       }
@@ -235,7 +231,7 @@ export default {
         this.materialclassid = res.result[0].key
         this.treeData = res.result
         this.classifyTree = this.treeData
-        console.log('tree-->', JSON.stringify(this.classifyTree))
+
         this.expandedKeys.push(this.classifyTree[0].key)
 
         this.getList()
@@ -307,7 +303,6 @@ export default {
       })
     },
 
-   
     deleteItem(record) {
       if (this.menuname == 'ProductList') {
         this.materialid = record.materialid

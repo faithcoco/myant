@@ -129,7 +129,7 @@ export default {
     const params = {}
     getData(params, url).then((res) => {
       this.approvalSettinTree = res.result
-      console.log('tree-->', JSON.stringify(this.approvalSettinTree))
+
       this.menuid = this.approvalSettinTree[0].memuid
     })
     url = '/work/getPsndocOrRoleList'

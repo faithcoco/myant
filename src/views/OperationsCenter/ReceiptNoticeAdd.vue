@@ -206,6 +206,7 @@ export default {
       departmentid: '',
       personid: '',
       vendorid: '',
+      warehouseid:'',
       businessclassid: '',
       spinning: false,
       name: '',
@@ -306,6 +307,7 @@ export default {
           values.personid = this.personid
           values.vendorid = this.vendorid
           values.businessclasscode = this.businessclassid
+          values.warehouseid=this.warehouseid
 
           values.approvalprocess = values.approvalprocess.join()
           console.log('submit url-->', submitUrl)
@@ -496,6 +498,13 @@ export default {
           departmentid: this.selectList[0].departmentname,
         })
         this.departmentid = this.selectList[0].departmentid
+      }else if (this.currentkey == 'warehouseid') {
+        this.visible = false
+        this.form.setFieldsValue({
+          warehouseid: this.selectList[0].warehousename,
+        })
+        this.warehouseid = this.selectList[0].warehouseid
+      
       } else if (this.currentkey == 'vendorid') {
         this.visible = false
         this.form.setFieldsValue({
@@ -621,6 +630,9 @@ export default {
         this.name = 'BusinessCategory'
       } else if (this.currentkey == 'receiptnoticecode') {
         this.name = 'ReceiptNoticeList'
+        this.visible = true
+      } else if (this.currentkey == 'warehouseid') {
+       this.name = 'WarehouseList'
         this.visible = true
       }
     },

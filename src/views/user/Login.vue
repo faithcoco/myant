@@ -170,15 +170,7 @@ export default {
     }
   },
   created() {
-    get2step({})
-      .then((res) => {
-        console.log('2step-code-->', JSON.stringify(res))
 
-        this.requiredTwoStepCaptcha = res.result.errorCode
-      })
-      .catch(() => {
-        this.requiredTwoStepCaptcha = false
-      })
     // this.requiredTwoStepCaptcha = true
   },
   methods: {
@@ -330,11 +322,7 @@ export default {
     },
     requestFailed(err) {
       this.isLoginError = true
-      this.$notification['error']({
-        message: '错误',
-        description: ((err.response || {}).data || {}).message || '请求出现错误，请稍后再试',
-        duration: 4,
-      })
+      
     },
   },
 }

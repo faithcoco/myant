@@ -47,7 +47,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getProductList, getProductListColumns, getclassificationGoodsList, postData, getData } from '@/api/manage'
+import {  getProductListColumns,postData, getData,requestData } from '@/api/manage'
 import action from '../../core/directives/action'
 import Approval from '../Approval'
 import SelectModal from '../other/SelectModal'
@@ -106,6 +106,7 @@ export default {
       searchValue: '',
       searchKey: 'all',
       name: '',
+      method: '',
     }
   },
   mounted() {
@@ -152,45 +153,32 @@ export default {
       this.menuname = name
       const parameter = {}
       if (name == 'ProductList') {
-        this.titleTree = '货品分类'
-        this.urlTree = '/bd/product/materialClassTree'
-
         this.urlList = '/bd/product/productList'
-        this.urlDelete = '/bd/product/delMaterialById'
+        this.method = 'get'
         parameter.memucode = '01-02'
       } else if (name == 'PersonnelSetting') {
-        this.titleTree = '部门分类'
-        this.urlTree = '/bd/Sector'
-
         this.urlList = '/bd/baseperson/PersonnelSettingList'
-        this.urlDelete = '/bd/baseperson/deletePerson'
+        this.method = 'get'
         parameter.memucode = '01-01'
       } else if (name == 'SupplierList') {
-        this.titleTree = '供应商分类'
-        this.urlTree = '/bd/basevendor/vendorTree'
-
         this.urlList = '/bd/basevendor/vendorlist'
-        this.urlDelete = '/bd/basevendor/delvendorbyid'
+        this.method = 'get'
         parameter.memucode = '01-03'
       } else if (name == 'CustomerList') {
-        this.titleTree = '客户分类'
-        this.urlTree = '/bd/customer/CustomerTree'
-
         this.urlList = '/bd/customer/customerlist'
-        this.urlDelete = '/bd/customer/delCustomerbyid'
+        this.method = 'get'
         parameter.memucode = '01-04'
       } else if (name == 'WarehouseList') {
-        this.titleTree = '仓位分类'
-        this.urlTree = '/bd/warehouse/WarehouseTree'
-
         this.urlList = '/bd/warehouse/warehouselist'
-        this.urlDelete = '/bd/warehouse/delWarehousebyid'
+        this.method = 'get'
         parameter.memucode = '01-05'
       } else if (name == 'ReceiptNoticeList') {
         this.urlList = '/bd/docreceiptnotice/selectlist'
+        this.method = 'post'
         parameter.memucode = '02-02'
       } else if (name == 'WarehouseList') {
-         this.urlList = '/bd/warehouse/warehouselist'
+        this.urlList = '/bd/warehouse/warehouselist'
+        this.method = 'get'
         parameter.memucode = '01-05'
       } else {
         return
@@ -220,23 +208,7 @@ export default {
         this.columns.splice(this.columns.length - 1, 1)
       })
     },
-    getTree() {
-      this.checkedKeys = []
-      const parameter = {}
-      parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      console.log('tree params-->', parameter)
-      console.log('tree url', this.urlTree)
-      getclassificationGoodsList(parameter, this.urlTree).then((res) => {
-        this.checkedKeys.push(res.result[0].key)
-        this.materialclassid = res.result[0].key
-        this.treeData = res.result
-        this.classifyTree = this.treeData
 
-        this.expandedKeys.push(this.classifyTree[0].key)
-
-        this.getList()
-      })
-    },
     onExpand(expandedKeys) {
       this.expandedKeys = expandedKeys
       this.autoExpandParent = false
@@ -261,7 +233,7 @@ export default {
 
       console.log('modal list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
-      getProductList(parameter, this.urlList).then((res) => {
+      requestData(parameter, this.urlList, this.method).then((res) => {
         this.listdata = res.result.data
         this.selectedRowKeys = []
         for (const key in this.listdata) {

@@ -602,6 +602,14 @@ export function getProductList(parameter,url) {
     params: parameter
   })
 }
+export function requestData(parameter,url,method) {
+  
+  return axios({
+    url: url,
+    method: method,
+    params: parameter
+  })
+}
 export function getSupplierList(parameter) {
   console.log('/getSupplierList req-->', JSON.stringify(parameter))
   return axios({

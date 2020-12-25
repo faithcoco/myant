@@ -70,7 +70,7 @@ export function get2step (parameter) {
   })
 }
 export function getCompanyList (parameter) {
-  console.log(" getCompanyList res--->",JSON.stringify(parameter))
+  
   return axios({
     url: '/sys/getCompanyList',
     method: 'get',

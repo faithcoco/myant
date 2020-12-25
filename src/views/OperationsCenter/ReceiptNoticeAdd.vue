@@ -73,9 +73,7 @@
                         type="number"
                       />
                     </span>
-                    <span slot="doclineno" slot-scope="text, record">
-                     {{text}}
-                    </span>
+
 
                     <span slot="action" slot-scope="text, record">
                       <a @click="handleEdit(record)">编辑</a>
@@ -324,7 +322,7 @@ export default {
                 if (this.status == 1) {
                   this.getFormdata()
                 } else if (this.status == 2) {
-                  console.log('is run--->')
+                  
                   this.$multiTab.closeCurrentPage()
                 }
               }
@@ -478,7 +476,7 @@ export default {
       this.setform()
     },
     setform() {
-      console.log('select--->', JSON.stringify(this.selectList))
+     
       if (this.currentkey == 'departmentid') {
         this.typeVisible = false
         this.form.setFieldsValue({
@@ -614,7 +612,7 @@ export default {
       this.value = value
     },
     showModal(item) {
-      console.log('this-->', item.key)
+      
       this.currentkey = item.key
       if (this.currentkey == 'departmentid') {
         this.typeVisible = true

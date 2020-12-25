@@ -213,7 +213,7 @@ export default {
       params.pageSize = 10
       console.log('supplier params-->', JSON.stringify(params))
       getData(params, '/bd/warehouse/warehouselist').then((res) => {
-        console.log('Warehouse', JSON.stringify(res))
+        
         this.warehouse = res.result.data
       })
     },

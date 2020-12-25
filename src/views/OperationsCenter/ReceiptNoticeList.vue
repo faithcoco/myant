@@ -4,8 +4,8 @@
       <a-form-model class="ant-advanced-search-form" :model="form" @submit="onSubmit" ref="ruleForm">
         <a-row :gutter="24">
           <a-col :span="8">
-            <a-form-model-item label="供应商" prop="supplier">
-              <a-select placeholder="请选择供应商" v-model="form.supplier" style="width: 100%">
+            <a-form-model-item label="供应商" prop="vendorid">
+              <a-select placeholder="请选择供应商" v-model="form.vendorid" style="width: 100%">
                 <a-select-option v-for="(item, index) in supplier" :value="item.vendorid"
                   >{{ item.vendorname }}
                 </a-select-option>
@@ -13,8 +13,8 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="8" v-if="menu == 'ReceiptNoticeList'">
-            <a-form-model-item label="部 门" prop="department">
-              <a-select style="width: 100%" placeholder="请选择部门" v-model="form.department">
+            <a-form-model-item label="部 门" prop="departmentid">
+              <a-select style="width: 100%" placeholder="请选择部门" v-model="form.departmentid">
                 <a-select-option v-for="(item, index) in department" :value="item.departmentid"
                   >{{ item.title }}
                 </a-select-option>
@@ -27,8 +27,8 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="8" v-if="menu == 'StorageManagementList'">
-            <a-form-model-item label="仓 库" prop="warehouse">
-              <a-select style="width: 100%" placeholder="请选择仓库" v-model="form.warehouse">
+            <a-form-model-item label="仓 库" prop="warehouseid">
+              <a-select style="width: 100%" placeholder="请选择仓库" v-model="form.warehouseid">
                 <a-select-option v-for="(item, index) in warehouse" :value="item.warehouseid"
                   >{{ item.warehousename }}
                 </a-select-option>
@@ -36,8 +36,8 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="8" v-if="menu == 'ReceiptNoticeList'">
-            <a-form-model-item label="业务员" prop="personnel">
-              <a-select style="width: 100%" placeholder="请选择人员" v-model="form.personnel">
+            <a-form-model-item label="业务员" prop="personid">
+              <a-select style="width: 100%" placeholder="请选择人员" v-model="form.personid">
                 <a-select-option v-for="(item, index) in personnel" :value="item.personid"
                   >{{ item.personname }}
                 </a-select-option>
@@ -177,13 +177,13 @@ export default {
       pagination: { current: 1, pageSize: 10, total: 10 },
       pageNo: 1,
       form: {
-        supplier: undefined,
-        department: undefined,
+       vendorid: undefined,
+        departmentid: undefined,
         date: [],
-        personnel: undefined,
-        approveStatus: undefined,
+        personid: undefined,
+        approveStatusid: undefined,
         key: undefined,
-        warehouse: undefined,
+        warehouseid: undefined,
       },
       supplier: [],
       department: [],
@@ -426,6 +426,7 @@ export default {
 <style>
 .ant-advanced-search-form .ant-form-item {
   display: flex;
+  margin-bottom: 10px;
 }
 
 .ant-advanced-search-form .ant-form-item-control-wrapper {

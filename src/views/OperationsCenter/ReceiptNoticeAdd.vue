@@ -3,7 +3,7 @@
     <a-spin size="large" :spinning="spinning" tip="正在加载">
       <div>
         <a-card>
-          <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
+          <a-form  class="ant-advanced-search-form" :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
             <a-form-item v-for="item in data" :label="item.title">
               <div v-if="item.selectVisible">
                 <a-cascader
@@ -72,6 +72,9 @@
                         @pressEnter="(e) => waitquantityChange(e.target.value, record)"
                         type="number"
                       />
+                    </span>
+                    <span slot="doclineno" slot-scope="text, record">
+                     {{text}}
                     </span>
 
                     <span slot="action" slot-scope="text, record">
@@ -206,7 +209,7 @@ export default {
       departmentid: '',
       personid: '',
       vendorid: '',
-      warehouseid:'',
+      warehouseid: '',
       businessclassid: '',
       spinning: false,
       name: '',
@@ -307,7 +310,7 @@ export default {
           values.personid = this.personid
           values.vendorid = this.vendorid
           values.businessclasscode = this.businessclassid
-          values.warehouseid=this.warehouseid
+          values.warehouseid = this.warehouseid
 
           values.approvalprocess = values.approvalprocess.join()
           console.log('submit url-->', submitUrl)
@@ -345,7 +348,7 @@ export default {
       }
       record.doclinenotputquantity = value
       this.detailsData = this.detailsData.map((item, index) => {
-        return { ...item, key: index + 1 }
+        return { ...item, doclineno: index + 1 }
       })
     },
     handleChange(value, key, record) {
@@ -407,7 +410,6 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, urlColumns).then((res) => {
         this.columns = res.result.columns
-        this.columns.unshift({ title: '序号', dataIndex: 'key', key: 'key', width: '200px' })
       })
     },
     getList(menu, id, type) {
@@ -435,13 +437,12 @@ export default {
         }
 
         this.detailsData = this.detailsData.map((item, index) => {
-          return { ...item, key: index + 1 }
+          return { ...item, doclineno: index + 1 }
         })
       })
     },
     detailSelect(list) {
       this.selectList = list
-      console.log('detail-->', JSON.stringify(this.selectList))
     },
     getSelect(list) {
       this.selectList = list
@@ -464,7 +465,7 @@ export default {
       this.detailsData = this.detailsData.concat(this.selectList)
 
       this.detailsData = this.detailsData.map((item, index) => {
-        return { ...item, key: parseInt(index) + 1 }
+        return { ...item, doclineno: parseInt(index) + 1 }
       })
     },
     detailCancel(e) {
@@ -498,13 +499,12 @@ export default {
           departmentid: this.selectList[0].departmentname,
         })
         this.departmentid = this.selectList[0].departmentid
-      }else if (this.currentkey == 'warehouseid') {
+      } else if (this.currentkey == 'warehouseid') {
         this.visible = false
         this.form.setFieldsValue({
           warehouseid: this.selectList[0].warehousename,
         })
         this.warehouseid = this.selectList[0].warehouseid
-      
       } else if (this.currentkey == 'vendorid') {
         this.visible = false
         this.form.setFieldsValue({
@@ -632,7 +632,7 @@ export default {
         this.name = 'ReceiptNoticeList'
         this.visible = true
       } else if (this.currentkey == 'warehouseid') {
-       this.name = 'WarehouseList'
+        this.name = 'WarehouseList'
         this.visible = true
       }
     },
@@ -753,4 +753,6 @@ export default {
 }
 </script>
 <style lang="less">
+
+
 </style>

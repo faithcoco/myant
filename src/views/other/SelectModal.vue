@@ -118,9 +118,11 @@ export default {
 
   methods: {
     onSelect(record, selected, selectedRows) {
+     
       this.$emit('onSelect', selectedRows)
     },
-    onSelectChange(selectedRowKeys) {
+    onSelectChange(selectedRowKeys, selectedRows) {
+     
       this.selectedRowKeys = selectedRowKeys
     },
     treeSearch(e) {

@@ -179,7 +179,7 @@ export default {
       form: {
        vendorid: undefined,
         departmentid: undefined,
-        date: [],
+        date: undefined,
         personid: undefined,
         approveStatusid: undefined,
         key: undefined,

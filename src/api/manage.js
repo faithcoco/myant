@@ -296,7 +296,7 @@ export function getSector(parameter) {
   })
 }
 export function getProductListColumns(parameter, url) {
- 
+
   return axios({
     url: url,
     method: 'get',
@@ -322,7 +322,7 @@ export function postData(parameter, url) {
 }
 
 export function submitForm(parameter, url) {
- 
+
   return axios({
     url: url,
     method: 'post',
@@ -531,7 +531,7 @@ export function getclassificationGoodsList(parameter, url) {
     params: parameter
   })
 }
-export function insertmaterialClass(parameter,url) {
+export function insertmaterialClass(parameter, url) {
   console.log(' req-->', JSON.stringify(parameter))
   return axios({
     url: url,
@@ -539,8 +539,8 @@ export function insertmaterialClass(parameter,url) {
     data: parameter
   })
 }
-export function getData(parameter,url) {
-  
+export function getData(parameter, url) {
+
   return axios({
     url: url,
     method: 'get',
@@ -556,7 +556,7 @@ export function getRoleList(parameter) {
   })
 }
 export function insertRole(parameter) {
-  
+
   return axios({
     url: '/bd/role/insertRole',
     method: 'post',
@@ -564,7 +564,7 @@ export function insertRole(parameter) {
   })
 }
 export function updateForm(parameter) {
- 
+
   return axios({
     url: '/bd/FormSetting/updateForm',
     method: 'post',
@@ -572,7 +572,7 @@ export function updateForm(parameter) {
   })
 }
 export function updateRole(parameter) {
- 
+
   return axios({
     url: '/bd/role/updateRole',
     method: 'post',
@@ -594,27 +594,36 @@ export function getServiceList(parameter) {
     params: parameter
   })
 }
-export function getProductList(parameter,url) {
-  
+export function getProductList(parameter, url) {
+
   return axios({
     url: url,
     method: 'get',
     params: parameter
   })
 }
-export function requestData(parameter,url,method) {
-  
-  return axios({
-    url: url,
-    method: method,
-    params: parameter
-  })
+export function requestData(parameter, url, method) {
+  if (method == 'get') {
+    return axios({
+      url: url,
+      method: method,
+      params: parameter
+    })
+  } else {
+    return axios({
+      url: url,
+      method: method,
+      data: parameter
+    })
+  }
+
 }
 export function getSupplierList(parameter) {
   console.log('/getSupplierList req-->', JSON.stringify(parameter))
   return axios({
     url: api.SupplierList,
     method: 'get',
+
     params: parameter
   })
 }
@@ -842,7 +851,7 @@ export function updateBaseenterprise(parameter) {
   })
 }
 export function insertBaseenterprise(parameter) {
-  console.log('create url-->',api.insertBaseenterprise)
+  console.log('create url-->', api.insertBaseenterprise)
   return axios({
     url: api.insertBaseenterprise,
     method: 'post',

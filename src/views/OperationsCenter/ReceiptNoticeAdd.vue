@@ -3,7 +3,13 @@
     <a-spin size="large" :spinning="spinning" tip="正在加载">
       <div>
         <a-card>
-          <a-form  class="ant-advanced-search-form" :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
+          <a-form
+            class="ant-advanced-search-form"
+            :form="form"
+            :label-col="{ span: 3 }"
+            :wrapper-col="{ span: 20 }"
+            @submit="handleSubmit"
+          >
             <a-form-item v-for="item in data" :label="item.title">
               <div v-if="item.selectVisible">
                 <a-cascader
@@ -52,7 +58,16 @@
             <a-form-item :wrapper-col="{ span: 21, offset: 2 }">
               <a-tabs>
                 <a-tab-pane tab="明细">
-                  <a-button @click="() => detailModal()">选择</a-button>
+                  <a-dropdown>
+                    <a class="ant-dropdown-link" @click="(e) => e.preventDefault()" style="margin-left: 20px">
+                      选择 <a-icon type="down" />
+                    </a>
+                    <a-menu slot="overlay" @click="onClick">
+                      <a-menu-item key="1"> 选择料品 </a-menu-item>
+                      <a-menu-item key="2" v-if="menu == 'StorageManagementList'">参照收货通知单 </a-menu-item>
+                    </a-menu>
+                  </a-dropdown>
+
                   <a-table :columns="columns" :data-source="detailsData" :scroll="{ x: 3000 }">
                     <template v-for="col in columns" :slot="col.dataIndex" slot-scope="text, record, index">
                       <div>
@@ -66,14 +81,13 @@
                         </template>
                       </div>
                     </template>
-                    <span slot="doclinenotputquantity" slot-scope="text, record">
+                    <span slot="doclinequantity" slot-scope="text, record">
                       <a-input
                         :value="text"
                         @pressEnter="(e) => waitquantityChange(e.target.value, record)"
                         type="number"
                       />
                     </span>
-
 
                     <span slot="action" slot-scope="text, record">
                       <a @click="handleEdit(record)">编辑</a>
@@ -181,7 +195,6 @@ export default {
       disabled: true,
       numberRow,
       selectedRow: [],
-
       selectedRowKeys: [],
 
       size: 'small',
@@ -248,6 +261,16 @@ export default {
     this.form = this.$form.createForm(this, { formname: 'form' })
   },
   methods: {
+    onClick({ key }) {
+      console.log(`Click on item ${key}`)
+      if (key == '1') {
+        this.detailModal()
+      } else {
+        this.currentkey = 'list'
+        this.name = 'ReceiptNoticeList'
+        this.visible = true
+      }
+    },
     cancelClick(e) {
       const parameter = {}
       parameter.memuid = this.menuid
@@ -274,7 +297,7 @@ export default {
         this.$message.info('参照明细不能修改')
       } else {
         this.name = 'ProductList'
-        this.currentkey = 'detail'
+        this.currentkey = 'edit'
         this.visible = true
 
         this.currentRecord = record
@@ -322,7 +345,6 @@ export default {
                 if (this.status == 1) {
                   this.getFormdata()
                 } else if (this.status == 2) {
-                  
                   this.$multiTab.closeCurrentPage()
                 }
               }
@@ -338,13 +360,13 @@ export default {
 
     waitquantityChange(value, record) {
       if (this.$route.query.menu == 'StorageManagementList') {
-        if (parseInt(record.doclinenotputquantity) > parseInt(value)) {
+        if (parseInt(record.doclinequantity) > parseInt(value)) {
           var temp = JSON.parse(JSON.stringify(record))
-          temp.doclinenotputquantity = parseInt(record.doclinenotputquantity) - parseInt(value)
+          temp.doclinequantity = parseInt(record.doclinequantity) - parseInt(value)
           this.detailsData.push(temp)
         }
       }
-      record.doclinenotputquantity = value
+      record.doclinequantity = value
       this.detailsData = this.detailsData.map((item, index) => {
         return { ...item, doclineno: index + 1 }
       })
@@ -376,7 +398,7 @@ export default {
       })
     },
     deleteItem(record) {
-      this.detailsData = this.detailsData.filter((item) => item.key !== record.key)
+      this.detailsData = this.detailsData.filter((item) => item.doclineno !== record.doclineno)
     },
     initdata() {
       this.spinning = true
@@ -406,6 +428,7 @@ export default {
       var urlColumns = '/sys/setting/getChildrenSetting'
       console.log('columns url--->', urlColumns)
       console.log('columns parameter-->', JSON.stringify(columnsParams))
+      this.scopeList = []
       getProductListColumns(columnsParams, urlColumns).then((res) => {
         this.columns = res.result.columns
       })
@@ -428,10 +451,16 @@ export default {
       getData(columnsParams, urlColumns).then((res) => {
         console.log('list--->', JSON.stringify(res.result.data[0]))
         if (type == 0) {
+          //编辑明细
           this.detailsData = []
           this.detailsData = res.result.data
         } else {
+          //参照明细
           this.detailsData = this.detailsData.concat(res.result.data)
+
+          this.detailsData = this.detailsData.map((item, index) => {
+            return { ...item, doclinequantity: item.doclinenotputquantity }
+          })
         }
 
         this.detailsData = this.detailsData.map((item, index) => {
@@ -476,7 +505,7 @@ export default {
       this.setform()
     },
     setform() {
-     
+      console.log('current--->', JSON.stringify(this.currentkey))
       if (this.currentkey == 'departmentid') {
         this.typeVisible = false
         this.form.setFieldsValue({
@@ -577,8 +606,8 @@ export default {
         this.departmentid = this.selectList[0].departmentid
         this.businessclassid = this.selectList[0].businessclassid
         this.vendorid = this.selectList[0].vendorid
-        this.getList('ReceiptNoticeList', this.selectList[0].docid, 1)
-      } else if (this.currentkey == 'detail') {
+        // this.getList('ReceiptNoticeList', this.selectList[0].docid, 1)
+      } else if (this.currentkey == 'edit') {
         this.visible = false
 
         var formkey = Object.keys(this.currentRecord)
@@ -589,6 +618,9 @@ export default {
             }
           }
         }
+      } else if (this.currentkey == 'list') {
+        this.getList('ReceiptNoticeList', this.selectList[0].docid, 1)
+        this.visible = false
       }
     },
     handleCancel(e) {
@@ -602,7 +634,9 @@ export default {
         this.typeVisible = false
       } else if (this.currentkey == 'receiptnoticecode') {
         this.visible = false
-      } else if (this.currentkey == 'detail') {
+      } else if (this.currentkey == 'edit') {
+        this.visible = false
+      } else if (this.currentkey == 'list') {
         this.visible = false
       }
     },
@@ -612,7 +646,6 @@ export default {
       this.value = value
     },
     showModal(item) {
-      
       this.currentkey = item.key
       if (this.currentkey == 'departmentid') {
         this.typeVisible = true
@@ -751,6 +784,4 @@ export default {
 }
 </script>
 <style lang="less">
-
-
 </style>

@@ -47,7 +47,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import {  getProductListColumns,postData, getData,requestData } from '@/api/manage'
+import { getProductListColumns, postData, getData, requestData } from '@/api/manage'
 import action from '../../core/directives/action'
 import Approval from '../Approval'
 import SelectModal from '../other/SelectModal'
@@ -226,19 +226,24 @@ export default {
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = '1'
       parameter.pageSize = '10'
+      parameter.form={}
       if (this.isSearch) {
         console.log('search-->', this.searchKey + '/' + this.searchValue)
         parameter[`${this.searchKey}`] = this.searchValue
       }
 
-      console.log('modal list url-->', this.urlList)
-      console.log('list params-->', JSON.stringify(parameter))
+      console.log('request url-->', this.urlList)
+      console.log('request params-->', JSON.stringify(parameter))
       requestData(parameter, this.urlList, this.method).then((res) => {
-        this.listdata = res.result.data
-        this.selectedRowKeys = []
-        for (const key in this.listdata) {
-          this.listdata[key].key = key
+       console.log('res-->',JSON.stringify(res))
+        if (res.result.data.length !== 0) {
+          this.listdata = res.result.data
+          this.selectedRowKeys = []
+          for (const key in this.listdata) {
+            this.listdata[key].key = key
+          }
         }
+
         this.isSearch = false
       })
     },

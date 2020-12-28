@@ -23,7 +23,7 @@
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="日 期" prop="date">
-              <a-range-picker v-model="form.date" style="width: 100%" />
+              <a-range-picker v-model="date" style="width: 100%" />
             </a-form-model-item>
           </a-col>
           <a-col :span="8" v-if="menu == 'StorageManagementList'">
@@ -45,8 +45,8 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
-            <a-form-model-item label="审核状态" prop="approveStatus">
-              <a-select style="width: 100%" placeholder="请选择审核状态" v-model="form.approveStatus">
+            <a-form-model-item label="审核状态" prop="approvestatus">
+              <a-select style="width: 100%" placeholder="请选择审核状态" v-model="form.approvetatus">
                 <a-select-option value="1"> 已审核 </a-select-option>
                 <a-select-option value="0"> 未审核 </a-select-option>
               </a-select>
@@ -54,7 +54,12 @@
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="关键字" prop="key">
-              <a-input-search style="width: 100%" placeholder="请输入搜索内容" v-model="form.key" />
+              <a-select v-model="key.scope" style="width: 150px">
+                <a-select-option v-for="SList in selectList" :key="SList.key" :value="SList.key">{{
+                  SList.value
+                }}</a-select-option>
+              </a-select>
+              <a-input-search style="width: 65%" placeholder="请输入搜索内容" v-model="key.value" />
             </a-form-model-item>
           </a-col>
           <a-col :span="3" :offset="21">
@@ -163,7 +168,7 @@ export default {
       urlColumns: '',
       urlList: '',
       materialclassid: '',
-
+      scopeList: [],
       materialid: '',
       approval_visible: false,
       tree_visible: true,
@@ -177,14 +182,19 @@ export default {
       pagination: { current: 1, pageSize: 10, total: 10 },
       pageNo: 1,
       form: {
-       vendorid: undefined,
+        vendorid: undefined,
         departmentid: undefined,
-        date: undefined,
+
         personid: undefined,
-        approveStatusid: undefined,
-        key: undefined,
+        approvetatus: undefined,
+
         warehouseid: undefined,
       },
+      key: {
+        scope: 'all',
+        value: undefined,
+      },
+      date: undefined,
       supplier: [],
       department: [],
       personnel: [],
@@ -192,13 +202,11 @@ export default {
     }
   },
   mounted() {
-    console.log('mounted', 'is run')
     this.initData(this.$route.name)
   },
   watch: {
     $route: {
       handler: function (val, oldVal) {
-        console.log('is run', 'watch')
         this.initData(val.name)
       },
       // 深度观察监听
@@ -213,12 +221,18 @@ export default {
       params.pageSize = 10
       console.log('supplier params-->', JSON.stringify(params))
       getData(params, '/bd/warehouse/warehouselist').then((res) => {
-        
         this.warehouse = res.result.data
       })
     },
     onSubmit() {
-      this.form.date = this.form.date.map((item) => moment(item).valueOf())
+      if (this.date !== undefined) {
+        this.date = this.date.map((item) => moment(item).valueOf())
+        this.form.starttime = this.date[0]
+        this.form.endtime = this.date[1]
+      }
+      if (this.key.value == undefined) {
+        this.form[this.key.scope] = ''
+      }
 
       this.getList()
     },
@@ -316,13 +330,9 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-
+        console.log('columns-->', JSON.stringify(this.columns))
         for (let i = 0; i < this.columns.length; i++) {
-          if (i < this.columns.length - 1) {
-            this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
-          } else {
-            this.columns[i].width = 155
-          }
+          this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
         }
       })
     },
@@ -344,7 +354,6 @@ export default {
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       postData(parameter, this.urlList).then((res) => {
-       
         this.listdata = []
         if (res.status == 'SUCCESS') {
           this.pagination.current = res.result.pageNo
@@ -357,6 +366,7 @@ export default {
             this.listdata[key].key = key
           }
         } else {
+          console.log('list error-->',JSON.stringify(res.errorMsg))
           this.$message.warning(res.errorMsg)
         }
 
@@ -378,7 +388,6 @@ export default {
       })
     },
     handleAdd(e) {
-      console.log('push-->', this.$route.name)
       this.$router.push({
         path: 'ReceiptNoticeAdd',
         query: {

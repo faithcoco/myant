@@ -113,8 +113,8 @@
       <router-link class="register" :to="{ name: 'register' }">还没有账号？注册账户</router-link>
     </a-form>
     <a-modal title="选择企业" :visible="enterpriseVisible" @ok="handleOk" @cancel="handleCancel">
-      <a-radio-group v-model="radioValue" @change="handleChange" >
-        <a-radio  :style="radioStyle" v-for="d in companyList" :value="d.enterpriseid">{{ d.enterprisename }}</a-radio>
+      <a-radio-group v-model="radioValue" @change="handleChange">
+        <a-radio :style="radioStyle" v-for="d in companyList" :value="d.enterpriseid">{{ d.enterprisename }}</a-radio>
       </a-radio-group>
     </a-modal>
     <two-step-captcha
@@ -162,7 +162,7 @@ export default {
         smsSendBtn: false,
       },
       radioValue: '',
-       radioStyle: {
+      radioStyle: {
         display: 'block',
         height: '30px',
         lineHeight: '30px',
@@ -170,7 +170,6 @@ export default {
     }
   },
   created() {
-
     // this.requiredTwoStepCaptcha = true
   },
   methods: {
@@ -194,7 +193,7 @@ export default {
       console.log('login params-->', JSON.stringify(loginParams))
       Login(loginParams)
         .then((res) => this.loginSuccess(res))
-        .catch((err) => this.requestFailed(err))
+        .catch((err) => console.log(err))
         .finally(() => {
           state.loginBtn = false
         })
@@ -240,18 +239,23 @@ export default {
           const loginParams = {}
 
           loginParams.phone = values.enterprisephone
+          loginParams.password = values.password
+          loginParams.state = '1'
           console.log('enterpriseid params-->', loginParams)
           getCompanyList(loginParams)
             .then((res) => {
-              console.log('getCompanyList-->', JSON.stringify(res))
-              if (res.result.length == 1) {
-                this.enterpriseid = res.result[0].enterpriseid
-                this.enterpriseVisible = false
-                this.loginSubmit()
+              if (res.status == 'FAILED') {
+                this.requestFailed(res.errorMsg)
               } else {
-                this.enterpriseVisible = true
+                if (res.result.length == 1) {
+                  this.enterpriseid = res.result[0].enterpriseid
+                  this.enterpriseVisible = false
+                  this.loginSubmit()
+                } else {
+                  this.enterpriseVisible = true
+                }
+                this.companyList = res.result
               }
-              this.companyList = res.result
             })
             .catch(() => {
               this.requiredTwoStepCaptcha = false
@@ -322,7 +326,6 @@ export default {
     },
     requestFailed(err) {
       this.isLoginError = true
-      
     },
   },
 }

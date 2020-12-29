@@ -626,13 +626,14 @@ export default {
     change() {
       this.changeVisible = true
       const params = {}
-      ;(params.phone = Vue.ls.get(logininfo).basepersonPO.personphone),
-        getCompanyList(params)
-          .then((res) => {
-            console.log('getCompanyList-->', JSON.stringify(res))
-            this.enterprisename = res.result
-          })
-          .catch(() => {})
+      params.phone = Vue.ls.get(logininfo).basepersonPO.personphone
+      params.state=''
+      getCompanyList(params)
+        .then((res) => {
+          console.log('getCompanyList-->', JSON.stringify(res))
+          this.enterprisename = res.result
+        })
+        .catch(() => {})
     },
     companyOk(e) {
       this.confirmLoading = true

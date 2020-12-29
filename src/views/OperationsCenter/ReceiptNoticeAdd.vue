@@ -609,7 +609,7 @@ export default {
         this.departmentid = this.selectList[0].departmentid
         this.businessclassid = this.selectList[0].businessclassid
         this.vendorid = this.selectList[0].vendorid
-        // this.getList('ReceiptNoticeList', this.selectList[0].docid, 1)
+        this.getList('ReceiptNoticeList', this.selectList[0].docid, 1)
       } else if (this.currentkey == 'edit') {
         this.visible = false
 

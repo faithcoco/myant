@@ -456,11 +456,14 @@ export default {
           this.detailsData = res.result.data
         } else {
           //参照明细
-          this.detailsData = this.detailsData.concat(res.result.data)
-
-          this.detailsData = this.detailsData.map((item, index) => {
-            return { ...item, doclinequantity: item.doclinenotputquantity }
+          var addData = []
+          addData = res.result.data
+       
+          addData = addData.map((item, index) => {
+            return { ...item, doclinequantity: item.doclinenotputquantity, receiptnoticelineid: item.doclineid }
           })
+
+          this.detailsData = this.detailsData.concat(addData)
         }
 
         this.detailsData = this.detailsData.map((item, index) => {

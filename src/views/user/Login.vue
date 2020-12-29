@@ -246,6 +246,7 @@ export default {
             .then((res) => {
               if (res.status == 'FAILED') {
                 this.requestFailed(res.errorMsg)
+                 state.loginBtn = false
               } else {
                 if (res.result.length == 1) {
                   this.enterpriseid = res.result[0].enterpriseid

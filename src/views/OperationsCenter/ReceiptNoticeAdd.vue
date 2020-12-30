@@ -281,6 +281,7 @@ export default {
       } else {
         url = '/work/directApproval'
       }
+      
       console.log('cancel-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
@@ -344,6 +345,9 @@ export default {
                 this.detailsData = []
                 if (this.status == 1) {
                   this.getFormdata()
+                  if (this.$route.query.tag == 2) {
+                    this.getList(this.$route.query.menu, this.$route.query.materialid, 0)
+                  }
                 } else if (this.status == 2) {
                   this.$multiTab.closeCurrentPage()
                 }
@@ -387,7 +391,9 @@ export default {
       } else {
         url = '/work/directApproval'
       }
-      console.log('submit approval-->', JSON.stringify(parameter))
+      
+      console.log('approval-->', JSON.stringify(parameter))
+      console.log('approval url-->', url)
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
           this.$message.info('提交审批成功')
@@ -458,7 +464,7 @@ export default {
           //参照明细
           var addData = []
           addData = res.result.data
-       
+
           addData = addData.map((item, index) => {
             return { ...item, doclinequantity: item.doclinenotputquantity, receiptnoticelineid: item.doclineid }
           })

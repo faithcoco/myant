@@ -46,7 +46,7 @@
           <a-button type="primary" v-show="approvalVisible" style="margin-right: 10px" @click="approvalClick"
             >同意</a-button
           >
-          
+
           <a-button type="danger" v-show="approvalVisible" style="margin-right: 10px" @click="refuceClick"
             >拒绝</a-button
           >
@@ -206,6 +206,7 @@ export default {
       approvalVisible: true,
       isContent: false,
       content: '',
+      approvalprocess: '',
     }
   },
   components: {},
@@ -309,6 +310,7 @@ export default {
     getTimeline() {
       const parameter = {}
       parameter.bizid = this.materialid
+      parameter.isEnabled = this.approvalprocess.join()
       console.log('timeline param-->', JSON.stringify(parameter))
       getData(parameter, '/work/getApprovalInfo').then((res) => {
         console.log('timeline-->', JSON.stringify(res))
@@ -330,7 +332,7 @@ export default {
       getData(parameter, url).then((res) => {
         this.menuid = res.result
         this.getFormdata()
-        this.getTimeline()
+       
       })
     },
     setStatus(status) {
@@ -367,6 +369,7 @@ export default {
 
       getData(columnsParams, this.urlForm).then((res) => {
         if (res.status == 'SUCCESS') {
+          console.log('time--->', JSON.stringify(res.result))
           this.data = []
           this.descriptions = []
           this.data = res.result
@@ -374,10 +377,13 @@ export default {
           for (const key in res.result) {
             if (res.result[key].key == 'ApproveStatus') {
               this.setStatus(res.result[key].value)
-            } else if (res.result[key].key !== 'approvalprocess') {
+            } else if (res.result[key].key == 'approvalprocess') {
+              this.approvalprocess = res.result[key].value
+            } else {
               this.descriptions.push({ label: res.result[key].title, value: res.result[key].value })
             }
           }
+           this.getTimeline()
         } else {
           this.$message.warn(res.errorMsg)
         }
@@ -420,7 +426,7 @@ export default {
       this.title = '审批'
       this.isContent = false
     },
-  
+
     refuceClick() {
       this.currtent = 2
       this.content = ''

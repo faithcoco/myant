@@ -308,6 +308,7 @@ export default {
       this.fileList = fileList
     },
     getTimeline() {
+      this.timelinelist=[]
       const parameter = {}
       parameter.bizid = this.materialid
       parameter.isEnabled = this.approvalprocess.join()
@@ -362,7 +363,9 @@ export default {
       console.log('materialid', this.materialid)
       if (this.menu == 'ReceiptNoticeList') {
         this.urlForm = '/bd/docreceiptnotice/updateform'
-      }
+      } else if (this.menu == 'StorageManagementList') {
+          this.urlForm = '/bd/Stockinrecord/updateForm'
+        }
       columnsParams.docid = this.materialid
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))

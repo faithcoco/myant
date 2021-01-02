@@ -54,12 +54,12 @@
           </a-col>
           <a-col :span="8">
             <a-form-model-item label="关键字" prop="key">
-              <a-select v-model="key.scope" style="width: 150px">
+              <a-select v-model="key.scope" style="width: 45%">
                 <a-select-option v-for="SList in selectList" :key="SList.key" :value="SList.key">{{
                   SList.value
                 }}</a-select-option>
               </a-select>
-              <a-input-search style="width: 65%" placeholder="请输入搜索内容" v-model="key.value" />
+              <a-input-search style="width: 55%" placeholder="请输入搜索内容" v-model="key.value" />
             </a-form-model-item>
           </a-col>
           <a-col :span="3" :offset="21">

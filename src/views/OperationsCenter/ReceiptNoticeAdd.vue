@@ -236,7 +236,7 @@ export default {
       saveVisible: true,
       cancelVisilbe: false,
       continueVisible: true,
-      approvalprocess: '',
+      approvalprocess: '',//1启用 2未启用
     }
   },
   created() {

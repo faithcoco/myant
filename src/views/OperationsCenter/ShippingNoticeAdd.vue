@@ -152,9 +152,9 @@ Vue.use(Form)
 import { TreeSelect } from 'ant-design-vue'
 import { keys, type } from 'mockjs2'
 Vue.use(TreeSelect)
-import ArchivesModal from '../other/ArchivesModal'
-import Type from '../other/TypeModal'
-import SelectModal from '../other/SelectModal'
+import ArchivesModal from '../modal/ArchivesModal'
+import Type from '../modal/TypeModal'
+import SelectModal from '../modal/SelectModal'
 import { getProductListColumns } from '@/api/manage'
 import { Empty } from 'ant-design-vue'
 import { isRendered } from 'nprogress'

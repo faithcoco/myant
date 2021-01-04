@@ -83,7 +83,7 @@ import { STable } from '@/components'
 import { getProductList, getProductListColumns, getclassificationGoodsList, postData, getData } from '@/api/manage'
 import action from '../../core/directives/action'
 import Approval from '../Approval'
-import SelectModal from '../other/SelectModal'
+import SelectModal from '../modal/SelectModal'
 import { logininfo, menuname } from '@/store/mutation-types'
 import { mapActions, mapGetters } from 'vuex'
 
@@ -335,7 +335,7 @@ export default {
 
     classify(e) {
       this.$router.push({
-        path: 'Type',
+        path: 'Classification',
         query: {
           menu: this.$route.name,
           baseTitle: this.$route.meta.title,

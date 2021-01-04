@@ -57,7 +57,7 @@ const selectList = [{ value: '全部', key: 'all' }]
 const Operat_visible = true
 const dataList = []
 export default {
-  name: 'archivesmodal',
+
   props: {
     name: {
       type: String,

@@ -91,7 +91,7 @@ import { getRoleList, getPermissions, insertRole, updateRole, deleteRole } from 
 import { actionToObject } from '@/utils/permissions'
 import { logininfo } from '@/store/mutation-types'
 import Vue from 'vue'
-import SelectModal from '../other/SelectModal'
+import SelectModal from '../modal/SelectModal'
 import Approval from '../Approval'
 
 export default {

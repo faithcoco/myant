@@ -204,7 +204,6 @@ export default {
       console.log('change', e.target.value)
       this.enterpriseid = e.target.value
     },
-    dropdownVisibleChange(value) {},
     handleUsernameOrEmail(rule, value, callback) {
       const { state } = this
       const regex = /^([a-zA-Z0-9_-])+@([a-zA-Z0-9_-])+((\.[a-zA-Z0-9_-]{2,3}){1,2})$/

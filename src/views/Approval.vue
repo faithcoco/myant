@@ -372,7 +372,7 @@ export default {
 
       getData(columnsParams, this.urlForm).then((res) => {
         if (res.status == 'SUCCESS') {
-          console.log('time--->', JSON.stringify(res.result))
+          
           this.data = []
           this.descriptions = []
           this.data = res.result

@@ -50,7 +50,7 @@ import { STable } from '@/components'
 import { getProductListColumns, postData, getData, requestData } from '@/api/manage'
 import action from '../../core/directives/action'
 import Approval from '../Approval'
-import SelectModal from '../other/SelectModal'
+import SelectModal from '../modal/SelectModal'
 import { logininfo, menuname } from '@/store/mutation-types'
 
 const columns = []

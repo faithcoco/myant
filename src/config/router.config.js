@@ -14,7 +14,7 @@ export const asyncRouterMap = [
         path: '/index',
         component: () => import('@/views/dashboard/Workplace'),
         name: 'index',
-        meta: { title: '首页', icon: 'user', keepAlive: true, permission: ['00'] }
+        meta: { title: '首页', icon: 'home', keepAlive: true, permission: ['00'] }
       },
       {
         path: '/basic_archives',
@@ -52,9 +52,9 @@ export const asyncRouterMap = [
             hidden: true
           },
           {
-            path: 'Type',
-            name: 'Type',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/Type.vue'),
+            path: 'Classification',
+            name: 'Classification',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/Classification.vue'),
             meta: { title: '分类', icon: 'user' },
             hidden: true
           },
@@ -121,19 +121,19 @@ export const asyncRouterMap = [
           {
             path: 'StorageManagementList',
             name: 'StorageManagementList',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/ReceiptNoticeList.vue'),
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/in_warehouse/ReceiptNoticeList.vue'),
             meta: { title: '入库产品清单', icon: 'user', permission: ['02-01'] }
           },
           {
             path: 'ReceiptNoticeList',
             name: 'ReceiptNoticeList',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/ReceiptNoticeList.vue'),
-            meta: { title: '收货通知', icon: 'user', permission: ['02-02'] }
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/in_warehouse/ReceiptNoticeList.vue'),
+            meta: { title: '收货通知', icon: 'notification', permission: ['02-02'] }
           },
           {
             path: 'ReceiptNoticeAdd',
             name: 'ReceiptNoticeAdd',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/ReceiptNoticeAdd.vue'),
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/in_warehouse/ReceiptNoticeAdd.vue'),
             meta: { title: '收货通知新增' },
             hidden: true
           },
@@ -311,13 +311,13 @@ export const asyncRouterMap = [
             path: 'FormSetting',
             name: 'form-setting',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/FormSetting.vue'),
-            meta: { title: '表单设置', icon: 'user', permission: ['05-03'] }
+            meta: { title: '表单设置', icon: 'form', permission: ['05-03'] }
           },
           {
             path: 'CodeSetting',
             name: 'code-setting',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/CodeSetting.vue'),
-            meta: { title: '编号设置', icon: 'user', permission: ['05-04'] }
+            meta: { title: '编号设置', icon: 'number', permission: ['05-04'] }
           },
           {
             path: 'approval-settin',
@@ -329,7 +329,7 @@ export const asyncRouterMap = [
             path: 'MessageSettin',
             name: 'message_settin',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/management/MessageSetting.vue'),
-            meta: { title: '消息设置', icon: 'user', permission: ['05-06'] }
+            meta: { title: '消息设置', icon: 'message', permission: ['05-06'] }
           }, {
             path: 'AdminFormsetting',
             name: 'AdminFormsetting',

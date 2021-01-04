@@ -3,7 +3,7 @@
     <div slot="headerContent">
       <div class="title">
         {{ timeFix }}，{{ user.name }}
-        <span class="welcome-text">，{{ welcome }}</span>
+       
       </div>
       <div>hello world</div>
     </div>

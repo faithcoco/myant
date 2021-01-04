@@ -45,10 +45,13 @@
             </a-form-model-item>
           </a-col>
           <a-col :span="8">
-            <a-form-model-item label="审核状态" prop="approvestatus">
-              <a-select style="width: 100%" placeholder="请选择审核状态" v-model="form.approvetatus">
-                <a-select-option value="1"> 已审核 </a-select-option>
-                <a-select-option value="0"> 未审核 </a-select-option>
+            <a-form-model-item label="审批状态" prop="approvestatus">
+              <a-select style="width: 100%" placeholder="请选择审批状态" v-model="form.approvetatus">
+                <a-select-option value="1"> 已审批 </a-select-option>
+                <a-select-option value="2"> 审批中 </a-select-option>
+                <a-select-option value="3"> 已提交 </a-select-option>
+                <a-select-option value="8"> 未审核 </a-select-option>
+                <a-select-option value="9"> 未通过 </a-select-option>
               </a-select>
             </a-form-model-item>
           </a-col>
@@ -176,9 +179,7 @@ export default {
       urlDelete: '',
       treeData: [],
       menu: '',
-
       searchValue: '',
-      searchKey: 'all',
       pagination: { current: 1, pageSize: 10, total: 10 },
       pageNo: 1,
       form: {
@@ -267,7 +268,6 @@ export default {
         this.department = res.result
       })
     },
-
     handleTableChange(pagination, filters, sorter) {
       console.log('pagination', pagination)
       this.pageNo = pagination.current
@@ -277,12 +277,9 @@ export default {
       this.approval_visible = true
       this.materialid = record.docid
     },
-
     delete() {
       const columnsParams = {}
-
       columnsParams.docid = this.materialid
-
       console.log('delete url--->', this.urlDelete)
       console.log('delete params--->', JSON.stringify(columnsParams))
       getData(columnsParams, this.urlDelete).then((res) => {
@@ -292,7 +289,6 @@ export default {
     },
     initData(name) {
       this.menu = this.$route.name
-
       this.titleTree = '仓位分类'
       console.log('menu-->', this.menu)
       if (this.menu == 'StorageManagementList') {
@@ -310,10 +306,8 @@ export default {
       var url = '/bd/menu/findallmenu'
       console.log('gtmenuid res-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
-        console.log('menu id-->', JSON.stringify(res))
-
+        console.log('menuid res-->', JSON.stringify(res))
         this.menuid = res.result
-
         this.getList()
         this.getColumns()
         this.getSupplier()
@@ -336,21 +330,12 @@ export default {
         }
       })
     },
-
-    onExpand(expandedKeys) {
-      this.expandedKeys = expandedKeys
-      this.autoExpandParent = false
-    },
-
     getList() {
       const parameter = {}
-
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = this.pageNo
       parameter.pageSize = '10'
-
       parameter.form = this.form
-
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       postData(parameter, this.urlList).then((res) => {
@@ -359,32 +344,14 @@ export default {
           this.pagination.current = res.result.pageNo
           this.pagination.pageSize = res.result.pageSize
           this.pagination.total = res.result.totalCount
-
           this.listdata = res.result.data
-
           for (const key in this.listdata) {
             this.listdata[key].key = key
           }
         } else {
-          console.log('list error-->',JSON.stringify(res.errorMsg))
+          console.log('list error-->', JSON.stringify(res.errorMsg))
           this.$message.warning(res.errorMsg)
         }
-
-        // Read total count from server
-        // pagination.total = data.totalCount;
-      })
-    },
-
-    selectChange(value) {
-      this.searchKey = value
-    },
-
-    Classify() {
-      this.$router.push({
-        name: 'ClassificationGoods',
-        params: {
-          menu: this.$route.name,
-        },
       })
     },
     handleAdd(e) {
@@ -399,10 +366,8 @@ export default {
         },
       })
     },
-
     handleEdit(record) {
       this.materialid = record.docid
-
       this.$router.push({
         path: 'ReceiptNoticeAdd',
         query: {
@@ -418,16 +383,8 @@ export default {
       this.materialid = record.docid
       this.delete()
     },
-    handleSub(record) {
-      console.log(record)
-    },
-
     change(visible) {
       this.approval_visible = visible
-    },
-
-    handleTitleClick(item) {
-      console.log('handleTitleClick', item)
     },
   },
 }

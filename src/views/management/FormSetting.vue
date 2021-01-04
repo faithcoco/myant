@@ -116,11 +116,11 @@
 
           <a-row :style="{ marginTop: '30px' }">
             <a-col :span="2" :offset="8">
-              <a-button type="primary" @click="resetForm">恢复默认值</a-button>
+              <a-button type="primary" @click="resetForm" :loading="restore" :disabled="restore">恢复默认值</a-button>
             </a-col>
 
             <a-col :span="1" :offset="1">
-              <a-button type="primary" @click="onSubmit">保存</a-button>
+              <a-button type="primary" @click="onSubmit" :loading="savestate" :disabled="savestate">保存</a-button>
             </a-col>
 
             <a-col :span="1" :offset="1">
@@ -185,7 +185,9 @@ export default {
       currentId: '',
       disabled: true,
       value: 3,
-      isReference:false
+      isReference: false,
+      restorestate: false,
+      savestate: false,
     }
   },
   created() {
@@ -194,7 +196,6 @@ export default {
       this.columns = res.result.columns
     })
     getFormSettingTree().then((res) => {
- 
       this.FormSettingTree = res.result
       this.menuid = this.FormSettingTree[0].children[0].memuid
       this.getlist()
@@ -210,7 +211,6 @@ export default {
       }
 
       getFormSettingList(parameter).then((res) => {
-        
         if (res.status == 'FAILED') {
           this.$message.error(res.errorMsg)
         } else {
@@ -261,13 +261,20 @@ export default {
       this.currentItem = record
     },
     onSubmit(e) {
+      this.savestate=true
       updateForm(this.formSettingList).then((res) => {
-       
-        this.$message.success('更改成功')
-        this.getlist()
+        if (res.status == 'FAILED') {
+          this.$message.error(res.errorMsg)
+        } else {
+          this.getlist()
+          this.$message.info('保存成功')
+        }
+        
+        this.savestate=false
       })
     },
     resetForm(e) {
+      this.restorestate = true
       const parameter = {
         enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
         memuid: this.menuid,
@@ -281,6 +288,7 @@ export default {
           this.getlist()
           this.$message.info('恢复默认值成功')
         }
+        this.restorestate = false
       })
     },
     onBack(e) {

@@ -196,7 +196,6 @@ export default {
       numberRow,
       selectedRow: [],
       selectedRowKeys: [],
-
       size: 'small',
       labelCol: { span: 2 },
       wrapperCol: { span: 22 },
@@ -230,13 +229,12 @@ export default {
       menu: '',
       status: 1, //1保存继续2保存返回
       stockincode: '',
-
       billcode: '',
       currentRecord: '',
       saveVisible: true,
       cancelVisilbe: false,
       continueVisible: true,
-      approvalprocess: '',//1启用 2未启用
+      approvalprocess: '', //1启用 2未启用
     }
   },
   created() {
@@ -281,7 +279,6 @@ export default {
       } else {
         url = '/work/directApproval'
       }
-      
       console.log('cancel-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
@@ -325,7 +322,6 @@ export default {
             this.$message.warn('请添加明细')
             return
           }
-
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           values.details = this.detailsData
           values.departmentid = this.departmentid
@@ -333,14 +329,12 @@ export default {
           values.vendorid = this.vendorid
           values.businessclasscode = this.businessclassid
           values.warehouseid = this.warehouseid
-
           values.approvalprocess = values.approvalprocess.join()
           console.log('submit url-->', submitUrl)
           console.log('submit parameter-->', JSON.stringify(values))
           submitForm(values, submitUrl)
             .then((res) => {
               console.log('submit--->', JSON.stringify(res))
-
               if (res.status == 'SUCCESS') {
                 this.detailsData = []
                 if (this.status == 1) {
@@ -352,7 +346,6 @@ export default {
                   this.$multiTab.closeCurrentPage()
                 }
               }
-
               this.$message.info(res.errorMsg)
             })
             .catch((err) => {
@@ -361,7 +354,6 @@ export default {
         }
       })
     },
-
     waitquantityChange(value, record) {
       if (this.$route.query.menu == 'StorageManagementList') {
         if (parseInt(record.doclinequantity) > parseInt(value)) {
@@ -378,11 +370,9 @@ export default {
     handleChange(value, key, record) {
       record[key] = value
     },
-
     submitApproval(e) {
       const parameter = {}
       parameter.bizid = this.materialid
-
       parameter.memuid = this.menuid
       var url = ''
       if (this.approvalprocess == 1) {
@@ -391,7 +381,6 @@ export default {
       } else {
         url = '/work/directApproval'
       }
-      
       console.log('approval-->', JSON.stringify(parameter))
       console.log('approval url-->', url)
       getData(parameter, url).then((res) => {
@@ -444,14 +433,12 @@ export default {
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       columnsParams.pageNo = 1
       columnsParams.pageSize = 10
-
+      columnsParams.docid = id
       if (menu == 'ReceiptNoticeList') {
         var urlColumns = '/bd/docreceiptnotice/childrenlist'
       } else if (menu == 'StorageManagementList') {
         var urlColumns = '/bd/Stockinrecord/stockinrecordlineList'
       }
-      columnsParams.docid = id
-
       console.log('listdata url--->', urlColumns)
       console.log('listdata parameter-->', JSON.stringify(columnsParams))
       getData(columnsParams, urlColumns).then((res) => {
@@ -464,14 +451,11 @@ export default {
           //参照明细
           var addData = []
           addData = res.result.data
-
           addData = addData.map((item, index) => {
             return { ...item, doclinequantity: item.doclinenotputquantity, receiptnoticelineid: item.doclineid }
           })
-
           this.detailsData = this.detailsData.concat(addData)
         }
-
         this.detailsData = this.detailsData.map((item, index) => {
           return { ...item, doclineno: index + 1 }
         })
@@ -492,14 +476,12 @@ export default {
       for (const key in this.detailsData) {
         this.selectedRowKeys.push(this.detailsData[key].materialid)
       }
-
       this.detailVisible = true
       this.name = 'ProductList'
     },
     detailOk(e) {
       this.detailVisible = false
       this.detailsData = this.detailsData.concat(this.selectList)
-
       this.detailsData = this.detailsData.map((item, index) => {
         return { ...item, doclineno: parseInt(index) + 1 }
       })
@@ -573,10 +555,8 @@ export default {
       } else if (this.currentkey == 'receiptnoticecode') {
         //收货通知选择
         this.visible = false
-
         var formdata = this.form.domFields
         var formkey = Object.keys(formdata)
-
         for (const key in formkey) {
           this.form.setFieldsValue({
             [formkey[key]]: this.selectList[0][formkey[key]],
@@ -618,7 +598,6 @@ export default {
         this.getList('ReceiptNoticeList', this.selectList[0].docid, 1)
       } else if (this.currentkey == 'edit') {
         this.visible = false
-
         var formkey = Object.keys(this.currentRecord)
         for (const key in formkey) {
           if (this.selectList[0][formkey[key]]) {
@@ -649,11 +628,7 @@ export default {
         this.visible = false
       }
     },
-
-    onChange(value) {
-      console.log(value)
-      this.value = value
-    },
+ 
     showModal(item) {
       this.currentkey = item.key
       if (this.currentkey == 'departmentid') {
@@ -680,11 +655,6 @@ export default {
       this.status = 1
       this.submit()
     },
-
-    onCascaderChange(value) {
-      console.log(this.test)
-    },
-
     getFormdata() {
       this.modalname = this.$route.query.menu
       this.menuid = this.$route.query.menuid
@@ -714,9 +684,7 @@ export default {
         }
         columnsParams.docid = this.materialid
       }
-
       this.$multiTab.rename(this.$route.path, this.title)
-
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
       this.data = []
@@ -766,28 +734,11 @@ export default {
         }, 500)
       })
     },
-
-    handleSearchChange(value) {
-      console.log(`selected ${value}`)
-    },
-
     // 返回到清单页面
     Back(e) {
       this.status = 2
       this.submit()
       // 路由跳转
-    },
-    // 重置表单
-
-    handleBlur() {
-      console.log('blur')
-    },
-    handleFocus() {
-      console.log('focus')
-    },
-
-    onSearch(value) {
-      console.log(value)
     },
   },
 }

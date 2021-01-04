@@ -214,7 +214,9 @@ export default {
   },
   methods: {
     onSelect(selectedKeys, info) {
-      console.log('info', JSON.stringify(selectedKeys))
+      this.checkedKeys = []
+      this.checkedKeys.push(selectedKeys[0])
+
       this.menuid = selectedKeys.join()
       this.getlist()
     },

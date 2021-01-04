@@ -3,19 +3,20 @@
     <a-card :bordered="false">
       <a-row :gutter="8">
         <a-col :span="4">
-          <div class="tree">
-            <s-tree
-              :dataSource="FormSettingTree"
-              :openKeys.sync="openKeys"
-              :search="true"
-              @click="handleClick"
-              @titleClick="handleTitleClick"
-              v-model="selectedKeys"
-            ></s-tree>
-          </div>
+          <a-tree
+            showLine
+            :expanded-keys="expandedKeys"
+            :auto-expand-parent="autoExpandParent"
+            :tree-data="FormSettingTree"
+            @expand="onExpand"
+            @select="onSelect"
+            :selectedKeys="checkedKeys"
+            :replaceFields="{ children: 'children', title: 'title', key: 'memuid' }"
+          ></a-tree>
         </a-col>
         <a-col :span="20">
           <a-table
+            :rowKey="(record) => record.fieldsort"
             :columns="columns"
             :data-source="formSettingList.data"
             bordered
@@ -116,7 +117,9 @@
 
           <a-row :style="{ marginTop: '30px' }">
             <a-col :span="2" :offset="8">
-              <a-button type="primary" @click="resetForm" :loading="restore" :disabled="restore">恢复默认值</a-button>
+              <a-button type="primary" @click="resetForm" :loading="restorestate" :disabled="restorestate"
+                >恢复默认值</a-button
+              >
             </a-col>
 
             <a-col :span="1" :offset="1">
@@ -139,7 +142,9 @@
 </template>
 
 <script>
-import STree from '@/components/Tree/Tree'
+import Vue from 'vue'
+import { Tree } from 'ant-design-vue'
+Vue.use(Tree)
 import { STable } from '@/components'
 import OrgModal from '../other/modules/OrgModal'
 import {
@@ -151,18 +156,20 @@ import {
   postData,
 } from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
-import Vue from 'vue'
+
 const columns = []
 //表单设置
 export default {
   name: 'TreeList',
   components: {
     STable,
-    STree,
     OrgModal,
   },
   data() {
     return {
+      expandedKeys: [],
+      autoExpandParent: true,
+      checkedKeys: [],
       openKeys: ['01'],
       selectedKeys: ['01-01'],
       menuid: '',
@@ -197,11 +204,24 @@ export default {
     })
     getFormSettingTree().then((res) => {
       this.FormSettingTree = res.result
-      this.menuid = this.FormSettingTree[0].children[0].memuid
+      console.log('this--->', JSON.stringify(res.result[0].children[0].memuid))
+      var treekey = res.result[0].memuid
+      this.checkedKeys.push(res.result[0].children[0].memuid)
+      this.expandedKeys.push(treekey)
+      this.menuid = res.result[0].children[0].memuid
       this.getlist()
     })
   },
   methods: {
+    onSelect(selectedKeys, info) {
+      console.log('info', JSON.stringify(selectedKeys))
+      this.menuid = selectedKeys.join()
+      this.getlist()
+    },
+    onExpand(expandedKeys) {
+      this.expandedKeys = expandedKeys
+      this.autoExpandParent = false
+    },
     getlist() {
       const parameter = {
         enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
@@ -261,7 +281,7 @@ export default {
       this.currentItem = record
     },
     onSubmit(e) {
-      this.savestate=true
+      this.savestate = true
       updateForm(this.formSettingList).then((res) => {
         if (res.status == 'FAILED') {
           this.$message.error(res.errorMsg)
@@ -269,8 +289,8 @@ export default {
           this.getlist()
           this.$message.info('保存成功')
         }
-        
-        this.savestate=false
+
+        this.savestate = false
       })
     },
     resetForm(e) {
@@ -338,6 +358,7 @@ export default {
       console.log(`checked = ${e.target.checked}`)
     },
     handleClick(e) {
+      console.log('click', e)
       for (const key in this.FormSettingTree) {
         for (const i in this.FormSettingTree[key].children) {
           if (e.key == this.FormSettingTree[key].children[i].key) {
@@ -351,9 +372,6 @@ export default {
       console.log('add button, item', item)
       this.$message.info(`提示：你点了 ${item.key} - ${item.title} `)
       this.$refs.modal.add(item.key)
-    },
-    handleTitleClick(item) {
-      console.log('handleTitleClick', item)
     },
     titleClick(e) {
       console.log('titleClick', e)

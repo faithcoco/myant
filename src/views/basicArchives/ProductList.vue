@@ -78,7 +78,7 @@ import { Timeline } from 'ant-design-vue'
 Vue.use(Timeline)
 import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
-import STree from '@/components/Tree/Tree'
+
 import { STable } from '@/components'
 import { getProductList, getProductListColumns, getclassificationGoodsList, postData, getData } from '@/api/manage'
 import action from '../../core/directives/action'
@@ -104,6 +104,10 @@ export default {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
+      expandedKeys: [],
+      autoExpandParent: true,
+      checkedKeys: [],
+
       selectList,
       Operat_visible,
       confirmLoading: false,
@@ -115,9 +119,7 @@ export default {
       classifyTree: [],
       moment,
       menuid: '',
-      expandedKeys: [],
-      autoExpandParent: true,
-      checkedKeys: [],
+
       titleTree: '',
       urlTree: '',
       urlColumns: '',
@@ -146,7 +148,6 @@ export default {
     $route: {
       handler: function (val, oldVal) {
         this.initData(val.name)
-       
       },
       // 深度观察监听
     },
@@ -258,8 +259,6 @@ export default {
       this.classifyTree = []
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       getclassificationGoodsList(parameter, this.urlTree).then((res) => {
-
-
         if (this.isInit) {
           var treekey = res.result[0].key
           this.$store.commit('SET_SELECTKEY', treekey)
@@ -315,7 +314,6 @@ export default {
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
-      
         this.listdata = res.result.data
 
         for (const key in this.listdata) {

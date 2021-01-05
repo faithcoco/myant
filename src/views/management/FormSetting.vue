@@ -185,8 +185,6 @@ export default {
       formSettingList: {},
       sortVisible: false,
       sortAfter: '',
-
-      sortMax: 100,
       currentItem: '',
       editVisible: false,
       currentId: '',
@@ -237,7 +235,6 @@ export default {
           this.$message.error(res.errorMsg)
         } else {
           this.formSettingList = res.result
-          this.sortMax = this.formSettingList.length
         }
       })
     },
@@ -253,19 +250,24 @@ export default {
       if (this.currentId == 'fieldsort') {
         this.formSettingList.data.splice(parseInt(this.currentItem.fieldsort) - 1, 1)
         this.formSettingList.data.splice(parseInt(this.sortAfter) - 1, 0, tamp)
-        for (const key in this.formSettingList.data) {
-          this.formSettingList.data[key].fieldsort = parseInt(key) + 1
-        }
+
+        this.formSettingList.data = this.formSettingList.data.map((item, index) => {
+          return { ...item, fieldsort: index + 1 }
+        })
         this.formSettingList.data.sort(function (a, b) {
           return a.fieldsort - b.fieldsort
         })
       } else {
-        //fieldsortlist
+        
+        //列表排序
+        tamp.fieldsortlist=this.sortAfter
         this.formSettingList.data.splice(parseInt(this.currentItem.fieldsortlist) - 1, 1)
-        this.formSettingList.data.splice(parseInt(this.sortAfter) - 1, 0, tamp)
-        for (const key in this.formSettingList.data) {
-          this.formSettingList.data[key].fieldsortlist = parseInt(key) + 1
-        }
+       this.formSettingList.data.splice(parseInt(this.sortAfter) - 1, 0, tamp)
+
+
+        this.formSettingList.data = this.formSettingList.data.map((item, index) => {
+          return { ...item, fieldsortlist: index+1}
+        })
         this.formSettingList.data.sort(function (a, b) {
           return a.fieldsortlist - b.fieldsortlist
         })

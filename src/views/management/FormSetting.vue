@@ -18,7 +18,7 @@
           <a-table
             :rowKey="(record) => record.fieldsort"
             :columns="columns"
-            :data-source="formSettingList.data"
+            :data-source="formSettingList"
             bordered
             :scroll="{ x: 2000, y: 700 }"
             :pagination="{ hideOnSinglePage: true, pageSize: 500 }"
@@ -182,7 +182,7 @@ export default {
       FormSettingTree: [],
       selectedRowKeys: [],
       selectedRows: [],
-      formSettingList: {},
+      formSettingList: [],
       sortVisible: false,
       sortAfter: '',
       currentItem: '',
@@ -231,10 +231,13 @@ export default {
       }
 
       getFormSettingList(parameter).then((res) => {
-        if (res.status == 'FAILED') {
+        if (res.status !== 'SUCCESS') {
           this.$message.error(res.errorMsg)
         } else {
-          this.formSettingList = res.result
+          this.formSettingList = res.result.data
+          this.formSettingList = this.formSettingList.map((item, index) => {
+            return { ...item, key: index }
+          })
         }
       })
     },
@@ -247,35 +250,34 @@ export default {
     },
     sortOk(e) {
       var tamp = this.currentItem
+      console.log('key--->', JSON.stringify(tamp))
       if (this.currentId == 'fieldsort') {
-        tamp.fieldsort=this.sortAfter
-        this.formSettingList.data.splice(parseInt(this.currentItem.fieldsort) - 1, 1)
-        this.formSettingList.data.splice(parseInt(this.sortAfter) - 1, 0, tamp)
-
-        this.formSettingList.data = this.formSettingList.data.map((item, index) => {
-          return { ...item, fieldsort: index + 1 }
+        this.formSettingList = this.formSettingList.filter((item) => item.fieldsort !== tamp.fieldsort)
+        this.formSettingList.splice(parseInt(this.sortAfter), 0, tamp)
+        this.formSettingList = this.formSettingList.map((item, index) => {
+          return { ...item, fieldsort: index+1 }
         })
-        this.formSettingList.data.sort(function (a, b) {
+        this.formSettingList.sort(function (a, b) {
           return a.fieldsort - b.fieldsort
         })
       } else {
-        
         //列表排序
-        tamp.fieldsortlist=this.sortAfter
-        this.formSettingList.data.splice(parseInt(this.currentItem.fieldsortlist) - 1, 1)
-       this.formSettingList.data.splice(parseInt(this.sortAfter) - 1, 0, tamp)
-
-
-        this.formSettingList.data = this.formSettingList.data.map((item, index) => {
-          return { ...item, fieldsortlist: index+1}
+        this.formSettingList = this.formSettingList.filter((item) => item.fieldsortlist !== tamp.fieldsortlist)
+        this.formSettingList.splice(parseInt(this.sortAfter) - 1, 0, tamp)
+        this.formSettingList = this.formSettingList.map((item, index) => {
+          return { ...item, fieldsortlist: index + 1 }
         })
-        this.formSettingList.data.sort(function (a, b) {
+        this.formSettingList.sort(function (a, b) {
           return a.fieldsortlist - b.fieldsortlist
         })
       }
 
       this.sortAfter = ''
       this.sortVisible = false
+    },
+    moveElement(arr, n) {
+      if (Math.abs(n) > arr.length) n = n % arr.length
+      return arr.slice(-n).concat(arr.slice(0, -n))
     },
     sortCancel(e) {
       this.sortVisible = false
@@ -284,6 +286,15 @@ export default {
       this.sortVisible = true
       this.currentId = text
       this.currentItem = record
+      if (this.currentId == 'fieldsort') {
+        this.formSettingList.sort(function (a, b) {
+          return a.fieldsort - b.fieldsort
+        })
+      } else {
+        this.formSettingList.sort(function (a, b) {
+          return a.fieldsortlist - b.fieldsortlist
+        })
+      }
     },
     onSubmit(e) {
       this.savestate = true
@@ -321,9 +332,9 @@ export default {
     },
 
     vdef2Change(value, record) {
-      for (const key in this.formSettingList.data) {
-        if (record.id == this.formSettingList.data[key].id) {
-          this.formSettingList.data[key].vdef2 = value
+      for (const key in this.formSettingList) {
+        if (record.id == this.formSettingList[key].id) {
+          this.formSettingList[key].vdef2 = value
         }
       }
     },

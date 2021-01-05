@@ -302,7 +302,7 @@ export default {
       this.savestate = true
       const parameter={}
       parameter.data=this.formSettingList
-      console.log('submit params-->',JSON.stringify(this.formSettingList))
+     
       updateForm(parameter).then((res) => {
         if (res.status == 'FAILED') {
           this.$message.error(res.errorMsg)

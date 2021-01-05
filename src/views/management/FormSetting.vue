@@ -248,6 +248,7 @@ export default {
     sortOk(e) {
       var tamp = this.currentItem
       if (this.currentId == 'fieldsort') {
+        tamp.fieldsort=this.sortAfter
         this.formSettingList.data.splice(parseInt(this.currentItem.fieldsort) - 1, 1)
         this.formSettingList.data.splice(parseInt(this.sortAfter) - 1, 0, tamp)
 

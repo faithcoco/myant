@@ -134,7 +134,7 @@
       </a-row>
       <a-modal title="提示" :visible="sortVisible" @ok="sortOk" @cancel="sortCancel">
         <p>请输入想要移动位置：</p>
-        <a-input v-model="sortAfter" />
+        <a-input-number v-model="sortAfter" :max="max" />
       </a-modal>
       <org-modal ref="modal" @ok="handleSaveOk" @close="handleSaveClose" />
     </a-card>
@@ -193,6 +193,7 @@ export default {
       isReference: false,
       restorestate: false,
       savestate: false,
+      max:'10'
     }
   },
   created() {
@@ -235,6 +236,7 @@ export default {
           this.$message.error(res.errorMsg)
         } else {
           this.formSettingList = res.result.data
+          this.max=this.formSettingList.length
           this.formSettingList = this.formSettingList.map((item, index) => {
             return { ...item, key: index }
           })
@@ -250,7 +252,7 @@ export default {
     },
     sortOk(e) {
       var tamp = this.currentItem
-      console.log('key--->', JSON.stringify(tamp))
+     
       if (this.currentId == 'fieldsort') {
         this.formSettingList = this.formSettingList.filter((item) => item.fieldsort !== tamp.fieldsort)
         this.formSettingList.splice(parseInt(this.sortAfter), 0, tamp)
@@ -298,14 +300,16 @@ export default {
     },
     onSubmit(e) {
       this.savestate = true
-      updateForm(this.formSettingList).then((res) => {
+      const parameter={}
+      parameter.data=this.formSettingList
+      console.log('submit params-->',JSON.stringify(this.formSettingList))
+      updateForm(parameter).then((res) => {
         if (res.status == 'FAILED') {
           this.$message.error(res.errorMsg)
         } else {
           this.getlist()
           this.$message.info('保存成功')
         }
-
         this.savestate = false
       })
     },

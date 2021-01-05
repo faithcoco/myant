@@ -255,7 +255,7 @@ export default {
      
       if (this.currentId == 'fieldsort') {
         this.formSettingList = this.formSettingList.filter((item) => item.fieldsort !== tamp.fieldsort)
-        this.formSettingList.splice(parseInt(this.sortAfter), 0, tamp)
+        this.formSettingList.splice(parseInt(this.sortAfter)-1, 0, tamp)
         this.formSettingList = this.formSettingList.map((item, index) => {
           return { ...item, fieldsort: index+1 }
         })

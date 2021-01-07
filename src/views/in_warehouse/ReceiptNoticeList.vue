@@ -2,7 +2,7 @@
   <div>
     <a-card>
       <a-form-model class="ant-advanced-search-form" :model="form" @submit="onSubmit" ref="ruleForm">
-        <a-row :gutter="24">
+        <a-row :gutter="24"  type="flex" justify="end">
           <a-col :span="8">
             <a-form-model-item label="供应商" prop="vendorid">
               <a-select placeholder="请选择供应商" v-model="form.vendorid" style="width: 100%">
@@ -65,7 +65,7 @@
               <a-input-search style="width: 55%" placeholder="请输入搜索内容" v-model="key.value" />
             </a-form-model-item>
           </a-col>
-          <a-col :span="3" :offset="21">
+          <a-col  :span="4" >
             <a-form-model-item>
               <a-button type="primary" @click="onSubmit"> 搜索 </a-button>
               <a-button style="margin-left: 10px" @click="resetForm"> 重置 </a-button>
@@ -75,12 +75,11 @@
       </a-form-model>
 
       <a-divider></a-divider>
-      <a-row>
-        <a-col :span="4" :offset="21">
+      <a-row  type="flex" justify="end">
+        <a-col :span="4">
           <a-button type="primary" @click="handleAdd">新增</a-button>
-
-          <a-button style="margin-left: 10px" @click="() => (queryParam = {})">导入</a-button>
-          <a-button style="margin-left: 10px" @click="() => (queryParam = {})">导出</a-button>
+          <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
+          <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
         </a-col>
       </a-row>
       <a-spin size="large" :spinning="spinning" tip="正在加载">

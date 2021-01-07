@@ -2,7 +2,7 @@
   <div>
     <a-card>
       <a-form-model class="ant-advanced-search-form" :model="form" @submit="onSubmit" ref="ruleForm">
-        <a-row :gutter="24"  type="flex" justify="end">
+        <a-row :gutter="24" type="flex" justify="end" v-show="search_show">
           <a-col :span="8">
             <a-form-model-item label="供应商" prop="vendorid">
               <a-select placeholder="请选择供应商" v-model="form.vendorid" style="width: 100%">
@@ -65,7 +65,7 @@
               <a-input-search style="width: 55%" placeholder="请输入搜索内容" v-model="key.value" />
             </a-form-model-item>
           </a-col>
-          <a-col  :span="4" >
+          <a-col :span="4">
             <a-form-model-item>
               <a-button type="primary" @click="onSubmit"> 搜索 </a-button>
               <a-button style="margin-left: 10px" @click="resetForm"> 重置 </a-button>
@@ -75,9 +75,10 @@
       </a-form-model>
 
       <a-divider></a-divider>
-      <a-row  type="flex" justify="end">
-        <a-col :span="4">
-          <a-button type="primary" @click="handleAdd">新增</a-button>
+      <a-row type="flex" justify="end">
+        <a-col :span="5">
+          <a-button type="primary" @click="handleSearch">{{search_text}}</a-button>
+          <a-button type="primary" style="margin-left: 5px" @click="handleAdd">新增</a-button>
           <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
           <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
         </a-col>
@@ -200,7 +201,9 @@ export default {
       department: [],
       personnel: [],
       warehouse: [],
-      spinning:false
+      spinning: false,
+      search_show: false,
+      search_text:'搜索'
     }
   },
   mounted() {
@@ -332,7 +335,7 @@ export default {
       })
     },
     getList() {
-      this.spinning=true
+      this.spinning = true
       const parameter = {}
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = this.pageNo
@@ -355,8 +358,18 @@ export default {
           console.log('list error-->', JSON.stringify(res.errorMsg))
           this.$message.warning(res.errorMsg)
         }
-        this.spinning=false
+        this.spinning = false
       })
+    },
+    handleSearch(e) {
+      if (this.search_show == false) {
+        this.search_show = true
+      
+          this.search_text='隐藏搜索'
+      } else {
+          this.search_text='展开搜索'
+        this.search_show = false
+      }
     },
     handleAdd(e) {
       this.$router.push({

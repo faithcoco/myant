@@ -95,7 +95,6 @@ const dataList = []
 export default {
   components: {
     STable,
-    STree,
     Approval,
     SelectModal,
   },

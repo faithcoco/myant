@@ -235,9 +235,7 @@ export default {
         this.form.starttime = this.date[0]
         this.form.endtime = this.date[1]
       }
-      if (this.key.value == undefined) {
-        this.form[this.key.scope] = ''
-      }
+      
 
       this.getList()
     },
@@ -340,6 +338,9 @@ export default {
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = this.pageNo
       parameter.pageSize = '10'
+      if (this.key.value == undefined) {
+        this.form[this.key.scope] = ''
+      }
       parameter.form = this.form
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))

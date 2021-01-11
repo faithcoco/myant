@@ -57,10 +57,12 @@ const selectList = [{ value: '全部', key: 'all' }]
 const Operat_visible = true
 const dataList = []
 export default {
-
   props: {
-    name: {
+    modalname: {
       type: String,
+    },
+    selected: {
+      type: Array,
     },
   },
   components: {
@@ -105,24 +107,14 @@ export default {
     }
   },
   mounted() {
-    this.initData(this.name)
+    this.initData(this.modalname)
   },
-  watch: {
-    defaultSelect: {
-      handler: function (val, oldVal) {
-        this.initData(this.name)
-      },
-      // 深度观察监听
-    },
-  },
-
   methods: {
     onSelect(record, selected, selectedRows) {
-     
       this.$emit('onSelect', selectedRows)
     },
     onSelectChange(selectedRowKeys, selectedRows) {
-     
+      console.log('selectedRowKeys-->',selectedRowKeys)
       this.selectedRowKeys = selectedRowKeys
     },
     treeSearch(e) {
@@ -131,7 +123,6 @@ export default {
     },
 
     initData(name) {
-      this.selectedRowKeys = []
       this.menuname = name
       const parameter = {}
 
@@ -203,7 +194,6 @@ export default {
     },
 
     getList() {
-      this.selectedRowKeys = []
       const parameter = {}
 
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
@@ -219,9 +209,12 @@ export default {
       getProductList(parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
         for (const key in this.listdata) {
-          this.listdata[key].key = key
+          this.listdata[key].key = this.listdata[key].personid
         }
+        console.log('list res-->',JSON.stringify(this.selected))
         this.isSearch = false
+        this.selectedRowKeys = this.selected
+       
       })
     },
     onSearch(value) {

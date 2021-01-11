@@ -108,7 +108,7 @@
             :destroyOnClose="destroyOnClose"
             width="1300px"
           >
-            <select-modal :name="name" :visible="visible" @onSelect="detailSelect"></select-modal>
+            <select-modal :modalname="name" :visible="visible" @onSelect="detailSelect"></select-modal>
           </a-modal>
         </a-card>
       </div>

@@ -74,10 +74,10 @@
         </a-card>
       </a-col>
     </a-row>
-    <a-modal title="选择" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px">
+    <a-modal title="选择" :visible="visible" @ok="handleOk" @cancel="handleCancel" width="1300px" :destroyOnClose="destroyOnClose">
       <select-modal
-        :name="name"
-        :defaultSelect="selectedRowKeys"
+        :modalname="name"
+        :selected="selected"
         :visible="visible"
         @onSelect="getSelect"
       ></select-modal>
@@ -114,10 +114,12 @@ export default {
       product: {},
       selectList: [],
       personlist: '',
-      updateList: [],
-      selectedRowKeys: [],
+      updateList: [],//人员列表 id name
+      selectedRowKeys: [],//人员列表id
       selectName: [],
       selectList: [],
+      selected:[],//已选择列表id
+      destroyOnClose:true
     }
   },
   created() {
@@ -128,11 +130,11 @@ export default {
   methods: {
     handleOk(e) {
       var list = []
-
+      this.selectedRowKeys=[]
       console.log('this list-->', JSON.stringify(this.selectList.length))
       for (const key in this.selectList) {
         list.push(this.selectList[key].personname)
-
+        this.selectedRowKeys.push(this.selectList[key].personid)
         this.updateList.push({ personid: this.selectList[key].personid, personname: this.selectList[key].personname })
       }
       this.personlist = list.join()
@@ -152,6 +154,8 @@ export default {
     personnelClick() {
       this.visible = true
       this.name = 'PersonnelSetting'
+      this.selected=this.selectedRowKeys
+      
     },
     setRole() {
       getRoleList(this.idParapms).then((res) => {
@@ -233,9 +237,9 @@ export default {
       }
       const params = {}
       params.id = this.mdl.id
-      console.log('delete--->', params)
+      console.log('delete--->', JSON.stringify(params))
       deleteRole(params).then((res) => {
-        console.log('  updateRole---------->', JSON.stringify(res))
+      
         if (res.status != 'SUCCESS') {
           this.$message.error(res.errorMsg)
         } else {
@@ -269,7 +273,7 @@ export default {
           }
         })
 
-        console.log('permissionsAction', permissionsAction)
+      
         // 把权限表遍历一遍，设定要勾选的权限 action
         this.permissions.forEach((permission) => {
           const selected = permissionsAction[permission.id]

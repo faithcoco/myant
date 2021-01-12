@@ -322,7 +322,7 @@ export const asyncRouterMap = [
           {
             path: 'approval-settin',
             name: 'ApprovalSettin',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/management/ApprovalSettin.vue'),
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/management/ApprovalSetting.vue'),
             meta: { title: '审批设置', icon: 'user', permission: ['05-05'] }
           },
           {

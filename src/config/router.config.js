@@ -117,7 +117,7 @@ export const asyncRouterMap = [
         redirect: '/StorageManagementAdd',
         meta: { title: '入库管理', icon: 'user', permission: ['02'] },
         children: [
-        
+
           {
             path: 'StorageManagementList',
             name: 'StorageManagementList',
@@ -135,6 +135,12 @@ export const asyncRouterMap = [
             name: 'ReceiptNoticeAdd',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/in_warehouse/ReceiptNoticeAdd.vue'),
             meta: { title: '收货通知新增' },
+            hidden: true
+          }, {
+            path: 'StorageManagementAdd',
+            name: 'StorageManagementAdd',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/in_warehouse/StorageManagementAdd.vue'),
+            meta: { title: '入库产品清单新增' },
             hidden: true
           },
           {

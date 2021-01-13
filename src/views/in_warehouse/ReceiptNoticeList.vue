@@ -203,7 +203,8 @@ export default {
       warehouse: [],
       spinning: false,
       search_show: false,
-      search_text:'搜索'
+      search_text:'搜索',
+      path:''
     }
   },
   mounted() {
@@ -296,9 +297,11 @@ export default {
       if (this.menu == 'StorageManagementList') {
         this.urlList = '/bd/Stockinrecord/stockinrecordList'
         this.urlDelete = '/bd/Stockinrecord/delStocinrec'
+        this.path='StorageManagementAdd'
       } else if (this.menu == 'ReceiptNoticeList') {
         this.urlList = '/bd/docreceiptnotice/list'
         this.urlDelete = '/bd/docreceiptnotice/del'
+        this.path='ReceiptNoticeAdd'
       } else {
         return
       }
@@ -374,7 +377,7 @@ export default {
     },
     handleAdd(e) {
       this.$router.push({
-        path: 'ReceiptNoticeAdd',
+        path: this.path,
         query: {
           menu: this.$route.name,
           menuid: this.menuid,

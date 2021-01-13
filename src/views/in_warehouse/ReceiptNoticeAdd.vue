@@ -142,7 +142,7 @@
       <a-card>
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
-            <a-button type="primary" style="margin-right: 10px" v-show="approvalVisilbe" @click="submitApproval"
+            <a-button type="primary" style="margin-right: 10px" v-show="approvalVisilbe" @click="approval"
               >提交审批</a-button
             >
             <a-button type="primary" style="margin-right: 10px" v-show="cancelVisilbe" @click="cancelClick"
@@ -152,6 +152,9 @@
               >保存继续</a-button
             >
             <a-button type @click="Back" style="margin-right: 10px" v-show="saveVisible">保存返回</a-button>
+            <a-modal title="提示" :visible="submitVisible" @ok="approvalOk" @cancel="approvalCancel">
+              <p>{{ approvaltext }}</p>
+            </a-modal>
           </a-col>
         </a-row>
       </a-card>
@@ -235,6 +238,8 @@ export default {
       cancelVisilbe: false,
       continueVisible: true,
       approvalprocess: '', //1启用 2未启用
+      submitVisible: false,
+      approvaltext: '是否提交审批?',
     }
   },
   created() {
@@ -247,6 +252,23 @@ export default {
     this.form = this.$form.createForm(this, { formname: 'form' })
   },
   methods: {
+    approvalOk(e) {
+      this.submitApproval()
+      this.submitVisible = false
+      this.addinit()
+    },
+    addinit() {
+      if (this.status == 1) {
+        this.getFormdata()
+      } else if (this.status == 2) {
+        this.$multiTab.closeCurrentPage()
+      }
+    },
+    approvalCancel(e) {
+      this.submitVisible = false
+      this.addinit()
+    },
+
     onClick({ key }) {
       console.log(`Click on item ${key}`)
       if (key == '1') {
@@ -325,13 +347,18 @@ export default {
               console.log('submit--->', JSON.stringify(res))
               if (res.status == 'SUCCESS') {
                 this.detailsData = []
-                if (this.status == 1) {
-                  this.getFormdata()
-                  if (this.$route.query.tag == 2) {
+                if (this.$route.query.tag == 2) {
+                  //编辑
+                  if (this.status == 1) {
                     this.getList(this.$route.query.menu, this.$route.query.materialid, 0)
+                  } else {
+                    this.$multiTab.closeCurrentPage()
                   }
-                } else if (this.status == 2) {
-                  this.$multiTab.closeCurrentPage()
+                } else {
+                  this.submitVisible = true
+                  this.materialid=res.result.bizid
+                  this.billcode=res.result.billcode
+                  this.approvalprocess=values.approvalprocess
                 }
               }
               this.$message.info(res.errorMsg)
@@ -358,7 +385,8 @@ export default {
     handleChange(value, key, record) {
       record[key] = value
     },
-    submitApproval(e) {
+    submitApproval() {
+      //提交审批
       const parameter = {}
       parameter.bizid = this.materialid
       parameter.memuid = this.menuid
@@ -374,11 +402,13 @@ export default {
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
           this.$message.info('提交审批成功')
-          this.getFormdata()
         } else {
           this.$message.info(res.errorMsg)
         }
       })
+    },
+    approval(e) {
+      this.submitApproval()
     },
     deleteItem(record) {
       this.detailsData = this.detailsData.filter((item) => item.doclineno !== record.doclineno)
@@ -616,7 +646,7 @@ export default {
         this.visible = false
       }
     },
- 
+
     showModal(item) {
       this.currentkey = item.key
       if (this.currentkey == 'departmentid') {
@@ -677,7 +707,7 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       this.data = []
       getForm(columnsParams, this.urlForm).then((res) => {
-        // console.log('form--->',JSON.stringify(res))
+         //console.log('form--->',JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = res.result
         } else {

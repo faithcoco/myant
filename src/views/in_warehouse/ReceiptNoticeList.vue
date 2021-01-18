@@ -2,59 +2,7 @@
   <div>
     <a-card>
       <a-form-model class="ant-advanced-search-form" :model="form" @submit="onSubmit" ref="ruleForm">
-        <a-row :gutter="24" type="flex" justify="end" v-show="search_show">
-          <a-col :span="8">
-            <a-form-model-item label="供应商" prop="vendorid">
-              <a-select placeholder="请选择供应商" v-model="form.vendorid" style="width: 100%">
-                <a-select-option v-for="(item, index) in supplier" :value="item.vendorid"
-                  >{{ item.vendorname }}
-                </a-select-option>
-              </a-select>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="8" v-if="menu == 'ReceiptNoticeList'">
-            <a-form-model-item label="部 门" prop="departmentid">
-              <a-select style="width: 100%" placeholder="请选择部门" v-model="form.departmentid">
-                <a-select-option v-for="(item, index) in department" :value="item.departmentid"
-                  >{{ item.title }}
-                </a-select-option>
-              </a-select>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="8">
-            <a-form-model-item label="日 期" prop="date">
-              <a-range-picker v-model="date" style="width: 100%" />
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="8" v-if="menu == 'StorageManagementList'">
-            <a-form-model-item label="仓 库" prop="warehouseid">
-              <a-select style="width: 100%" placeholder="请选择仓库" v-model="form.warehouseid">
-                <a-select-option v-for="(item, index) in warehouse" :value="item.warehouseid"
-                  >{{ item.warehousename }}
-                </a-select-option>
-              </a-select>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="8" v-if="menu == 'ReceiptNoticeList'">
-            <a-form-model-item label="业务员" prop="personid">
-              <a-select style="width: 100%" placeholder="请选择人员" v-model="form.personid">
-                <a-select-option v-for="(item, index) in personnel" :value="item.personid"
-                  >{{ item.personname }}
-                </a-select-option>
-              </a-select>
-            </a-form-model-item>
-          </a-col>
-          <a-col :span="8">
-            <a-form-model-item label="审批状态" prop="approvestatus">
-              <a-select style="width: 100%" placeholder="请选择审批状态" v-model="form.approvestatus">
-                <a-select-option value="1"> 已审批 </a-select-option>
-                <a-select-option value="2"> 审批中 </a-select-option>
-                <a-select-option value="3"> 已提交 </a-select-option>
-                <a-select-option value="8"> 未提交 </a-select-option>
-                <a-select-option value="9"> 未通过 </a-select-option>
-              </a-select>
-            </a-form-model-item>
-          </a-col>
+        <a-row>
           <a-col :span="8">
             <a-form-model-item label="关键字" prop="key">
               <a-select v-model="key.scope" style="width: 45%">
@@ -65,9 +13,71 @@
               <a-input-search style="width: 55%" placeholder="请输入搜索内容" v-model="key.value" />
             </a-form-model-item>
           </a-col>
+          <a-form-model-item>
+             <a-button type="primary" style="margin-left: 10px" @click="handleSearch">{{ search_text }}</a-button>
+          </a-form-model-item>
+           
+        </a-row>
+        <a-row :gutter="24" v-show="search_show">
           <a-col :span="4">
+            <a-form-model-item label="供应商" prop="vendorid">
+              <a-select placeholder="请选择供应商" v-model="form.vendorid" style="width: 100%">
+                <a-select-option v-for="(item, index) in supplier" :value="item.vendorid"
+                  >{{ item.vendorname }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="4" v-if="menu == 'ReceiptNoticeList'">
+            <a-form-model-item label="部 门" prop="departmentid">
+              <a-select style="width: 100%" placeholder="请选择部门" v-model="form.departmentid">
+                <a-select-option v-for="(item, index) in department" :value="item.departmentid"
+                  >{{ item.title }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="4">
+            <a-form-model-item label="日 期" prop="date">
+              <a-range-picker v-model="date" style="width: 100%" />
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="4" v-if="menu == 'StorageManagementList'">
+            <a-form-model-item label="仓 库" prop="warehouseid">
+              <a-select style="width: 100%" placeholder="请选择仓库" v-model="form.warehouseid">
+                <a-select-option v-for="(item, index) in warehouse" :value="item.warehouseid"
+                  >{{ item.warehousename }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+
+          <a-col :span="4">
+            <a-form-model-item label="审批状态" prop="approvestatus">
+              <a-select style="width: 100%" placeholder="请选择审批状态" v-model="form.approvestatus">
+                <a-select-option value="1"> 已审批 </a-select-option>
+                <a-select-option value="2"> 审批中 </a-select-option>
+                <a-select-option value="3"> 已提交 </a-select-option>
+                <a-select-option value="8"> 未提交 </a-select-option>
+                <a-select-option value="9"> 未通过 </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+          <a-col :span="4" v-if="menu == 'ReceiptNoticeList'">
+            <a-form-model-item label="业务员" prop="personid">
+              <a-select style="width: 100%" placeholder="请选择人员" v-model="form.personid">
+                <a-select-option v-for="(item, index) in personnel" :value="item.personid"
+                  >{{ item.personname }}
+                </a-select-option>
+              </a-select>
+            </a-form-model-item>
+          </a-col>
+        </a-row>
+        <a-row type="flex" justify="end">
+          <a-col :span="3">
             <a-form-model-item>
               <a-button type="primary" @click="onSubmit"> 搜索 </a-button>
+             
               <a-button style="margin-left: 10px" @click="resetForm"> 重置 </a-button>
             </a-form-model-item>
           </a-col>
@@ -76,8 +86,8 @@
 
       <a-divider></a-divider>
       <a-row type="flex" justify="end">
-        <a-col :span="5">
-          <a-button type="primary" @click="handleSearch">{{search_text}}</a-button>
+        <a-col :span="4">
+         
           <a-button type="primary" style="margin-left: 5px" @click="handleAdd">新增</a-button>
           <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
           <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
@@ -203,8 +213,9 @@ export default {
       warehouse: [],
       spinning: false,
       search_show: false,
-      search_text:'搜索',
-      path:''
+      search_text: '高级选项',
+      path: '',
+      span: 8,
     }
   },
   mounted() {
@@ -236,7 +247,6 @@ export default {
         this.form.starttime = this.date[0]
         this.form.endtime = this.date[1]
       }
-      
 
       this.getList()
     },
@@ -297,11 +307,11 @@ export default {
       if (this.menu == 'StorageManagementList') {
         this.urlList = '/bd/Stockinrecord/stockinrecordList'
         this.urlDelete = '/bd/Stockinrecord/delStocinrec'
-        this.path='StorageManagementAdd'
+        this.path = 'StorageManagementAdd'
       } else if (this.menu == 'ReceiptNoticeList') {
         this.urlList = '/bd/docreceiptnotice/list'
         this.urlDelete = '/bd/docreceiptnotice/del'
-        this.path='ReceiptNoticeAdd'
+        this.path = 'ReceiptNoticeAdd'
       } else {
         return
       }
@@ -368,10 +378,10 @@ export default {
     handleSearch(e) {
       if (this.search_show == false) {
         this.search_show = true
-      
-          this.search_text='隐藏搜索'
+
+        this.search_text = '隐藏选项'
       } else {
-          this.search_text='展开搜索'
+        this.search_text = '展开选项'
         this.search_show = false
       }
     },

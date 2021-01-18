@@ -2,20 +2,25 @@
   <div>
     <a-card>
       <a-form-model class="ant-advanced-search-form" :model="form" @submit="onSubmit" ref="ruleForm">
-        <a-row>
-          <a-col :span="8">
+        <a-row >
+          <a-col :span="22">
             <a-form-model-item label="关键字" prop="key">
-              <a-select v-model="key.scope" style="width: 45%">
+              <a-select v-model="key.scope" style="width: 10%">
                 <a-select-option v-for="SList in selectList" :key="SList.key" :value="SList.key">{{
                   SList.value
                 }}</a-select-option>
               </a-select>
-              <a-input-search style="width: 55%" placeholder="请输入搜索内容" v-model="key.value" />
+              <a-input-search style="width: 90%" placeholder="请输入搜索内容" v-model="key.value" />
             </a-form-model-item>
+            
           </a-col>
-          <a-form-model-item>
+          <a-col :span="1">
+             <a-form-model-item>
+           
              <a-button type="primary" style="margin-left: 10px" @click="handleSearch">{{ search_text }}</a-button>
+            
           </a-form-model-item>
+          </a-col>
            
         </a-row>
         <a-row :gutter="24" v-show="search_show">

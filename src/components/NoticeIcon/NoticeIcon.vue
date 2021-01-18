@@ -9,11 +9,11 @@
     :arrowPointAtCenter="true"
     :overlayStyle="{ width: '300px', top: '50px' }"
   >
-    <template slot="content">
+    <template slot="content" >
       <a-spin :spinning="loading">
-        <a-tabs>
+        <a-tabs class="notice-infinite-container">
           <a-tab-pane tab="通知" key="1">
-            <a-list :data-source="noticeList">
+            <a-list :data-source="noticeList"  >
               <a-list-item slot="renderItem" slot-scope="item, index">
                 <a-list-item-meta :title="item.title">
                   <a slot="description">{{ item.time | formatDate }}</a>
@@ -40,10 +40,10 @@
               </a-list-item>
             </a-list>
           </a-tab-pane>
-          <a-tab-pane tab="待办" key="3">
-            <a-list :data-source="workTaskList">
+          <a-tab-pane tab="待办" key="3" >
+            <a-list :data-source="workTaskList" >
               <a-list-item slot="renderItem" slot-scope="item, index">
-                <a-list-item-meta :title="item.title">
+                <a-list-item-meta :title="item.context">
                   
                   <a slot="description">{{ item.time | formatDate }}</a-col></a>
                   <a-avatar
@@ -123,5 +123,12 @@ export default {
   span {
     vertical-align: initial;
   }
+}
+.notice-infinite-container {
+  border: 0px solid #e8e8e8;
+  border-radius: 0px;
+  overflow: auto;
+  padding: 0px 0px;
+  height: 250px;
 }
 </style>

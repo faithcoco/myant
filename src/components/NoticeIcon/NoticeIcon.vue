@@ -59,7 +59,7 @@
       </a-spin>
     </template>
     <span @click="fetchNotice" class="header-notice" ref="noticeRef" style="padding: 0 18px">
-      <a-badge count="12">
+      <a-badge :count="count">
         <a-icon style="font-size: 16px; padding: 4px" type="bell" />
       </a-badge>
     </span>
@@ -78,6 +78,7 @@ export default {
       commonList: [],
       noticeList:[],
       workTaskList:[],
+      count:0
       
     }
   },
@@ -93,6 +94,7 @@ export default {
         this.commonList = res.result.commonList
         this.noticeList=res.result.noticeList
         this.workTaskList=res.result.workTaskList
+        this.count=res.result.msgcount
       })
     },
     fetchNotice() {

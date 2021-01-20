@@ -97,7 +97,7 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-        if (val.params.baseTitle !== undefined) {
+        if (val.query.baseTitle !== undefined) {
           this.initData(this.$route.query.menu)
         }
       },

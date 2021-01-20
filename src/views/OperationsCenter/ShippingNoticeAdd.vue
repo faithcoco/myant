@@ -214,6 +214,7 @@ export default {
       cancelVisilbe: false,
       continueVisible: true,
       approvalprocess: '',
+      businessname:''
     }
   },
   created() {
@@ -347,6 +348,7 @@ export default {
       if (this.approvalprocess == 1) {
         url = '/work/submitProcess'
         parameter.billcode = this.billcode
+          parameter.businessname=this.businessname
       } else {
         url = '/work/directApproval'
       }
@@ -665,6 +667,8 @@ export default {
               this.vendorid = this.data[i].keyvalue
             } else if (this.data[i].key == 'doccode') {
               this.billcode = this.data[i].value
+            }else if (this.data[i].key == 'businessclassname') {
+              this.businessname = this.data[i].value
             } else if (this.data[i].key == 'ApproveStatus') {
               if (this.$route.query.tag == 2) {
                 this.continueVisible = false

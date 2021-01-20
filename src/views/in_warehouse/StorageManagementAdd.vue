@@ -240,13 +240,14 @@ export default {
       approvalprocess: '', //1启用 2未启用
       submitVisible: false,
       approvaltext: '是否提交审批?',
+      businessname: '',
     }
   },
   created() {
     this.initdata()
   },
   activated() {
-    console.log('activated',"is run")
+    console.log('activated', 'is run')
     this.initdata()
   },
   beforeCreate() {
@@ -357,9 +358,9 @@ export default {
                   }
                 } else {
                   this.submitVisible = true
-                  this.materialid=res.result.bizid
-                  this.billcode=res.result.billcode
-                  this.approvalprocess=values.approvalprocess
+                  this.materialid = res.result.bizid
+                  this.billcode = res.result.billcode
+                  this.approvalprocess = values.approvalprocess
                 }
               }
               this.$message.info(res.errorMsg)
@@ -395,6 +396,7 @@ export default {
       if (this.approvalprocess == 1) {
         url = '/work/submitProcess'
         parameter.billcode = this.billcode
+        parameter.businessname = this.businessname
       } else {
         url = '/work/directApproval'
       }
@@ -708,7 +710,7 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       this.data = []
       getForm(columnsParams, this.urlForm).then((res) => {
-         console.log('form--->',JSON.stringify(res))
+        console.log('form--->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = res.result
         } else {
@@ -728,6 +730,8 @@ export default {
               this.vendorid = this.data[i].keyvalue
             } else if (this.data[i].key == 'doccode') {
               this.billcode = this.data[i].value
+            } else if (this.data[i].key == 'businessclassname') {
+              this.businessname = this.data[i].value
             } else if (this.data[i].key == 'ApproveStatus') {
               if (this.$route.query.tag == 2) {
                 this.continueVisible = false

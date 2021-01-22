@@ -142,8 +142,12 @@
       <a-card>
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
+             <a-button type="primary" @click="print" style="margin-right: 10px">打印</a-button>
             <a-button type="primary" style="margin-right: 10px" v-show="approvalVisilbe" @click="approval"
               >提交审批</a-button
+            >
+            <a-button type="primary" style="margin-right: 10px" v-show="cancelVisilbe" @click="cancelClick"
+              >撤回审批</a-button
             >
             <a-button type="primary" style="margin-right: 10px" v-show="cancelVisilbe" @click="cancelClick"
               >撤回审批</a-button
@@ -151,7 +155,9 @@
             <a-button type="primary" ref="submit" style="margin-right: 10px" v-show="saveVisible" @click="handleSubmit"
               >保存继续</a-button
             >
+           
             <a-button type @click="Back" style="margin-right: 10px" v-show="saveVisible">保存返回</a-button>
+           
             <a-modal title="提示" :visible="submitVisible" @ok="approvalOk" @cancel="approvalCancel">
               <p>{{ approvaltext }}</p>
             </a-modal>
@@ -240,14 +246,14 @@ export default {
       approvalprocess: '', //1启用 2未启用
       submitVisible: false,
       approvaltext: '是否提交审批?',
-      businessname:''
+      businessname: '',
     }
   },
   created() {
     this.initdata()
   },
   activated() {
-    console.log('activated',"is run")
+    console.log('activated', 'is run')
     this.initdata()
   },
   beforeCreate() {
@@ -358,9 +364,10 @@ export default {
                   }
                 } else {
                   this.submitVisible = true
-                  this.materialid=res.result.bizid
-                  this.billcode=res.result.billcode
-                  this.approvalprocess=values.approvalprocess
+                  this.materialid = res.result.bizid
+                  this.billcode = res.result.billcode
+                  this.businessname = values.businessclassname
+                  this.approvalprocess = values.approvalprocess
                 }
               }
               this.$message.info(res.errorMsg)
@@ -396,7 +403,7 @@ export default {
       if (this.approvalprocess == 1) {
         url = '/work/submitProcess'
         parameter.billcode = this.billcode
-        parameter.businessname=this.businessname
+        parameter.businessname = this.businessname
       } else {
         url = '/work/directApproval'
       }
@@ -710,7 +717,6 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       this.data = []
       getForm(columnsParams, this.urlForm).then((res) => {
-         console.log('form--->',JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = res.result
         } else {
@@ -730,7 +736,7 @@ export default {
               this.vendorid = this.data[i].keyvalue
             } else if (this.data[i].key == 'doccode') {
               this.billcode = this.data[i].value
-            }else if (this.data[i].key == 'businessclassname') {
+            } else if (this.data[i].key == 'businessclassname') {
               this.businessname = this.data[i].value
             } else if (this.data[i].key == 'ApproveStatus') {
               if (this.$route.query.tag == 2) {
@@ -763,6 +769,7 @@ export default {
       this.submit()
       // 路由跳转
     },
+    print(e) {},
   },
 }
 </script>

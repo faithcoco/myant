@@ -177,7 +177,10 @@ export default {
       console.log('delete params--->', JSON.stringify(columnsParams))
       getData(columnsParams, this.urlDelete).then((res) => {
         console.log('delete res-->', JSON.stringify(res))
-        this.getList()
+        this.$message.info(res.errorMsg)
+        if (res.status == 'SUCCESS') {
+          this.getList()
+        }
       })
     },
     initData(name) {

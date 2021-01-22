@@ -36,7 +36,7 @@
 </template>
 <script>
 import { getclassificationGoodsColumns, getclassificationGoodsList, insertmaterialClass, getData } from '@/api/manage'
-import { logininfo} from '@/store/mutation-types'
+import { logininfo } from '@/store/mutation-types'
 import Vue from 'vue'
 export default {
   props: {
@@ -198,9 +198,8 @@ export default {
         console.log('add res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.getList()
-        } else {
-          this.$message.warning(res.errorMsg)
         }
+        this.$message.info(res.errorMsg)
       })
     },
     update() {

@@ -61,13 +61,7 @@
           </a-col>
           <a-col :span="20">
             <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-              <a-form-model-item label="所在企业:" prop="DepartmentID">
-                <a-input v-model="form.departmentname" disabled placeholder="请输入姓名"></a-input>
-              </a-form-model-item>
-              <a-form-model-item label="工号:" prop="PersonCode">
-                <a-input v-model="form.personcode" disabled placeholder="请输入工号"></a-input>
-              </a-form-model-item>
-              <a-form-model-item label="姓名:" prop="PersonName">
+               <a-form-model-item label="姓名:" prop="PersonName">
                 <a-input v-model="form.personname" placeholder="请输入姓名"></a-input>
               </a-form-model-item>
               <a-form-model-item label="手机号:" prop="PersonPhone">
@@ -79,16 +73,26 @@
                 ></a-input>
                 <a @click="changePhone">更改</a>
               </a-form-model-item>
-              <a-form-model-item label="入职时间:" prop="PersonBeginTime">
-                <a-input v-model="form.personbegintime" disabled placeholder="请输入邮箱"></a-input>
-                <!--<a @click="changeMail">绑定</a> -->
-              </a-form-model-item>
-              <a-form-model-item label="建立时间:" prop="PersonCreationdate">
-                <a-input v-model="form.personcreationdate" disabled placeholder="请输入备注"></a-input>
-              </a-form-model-item>
-              <a-form-model-item label="个性签名:">
+                <a-form-model-item label="个性签名:">
                 <a-input v-model="form.personlabel" placeholder="请输入个性签名"></a-input>
               </a-form-model-item>
+              <a-form-model-item label="所在部门:" prop="DepartmentID">
+                {{form.departmentname}}
+              </a-form-model-item>
+              <a-form-model-item label="工号:" prop="PersonCode">
+                {{form.personcode}}
+              
+              </a-form-model-item>
+             
+              <a-form-model-item label="入职时间:" prop="PersonBeginTime">
+               
+                 {{form.personbegintime}}
+              </a-form-model-item>
+              <a-form-model-item label="建立时间:" prop="PersonCreationdate">
+               
+                 {{form.personcreationdate}}
+              </a-form-model-item>
+            
             </a-form-model>
           </a-col>
         </a-row>

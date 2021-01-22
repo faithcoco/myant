@@ -29,14 +29,17 @@
           <a-tab-pane tab="消息" key="2">
             <a-list :data-source="commonList">
               <a-list-item slot="renderItem" slot-scope="item, index">
-                <a-list-item-meta :title="item.title">
+                <a-list-item-meta >
+                   <a slot="title" :href="item.href">{{ item.title }}</a>
                   <a slot="description">{{ item.time | formatDate }}</a>
                   <a-avatar
                     style="background-color: white"
                     slot="avatar"
                     src="https://gw.alipayobjects.com/zos/rmsportal/ThXAXghbEsBCCSDihZxY.png"
                   />
+                   {{ item.title }}
                 </a-list-item-meta>
+               
               </a-list-item>
             </a-list>
           </a-tab-pane>
@@ -76,25 +79,23 @@ export default {
       loading: false,
       visible: false,
       commonList: [],
-      noticeList:[],
-      workTaskList:[],
-      count:0
-      
+      noticeList: [],
+      workTaskList: [],
+      count: 0,
     }
   },
   created() {
     this.getData()
   },
   methods: {
-    
     getData() {
       const params = {}
       getData(params, '/desk/getDeskMsgList').then((res) => {
         console.log('noticelcon res-->', JSON.stringify(res.result))
         this.commonList = res.result.commonList
-        this.noticeList=res.result.noticeList
-        this.workTaskList=res.result.workTaskList
-        this.count=res.result.msgcount
+        this.noticeList = res.result.noticeList
+        this.workTaskList = res.result.workTaskList
+        this.count = res.result.msgcount
       })
     },
     fetchNotice() {

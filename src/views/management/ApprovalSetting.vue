@@ -135,7 +135,7 @@ export default {
     url = '/work/getPsndocOrRoleList'
     const paramsName = { enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid }
     getData(paramsName, url).then((res) => {
-      console.log('name list ->', JSON.stringify(res))
+      console.log('name list -->', JSON.stringify(res))
       this.nameList = res.result
 
       this.getSelect()

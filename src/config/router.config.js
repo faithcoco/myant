@@ -12,7 +12,7 @@ export const asyncRouterMap = [
     children: [
       {
         path: '/index',
-        component: () => import('@/views/dashboard/Workplace'),
+        component: () => import('@/views/index/Workplace'),
         name: 'index',
         meta: { title: '首页', icon: 'home', keepAlive: true }
       },

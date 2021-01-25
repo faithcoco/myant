@@ -787,7 +787,22 @@ export default {
 
       // 路由跳转
     },
-    print(e) {},
+    // 打印
+    print(e) {
+      const parameter = {}
+      var url = '/report/getReportUrl'
+      console.log('getReportUrl-->', JSON.stringify(parameter))
+      getData(parameter, url).then((res) => {
+        if (res.status == 'SUCCESS') {
+          debugger
+          let address = res.result+"收货通知打印.cpt&id="+this.materialid;
+          window.open(address, '_blank',)
+        } else {
+          this.$message.warn(res.errorMsg);
+        }
+      })
+
+    },
   },
 }
 </script>

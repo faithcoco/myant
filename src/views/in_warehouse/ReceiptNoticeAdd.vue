@@ -84,12 +84,19 @@
                     <span slot="doclinequantity" slot-scope="text, record">
                       <a-input
                         :value="text"
-                        @pressEnter="(e) => waitquantityChange(e.target.value, record)"
+                        @change="(e) => waitquantityChange(e.target.value, record)"
                         type="number"
                       />
                     </span>
 
                     <span slot="action" slot-scope="text, record">
+                       <a @click="split(record)" v-if="record.docid !== undefined">拆单</a>
+                      <a-modal v-model="splitmodal_visible" title="类别" @ok="() => splitOk(record)">
+                        <p>请输入拆单数量：</p>
+                        <a-input-number v-model="splitQuantity" placeholder :min="0" />
+                      </a-modal>
+                      <a-divider type="vertical" v-if="record.docid !== undefined" />
+                     
                       <a @click="handleEdit(record)">编辑</a>
                       <a-divider type="vertical" />
 
@@ -142,25 +149,19 @@
       <a-card>
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
-             <a-button type="primary" @click="print" style="margin-right: 10px">打印</a-button>
+            <a-button type="primary" @click="print" style="margin-right: 10px">打印</a-button>
             <a-button type="primary" style="margin-right: 10px" v-show="approvalVisilbe" @click="approval"
               >提交审批</a-button
             >
             <a-button type="primary" style="margin-right: 10px" v-show="cancelVisilbe" @click="cancelClick"
               >撤回审批</a-button
             >
-            <a-button type="primary" style="margin-right: 10px" v-show="cancelVisilbe" @click="cancelClick"
-              >撤回审批</a-button
-            >
+
             <a-button type="primary" ref="submit" style="margin-right: 10px" v-show="saveVisible" @click="handleSubmit"
-              >保存继续</a-button
+              >存为草稿</a-button
             >
-           
-            <a-button type @click="Back" style="margin-right: 10px" v-show="saveVisible">保存返回</a-button>
-           
-            <a-modal title="提示" :visible="submitVisible" @ok="approvalOk" @cancel="approvalCancel">
-              <p>{{ approvaltext }}</p>
-            </a-modal>
+
+            <a-button type @click="Back" style="margin-right: 10px" v-show="saveVisible">保存送审</a-button>
           </a-col>
         </a-row>
       </a-card>
@@ -176,20 +177,19 @@ Vue.use(Cascader)
 import { PageHeader } from 'ant-design-vue'
 Vue.use(PageHeader)
 Vue.use(formModel, Button)
-import { postProductAdd } from '@/api/manage'
-import { logininfo, menuname } from '@/store/mutation-types'
-import { getForm, submitForm, postData, getData } from '@/api/manage'
+import { logininfo } from '@/store/mutation-types'
+import { getForm, submitForm, getData } from '@/api/manage'
 import { Form } from 'ant-design-vue'
 Vue.use(Form)
 import { TreeSelect } from 'ant-design-vue'
-import { keys, type } from 'mockjs2'
+
 Vue.use(TreeSelect)
 import ArchivesModal from '../modal/ArchivesModal'
 import Type from '../modal/TypeModal'
 import SelectModal from '../modal/SelectModal'
 import { getProductListColumns } from '@/api/manage'
 import { Empty } from 'ant-design-vue'
-import { isRendered } from 'nprogress'
+
 Vue.use(Empty)
 
 const numberRow = []
@@ -236,17 +236,20 @@ export default {
       approveStatus: 8,
       destroyOnClose: true,
       menu: '',
-      status: 1, //1保存继续2保存返回
+      status: 1, //1存为草稿2保存送审
       stockincode: '',
       billcode: '',
       currentRecord: '',
       saveVisible: true,
       cancelVisilbe: false,
       continueVisible: true,
-      approvalprocess: '', //1启用 2未启用
-      submitVisible: false,
-      approvaltext: '是否提交审批?',
+      approvalprocess: '', //1审批流启用 2审批流未启用
       businessname: '',
+      splitmodal_visible: false,
+     
+      splitQuantity: '',
+      
+      
     }
   },
   created() {
@@ -260,10 +263,21 @@ export default {
     this.form = this.$form.createForm(this, { formname: 'form' })
   },
   methods: {
-    approvalOk(e) {
-      this.submitApproval()
-      this.submitVisible = false
-      this.addinit()
+    splitOk(record) {
+      if (parseInt(record.doclinequantity) < parseInt(this.splitQuantity)) {
+        this.$message.info('拆单数量不能大于该行数量！')
+        return
+      }
+      var temp = JSON.parse(JSON.stringify(record))
+      temp.doclinequantity = parseInt(record.doclinequantity) - parseInt(this.splitQuantity)
+      this.detailsData.push(temp)
+
+      record.doclinequantity = this.splitQuantity
+      this.detailsData = this.detailsData.map((item, index) => {
+        return { ...item, doclineno: index + 1 }
+      })
+      this.splitmodal_visible = false
+      this.splitQuantity = ''
     },
     addinit() {
       if (this.status == 1) {
@@ -271,10 +285,6 @@ export default {
       } else if (this.status == 2) {
         this.$multiTab.closeCurrentPage()
       }
-    },
-    approvalCancel(e) {
-      this.submitVisible = false
-      this.addinit()
     },
 
     onClick({ key }) {
@@ -291,12 +301,8 @@ export default {
       const parameter = {}
       parameter.memuid = this.menuid
       parameter.bizid = this.materialid
-      var url = ''
-      if (this.approvalprocess == 1) {
-        url = '/work/recallProcess'
-      } else {
-        url = '/work/directApproval'
-      }
+      var url = '/work/recallProcess'
+     
       console.log('cancel-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
@@ -306,6 +312,9 @@ export default {
           this.$message.warn(res.errorMsg)
         }
       })
+    },
+    split(record) {
+      this.splitmodal_visible = true
     },
     handleEdit(record) {
       console.log(JSON.stringify(record.doclineid))
@@ -341,6 +350,7 @@ export default {
             return
           }
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+          values.memuid = this.memuid
           values.details = this.detailsData
           values.departmentid = this.departmentid
           values.personid = this.personid
@@ -363,11 +373,16 @@ export default {
                     this.$multiTab.closeCurrentPage()
                   }
                 } else {
-                  this.submitVisible = true
+                  //新增
+
                   this.materialid = res.result.bizid
                   this.billcode = res.result.billcode
                   this.businessname = values.businessclassname
                   this.approvalprocess = values.approvalprocess
+                  this.addinit()
+                  if (this.status == 2) {
+                    this.submitApproval()
+                  }
                 }
               }
               this.$message.info(res.errorMsg)
@@ -379,13 +394,13 @@ export default {
       })
     },
     waitquantityChange(value, record) {
-      if (this.$route.query.menu == 'StorageManagementList') {
-        if (parseInt(record.doclinequantity) > parseInt(value)) {
-          var temp = JSON.parse(JSON.stringify(record))
-          temp.doclinequantity = parseInt(record.doclinequantity) - parseInt(value)
-          this.detailsData.push(temp)
-        }
-      }
+      // if (this.$route.query.menu == 'StorageManagementList') {
+      //   if (parseInt(record.doclinequantity) > parseInt(value)) {
+      //     var temp = JSON.parse(JSON.stringify(record))
+      //     temp.doclinequantity = parseInt(record.doclinequantity) - parseInt(value)
+      //     this.detailsData.push(temp)
+      //   }
+      // }
       record.doclinequantity = value
       this.detailsData = this.detailsData.map((item, index) => {
         return { ...item, doclineno: index + 1 }
@@ -413,6 +428,7 @@ export default {
         if (res.status == 'SUCCESS') {
           this.$message.info('提交审批成功')
         } else {
+          console.log('approval error-->', res)
           this.$message.info(res.errorMsg)
         }
       })
@@ -682,6 +698,7 @@ export default {
     handleSubmit(e) {
       this.status = 1
       this.submit()
+      this.addinit()
     },
     getFormdata() {
       this.modalname = this.$route.query.menu
@@ -767,6 +784,7 @@ export default {
     Back(e) {
       this.status = 2
       this.submit()
+
       // 路由跳转
     },
     print(e) {},

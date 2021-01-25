@@ -2,7 +2,7 @@
   <div>
     <a-card>
       <a-form-model class="ant-advanced-search-form" :model="form" @submit="onSubmit" ref="ruleForm">
-        <a-row >
+        <a-row>
           <a-col :span="22">
             <a-form-model-item label="关键字" prop="key">
               <a-select v-model="key.scope" style="width: 10%">
@@ -12,16 +12,12 @@
               </a-select>
               <a-input-search style="width: 90%" placeholder="请输入搜索内容" v-model="key.value" />
             </a-form-model-item>
-            
           </a-col>
           <a-col :span="1">
-             <a-form-model-item>
-           
-             <a-button type="primary" style="margin-left: 10px" @click="handleSearch">{{ search_text }}</a-button>
-            
-          </a-form-model-item>
+            <a-form-model-item>
+              <a-button type="primary" style="margin-left: 10px" @click="handleSearch">{{ search_text }}</a-button>
+            </a-form-model-item>
           </a-col>
-           
         </a-row>
         <a-row :gutter="24" v-show="search_show">
           <a-col :span="4">
@@ -82,7 +78,7 @@
           <a-col :span="3">
             <a-form-model-item>
               <a-button type="primary" @click="onSubmit"> 搜索 </a-button>
-             
+
               <a-button style="margin-left: 10px" @click="resetForm"> 重置 </a-button>
             </a-form-model-item>
           </a-col>
@@ -92,7 +88,6 @@
       <a-divider></a-divider>
       <a-row type="flex" justify="end">
         <a-col :span="4">
-         
           <a-button type="primary" style="margin-left: 5px" @click="handleAdd">新增</a-button>
           <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
           <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
@@ -114,9 +109,12 @@
           <span slot="action" slot-scope="text, record">
             <a @click="showApproval(record)">查审</a>
             <a-divider type="vertical" />
+            <a @click="submitApproval(record)" v-if="record.approvecode == 8">送审</a>
+            <a-divider type="vertical" v-if="record.approvecode == 8" />
+            <a @click="handleRevocation(record)" v-if="record.approvecode == 3">撤回</a>
+            <a-divider type="vertical" v-if="record.approvecode == 3" />
             <a @click="handleEdit(record)">编辑</a>
             <a-divider type="vertical" />
-
             <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
               <a href="javascript:;">删除</a>
             </a-popconfirm>
@@ -148,8 +146,7 @@ import { FormModel } from 'ant-design-vue'
 Vue.use(FormModel)
 import STree from '@/components/Tree/Tree'
 import { STable } from '@/components'
-import { getProductList, getProductListColumns, getclassificationGoodsList, postData, getData } from '@/api/manage'
-import action from '../../core/directives/action'
+import { getProductListColumns, postData, getData } from '@/api/manage'
 import Approval from '../Approval'
 import SelectModal from '../modal/SelectModal'
 import { logininfo } from '@/store/mutation-types'
@@ -294,6 +291,48 @@ export default {
     showApproval(record) {
       this.approval_visible = true
       this.materialid = record.docid
+    },
+    handleRevocation(record) {
+      const parameter = {}
+      parameter.memuid = this.menuid
+      parameter.bizid = record.docid
+      var url = '/work/recallProcess'
+     
+      console.log('cancel-->', JSON.stringify(parameter))
+      getData(parameter, url).then((res) => {
+        if (res.status == 'SUCCESS') {
+          this.$message.info('撤销成功')
+          this.getList()
+        } else {
+          this.$message.warn(res.errorMsg)
+        }
+      })
+    },
+    submitApproval(record) {
+      console.log('record--->', JSON.stringify(record))
+      //提交审批
+      const parameter = {}
+      parameter.bizid = record.docid
+      parameter.memuid = this.menuid
+      var url = ''
+
+      if (record.approvalprocess == '启用') {
+        url = '/work/submitProcess'
+        parameter.billcode = this.billcode
+        parameter.businessname = this.businessname
+      } else {
+        url = '/work/directApproval'
+      }
+      console.log('approval-->', JSON.stringify(parameter))
+      console.log('approval url-->', url)
+      getData(parameter, url).then((res) => {
+        if (res.status == 'SUCCESS') {
+          this.$message.info('提交审批成功')
+           this.getList()
+        } else {
+          this.$message.info(res.errorMsg)
+        }
+      })
     },
     delete() {
       const columnsParams = {}

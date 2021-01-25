@@ -235,7 +235,7 @@ export default {
       console.log('request url-->', this.urlList)
       console.log('request params-->', JSON.stringify(parameter))
       requestData(parameter, this.urlList, this.method).then((res) => {
-       console.log('res-->',JSON.stringify(res))
+     
         if (res.result.data.length !== 0) {
           this.listdata = res.result.data
           this.selectedRowKeys = []

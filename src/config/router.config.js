@@ -139,7 +139,7 @@ export const asyncRouterMap = [
           }, {
             path: 'StorageManagementAdd',
             name: 'StorageManagementAdd',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/in_warehouse/StorageManagementAdd.vue'),
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/in_warehouse/ReceiptNoticeAdd.vue'),
             meta: { title: '入库产品清单新增' },
             hidden: true
           },

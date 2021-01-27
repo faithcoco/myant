@@ -90,13 +90,14 @@
                     </span>
 
                     <span slot="action" slot-scope="text, record">
-                       <a @click="split(record)" v-if="record.docid !== undefined">拆单</a>
                       <a-modal v-model="splitmodal_visible" title="类别" @ok="() => splitOk(record)">
                         <p>请输入拆单数量：</p>
                         <a-input-number v-model="splitQuantity" placeholder :min="0" />
                       </a-modal>
+                      <a @click="split(record)" v-if="record.docid !== undefined">拆单</a>
+
                       <a-divider type="vertical" v-if="record.docid !== undefined" />
-                     
+
                       <a @click="handleEdit(record)">编辑</a>
                       <a-divider type="vertical" />
 
@@ -246,10 +247,8 @@ export default {
       approvalprocess: '', //1审批流启用 2审批流未启用
       businessname: '',
       splitmodal_visible: false,
-     
+
       splitQuantity: '',
-      
-      
     }
   },
   created() {
@@ -302,7 +301,7 @@ export default {
       parameter.memuid = this.menuid
       parameter.bizid = this.materialid
       var url = '/work/recallProcess'
-     
+
       console.log('cancel-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
@@ -795,13 +794,12 @@ export default {
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
           debugger
-          let address = res.result+"收货通知打印.cpt&id="+this.materialid;
-          window.open(address, '_blank',)
+          let address = res.result + '收货通知打印.cpt&id=' + this.materialid
+          window.open(address, '_blank')
         } else {
-          this.$message.warn(res.errorMsg);
+          this.$message.warn(res.errorMsg)
         }
       })
-
     },
   },
 }

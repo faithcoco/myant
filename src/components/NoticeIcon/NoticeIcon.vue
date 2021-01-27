@@ -92,10 +92,12 @@ export default {
       const params = {}
       getData(params, '/desk/getDeskMsgList').then((res) => {
         console.log('noticelcon res-->', JSON.stringify(res.result))
-        this.commonList = res.result.commonList
-        this.noticeList = res.result.noticeList
-        this.workTaskList = res.result.workTaskList
-        this.count = res.result.msgcount
+        if (res.result !== null) {
+          this.commonList = res.result.commonList
+          this.noticeList = res.result.noticeList
+          this.workTaskList = res.result.workTaskList
+          this.count = res.result.msgcount
+        }
       })
     },
     fetchNotice() {

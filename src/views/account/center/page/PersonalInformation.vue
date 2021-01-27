@@ -3,8 +3,15 @@
     <div v-show="visible">
       <a-card>
         <a-row>
-          <a-col :span="4">
-            <a-avatar :size="70" icon="user" />
+          <avatar-modal ref="modal" @ok="setavatar" />
+          <a-col :span="5">
+            <div class="ant-upload-preview" @click="$refs.modal.edit(1)">
+              <a-icon type="cloud-upload-o" class="upload-icon" />
+              <div class="mask">
+                <a-icon type="plus" />
+              </div>
+              <img :src="option.img" />
+            </div>
           </a-col>
           <a-col :span="14">
             <a-form ref="ruleForm" :model="form" :rules="rules">
@@ -61,7 +68,7 @@
           </a-col>
           <a-col :span="20">
             <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
-               <a-form-model-item label="姓名:" prop="PersonName">
+              <a-form-model-item label="姓名:" prop="PersonName">
                 <a-input v-model="form.personname" placeholder="请输入姓名"></a-input>
               </a-form-model-item>
               <a-form-model-item label="手机号:" prop="PersonPhone">
@@ -73,26 +80,22 @@
                 ></a-input>
                 <a @click="changePhone">更改</a>
               </a-form-model-item>
-                <a-form-model-item label="个性签名:">
+              <a-form-model-item label="个性签名:">
                 <a-input v-model="form.personlabel" placeholder="请输入个性签名"></a-input>
               </a-form-model-item>
               <a-form-model-item label="所在部门:" prop="DepartmentID">
-                {{form.departmentname}}
+                {{ form.departmentname }}
               </a-form-model-item>
               <a-form-model-item label="工号:" prop="PersonCode">
-                {{form.personcode}}
-              
+                {{ form.personcode }}
               </a-form-model-item>
-             
+
               <a-form-model-item label="入职时间:" prop="PersonBeginTime">
-               
-                 {{form.personbegintime}}
+                {{ form.personbegintime }}
               </a-form-model-item>
               <a-form-model-item label="建立时间:" prop="PersonCreationdate">
-               
-                 {{form.personcreationdate}}
+                {{ form.personcreationdate }}
               </a-form-model-item>
-            
             </a-form-model>
           </a-col>
         </a-row>
@@ -227,12 +230,14 @@ import { mapGetters } from 'vuex'
 import { retrievePsdSendSMSregister } from '@/api/register'
 import { forgetPasswordlogin } from '@/api/ForgotPassword'
 import { logininfo } from '@/store/mutation-types'
+import AvatarModal from '../../settings/AvatarModal'
 
 import { getBaseenterpriseInfo, getBasepersonInfo, updateBaseperson } from '@/api/manage'
 export default {
   name: 'PersonalInformation',
   components: {
     Slider,
+    AvatarModal,
   },
   data() {
     return {
@@ -305,6 +310,21 @@ export default {
         CPersonPassword: [{ required: true, message: '请输入新密码', trigger: 'blur' }],
         phoneCode4: [{ required: true, message: '请输入验证码', trigger: 'blur' }],
       },
+      option: {
+        img: '/avatar2.jpg',
+        info: true,
+        size: 1,
+        outputType: 'jpeg',
+        canScale: false,
+        autoCrop: true,
+        // 只有自动截图开启 宽度高度才生效
+        autoCropWidth: 180,
+        autoCropHeight: 180,
+        fixedBox: true,
+        // 开启宽度和高度比例
+        fixed: true,
+        fixedNumber: [1, 1],
+      },
       Mrules: {
         //校验规则
         NewMail: [
@@ -322,13 +342,11 @@ export default {
   created() {
     this.basepersonPO = Vue.ls.get(logininfo).basepersonPO
     this.enterprisephone = this.basepersonPO.personphone
-   
 
     const params = {}
     params.id = this.basepersonPO.personid
     getBasepersonInfo(params)
       .then((res) => {
-       
         this.form = res.result
         this.form.personcreationdate = PersonCreationdate
         this.form.personbegintime = personbegintime
@@ -349,6 +367,9 @@ export default {
     confirmSuccess: function (confirmSuccess) {
       this.Success = confirmSuccess
       console.log(this.Success)
+    },
+    setavatar(url) {
+      this.option.img = url
     },
     getNewpasswordVerificationCode() {
       this.$refs.CPruleForm.validate((valid) => {
@@ -477,7 +498,7 @@ export default {
             data.personname = this.form.personname
             data.personlabel = this.form.personlabel
             data.personphone = this.form.personphone
-            console.log('update userinfo-->',JSON.stringify(data))
+            console.log('update userinfo-->', JSON.stringify(data))
             updateBaseperson(data)
               .then((res) => {
                 console.log('updateBaseperson--->', res)
@@ -487,7 +508,6 @@ export default {
                   this.visible = true
                   //提示用户信息
                 } else {
-                 
                   this.$message.warn(res.errorMsg)
                 }
               })
@@ -710,3 +730,54 @@ export default {
   },
 }
 </script>
+<style lang="less" scoped>
+.ant-upload-preview {
+  position: relative;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 180px;
+  border-radius: 50%;
+  box-shadow: 0 0 4px #ccc;
+
+  .upload-icon {
+    position: absolute;
+    top: 0;
+    right: 10px;
+    font-size: 1.4rem;
+    padding: 0.5rem;
+    background: rgba(222, 221, 221, 0.7);
+    border-radius: 50%;
+    border: 1px solid rgba(0, 0, 0, 0.2);
+  }
+  .mask {
+    opacity: 0;
+    position: absolute;
+    background: rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+    transition: opacity 0.4s;
+
+    &:hover {
+      opacity: 1;
+    }
+
+    i {
+      font-size: 2rem;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      margin-left: -1rem;
+      margin-top: -1rem;
+      color: #d6d6d6;
+    }
+  }
+
+  img,
+  .mask {
+    width: 100%;
+    max-width: 180px;
+    height: 100%;
+    border-radius: 50%;
+    overflow: hidden;
+  }
+}
+</style>

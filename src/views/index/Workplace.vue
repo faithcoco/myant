@@ -21,94 +21,37 @@
     <div>
       <a-row :gutter="24">
         <a-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">
-          <a-card title="审批" :bordered="false">
-            <a-table :columns="columns" :data-source="data">
-              <a slot="billcode" slot-scope="text, record" @click="handleClick(record)">{{ text }}</a>
-              <a slot="commitdate" slot-scope="text, record">{{ record.commitdate | formatDate }}</a>
-            </a-table>
+          <a-card title="我的任务" :bordered="false">
+            <a-tabs default-active-key="1" @change="callback">
+              <a-tab-pane key="1" tab="待办">
+                <a-table :columns="columns" :data-source="data">
+                  <a slot="billcode" slot-scope="text, record" @click="handleClick(record)">{{ text }}</a>
+                  <a slot="commitdate" slot-scope="text, record">{{ record.commitdate | formatDate }}</a>
+                </a-table>
+              </a-tab-pane>
+              <a-tab-pane key="2" tab="已审核">
+                <a-table :columns="columns" :data-source="data">
+                  <a slot="billcode" slot-scope="text, record" @click="handleClick(record)">{{ text }}</a>
+                  <a slot="commitdate" slot-scope="text, record">{{ record.commitdate | formatDate }}</a>
+                </a-table>
+              </a-tab-pane>
+              <a-tab-pane key="3" tab="已创建">
+                <a-table :columns="columns" :data-source="data">
+                  <a slot="billcode" slot-scope="text, record" @click="handleClick(record)">{{ text }}</a>
+                  <a slot="commitdate" slot-scope="text, record">{{ record.commitdate | formatDate }}</a>
+                </a-table>
+              </a-tab-pane>
+            </a-tabs>
           </a-card>
-          <a-card
-            class="project-list"
-            :loading="loading"
-            style="margin-top: 24px"
-            :bordered="false"
-            title="进行中的项目"
-            :body-style="{ padding: 0 }"
-          >
-            <a slot="extra">全部项目</a>
-            <div>
-              <a-row :gutter="24" :style="{ marginTop: '24px' }">
-                <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-                  <chart-card :loading="loading" title="总销售额" total="￥126,560">
-                    <a-tooltip title="指标说明" slot="action">
-                      <a-icon type="info-circle-o" />
-                    </a-tooltip>
-                    <div>
-                      <trend flag="up" style="margin-right: 16px">
-                        <span slot="term">周同比</span>
-                        12%
-                      </trend>
-                      <trend flag="down">
-                        <span slot="term">日同比</span>
-                        11%
-                      </trend>
-                    </div>
-                    <template slot="footer">
-                      日均销售额
-                      <span>￥ 234.56</span>
-                    </template>
-                  </chart-card>
-                </a-col>
-                <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-                  <chart-card :loading="loading" title="访问量" :total="8846 | NumberFormat">
-                    <a-tooltip title="指标说明" slot="action">
-                      <a-icon type="info-circle-o" />
-                    </a-tooltip>
-                    <div>
-                      <mini-area />
-                    </div>
-                    <template slot="footer">
-                      日访问量
-                      <span>{{ '1234' | NumberFormat }}</span>
-                    </template>
-                  </chart-card>
-                </a-col>
-                <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-                  <chart-card :loading="loading" title="支付笔数" :total="6560 | NumberFormat">
-                    <a-tooltip title="指标说明" slot="action">
-                      <a-icon type="info-circle-o" />
-                    </a-tooltip>
-                    <div>
-                      <mini-bar />
-                    </div>
-                    <template slot="footer">
-                      转化率
-                      <span>60%</span>
-                    </template>
-                  </chart-card>
-                </a-col>
-                <a-col :sm="24" :md="12" :xl="6" :style="{ marginBottom: '24px' }">
-                  <chart-card :loading="loading" title="运营活动效果" total="78%">
-                    <a-tooltip title="指标说明" slot="action">
-                      <a-icon type="info-circle-o" />
-                    </a-tooltip>
-                    <div>
-                      <mini-progress color="rgb(19, 194, 194)" :target="80" :percentage="78" height="8px" />
-                    </div>
-                    <template slot="footer">
-                      <trend flag="down" style="margin-right: 16px">
-                        <span slot="term">同周比</span>
-                        12%
-                      </trend>
-                      <trend flag="up">
-                        <span slot="term">日环比</span>
-                        80%
-                      </trend>
-                    </template>
-                  </chart-card>
-                </a-col>
-              </a-row>
-            </div>
+          <a-card title="我的消息" :bordered="false">
+            <a-list item-layout="horizontal" :data-source="messageData">
+              <a-list-item slot="renderItem" slot-scope="item, index">
+                <a-list-item-meta   :description="item.time">
+                  <a slot="title" href="https://www.antdv.com/">{{ item.sendpersonname+":"+item.title}}</a>
+                  <a-avatar slot="avatar" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+                </a-list-item-meta>
+              </a-list-item>
+            </a-list>
           </a-card>
         </a-col>
       </a-row>
@@ -211,6 +154,7 @@ export default {
       radarLoading: true,
       activities: [],
       teams: [],
+      messageData: [],
       // data
     }
   },
@@ -226,29 +170,55 @@ export default {
   created() {
     this.user = this.userInfo
     this.avatar = this.userInfo.avatar
-    this.getPending()
+    this.getPending(1)
+    this.getMessage()
+  },
+  watch: {
+    $route: {
+      handler: function (val, oldVal) {
+        this.getPending(1)
+        this.getMessage()
+      },
+      // 深度观察监听
+    },
   },
 
   methods: {
+    callback(key) {
+      this.getPending(key)
+    },
     handleClick(record) {
       if (record.memuname == '收货通知') {
         this.$router.push({
           name: 'ReceiptNoticeList',
         })
-      }else  if (record.memuname == '入库产品清单') {
+      } else if (record.memuname == '入库产品清单') {
         this.$router.push({
           name: 'StorageManagementList',
         })
       }
     },
-    getPending() {
+    getMessage() {
       const params = {}
+      console.log('getMessage-->', params)
+      getData(params, '/desk/getCommentList').then((res) => {
+        this.messageData = res.result
+        this.messageData = this.messageData.map((item, index) => {
+          return { ...item, time: moment(item.time).format('YYYY-MM-DD HH:mm') }
+        })
+        console.log('getMessage res-->', JSON.stringify(res))
+      })
+    },
+    getPending(querystatus) {
+      const params = {}
+      params.querystatus = querystatus
+      console.log('getPending-->', params)
       getData(params, '/desk/getPendingpprovalList').then((res) => {
         this.data = res.result
         this.data = this.data.map((item, index) => {
           return { ...item, commitdate: moment(item.commitdate).format('YYYY-MM-DD HH:mm') }
         })
-        console.log('getPending res-->', JSON.stringify(this.data[0]))
+        console.log('getPending res-->', JSON.stringify(res))
       })
     },
   },

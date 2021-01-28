@@ -348,6 +348,7 @@ export default {
             this.$message.warn('请添加明细')
             return
           }
+
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           values.memuid = this.memuid
           values.details = this.detailsData
@@ -393,13 +394,6 @@ export default {
       })
     },
     waitquantityChange(value, record) {
-      // if (this.$route.query.menu == 'StorageManagementList') {
-      //   if (parseInt(record.doclinequantity) > parseInt(value)) {
-      //     var temp = JSON.parse(JSON.stringify(record))
-      //     temp.doclinequantity = parseInt(record.doclinequantity) - parseInt(value)
-      //     this.detailsData.push(temp)
-      //   }
-      // }
       record.doclinequantity = value
       this.detailsData = this.detailsData.map((item, index) => {
         return { ...item, doclineno: index + 1 }
@@ -696,8 +690,18 @@ export default {
     },
     handleSubmit(e) {
       this.status = 1
-      this.submit()
-      this.addinit()
+      var isError = false
+      for (const key in this.detailsData) {
+        if (this.detailsData[key].doclinequantity == undefined) {
+          isError = true
+        }
+      }
+      if (isError) {
+        this.$message.info('明细数量不能为空！')
+      } else {
+        this.submit()
+        this.addinit()
+      }
     },
     getFormdata() {
       this.modalname = this.$route.query.menu
@@ -782,7 +786,16 @@ export default {
     // 返回到清单页面
     Back(e) {
       this.status = 2
+       for (const key in this.detailsData) {
+        if (this.detailsData[key].doclinequantity == undefined) {
+          isError = true
+        }
+      }
+      if (isError) {
+        this.$message.info('明细数量不能为空！')
+      } else {
       this.submit()
+      }
 
       // 路由跳转
     },

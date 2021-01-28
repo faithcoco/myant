@@ -22,7 +22,7 @@
       <a-row :gutter="24">
         <a-col :xl="24" :lg="24" :md="24" :sm="24" :xs="24">
           <a-card title="我的任务" :bordered="false">
-            <a-tabs default-active-key="1" @change="callback">
+            <a-tabs v-model="currentkey" @change="callback">
               <a-tab-pane key="1" tab="待办">
                 <a-table :columns="columns" :data-source="data">
                   <a slot="billcode" slot-scope="text, record" @click="handleClick(record)">{{ text }}</a>
@@ -46,8 +46,8 @@
           <a-card title="我的消息" :bordered="false">
             <a-list item-layout="horizontal" :data-source="messageData">
               <a-list-item slot="renderItem" slot-scope="item, index">
-                <a-list-item-meta   :description="item.time">
-                  <a slot="title" href="https://www.antdv.com/">{{ item.sendpersonname+":"+item.title}}</a>
+                <a-list-item-meta :description="item.time">
+                  <a slot="title" href="https://www.antdv.com/">{{ item.sendpersonname + ':' + item.title }}</a>
                   <a-avatar slot="avatar" src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
                 </a-list-item-meta>
               </a-list-item>
@@ -84,6 +84,13 @@ import { getData } from '@/api/manage'
 const DataSet = require('@antv/data-set')
 
 const columns = [
+   {
+    title: '序号',
+    width: 50,
+    dataIndex: 'sn',
+    key: 'sn',
+    scopedSlots: { customRender: 'sn' },
+  },
   {
     title: '业务单号',
     width: 100,
@@ -99,7 +106,7 @@ const columns = [
   },
   {
     title: '业务类别',
-    width: 200,
+    width: 100,
     dataIndex: 'businessname',
     key: 'businessname',
   },
@@ -112,7 +119,7 @@ const columns = [
   },
   {
     title: '天数',
-    width: 60,
+    width: 50,
     dataIndex: 'days',
     key: 'days',
     sorter: (a, b) => a.days - b.days,
@@ -155,6 +162,7 @@ export default {
       activities: [],
       teams: [],
       messageData: [],
+      currentkey: "1",
       // data
     }
   },
@@ -176,8 +184,9 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
+        this.currentkey='1'
         this.getPending(1)
-        this.getMessage()
+        this.this.getMessage()
       },
       // 深度观察监听
     },
@@ -216,7 +225,7 @@ export default {
       getData(params, '/desk/getPendingpprovalList').then((res) => {
         this.data = res.result
         this.data = this.data.map((item, index) => {
-          return { ...item, commitdate: moment(item.commitdate).format('YYYY-MM-DD HH:mm') }
+          return { ...item, commitdate: moment(item.commitdate).format('YYYY-MM-DD HH:mm'),sn:index+1 }
         })
         console.log('getPending res-->', JSON.stringify(res))
       })

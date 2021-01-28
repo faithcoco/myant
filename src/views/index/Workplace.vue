@@ -227,7 +227,7 @@ export default {
         this.data = this.data.map((item, index) => {
           return { ...item, commitdate: moment(item.commitdate).format('YYYY-MM-DD HH:mm'),sn:index+1 }
         })
-        console.log('getPending res-->', JSON.stringify(res))
+       
       })
     },
   },

@@ -7,7 +7,7 @@
         @change="handleTabClick"
       >
         <a-tab-pane key="2" tab="账号密码登录">
-          <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px" message="账户或密码错误" />
+          <a-alert v-if="isLoginError" type="error" showIcon style="margin-bottom: 24px" :message="message" />
           <a-form-item>
             <a-input
               size="large"
@@ -161,6 +161,7 @@ export default {
         loginType: 0,
         smsSendBtn: false,
       },
+      message:'',
       radioValue: '',
       radioStyle: {
         display: 'block',
@@ -195,7 +196,7 @@ export default {
       console.log('login params-->', JSON.stringify(loginParams))
       Login(loginParams)
         .then((res) => this.loginSuccess(res))
-        .catch((err) => console.log(err))
+        .catch((err) =>   this.requestFailed(err))
         .finally(() => {
           state.loginBtn = false
         })
@@ -327,6 +328,7 @@ export default {
       this.isLoginError = false
     },
     requestFailed(err) {
+      this.message=err
       this.isLoginError = true
     },
   },

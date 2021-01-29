@@ -18,7 +18,7 @@
       <a-col :span="19">
         <a-form layout="vertical">
           <a-form-item :required="false">
-            固定审批流
+            审批流
             <a-switch default-checked @change="onChange" />
           </a-form-item>
           <a-form-item label :required="false"

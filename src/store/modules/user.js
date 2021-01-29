@@ -44,12 +44,15 @@ const user = {
         login(userInfo).then(response => {
           const result = response.result
           console.log('login res-->', JSON.stringify(response))
-          Vue.ls.set(ACCESS_TOKEN, result.userToken, 7 * 24 * 60 * 60 * 1000)
+          if (response.status == 'FAILED') {
+            reject(response.errorMsg)
+          } else {
+            Vue.ls.set(ACCESS_TOKEN, result.userToken, 7 * 24 * 60 * 60 * 1000)
+            Vue.ls.set(logininfo, result)
+            commit('SET_TOKEN', result.userToken)
+            resolve()
+          }
 
-          Vue.ls.set(logininfo, result)
-          commit('SET_TOKEN', result.userToken)
-
-          resolve()
         }).catch(error => {
           reject(error)
         })

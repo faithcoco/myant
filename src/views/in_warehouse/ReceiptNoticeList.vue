@@ -297,7 +297,7 @@ export default {
       parameter.memuid = this.menuid
       parameter.bizid = record.docid
       var url = '/work/recallProcess'
-     
+
       console.log('cancel-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
@@ -328,7 +328,7 @@ export default {
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
           this.$message.info('提交审批成功')
-           this.getList()
+          this.getList()
         } else {
           this.$message.info(res.errorMsg)
         }
@@ -341,7 +341,11 @@ export default {
       console.log('delete params--->', JSON.stringify(columnsParams))
       getData(columnsParams, this.urlDelete).then((res) => {
         console.log('delete res-->', JSON.stringify(res))
-        this.getList()
+        if (res.status == 'FAILED') {
+          this.$message.info(res.errorMsg)
+        } else {
+          this.getList()
+        }
       })
     },
     initData(name) {

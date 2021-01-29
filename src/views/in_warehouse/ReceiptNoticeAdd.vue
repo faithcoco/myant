@@ -157,12 +157,12 @@
             <a-button type="primary" style="margin-right: 10px" v-show="cancelVisilbe" @click="cancelClick"
               >撤回审批</a-button
             >
-
-            <a-button type="primary" ref="submit" style="margin-right: 10px" v-show="saveVisible" @click="handleSubmit"
+            <!--新增按钮 -->
+            <a-button type="primary" ref="submit" style="margin-right: 10px"  @click="handleSubmit" v-if="this.$route.query.tag == 1"
               >存为草稿</a-button
             >
-
-            <a-button type @click="Back" style="margin-right: 10px" v-show="saveVisible">保存送审</a-button>
+            <a-button type @click="Back" style="margin-right: 10px" v-if="this.$route.query.tag == 1" >保存送审</a-button>
+             <a-button type @click="handleSubmit" style="margin-right: 10px" v-show="approvalVisilbe"  >保存</a-button>
           </a-col>
         </a-row>
       </a-card>
@@ -247,7 +247,6 @@ export default {
       approvalprocess: '', //1审批流启用 2审批流未启用
       businessname: '',
       splitmodal_visible: false,
-
       splitQuantity: '',
     }
   },
@@ -364,7 +363,7 @@ export default {
             .then((res) => {
               console.log('submit--->', JSON.stringify(res))
               if (res.status == 'SUCCESS') {
-                this.detailsData = []
+              
                 if (this.$route.query.tag == 2) {
                   //编辑
                   if (this.status == 1) {
@@ -379,7 +378,7 @@ export default {
                   this.billcode = res.result.billcode
                   this.businessname = values.businessclassname
                   this.approvalprocess = values.approvalprocess
-                  this.addinit()
+                 5
                   if (this.status == 2) {
                     this.submitApproval()
                   }
@@ -420,6 +419,7 @@ export default {
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
           this.$message.info('提交审批成功')
+          this.getFormdata()
         } else {
           console.log('approval error-->', res)
           this.$message.info(res.errorMsg)
@@ -700,7 +700,7 @@ export default {
         this.$message.info('明细数量不能为空！')
       } else {
         this.submit()
-        this.addinit()
+       
       }
     },
     getFormdata() {
@@ -783,9 +783,11 @@ export default {
         }, 500)
       })
     },
+
     // 返回到清单页面
     Back(e) {
       this.status = 2
+      var isError=false
        for (const key in this.detailsData) {
         if (this.detailsData[key].doclinequantity == undefined) {
           isError = true

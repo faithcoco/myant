@@ -278,9 +278,7 @@ export default {
       this.detailsData.push(temp)
 
       record.doclinequantity = this.splitQuantity
-      this.detailsData = this.detailsData.map((item, index) => {
-        return { ...item, doclineno: index + 1 }
-      })
+     
       this.splitmodal_visible = false
       this.splitQuantity = ''
     },

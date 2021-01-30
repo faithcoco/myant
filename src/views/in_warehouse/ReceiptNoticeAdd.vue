@@ -158,11 +158,18 @@
               >撤回审批</a-button
             >
             <!--新增按钮 -->
-            <a-button type="primary" ref="submit" style="margin-right: 10px"  @click="handleSubmit" v-if="this.$route.query.tag == 1"
+            <a-button
+              type="primary"
+              ref="submit"
+              style="margin-right: 10px"
+              @click="handleSubmit"
+              v-if="this.$route.query.tag == 1"
               >存为草稿</a-button
             >
-            <a-button type @click="Back" style="margin-right: 10px" v-if="this.$route.query.tag == 1" >保存送审</a-button>
-             <a-button type @click="handleSubmit" style="margin-right: 10px" v-show="approvalVisilbe"  >保存</a-button>
+            <a-button type @click="Back" style="margin-right: 10px" v-if="this.$route.query.tag == 1"
+              >保存送审</a-button
+            >
+            <a-button type @click="handleSubmit" style="margin-right: 10px" v-show="approvalVisilbe">保存</a-button>
           </a-col>
         </a-row>
       </a-card>
@@ -363,7 +370,6 @@ export default {
             .then((res) => {
               console.log('submit--->', JSON.stringify(res))
               if (res.status == 'SUCCESS') {
-              
                 if (this.$route.query.tag == 2) {
                   //编辑
                   if (this.status == 1) {
@@ -378,7 +384,7 @@ export default {
                   this.billcode = res.result.billcode
                   this.businessname = values.businessclassname
                   this.approvalprocess = values.approvalprocess
-                 5
+                  5
                   if (this.status == 2) {
                     this.submitApproval()
                   }
@@ -694,13 +700,18 @@ export default {
       for (const key in this.detailsData) {
         if (this.detailsData[key].doclinequantity == undefined) {
           isError = true
+          this.$message.info('明细数量不能为空！')
+          return
+        } else if (parseInt(this.detailsData[key].doclinequantity) < 1) {
+          isError = true
+          this.$message.info('明细数量必须大于0！')
+          return
         }
       }
       if (isError) {
         this.$message.info('明细数量不能为空！')
       } else {
         this.submit()
-       
       }
     },
     getFormdata() {
@@ -787,18 +798,21 @@ export default {
     // 返回到清单页面
     Back(e) {
       this.status = 2
-      var isError=false
-       for (const key in this.detailsData) {
+      var isError = false
+      for (const key in this.detailsData) {
         if (this.detailsData[key].doclinequantity == undefined) {
           isError = true
+          this.$message.info('明细数量不能为空！')
+          return
+        } else if (parseInt(this.detailsData[key].doclinequantity) < 1) {
+          isError = true
+          this.$message.info('明细数量必须大于0！')
+          return
         }
       }
-      if (isError) {
-        this.$message.info('明细数量不能为空！')
-      } else {
-      this.submit()
+      if (!isError) {
+        this.submit()
       }
-
       // 路由跳转
     },
     // 打印

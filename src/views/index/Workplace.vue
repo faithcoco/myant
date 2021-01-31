@@ -186,7 +186,7 @@ export default {
       handler: function (val, oldVal) {
         this.currentkey='1'
         this.getPending(1)
-        this.this.getMessage()
+        this.getMessage()
       },
       // 深度观察监听
     },

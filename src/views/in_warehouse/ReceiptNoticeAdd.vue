@@ -283,11 +283,12 @@ export default {
       this.splitQuantity = ''
     },
     addinit() {
-      if (this.status == 1) {
-        this.getFormdata()
-      } else if (this.status == 2) {
-        this.$multiTab.closeCurrentPage()
-      }
+       this.$multiTab.closeCurrentPage()
+      // if (this.status == 1) {
+      //   this.getFormdata()
+      // } else if (this.status == 2) {
+       
+      // }
     },
 
     onClick({ key }) {
@@ -361,7 +362,7 @@ export default {
           values.vendorid = this.vendorid
           values.businessclasscode = this.businessclassid
           values.warehouseid = this.warehouseid
-         // values.approvalprocess = values.approvalprocess.join()
+          values.approvalprocess = values.approvalprocess.join()
           console.log('submit url-->', submitUrl)
           console.log('submit parameter-->', JSON.stringify(values))
           submitForm(values, submitUrl)
@@ -382,9 +383,12 @@ export default {
                   this.billcode = res.result.billcode
                   this.businessname = values.businessclassname
                   this.approvalprocess = values.approvalprocess
-                  5
+                  
                   if (this.status == 2) {
                     this.submitApproval()
+                    this.addinit()
+                  }else if(this.status==1){
+                    this.addinit()
                   }
                 }
               }
@@ -708,8 +712,10 @@ export default {
       }
       if (isError) {
         this.$message.info('明细数量不能为空！')
+        isError=false
       } else {
         this.submit()
+        //this.addinit()
       }
     },
     getFormdata() {

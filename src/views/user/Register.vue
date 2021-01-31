@@ -302,7 +302,7 @@ export default {
         if (res.status == 'SUCCESS') {
           this.$router.push({
             name: `registerResult`, // 这里只能是name，对应路由
-            params: { EnterpriseName: this.data.enterprisename },
+            query: { EnterpriseName: this.data.enterprisename },
           })
         } else {
           this.$message.error(res.errorMsg)

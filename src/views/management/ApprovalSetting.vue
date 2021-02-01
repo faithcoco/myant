@@ -172,7 +172,7 @@ export default {
         if (res.status == 'SUCCESS') {
           this.$message.info('保存成功')
         } else {
-          this.$message.error(res.status)
+          this.$message.error(res.errorMsg)
         }
       })
     },

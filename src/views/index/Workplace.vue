@@ -1,7 +1,7 @@
 <template>
   <page-view :avatar="avatar" :title="false">
     <div slot="headerContent">
-      <div class="title">{{ timeFix }}，{{ user.name }}</div>
+      <div class="title">{{ timeFix }}，{{ nickname }}</div>
       <div>hello world</div>
     </div>
     <div slot="extra">
@@ -62,8 +62,8 @@
 <script>
 import moment from 'moment'
 import { timeFix } from '@/utils/util'
-import { mapState } from 'vuex'
 import Vue from 'vue'
+import { mapGetters } from 'vuex'
 import { PageView } from '@/layouts'
 import HeadInfo from '@/components/tools/HeadInfo'
 import {
@@ -84,7 +84,7 @@ import { getData } from '@/api/manage'
 const DataSet = require('@antv/data-set')
 
 const columns = [
-   {
+  {
     title: '序号',
     width: 50,
     dataIndex: 'sn',
@@ -154,29 +154,26 @@ export default {
       loading: true,
       timeFix: timeFix(),
       avatar: '',
-      user: {},
-
       projects: [],
       loading: true,
       radarLoading: true,
       activities: [],
       teams: [],
       messageData: [],
-      currentkey: "1",
+      currentkey: '1',
       // data
     }
   },
   computed: {
-    ...mapState({
-      nickname: (state) => state.user.nickname,
-      welcome: (state) => state.user.welcome,
-    }),
+   
+    ...mapGetters(['nickname', 'welcome']),
     userInfo() {
       return this.$store.getters.userInfo
     },
   },
+
   created() {
-    this.user = this.userInfo
+
     this.avatar = this.userInfo.avatar
     this.getPending(1)
     this.getMessage()
@@ -184,7 +181,7 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-        this.currentkey='1'
+        this.currentkey = '1'
         this.getPending(1)
         this.getMessage()
       },
@@ -225,9 +222,8 @@ export default {
       getData(params, '/desk/getPendingpprovalList').then((res) => {
         this.data = res.result
         this.data = this.data.map((item, index) => {
-          return { ...item, commitdate: moment(item.commitdate).format('YYYY-MM-DD HH:mm'),sn:index+1 }
+          return { ...item, commitdate: moment(item.commitdate).format('YYYY-MM-DD HH:mm'), sn: index + 1 }
         })
-       
       })
     },
   },

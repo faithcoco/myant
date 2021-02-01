@@ -285,10 +285,8 @@ import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
 import moment from 'moment'
 import { mapActions } from 'vuex'
-import { welcome } from '@/utils/util'
 import AvatarModal from '../settings/AvatarModal'
 import { getBaseenterpriseInfo, updateBaseenterprise, postData } from '@/api/manage'
-import { mapGetters } from 'vuex'
 import { retrievePsdSendSMSregister } from '@/api/register'
 import { logininfo } from '@/store/mutation-types'
 import { getCompanyList } from '@/api/login'
@@ -403,7 +401,7 @@ export default {
             this.enterprisestatusname = '已注销'
             this.color = 'black'
           }
-          this.$store.commit('SET_NAME', { name: res.result.enterprisename, welcome: welcome() })
+         
         })
         .catch((err) => {})
     },
@@ -605,7 +603,7 @@ export default {
       this.$router.push({ path: '/Newbusiness' })
     },
     setavatar(url) {
-      console.log('--------->', url)
+    
       this.option.img = url
     },
     pCancel() {
@@ -644,13 +642,13 @@ export default {
           setTimeout(() => {
             //判断valid是否等于true
             const data = {}
-            data.enterpriseid = this.baseenterprisePO.enterpriseid
+            data.enterpriseid = this.form.enterpriseid
             data.enterprisename = this.form.enterprisename
             data.enterpriseaddress = this.form.enterpriseaddress
             data.enterprisecontact = this.form.enterprisecontact
             data.enterprisetel = this.form.enterprisetel
             data.enterprisephone = this.form.enterprisephone
-            console.log(data)
+            console.log('update enterprise-->',data)
             updateBaseenterprise(data)
               .then((res) => {
                 console.log('updateBaseenterprise-->', res)
@@ -659,6 +657,7 @@ export default {
                   this.$message.info('保存成功！')
                   this.companyVisible = false
                   //   提示用户信息
+                   this.$store.commit('SET_ENTERPRISENAME', data.enterprisename)
                 }
               })
               .catch((err) => {

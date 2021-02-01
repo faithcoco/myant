@@ -227,6 +227,8 @@ import Slider from '@/components/tools/Slider'
 import { formModel, Button } from 'ant-design-vue'
 Vue.use(formModel, Button)
 import { mapGetters } from 'vuex'
+import { mapActions } from 'vuex'
+import { welcome } from '@/utils/util'
 import { retrievePsdSendSMSregister } from '@/api/register'
 import { forgetPasswordlogin } from '@/api/ForgotPassword'
 import { logininfo } from '@/store/mutation-types'
@@ -259,7 +261,7 @@ export default {
       form: {
         enterprisephone: '',
         DepartmentID: '开发部',
-        PersonName: 'curry',
+        personname: 'curry',
         PersonPhone: '',
         PersonCode: '无',
         PersonBeginTime: '2020.9.9',
@@ -501,18 +503,18 @@ export default {
             console.log('update userinfo-->', JSON.stringify(data))
             updateBaseperson(data)
               .then((res) => {
-                console.log('updateBaseperson--->', res)
                 if (res.status == 'SUCCESS') {
                   this.$message.info('保存成功！')
                   this.editVisible = false
                   this.visible = true
+                  this.$store.commit('SET_NAME', { name: data.personname, welcome: welcome() })
                   //提示用户信息
                 } else {
                   this.$message.warn(res.errorMsg)
                 }
               })
               .catch((err) => {
-                console.log('错误------》', err)
+                console.log('error-->', err)
               })
           } else {
             // 等于false

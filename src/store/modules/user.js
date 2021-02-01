@@ -7,6 +7,7 @@ const user = {
   state: {
     token: '',
     name: '',
+    enterprisename:'',
     welcome: '',
     avatar: '',
     roles: [],
@@ -24,6 +25,9 @@ const user = {
     SET_NAME: (state, { name, welcome }) => {
       state.name = name
       state.welcome = welcome
+    },
+    SET_ENTERPRISENAME: (state,enterprisename) => {
+      state.enterprisename = enterprisename
     },
     SET_AVATAR: (state, avatar) => {
       state.avatar = avatar
@@ -89,8 +93,8 @@ const user = {
           console.log("getinfo--->", JSON.stringify(result))
 
           commit('SET_AVATAR', result.avatar)
-          commit('SET_NAME', { name: result.enterprisename, welcome: welcome() })
-
+          commit('SET_NAME', { name: result.name, welcome: welcome() })
+          commit('SET_ENTERPRISENAME',result.enterprisename)
           resolve(response)
         }).catch(error => {
           reject(error)

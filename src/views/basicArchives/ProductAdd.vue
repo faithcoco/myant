@@ -67,14 +67,11 @@ Vue.use(Cascader)
 import { PageHeader } from 'ant-design-vue'
 Vue.use(PageHeader)
 Vue.use(formModel, Button)
-import { postProductAdd } from '@/api/manage'
-import { logininfo, menuname } from '@/store/mutation-types'
-import { getForm, submitForm, postData, getData } from '@/api/manage'
+import { logininfo} from '@/store/mutation-types'
+import { getForm, submitForm} from '@/api/manage'
 import { Form } from 'ant-design-vue'
 Vue.use(Form)
 import { TreeSelect } from 'ant-design-vue'
-import { keys } from 'mockjs2'
-import ReturnNoticeClientListVue from '../OperationsCenter/ReturnNoticeClientList.vue'
 Vue.use(TreeSelect)
 
 const numberRow = []

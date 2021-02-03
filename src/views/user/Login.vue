@@ -246,6 +246,7 @@ export default {
           console.log('enterpriseid params-->', loginParams)
           getCompanyList(loginParams)
             .then((res) => {
+              console.log('error-->',JSON.stringify(res))
               if (res.status == 'FAILED') {
                 this.requestFailed(res.errorMsg)
                 state.loginBtn = false

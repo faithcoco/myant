@@ -225,7 +225,7 @@ export default {
     onSelect(selectedKeys, info) {
       this.checkedKeys = []
       this.checkedKeys.push(selectedKeys[0])
-      console.log('onselect-->', this.checkedKeys)
+      console.log('onselect-->', selectedKeys)
       this.materialclassid = selectedKeys.join()
       this.getList()
     },
@@ -255,7 +255,7 @@ export default {
       Vue.ls.set(menuname, this.$route.name)
       this.$router.push({
         name: 'ClassificationGoods',
-        params: {
+        query: {
           menu: this.$route.name,
         },
       })
@@ -264,12 +264,12 @@ export default {
       Vue.ls.set(menuname, this.$route.name)
       this.$router.push({
         name: 'ProductAdd',
-        params: {
+        query: {
           menu: this.$route.name,
           menuid: this.menuid,
           materialclassid: this.materialclassid,
           tag: 1,
-          title: this.$route.meta.title,
+          baseTitle: this.$route.meta.title,
         },
       })
     },
@@ -286,7 +286,7 @@ export default {
           materialid: this.materialid,
           tag: 2,
           menuid: this.menuid,
-          title: this.$route.meta.title,
+          baseTitle: this.$route.meta.title,
         },
       })
     },

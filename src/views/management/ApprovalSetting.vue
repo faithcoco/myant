@@ -19,7 +19,7 @@
         <a-form layout="vertical">
           <a-form-item :required="false">
             审批流
-            <a-switch default-checked @change="onChange" />
+            <a-switch v-model="enablestatus" @change="onChange" />
           </a-form-item>
           <a-form-item label :required="false"
             >开启后，将按照锁设置的审批流程进行，若需要自由审批，则关闭即可</a-form-item
@@ -121,6 +121,7 @@ export default {
         node3: [],
       },
       node1: [],
+      enablestatus:true
     }
   },
   created() {
@@ -142,6 +143,7 @@ export default {
     })
   },
   methods: {
+   
     getSelect() {
       const parameter = {
         enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
@@ -164,10 +166,12 @@ export default {
         enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
         memuid: this.menuid,
         nameList: this.submit,
+        enablestatus:this.enablestatus
       }
       var url = '/work/insertWorkflow'
+      console.log('insertWorkflow-->',JSON.stringify(parameter))
       postData(parameter, url).then((res) => {
-        console.log('name ->', JSON.stringify(res))
+      
 
         if (res.status == 'SUCCESS') {
           this.$message.info('保存成功')
@@ -194,7 +198,7 @@ export default {
       this.submit.node3 = value
     },
     onChange(checked) {
-      console.log(`a-switch to ${checked}`)
+      this.enablestatus=checked
     },
     handleClick(e) {
       this.menuid = e.key

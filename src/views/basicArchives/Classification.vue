@@ -145,7 +145,7 @@ export default {
         this.urlAdd = '/bd/warehouse/insterWarehouseClass'
         this.urlDelete = '/bd/warehouse/delWarehouseClass'
         this.urlUpdate = '/bd/warehouse/updateWarehouseClass'
-        this.columns[1].dataIndex = 'materialclasscode'
+        this.columns[1].dataIndex = 'warehouseclasscode'
         this.columns[0].title = '仓位分类名称'
         this.columns[1].title = '仓位分类编号'
       }
@@ -198,8 +198,9 @@ export default {
         console.log('add res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.getList()
+        } else {
+          this.$message.info(res.errorMsg)
         }
-        this.$message.info(res.errorMsg)
       })
     },
     update() {

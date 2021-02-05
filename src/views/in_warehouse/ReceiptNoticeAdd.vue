@@ -156,16 +156,16 @@
               approvalText
             }}</a-button>
             <!--新增按钮 -->
-            <a-button
+            <!-- <a-button
               type="primary"
               ref="submit"
               style="margin-right: 10px"
               @click="handleSubmit"
               v-if="this.isEdit == false"
               >存为草稿</a-button
-            >
+            > -->
             <a-button type @click="submitEdit" style="margin-right: 10px" v-if="this.isEdit == false"
-              >保存编辑</a-button
+              >存为草稿</a-button
             >
             <a-button type @click="Back" style="margin-right: 10px" v-if="this.isEdit == false"
               >保存送审</a-button
@@ -182,7 +182,7 @@
 
 <script>
 import Vue from 'vue'
-import { formModel, Button, Tree } from 'ant-design-vue'
+import { formModel, Button } from 'ant-design-vue'
 import { Cascader } from 'ant-design-vue'
 Vue.use(Cascader)
 import { PageHeader } from 'ant-design-vue'
@@ -255,8 +255,8 @@ export default {
       businessname: '',
       splitmodal_visible: false,
       splitQuantity: '',
-      approvalText: '审批',
-      isEdit: false,
+      approvalText: '',
+      isEdit:false,
     }
   },
   created() {

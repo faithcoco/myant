@@ -151,21 +151,28 @@
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
             <a-button type="primary" @click="print" style="margin-right: 10px">打印</a-button>
-           
-            <a-button type="primary" style="margin-right: 10px"  v-show="approval_visible" @click="approvalClick">{{ approvalText }}</a-button>
+
+            <a-button type="primary" style="margin-right: 10px" v-show="isEdit" @click="approvalClick">{{
+              approvalText
+            }}</a-button>
             <!--新增按钮 -->
             <a-button
               type="primary"
               ref="submit"
               style="margin-right: 10px"
               @click="handleSubmit"
-              v-if="this.$route.query.tag == 1"
+              v-if="this.isEdit == false"
               >存为草稿</a-button
             >
-            <a-button type @click="Back" style="margin-right: 10px" v-if="this.$route.query.tag == 1"
+            <a-button type @click="submitEdit" style="margin-right: 10px" v-if="this.isEdit == false"
+              >保存编辑</a-button
+            >
+            <a-button type @click="Back" style="margin-right: 10px" v-if="this.isEdit == false"
               >保存送审</a-button
             >
-            <a-button type @click="handleSubmit" style="margin-right: 10px"  v-if="this.approvalText=='提交审批'" >保存</a-button>
+            <a-button type @click="handleSubmit" style="margin-right: 10px" v-if="this.approvalText == '提交审批'"
+              >保存</a-button
+            >
           </a-col>
         </a-row>
       </a-card>
@@ -236,7 +243,6 @@ export default {
       businessclassid: '',
       spinning: false,
       name: '',
-
       approveStatus: 8,
       destroyOnClose: true,
       menu: '',
@@ -244,14 +250,13 @@ export default {
       stockincode: '',
       billcode: '',
       currentRecord: '',
-
-      approval_visible:true,
       continueVisible: true,
       approvalprocess: false, //1审批流启用 2审批流未启用
       businessname: '',
       splitmodal_visible: false,
       splitQuantity: '',
       approvalText: '审批',
+      isEdit: false,
     }
   },
   created() {
@@ -299,8 +304,8 @@ export default {
       }
     },
     approvalClick(e) {
-      if ((this.approvalText = '提交审批')) {
-         this.submitApproval()
+      if (this.approvalText == '提交审批') {
+        this.submitApproval()
       } else {
         const parameter = {}
         parameter.memuid = this.menuid
@@ -318,7 +323,7 @@ export default {
         })
       }
     },
-  
+
     split(record) {
       this.splitmodal_visible = true
     },
@@ -335,6 +340,23 @@ export default {
       }
     },
     submit() {
+      var isError = false
+      for (const key in this.detailsData) {
+        if (this.detailsData[key].doclinequantity == undefined) {
+          isError = true
+          this.$message.info('明细数量不能为空！')
+          return
+        } else if (parseInt(this.detailsData[key].doclinequantity) < 1) {
+          isError = true
+          this.$message.info('明细数量必须大于0！')
+          return
+        }
+      }
+      if (isError) {
+        this.$message.info('明细数量不能为空！')
+        isError = false
+        return
+      }
       this.form.validateFields((err, values) => {
         if (!err) {
           if (this.$route.query.tag == 1) {
@@ -389,7 +411,11 @@ export default {
                     this.submitApproval()
                     this.addinit()
                   } else if (this.status == 1) {
-                    this.addinit()
+                    this.isEdit=true
+                    this.getList(this.menu, this.materialid, 0)
+                    this.getFormdata()
+                    this.getColumns()
+                    // this.addinit()
                   }
                 }
               }
@@ -442,21 +468,21 @@ export default {
     initdata() {
       this.spinning = true
       this.menu = this.$route.query.menu
-      console.log('add menu-->', this.$route)
-      if (this.$route.query.menu == 'ReceiptNoticeList') {
+      if (this.menu == 'ReceiptNoticeList') {
         this.memuid = '03bf0fb1-e9fb-4014-92e7-7121f4f72003'
-      } else if (this.$route.query.menu == 'StorageManagementList') {
+      } else if (this.menu == 'StorageManagementList') {
         this.memuid = '03bf0fb1-e9fb-4014-92e7-7121f4f72002'
       } else {
         return
       }
       this.materialid = this.$route.query.materialid
+
       console.log('route-->', this.$route)
       if (this.$route.query.tag == 2) {
-        this.approval_visible=true
-        this.getList(this.$route.query.menu, this.$route.query.materialid, 0)
+        this.isEdit = true
+        this.getList(this.menu, this.materialid, 0)
       } else {
-         this.approval_visible=false
+        this.isEdit = false
         this.detailsData = []
       }
       this.getFormdata()
@@ -697,27 +723,12 @@ export default {
         this.visible = true
       }
     },
+    submitEdit(e) {
+      this.submit()
+    },
     handleSubmit(e) {
       this.status = 1
-      var isError = false
-      for (const key in this.detailsData) {
-        if (this.detailsData[key].doclinequantity == undefined) {
-          isError = true
-          this.$message.info('明细数量不能为空！')
-          return
-        } else if (parseInt(this.detailsData[key].doclinequantity) < 1) {
-          isError = true
-          this.$message.info('明细数量必须大于0！')
-          return
-        }
-      }
-      if (isError) {
-        this.$message.info('明细数量不能为空！')
-        isError = false
-      } else {
-        this.submit()
-        //this.addinit()
-      }
+      this.submit()
     },
     getFormdata() {
       this.modalname = this.$route.query.menu
@@ -726,8 +737,7 @@ export default {
       columnsParams.memuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
 
-      if (this.$route.query.tag == 1) {
-
+      if (this.isEdit == false) {
         this.continueVisible = true
 
         this.title = this.$route.query.storageTitle + '新增'
@@ -737,14 +747,13 @@ export default {
         } else if (this.$route.query.menu == 'StorageManagementList') {
           this.urlForm = '/bd/Stockinrecord/insterForm'
         }
-      } else if (this.$route.query.tag == 2) {
-
-        this.approvalText='提交审批'
+      } else if (this.isEdit) {
+        this.approvalText = '提交审批'
         this.title = this.$route.query.storageTitle + '编辑'
 
-        if (this.$route.query.menu == 'ReceiptNoticeList') {
+        if (this.menu == 'ReceiptNoticeList') {
           this.urlForm = '/bd/docreceiptnotice/updateform'
-        } else if (this.$route.query.menu == 'StorageManagementList') {
+        } else if (this.menu == 'StorageManagementList') {
           this.urlForm = '/bd/Stockinrecord/updateForm'
         }
         columnsParams.docid = this.materialid
@@ -754,7 +763,6 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       this.data = []
       getForm(columnsParams, this.urlForm).then((res) => {
-        console.log('res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = res.result.form
           this.approvalprocess = res.result.data.enabledStatus
@@ -778,13 +786,14 @@ export default {
             } else if (this.data[i].key == 'businessclassname') {
               this.businessname = this.data[i].value
             } else if (this.data[i].key == 'ApproveStatus') {
-              if (this.$route.query.tag == 2) {
+              
+              if (this.isEdit) {
                 this.continueVisible = false
                 if (this.data[i].value == 3) {
-                  this.approvalText='撤回审批'
+                  this.approvalText = '撤回审批'
                   //撤回
                 } else if (this.data[i].value == 8) {
-                  this.approvalText="提交审批"
+                  this.approvalText = '提交审批'
                   //提交
                 } else {
                   //都不显示

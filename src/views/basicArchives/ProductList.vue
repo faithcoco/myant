@@ -30,7 +30,7 @@
           <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容" />
 
           <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
-            <a-button style="margin-left: 5px" type="primary" @click="add()">新增</a-button>
+            <a-button  type="primary" @click="add()">新增</a-button>
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
           </span>

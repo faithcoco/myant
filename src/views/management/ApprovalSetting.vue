@@ -5,7 +5,6 @@
         <div class="approvalTree">
           <s-tree
             :dataSource="approvalSettinTree"
-           
             :search="true"
             @click="handleClick"
             @add="handleAdd"
@@ -121,7 +120,7 @@ export default {
         node3: [],
       },
       node1: [],
-      enablestatus:true
+      enablestatus: undefined,
     }
   },
   created() {
@@ -143,7 +142,6 @@ export default {
     })
   },
   methods: {
-   
     getSelect() {
       const parameter = {
         enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
@@ -151,14 +149,14 @@ export default {
       }
       var url = '/work/getWorkFlowSetInfo'
       getData(parameter, url).then((res) => {
-        console.log('approval init-->',JSON.stringify(res))
+        console.log('approval init-->', JSON.stringify(res))
         this.submit.node1 = res.result.node1.map((item) => item.key)
         this.submit.node2 = res.result.node2.map((item) => item.key)
         this.submit.node3 = res.result.node3.map((item) => item.key)
-        this.steps[0].name=res.result.node1.map((item) => item.name).join()
-         this.steps[1].name=res.result.node2.map((item) => item.name).join()
-          this.steps[2].name=res.result.node3.map((item) => item.name).join()
-       
+        this.steps[0].name = res.result.node1.map((item) => item.name).join()
+        this.steps[1].name = res.result.node2.map((item) => item.name).join()
+        this.steps[2].name = res.result.node3.map((item) => item.name).join()
+        this.enablestatus = res.result.enablestatus
       })
     },
     onSubmit(e) {
@@ -166,13 +164,11 @@ export default {
         enterpriseid: Vue.ls.get(logininfo).basepersonPO.enterpriseid,
         memuid: this.menuid,
         nameList: this.submit,
-        enablestatus:this.enablestatus
+        enablestatus: this.enablestatus,
       }
       var url = '/work/insertWorkflow'
-      console.log('insertWorkflow-->',JSON.stringify(parameter))
+      console.log('insertWorkflow-->', JSON.stringify(parameter))
       postData(parameter, url).then((res) => {
-      
-
         if (res.status == 'SUCCESS') {
           this.$message.info('保存成功')
         } else {
@@ -198,7 +194,7 @@ export default {
       this.submit.node3 = value
     },
     onChange(checked) {
-      this.enablestatus=checked
+      this.enablestatus = checked
     },
     handleClick(e) {
       this.menuid = e.key

@@ -151,12 +151,8 @@
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
             <a-button type="primary" @click="print" style="margin-right: 10px">打印</a-button>
-            <a-button type="primary" style="margin-right: 10px" v-show="approvalVisilbe" @click="approval"
-              >提交审批</a-button
-            >
-            <a-button type="primary" style="margin-right: 10px" v-show="cancelVisilbe" @click="cancelClick"
-              >撤回审批</a-button
-            >
+           
+            <a-button type="primary" style="margin-right: 10px"  v-show="approval_visible" @click="approvalClick">{{ approvalText }}</a-button>
             <!--新增按钮 -->
             <a-button
               type="primary"
@@ -169,7 +165,7 @@
             <a-button type @click="Back" style="margin-right: 10px" v-if="this.$route.query.tag == 1"
               >保存送审</a-button
             >
-            <a-button type @click="handleSubmit" style="margin-right: 10px" v-show="approvalVisilbe">保存</a-button>
+            <a-button type @click="handleSubmit" style="margin-right: 10px"  v-if="this.approvalText=='提交审批'" >保存</a-button>
           </a-col>
         </a-row>
       </a-card>
@@ -240,7 +236,7 @@ export default {
       businessclassid: '',
       spinning: false,
       name: '',
-      approvalVisilbe: false,
+
       approveStatus: 8,
       destroyOnClose: true,
       menu: '',
@@ -248,13 +244,14 @@ export default {
       stockincode: '',
       billcode: '',
       currentRecord: '',
-      saveVisible: true,
-      cancelVisilbe: false,
+
+      approval_visible:true,
       continueVisible: true,
-      approvalprocess: '', //1审批流启用 2审批流未启用
+      approvalprocess: false, //1审批流启用 2审批流未启用
       businessname: '',
       splitmodal_visible: false,
       splitQuantity: '',
+      approvalText: '审批',
     }
   },
   created() {
@@ -278,16 +275,16 @@ export default {
       this.detailsData.push(temp)
 
       record.doclinequantity = this.splitQuantity
-     
+
       this.splitmodal_visible = false
       this.splitQuantity = ''
     },
     addinit() {
-       this.$multiTab.closeCurrentPage()
+      this.$multiTab.closeCurrentPage()
       // if (this.status == 1) {
       //   this.getFormdata()
       // } else if (this.status == 2) {
-       
+
       // }
     },
 
@@ -301,22 +298,27 @@ export default {
         this.visible = true
       }
     },
-    cancelClick(e) {
-      const parameter = {}
-      parameter.memuid = this.menuid
-      parameter.bizid = this.materialid
-      var url = '/work/recallProcess'
+    approvalClick(e) {
+      if ((this.approvalText = '提交审批')) {
+         this.submitApproval()
+      } else {
+        const parameter = {}
+        parameter.memuid = this.menuid
+        parameter.bizid = this.materialid
+        var url = '/work/recallProcess'
 
-      console.log('cancel-->', JSON.stringify(parameter))
-      getData(parameter, url).then((res) => {
-        if (res.status == 'SUCCESS') {
-          this.$message.info('撤销成功')
-          this.getFormdata()
-        } else {
-          this.$message.warn(res.errorMsg)
-        }
-      })
+        console.log('cancel-->', JSON.stringify(parameter))
+        getData(parameter, url).then((res) => {
+          if (res.status == 'SUCCESS') {
+            this.$message.info('撤销成功')
+            this.getFormdata()
+          } else {
+            this.$message.warn(res.errorMsg)
+          }
+        })
+      }
     },
+  
     split(record) {
       this.splitmodal_visible = true
     },
@@ -362,7 +364,7 @@ export default {
           values.vendorid = this.vendorid
           values.businessclasscode = this.businessclassid
           values.warehouseid = this.warehouseid
-         // values.approvalprocess = values.approvalprocess.join()
+          // values.approvalprocess = values.approvalprocess.join()
           console.log('submit url-->', submitUrl)
           console.log('submit parameter-->', JSON.stringify(values))
           submitForm(values, submitUrl)
@@ -382,12 +384,11 @@ export default {
                   this.materialid = res.result.bizid
                   this.billcode = res.result.billcode
                   this.businessname = values.businessclassname
-                  this.approvalprocess = values.approvalprocess
-                  
+
                   if (this.status == 2) {
                     this.submitApproval()
                     this.addinit()
-                  }else if(this.status==1){
+                  } else if (this.status == 1) {
                     this.addinit()
                   }
                 }
@@ -415,7 +416,7 @@ export default {
       parameter.bizid = this.materialid
       parameter.memuid = this.menuid
       var url = ''
-      if (this.approvalprocess == 1) {
+      if (this.approvalprocess) {
         url = '/work/submitProcess'
         parameter.billcode = this.billcode
         parameter.businessname = this.businessname
@@ -434,9 +435,7 @@ export default {
         }
       })
     },
-    approval(e) {
-      this.submitApproval()
-    },
+
     deleteItem(record) {
       this.detailsData = this.detailsData.filter((item) => item.doclineno !== record.doclineno)
     },
@@ -454,8 +453,10 @@ export default {
       this.materialid = this.$route.query.materialid
       console.log('route-->', this.$route)
       if (this.$route.query.tag == 2) {
+        this.approval_visible=true
         this.getList(this.$route.query.menu, this.$route.query.materialid, 0)
       } else {
+         this.approval_visible=false
         this.detailsData = []
       }
       this.getFormdata()
@@ -712,7 +713,7 @@ export default {
       }
       if (isError) {
         this.$message.info('明细数量不能为空！')
-        isError=false
+        isError = false
       } else {
         this.submit()
         //this.addinit()
@@ -726,9 +727,9 @@ export default {
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
 
       if (this.$route.query.tag == 1) {
-        this.approvalVisilbe = false
+
         this.continueVisible = true
-        this.saveVisible = true
+
         this.title = this.$route.query.storageTitle + '新增'
         this.materialclassid = this.$route.query.materialclassid
         if (this.$route.query.menu == 'ReceiptNoticeList') {
@@ -737,7 +738,8 @@ export default {
           this.urlForm = '/bd/Stockinrecord/insterForm'
         }
       } else if (this.$route.query.tag == 2) {
-        this.approvalVisilbe = true
+
+        this.approvalText='提交审批'
         this.title = this.$route.query.storageTitle + '编辑'
 
         if (this.$route.query.menu == 'ReceiptNoticeList') {
@@ -752,8 +754,10 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       this.data = []
       getForm(columnsParams, this.urlForm).then((res) => {
+        console.log('res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
-          this.data = res.result
+          this.data = res.result.form
+          this.approvalprocess = res.result.data.enabledStatus
         } else {
           this.$message.info(res)
         }
@@ -777,21 +781,15 @@ export default {
               if (this.$route.query.tag == 2) {
                 this.continueVisible = false
                 if (this.data[i].value == 3) {
-                  this.cancelVisilbe = true
-                  this.approvalVisilbe = false
-                  this.saveVisible = false
+                  this.approvalText='撤回审批'
+                  //撤回
                 } else if (this.data[i].value == 8) {
-                  this.cancelVisilbe = false
-                  this.approvalVisilbe = true
-                  this.saveVisible = true
+                  this.approvalText="提交审批"
+                  //提交
                 } else {
-                  this.cancelVisilbe = false
-                  this.approvalVisilbe = false
-                  this.saveVisible = false
+                  //都不显示
                 }
               }
-            } else if (this.data[i].key == 'approvalprocess') {
-              this.approvalprocess = this.data[i].value.join()
             }
           }
           this.spinning = false

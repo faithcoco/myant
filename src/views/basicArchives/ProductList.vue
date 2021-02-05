@@ -31,7 +31,6 @@
 
           <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
             <a-button style="margin-left: 5px" type="primary" @click="add()">新增</a-button>
-
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
           </span>

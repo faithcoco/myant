@@ -255,6 +255,7 @@ export default {
       console.log(this.$route.query.menu + ' form params-->', JSON.stringify(columnsParams))
 
       getForm(columnsParams, this.urlForm).then((res) => {
+       
         this.data = res.result
         this.$multiTab.rename(this.$route.path, this.title)
 

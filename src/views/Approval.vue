@@ -311,7 +311,12 @@ export default {
       this.timelinelist=[]
       const parameter = {}
       parameter.bizid = this.materialid
-      parameter.isEnabled = this.approvalprocess.join()
+      if(this.approvalprocess){
+        parameter.isEnabled ="1"
+      }else{
+        parameter.isEnabled ="2"
+      }
+     
       console.log('timeline param-->', JSON.stringify(parameter))
       getData(parameter, '/work/getApprovalInfo').then((res) => {
         console.log('timeline-->', JSON.stringify(res))
@@ -371,19 +376,19 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
 
       getData(columnsParams, this.urlForm).then((res) => {
+         console.log('res-->',JSON.stringify(res))
         if (res.status == 'SUCCESS') {
-          
+         
           this.data = []
           this.descriptions = []
-          this.data = res.result
+          this.data = res.result.form
+          this.approvalprocess=res.result.data.enabledStatus
 
-          for (const key in res.result) {
-            if (res.result[key].key == 'ApproveStatus') {
-              this.setStatus(res.result[key].value)
-            } else if (res.result[key].key == 'approvalprocess') {
-              this.approvalprocess = res.result[key].value
+          for (const key in this.data) {
+            if (this.data[key].key == 'ApproveStatus') {
+              this.setStatus(this.data[key].value)
             } else {
-              this.descriptions.push({ label: res.result[key].title, value: res.result[key].value })
+              this.descriptions.push({ label: this.data[key].title, value: this.data[key].value })
             }
           }
            this.getTimeline()

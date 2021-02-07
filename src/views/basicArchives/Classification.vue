@@ -245,7 +245,7 @@ export default {
           this.typeName = ''
           this.typeCode = ''
         } else {
-          this.$message.warning(res.status)
+          this.$message.info(res.errorMsg)
         }
       })
     },

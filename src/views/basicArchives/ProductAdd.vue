@@ -4,7 +4,13 @@
       <div>
         <a-card>
           <div></div>
-          <a-form class="ant-advanced-search-form" :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
+          <a-form
+            class="ant-advanced-search-form"
+            :form="form"
+            :label-col="{ span: 3 }"
+            :wrapper-col="{ span: 20 }"
+            @submit="handleSubmit"
+          >
             <a-form-item v-for="item in data" :label="item.title">
               <div v-if="item.selectVisible">
                 <a-cascader
@@ -67,8 +73,8 @@ Vue.use(Cascader)
 import { PageHeader } from 'ant-design-vue'
 Vue.use(PageHeader)
 Vue.use(formModel, Button)
-import { logininfo} from '@/store/mutation-types'
-import { getForm, submitForm} from '@/api/manage'
+import { logininfo } from '@/store/mutation-types'
+import { getForm, submitForm } from '@/api/manage'
 import { Form } from 'ant-design-vue'
 Vue.use(Form)
 import { TreeSelect } from 'ant-design-vue'
@@ -102,8 +108,19 @@ export default {
       typeValue: '',
     }
   },
-  created() {
+
+  activated() {
     this.getFormdata()
+    this.$multiTab.rename(this.$route.name, this.title)
+  },
+
+  watch: {
+    $route: {
+      handler: function (val, oldVal) {
+        this.getFormdata()
+      },
+      // 深度观察监听
+    },
   },
 
   computed: {
@@ -116,16 +133,7 @@ export default {
       }
     },
   },
-  watch: {
-    $route: {
-      handler: function (val, oldVal) {
-        if (val.query.baseTitle !== undefined) {
-          this.getFormdata()
-        }
-      },
-      // 深度观察监听
-    },
-  },
+
   beforeCreate() {
     this.form = this.$form.createForm(this, { name: 'form' })
   },
@@ -197,6 +205,7 @@ export default {
     },
 
     getFormdata() {
+      console.log(this.$route.query.menu + 'is run')
       this.spinning = true
       this.menuid = this.$route.query.menuid
       const columnsParams = {}
@@ -255,9 +264,7 @@ export default {
       console.log(this.$route.query.menu + ' form params-->', JSON.stringify(columnsParams))
 
       getForm(columnsParams, this.urlForm).then((res) => {
-       
         this.data = res.result
-        this.$multiTab.rename(this.$route.path, this.title)
 
         setTimeout(() => {
           for (const i in this.data) {
@@ -338,7 +345,6 @@ export default {
 
             if (res.status == 'SUCCESS') {
               this.$multiTab.closeCurrentPage()
-              
 
               this.form.resetFields()
             }

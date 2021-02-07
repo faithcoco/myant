@@ -26,16 +26,20 @@
         <a-checkbox @change="onChange" />
       </span>
     </a-table>
-    <a-modal v-model="visible" title="类别" @ok="handleOk">
+    <a-modal v-model="visible" title="类别" @ok="handleOk" @cancel="handleCancel">
       <p>请输入类别名称：</p>
-      <a-input ref="userNameInput" v-model="typeName" placeholder />
-      <p>请输入类别编码：</p>
-      <a-input ref="userNameInput" v-model="typeCode" placeholder />
+      <p>
+        <a-input ref="userNameInput" v-model="typeName" placeholder />
+      </p>
+      <p><font color="#FF0000" v-if="this.name == 'PersonnelSetting'">*</font>请输入类别编码： </p>
+      <p>
+        <a-input ref="userNameInput" v-model="typeCode" :placeholder="codePlaceholder" />
+      </p>
     </a-modal>
   </a-card>
 </template>
 <script>
-import { getclassificationGoodsColumns, getclassificationGoodsList, insertmaterialClass, getData } from '@/api/manage'
+import { getclassificationGoodsList, insertmaterialClass, getData } from '@/api/manage'
 import { logininfo } from '@/store/mutation-types'
 import Vue from 'vue'
 export default {
@@ -89,6 +93,8 @@ export default {
       urlDelete: '',
       menuname: '',
       title: '',
+      destroyOnClose: true,
+      codePlaceholder: '',
     }
   },
   created() {
@@ -149,7 +155,7 @@ export default {
         this.columns[0].title = '仓位分类名称'
         this.columns[1].title = '仓位分类编号'
       }
-      this.$multiTab.rename(this.$route.path, this.title)
+      this.$multiTab.rename(this.$route.name, this.title)
 
       this.getList()
     },
@@ -290,7 +296,7 @@ export default {
       } else if (this.name == 'CustomerList') {
         this.typeCode = record.customerclasscode
       } else if (this.name == 'WarehouseList') {
-        this.typeCode = record.materialclasscode
+        this.typeCode = record.warehouseclasscode
       }
     },
     handleDelete(record) {
@@ -311,11 +317,20 @@ export default {
     back() {
       this.$router.go(-1)
     },
+    handleCancel(e) {
+      this.typeName = ''
+      this.typeCode = ''
+    },
     handleOk(e) {
-      this.visible = false
-
       this.materialclassname = this.typeName
       this.materialclasscode = this.typeCode
+      if (this.name == 'PersonnelSetting') {
+        if (this.materialclasscode == '') {
+          this.$message.info('部门编码不能为空')
+          return
+        }
+      }
+      this.visible = false
       if (this.tag == 1) {
         this.insertmaterialClass()
       } else if (this.tag == 2) {

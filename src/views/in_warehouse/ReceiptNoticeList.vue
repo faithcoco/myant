@@ -434,6 +434,11 @@ export default {
       }
     },
     handleAdd(e) {
+      if (this.menu == 'StorageManagementList') {
+        this.path = 'StorageManagementAdd'
+      } else if (this.menu == 'ReceiptNoticeList') {
+        this.path = 'ReceiptNoticeAdd'
+      }
       this.$router.push({
         path: this.path,
         query: {
@@ -446,9 +451,14 @@ export default {
       })
     },
     handleEdit(record) {
+      if (this.menu == 'StorageManagementList') {
+        this.path = 'StorageManagementEdit'
+      } else if (this.menu == 'ReceiptNoticeList') {
+        this.path = 'ReceiptNoticeEdit'
+      }
       this.materialid = record.docid
       this.$router.push({
-        path: 'ReceiptNoticeAdd',
+        path: this.path,
         query: {
           menu: this.$route.name,
           materialid: this.materialid,

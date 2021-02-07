@@ -27,8 +27,10 @@ export default {
     }).$on('rename', ({ key, name }) => {
       console.log('rename-->', key, name)
       try {
-        const item = this.pages.find(item => item.path === key)
+        const item = this.pages.find(item => item.name === key)
+        console.log('item-->',this.pages)
         item.meta.customTitle = name
+        
         this.$forceUpdate()
       } catch (e) {
       }

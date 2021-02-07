@@ -39,7 +39,21 @@ export const asyncRouterMap = [
             hidden: true
           },
           {
-            path: 'product-list',
+            path: 'PersonsettingEdit',
+            name: 'PersonsettingEdit',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
+            meta: { title: '部门人员档案编辑', icon: 'user' },
+            hidden: true
+          },
+          {
+            path: 'PersonsettingType',
+            name: 'PersonsettingType',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/Classification.vue'),
+            meta: { title: '部门人员档案分类', icon: 'user' },
+            hidden: true
+          },
+          {
+            path: 'ProductList',
             name: 'ProductList',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductList.vue'),
             meta: { title: '料品档案', icon: 'user', permission: ['01-02'] }
@@ -48,17 +62,23 @@ export const asyncRouterMap = [
             path: 'ProductAdd',
             name: 'ProductAdd',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
-            meta: { title: '商品档案新增' },
+            meta: { title: '料品档案新增' },
             hidden: true
           },
           {
-            path: 'Classification',
-            name: 'Classification',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/Classification.vue'),
-            meta: { title: '分类', icon: 'user' },
+            path: 'ProductEdit',
+            name: 'ProductEdit',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
+            meta: { title: '料品档案编辑', icon: 'user' },
             hidden: true
           },
-
+          {
+            path: 'ProductType',
+            name: 'ProductType',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/Classification.vue'),
+            meta: { title: '料品档案分类', icon: 'user' },
+            hidden: true
+          },
           {
             path: 'SupplierList',
             name: 'SupplierList',
@@ -70,6 +90,20 @@ export const asyncRouterMap = [
             name: 'SupplierAdd',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
             meta: { title: '供应商新增' },
+            hidden: true
+          },
+          {
+            path: 'SupplierEdit',
+            name: 'SupplierEdit',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
+            meta: { title: '供应商档案编辑', icon: 'user' },
+            hidden: true
+          },
+          {
+            path: 'SupplierType',
+            name: 'SupplierType',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/Classification.vue'),
+            meta: { title: '供应商档案分类', icon: 'user' },
             hidden: true
           },
           {
@@ -86,6 +120,20 @@ export const asyncRouterMap = [
             hidden: true
           },
           {
+            path: 'CustomerEdit',
+            name: 'CustomerEdit',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
+            meta: { title: '客户档案编辑', icon: 'user' },
+            hidden: true
+          },
+          {
+            path: 'CustomerType',
+            name: 'CustomerType',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/Classification.vue'),
+            meta: { title: '客户档案分类', icon: 'user' },
+            hidden: true
+          },
+          {
             path: 'WarehouseList',
             name: 'WarehouseList',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductList.vue'),
@@ -95,14 +143,44 @@ export const asyncRouterMap = [
             path: 'WarehouseAdd',
             name: 'WarehouseAdd',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
-            meta: { title: '仓库档案新增', permission: ['dashboard'] },
+            meta: { title: '仓库档案编辑', icon: 'user' },
             hidden: true
-          }, {
+          },
+          {
+            path: 'WarehouseEdit',
+            name: 'WarehouseEdit',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
+            meta: { title: '仓库档案编辑', icon: 'user' },
+            hidden: true
+          },
+          {
+            path: 'WarehouseType',
+            name: 'WarehouseType',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/Classification.vue'),
+            meta: { title: '仓库档案分类', icon: 'user' },
+            hidden: true
+          },
+          {
             path: 'CargoSpace',
             name: 'CargoSpace',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/CargoSpace.vue'),
             meta: { title: '货位档案', icon: 'user', permission: ['01-07'] }
-          }, {
+          },
+          {
+            path: 'CargoSpaceAdd',
+            name: 'CargoSpaceAdd',
+            component: () => import(/* webpackChunkName: "fail" */'@/views/basicArchives/ProductAdd.vue'),
+            meta: { title: '货位新增' },
+            hidden: true
+          },
+          {
+            path: 'CargoSpaceEdit',
+            name: 'CargoSpaceEdit',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/ProductAdd.vue'),
+            meta: { title: '货位编辑', icon: 'user' },
+            hidden: true
+          },
+          {
             path: 'BusinessCategory',
             name: 'BusinessCategory',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/basicArchives/BusinessCategory.vue'),
@@ -125,6 +203,20 @@ export const asyncRouterMap = [
             meta: { title: '入库产品清单', icon: 'user', permission: ['02-01'] }
           },
           {
+            path: 'StorageManagementAdd',
+            name: 'StorageManagementAdd',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/in_warehouse/ReceiptNoticeAdd.vue'),
+            meta: { title: '入库产品新增' },
+            hidden: true
+          },
+          {
+            path: 'StorageManagementEdit',
+            name: 'StorageManagementEdit',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/in_warehouse/ReceiptNoticeAdd.vue'),
+            meta: { title: '入库产品编辑' },
+            hidden: true
+          },
+          {
             path: 'ReceiptNoticeList',
             name: 'ReceiptNoticeList',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/in_warehouse/ReceiptNoticeList.vue'),
@@ -137,6 +229,13 @@ export const asyncRouterMap = [
             meta: { title: '收货通知新增' },
             hidden: true
           }, {
+            path: 'ReceiptNoticeEdit',
+            name: 'ReceiptNoticeEdit',
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/in_warehouse/ReceiptNoticeAdd.vue'),
+            meta: { title: '收货通知编辑' },
+            hidden: true
+          },
+          {
             path: 'StorageManagementAdd',
             name: 'StorageManagementAdd',
             component: () => import(/* webpackChunkName: "fail" */ '@/views/in_warehouse/ReceiptNoticeAdd.vue'),

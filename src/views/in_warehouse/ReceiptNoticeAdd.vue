@@ -167,9 +167,7 @@
             <a-button type @click="submitEdit" style="margin-right: 10px" v-if="this.isEdit == false"
               >存为草稿</a-button
             >
-            <a-button type @click="Back" style="margin-right: 10px" v-if="this.isEdit == false"
-              >保存送审</a-button
-            >
+            <a-button type @click="Back" style="margin-right: 10px" v-if="this.isEdit == false">保存送审</a-button>
             <a-button type @click="handleSubmit" style="margin-right: 10px" v-if="this.approvalText == '提交审批'"
               >保存</a-button
             >
@@ -256,16 +254,23 @@ export default {
       splitmodal_visible: false,
       splitQuantity: '',
       approvalText: '',
-      isEdit:false,
+      isEdit: false,
     }
   },
-  created() {
-    this.initdata()
-  },
+
   activated() {
-    console.log('activated', 'is run')
     this.initdata()
+     this.$multiTab.rename(this.$route.name, this.title)
   },
+  watch: {
+    $route: {
+      handler: function (val, oldVal) {
+       this.initdata()
+      },
+      // 深度观察监听
+    },
+  },
+
   beforeCreate() {
     this.form = this.$form.createForm(this, { formname: 'form' })
   },
@@ -359,16 +364,16 @@ export default {
       }
       this.form.validateFields((err, values) => {
         if (!err) {
-          if (this.$route.query.tag == 1) {
-            if (this.$route.query.menu == 'ReceiptNoticeList') {
+          if (this.isEdit == false) {
+            if (this.menu == 'ReceiptNoticeList') {
               var submitUrl = '/bd/docreceiptnotice/instersave'
-            } else if (this.$route.query.menu == 'StorageManagementList') {
+            } else if (this.menu == 'StorageManagementList') {
               var submitUrl = '/bd/Stockinrecord/insterSave'
             }
           } else {
-            if (this.$route.query.menu == 'ReceiptNoticeList') {
+            if (this.menu == 'ReceiptNoticeList') {
               var submitUrl = '/bd/docreceiptnotice/updatesave'
-            } else if (this.$route.query.menu == 'StorageManagementList') {
+            } else if (this.menu == 'StorageManagementList') {
               var submitUrl = '/bd/Stockinrecord/updateSave'
             }
             values.docid = this.materialid
@@ -411,7 +416,7 @@ export default {
                     this.submitApproval()
                     this.addinit()
                   } else if (this.status == 1) {
-                    this.isEdit=true
+                    this.isEdit = true
                     this.getList(this.menu, this.materialid, 0)
                     this.getFormdata()
                     this.getColumns()
@@ -758,7 +763,7 @@ export default {
         }
         columnsParams.docid = this.materialid
       }
-      this.$multiTab.rename(this.$route.path, this.title)
+     
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
       this.data = []
@@ -786,7 +791,6 @@ export default {
             } else if (this.data[i].key == 'businessclassname') {
               this.businessname = this.data[i].value
             } else if (this.data[i].key == 'ApproveStatus') {
-              
               if (this.isEdit) {
                 this.continueVisible = false
                 if (this.data[i].value == 3) {

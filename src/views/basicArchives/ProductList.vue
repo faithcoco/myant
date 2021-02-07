@@ -30,7 +30,7 @@
           <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容" />
 
           <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
-            <a-button  type="primary" @click="add()">新增</a-button>
+            <a-button type="primary" @click="add()">新增</a-button>
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
           </span>
@@ -333,8 +333,20 @@ export default {
     },
 
     classify(e) {
+      var pushPath = ''
+      if (this.menuname == 'ProductList') {
+        pushPath = 'ProductType'
+      } else if (this.menuname == 'PersonnelSetting') {
+        pushPath = 'PersonsettingType'
+      } else if (this.menuname == 'SupplierList') {
+        pushPath = 'SupplierType'
+      } else if (this.menuname == 'CustomerList') {
+        pushPath = 'CustomerType'
+      } else if (this.menuname == 'WarehouseList') {
+        pushPath = 'WarehouseType'
+      }
       this.$router.push({
-        path: 'Classification',
+        path: pushPath,
         query: {
           menu: this.$route.name,
           baseTitle: this.$route.meta.title,
@@ -342,8 +354,21 @@ export default {
       })
     },
     add() {
+      var pushPath = ''
+      if (this.menuname == 'ProductList') {
+        pushPath = 'PersonsettingAdd'
+      } else if (this.menuname == 'PersonnelSetting') {
+        pushPath = 'ProductAdd'
+      } else if (this.menuname == 'SupplierList') {
+        pushPath = 'SupplierAdd'
+      } else if (this.menuname == 'CustomerList') {
+        pushPath = 'CustomerAdd'
+      } else if (this.menuname == 'WarehouseList') {
+        pushPath = 'WarehouseAdd'
+      }
+      console.log(pushPath + '--->')
       this.$router.push({
-        path: 'ProductAdd',
+        path: pushPath,
         query: {
           menu: this.$route.name,
           menuid: this.menuid,
@@ -355,20 +380,26 @@ export default {
     },
 
     handleEdit(record) {
+      var pushPath = ''
       if (this.menuname == 'ProductList') {
         this.materialid = record.materialid
+        pushPath = 'PersonsettingEdit'
       } else if (this.menuname == 'PersonnelSetting') {
         this.materialid = record.personid
+        pushPath = 'ProductEdit'
       } else if (this.menuname == 'SupplierList') {
         this.materialid = record.vendorid
+        pushPath = 'SupplierEdit'
       } else if (this.menuname == 'CustomerList') {
         this.materialid = record.customerid
+        pushPath = ''
       } else if (this.menuname == 'WarehouseList') {
         this.materialid = record.warehouseid
+        pushPath = ''
       }
 
       this.$router.push({
-        path: 'ProductAdd',
+        path: pushPath,
         query: {
           menu: this.$route.name,
           materialid: this.materialid,

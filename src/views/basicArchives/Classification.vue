@@ -31,7 +31,7 @@
       <p>
         <a-input ref="userNameInput" v-model="typeName" placeholder />
       </p>
-      <p><font color="#FF0000" v-if="this.name == 'PersonnelSetting'">*</font>请输入类别编码： </p>
+      <p><font color="#FF0000" v-if="this.name == 'PersonnelSetting'">*</font>请输入类别编码：</p>
       <p>
         <a-input ref="userNameInput" v-model="typeCode" :placeholder="codePlaceholder" />
       </p>
@@ -204,6 +204,9 @@ export default {
         console.log('add res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.getList()
+          this.visible = false
+          this.typeName = ''
+          this.typeCode = ''
         } else {
           this.$message.info(res.errorMsg)
         }
@@ -238,6 +241,9 @@ export default {
         console.log('update res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.getList()
+          this.visible = false
+          this.typeName = ''
+          this.typeCode = ''
         } else {
           this.$message.warning(res.status)
         }
@@ -324,21 +330,12 @@ export default {
     handleOk(e) {
       this.materialclassname = this.typeName
       this.materialclasscode = this.typeCode
-      if (this.name == 'PersonnelSetting') {
-        if (this.materialclasscode == '') {
-          this.$message.info('部门编码不能为空')
-          return
-        }
-      }
-      this.visible = false
+
       if (this.tag == 1) {
         this.insertmaterialClass()
       } else if (this.tag == 2) {
         this.update()
       }
-
-      this.typeName = ''
-      this.typeCode = ''
     },
     onDelete(key) {
       const list = [...this.list]

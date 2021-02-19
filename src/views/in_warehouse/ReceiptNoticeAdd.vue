@@ -152,18 +152,9 @@
           <a-col :span="12">
             <a-button type="primary" @click="print" style="margin-right: 10px">打印</a-button>
 
-            <a-button type="primary" style="margin-right: 10px" v-show="isEdit" @click="approvalClick">{{
+            <a-button type="primary" style="margin-right: 10px"  v-show="approvalVisible" @click="approvalClick">{{
               approvalText
             }}</a-button>
-            <!--新增按钮 -->
-            <!-- <a-button
-              type="primary"
-              ref="submit"
-              style="margin-right: 10px"
-              @click="handleSubmit"
-              v-if="this.isEdit == false"
-              >存为草稿</a-button
-            > -->
             <a-button type @click="submitEdit" style="margin-right: 10px" v-if="this.isEdit == false"
               >存为草稿</a-button
             >
@@ -249,6 +240,7 @@ export default {
       billcode: '',
       currentRecord: '',
       continueVisible: true,
+       approvalVisible:false,
       approvalprocess: false, //1审批流启用 2审批流未启用
       businessname: '',
       splitmodal_visible: false,
@@ -692,6 +684,7 @@ export default {
       }
     },
     handleCancel(e) {
+      console.log('currentkey->',this.currentkey)
       if (this.currentkey == 'departmentid') {
         this.typeVisible = false
       } else if (this.currentkey == 'personid') {
@@ -705,6 +698,8 @@ export default {
       } else if (this.currentkey == 'edit') {
         this.visible = false
       } else if (this.currentkey == 'list') {
+        this.visible = false
+      } if (this.currentkey == 'warehouseid') {
         this.visible = false
       }
     },
@@ -756,7 +751,8 @@ export default {
           this.urlForm = '/bd/Stockinrecord/insterForm'
         }
       } else if (this.isEdit) {
-        this.approvalText = '提交审批'
+        //编辑
+      
         this.title = this.$route.query.storageTitle + '编辑'
 
         if (this.menu == 'ReceiptNoticeList') {
@@ -798,11 +794,15 @@ export default {
                 this.continueVisible = false
                 if (this.data[i].value == 3) {
                   this.approvalText = '撤回审批'
+                  this.approvalVisible=true
                   //撤回
                 } else if (this.data[i].value == 8) {
                   this.approvalText = '提交审批'
+                   this.approvalVisible=true
                   //提交
                 } else {
+                   this.approvalText = ''
+                  this.approvalVisible=false
                   //都不显示
                 }
               }

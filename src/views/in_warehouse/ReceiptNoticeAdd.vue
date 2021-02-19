@@ -260,12 +260,12 @@ export default {
 
   activated() {
     this.initdata()
-     this.$multiTab.rename(this.$route.name, this.title)
+    this.$multiTab.rename(this.$route.name, this.title)
   },
   watch: {
     $route: {
       handler: function (val, oldVal) {
-       this.initdata()
+        this.initdata()
       },
       // 深度观察监听
     },
@@ -288,6 +288,9 @@ export default {
 
       this.splitmodal_visible = false
       this.splitQuantity = ''
+      this.detailsData = this.detailsData.map((item, index) => {
+        return { ...item, doclineno: index + 1 }
+      })
     },
     addinit() {
       this.$multiTab.closeCurrentPage()
@@ -763,7 +766,7 @@ export default {
         }
         columnsParams.docid = this.materialid
       }
-     
+
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
       this.data = []

@@ -27,11 +27,11 @@
       </span>
     </a-table>
     <a-modal v-model="visible" title="类别" @ok="handleOk" @cancel="handleCancel">
-      <p>请输入类别名称：</p>
+      <p><font color="#FF0000">*</font>请输入类别名称：</p>
       <p>
         <a-input ref="userNameInput" v-model="typeName" placeholder />
       </p>
-      <p><font color="#FF0000" v-if="this.name == 'PersonnelSetting'">*</font>请输入类别编码：</p>
+      <p><font color="#FF0000">*</font>请输入类别编码：</p>
       <p>
         <a-input ref="userNameInput" v-model="typeCode" :placeholder="codePlaceholder" />
       </p>

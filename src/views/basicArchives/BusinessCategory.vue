@@ -123,6 +123,9 @@ export default {
         console.log('add res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.getList()
+          this.visible = false
+          this.typeName = ''
+          this.typeCode = ''
         } else {
           this.$message.warning(res.errorMsg)
         }
@@ -140,6 +143,9 @@ export default {
         console.log('update res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.getList()
+          this.visible = false
+          this.typeName = ''
+          this.typeCode = ''
         } else {
           this.$message.warning(res.status)
         }
@@ -198,8 +204,6 @@ export default {
       this.$router.go(-1)
     },
     handleOk(e) {
-      this.visible = false
-
       this.materialclassname = this.typeName
       this.materialclasscode = this.typeCode
       if (this.tag == 1) {
@@ -207,9 +211,6 @@ export default {
       } else if (this.tag == 2) {
         this.update()
       }
-
-      this.typeName = ''
-      this.typeCode = ''
     },
     onDelete(key) {
       const list = [...this.list]

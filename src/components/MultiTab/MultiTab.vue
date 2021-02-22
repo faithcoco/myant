@@ -25,10 +25,10 @@ export default {
       }
       this.closeThat(val)
     }).$on('rename', ({ key, name }) => {
-      console.log('rename-->', key, name)
+
       try {
         const item = this.pages.find(item => item.name === key)
-        console.log('item-->',this.pages)
+
         item.meta.customTitle = name
         
         this.$forceUpdate()

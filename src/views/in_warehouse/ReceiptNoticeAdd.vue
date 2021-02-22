@@ -150,9 +150,9 @@
       <a-card>
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
-            <a-button type="primary" @click="print" style="margin-right: 10px">打印</a-button>
+            <a-button type="primary"  style="margin-right: 10px">打印</a-button>
 
-            <a-button type="primary" style="margin-right: 10px"  v-show="approvalVisible" @click="approvalClick">{{
+            <a-button type="primary" style="margin-right: 10px" v-show="approvalVisible" @click="approvalClick">{{
               approvalText
             }}</a-button>
             <a-button type @click="submitEdit" style="margin-right: 10px" v-if="this.isEdit == false"
@@ -240,7 +240,7 @@ export default {
       billcode: '',
       currentRecord: '',
       continueVisible: true,
-       approvalVisible:false,
+      approvalVisible: false,
       approvalprocess: false, //1审批流启用 2审批流未启用
       businessname: '',
       splitmodal_visible: false,
@@ -684,7 +684,7 @@ export default {
       }
     },
     handleCancel(e) {
-      console.log('currentkey->',this.currentkey)
+      console.log('currentkey->', this.currentkey)
       if (this.currentkey == 'departmentid') {
         this.typeVisible = false
       } else if (this.currentkey == 'personid') {
@@ -699,7 +699,8 @@ export default {
         this.visible = false
       } else if (this.currentkey == 'list') {
         this.visible = false
-      } if (this.currentkey == 'warehouseid') {
+      }
+      if (this.currentkey == 'warehouseid') {
         this.visible = false
       }
     },
@@ -741,8 +742,10 @@ export default {
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
 
       if (this.isEdit == false) {
-        this.continueVisible = true
+        this.approvalText = ''
+        this.approvalVisible = false
 
+        this.continueVisible = true
         this.title = this.$route.query.storageTitle + '新增'
         this.materialclassid = this.$route.query.materialclassid
         if (this.$route.query.menu == 'ReceiptNoticeList') {
@@ -752,7 +755,7 @@ export default {
         }
       } else if (this.isEdit) {
         //编辑
-      
+
         this.title = this.$route.query.storageTitle + '编辑'
 
         if (this.menu == 'ReceiptNoticeList') {
@@ -790,19 +793,20 @@ export default {
             } else if (this.data[i].key == 'businessclassname') {
               this.businessname = this.data[i].value
             } else if (this.data[i].key == 'ApproveStatus') {
+             
               if (this.isEdit) {
                 this.continueVisible = false
                 if (this.data[i].value == 3) {
                   this.approvalText = '撤回审批'
-                  this.approvalVisible=true
+                  this.approvalVisible = true
                   //撤回
                 } else if (this.data[i].value == 8) {
                   this.approvalText = '提交审批'
-                   this.approvalVisible=true
+                  this.approvalVisible = true
                   //提交
                 } else {
-                   this.approvalText = ''
-                  this.approvalVisible=false
+                  this.approvalText = ''
+                  this.approvalVisible = false
                   //都不显示
                 }
               }

@@ -163,8 +163,7 @@ export default {
     SelectModal,
   },
   data() {
-    const oriTargetKeys = this.columns
-    const targetList = []
+
     return {
       selectList,
       confirmLoading: false,
@@ -315,7 +314,7 @@ export default {
       parameter.bizid = record.docid
       parameter.memuid = this.menuid
       var url = ''
-
+     
       if (record.approvalprocess == '启用') {
         url = '/work/submitProcess'
         parameter.billcode = this.billcode
@@ -387,7 +386,7 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-        console.log('columns-->', JSON.stringify(this.columns))
+       
         for (let i = 0; i < this.columns.length; i++) {
           this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
         }
@@ -451,6 +450,7 @@ export default {
       })
     },
     handleEdit(record) {
+      console.log('record.approvalprocess-->',record.approvalprocess)
       if (this.menu == 'StorageManagementList') {
         this.path = 'StorageManagementEdit'
       } else if (this.menu == 'ReceiptNoticeList') {

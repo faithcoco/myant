@@ -35,8 +35,8 @@
   </a-card>
 </template>
 <script>
-import { getclassificationGoodsColumns, getclassificationGoodsList, insertmaterialClass, getData } from '@/api/manage'
-import { logininfo, menuname } from '@/store/mutation-types'
+import { getclassificationGoodsList, insertmaterialClass, getData } from '@/api/manage'
+import { logininfo } from '@/store/mutation-types'
 import Vue from 'vue'
 export default {
   data() {

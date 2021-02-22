@@ -198,7 +198,7 @@ export default {
   },
   created() {
     getFormSettingColumns().then((res) => {
-      console.log('form columns-->', JSON.stringify(res))
+    
       this.columns = res.result.columns
     })
     getFormSettingTree().then((res) => {

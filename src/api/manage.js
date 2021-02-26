@@ -547,6 +547,15 @@ export function getData(parameter, url) {
     params: parameter
   })
 }
+export function downloadData(parameter, url) {
+
+  return axios({
+    url: url,
+    method: 'get',
+    params: parameter,
+    responseType:'arraybuffer'
+  })
+}
 
 export function getRoleList(parameter) {
   return axios({

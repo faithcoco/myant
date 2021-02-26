@@ -19,6 +19,7 @@ import './utils/filter' // global filter
 import './components/global.less'
 import { Dialog } from '@/components'
 import Moment from 'moment'
+import XLSX from "xlsx";
 
 Vue.config.productionTip = false
 Vue.filter('formatDate', function (value) {

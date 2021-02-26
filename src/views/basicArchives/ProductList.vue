@@ -31,7 +31,8 @@
 
           <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
             <a-button type="primary" @click="add()">新增</a-button>
-            <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
+            <a-button style="margin-left: 5px" @click="downloadTemplate()">下载导入模板</a-button>
+            <a-button style="margin-left: 5px" @click="importTemplate()">导入</a-button>
             <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
           </span>
 
@@ -57,12 +58,24 @@
         </a-col>
       </a-row>
     </a-card>
-
+    <a-modal title="导入模板" @ok="importOk" v-model="importVisible">
+      <a-upload
+        name="file"
+        :multiple="true"
+        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+        :headers="headers"
+        :before-upload="beforeUpload"
+        @change="handleChange"
+      >
+        <a-button> <a-icon type="upload" /> 选择 </a-button>
+      </a-upload>
+    </a-modal>
     <approval :visible="approval_visible" :product="product" @change="change"></approval>
   </div>
 </template>
 
 <script>
+import XLSX from 'xlsx'
 import moment from 'moment'
 import Vue from 'vue'
 import { Descriptions } from 'ant-design-vue'
@@ -79,7 +92,7 @@ import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 
 import { STable } from '@/components'
-import { getProductList, getProductListColumns, getclassificationGoodsList, postData, getData } from '@/api/manage'
+import { getProductList, getProductListColumns, getclassificationGoodsList, getData, postData } from '@/api/manage'
 import action from '../../core/directives/action'
 import Approval from '../Approval'
 import SelectModal from '../modal/SelectModal'
@@ -102,6 +115,9 @@ export default {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
+       headers: {
+        authorization: 'authorization-text',
+      },
       expandedKeys: [],
       autoExpandParent: true,
       checkedKeys: [],
@@ -135,6 +151,9 @@ export default {
       searchValue: '',
       searchKey: 'all',
       isInit: false,
+
+      importVisible: false,
+      importData: undefined,
     }
   },
   mounted() {
@@ -154,6 +173,91 @@ export default {
     ...mapGetters(['selectkey']),
   },
   methods: {
+    handleChange(info) {
+      console.log('info', info)
+      if (info.file.status === 'uploading') {
+        const params = {}
+        params.memuid = this.menuid
+        params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+        params.data = this.importData
+        console.log('params', JSON.stringify(params))
+
+        postData(params, '/excel/importToMaterial').then((res) => {
+          console.log('res-->', JSON.stringify(res))
+          if (res.status == 'SUCCESS') {
+           this.$message.info('导入成功')
+           this.importVisible=false
+          }
+        })
+        
+      }
+      if (info.file.status === 'done') {
+        // Get this url from response in real world.
+      }
+    },
+    beforeUpload(file) {
+      const types = file.name.split('.')[1]
+      const fileType = ['xlsx', 'xlc', 'xlm', 'xls', 'xlt'].some((item) => item === types)
+      if (!fileType) {
+        alert('格式错误！请重新选择')
+        return
+      }
+      this.file2Xce(file).then((tabJson) => {
+        console.log(tabJson)
+        if (tabJson && tabJson.length > 0) {
+          var data = {}
+          var this_ = this
+
+          this_.card = JSON.stringify(tabJson[0].sheet)
+          data.card = this_.card
+          this.importData = JSON.parse(data.card)
+          console.log('card-->', JSON.stringify(this.importData))
+        }
+      })
+    },
+    file2Xce(file) {
+      console.log('file-->', file)
+      return new Promise(function (resolve, reject) {
+        const reader = new FileReader()
+        reader.onload = function (e) {
+          const data = e.target.result
+          this.wb = XLSX.read(data, {
+            type: 'binary',
+          })
+          const result = []
+          this.wb.SheetNames.forEach((sheetName) => {
+            result.push({
+              sheetName: sheetName,
+              sheet: XLSX.utils.sheet_to_json(this.wb.Sheets[sheetName]),
+            })
+          })
+          resolve(result)
+        }
+        reader.readAsBinaryString(file)
+      })
+    },
+    importOk(e) {
+      console.log(e)
+      this.importVisible = false
+    },
+    downloadTemplate() {
+      const params = {}
+      params.memuid = this.menuid
+      params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      console.log('params', JSON.stringify(params))
+
+      getData(params, '/excel/exportExcel').then((res) => {
+        console.log('res-->', JSON.stringify(res))
+        if (res.status == 'SUCCESS') {
+          let a = document.createElement('a')
+          a.href = res.result
+          a.click()
+        }
+      })
+    },
+    importTemplate() {
+      this.importVisible = true
+    },
     treeSearch(e) {
       const value = e.target.value
       this.classifyTree = this.treeData.filter((item) => JSON.stringify(item).includes(value))

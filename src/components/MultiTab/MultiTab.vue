@@ -35,16 +35,49 @@ export default {
       } catch (e) {
       }
     })
-
+    debugger
     this.pages.push(this.$route)
+    if (this.$route.fullPath != '/index') {
+      this.pages.push.splice(0,0,{
+        name: 'index',
+        path: '/index',
+        fullPath: '/index',
+        meta: {
+          'icon': 'home',
+          'title': '首页',
+        }
+      }
+      )
+    }
+    console.log(this.pages);
     this.fullPathList.push(this.$route.fullPath)
     this.selectedLastPath()
   },
   methods: {
+    // 将首页添加到第一位
+    // addIndexToFirst() {
+    //   this.pages.splice(0, 0, {
+    //     name: 'index',
+    //     path: '/index',
+    //     fullPath: '/index',
+    //     meta: {
+    //       icon: 'dashboard',
+    //       title: '首页'
+    //     }
+    //   })
+    //   this.linkList.splice(0, 0, '/index')
+    // },
     onEdit (targetKey, action) {
+      debugger
       this[action](targetKey)
     },
     remove (targetKey) {
+      debugger
+      // 首页不能关闭
+      if (targetKey == "/index") {
+        this.$message.warning('首页不能关闭')
+        return;
+      }
       this.pages = this.pages.filter(page => page.fullPath !== targetKey)
       this.fullPathList = this.fullPathList.filter(path => path !== targetKey)
       // 判断当前标签是否关闭，若关闭则跳转到最后一个还存在的标签页
@@ -58,6 +91,7 @@ export default {
 
     // content menu
     closeThat (e) {
+      debugger
       // 判断是否为最后一个标签页，如果是最后一个，则无法被关闭
       if (this.fullPathList.length > 1) {
         this.remove(e)
@@ -66,11 +100,14 @@ export default {
       }
     },
     closeLeft (e) {
+      debugger
       const currentIndex = this.fullPathList.indexOf(e)
       if (currentIndex > 0) {
         this.fullPathList.forEach((item, index) => {
-          if (index < currentIndex) {
-            this.remove(item)
+          if (item != "/index") {
+            if (index < currentIndex) {
+              this.remove(item)
+            }
           }
         })
       } else {
@@ -81,8 +118,10 @@ export default {
       const currentIndex = this.fullPathList.indexOf(e)
       if (currentIndex < (this.fullPathList.length - 1)) {
         this.fullPathList.forEach((item, index) => {
-          if (index > currentIndex) {
-            this.remove(item)
+          if (item != "/index") {
+            if (index > currentIndex) {
+              this.remove(item)
+            }
           }
         })
       } else {
@@ -92,12 +131,15 @@ export default {
     closeAll (e) {
       const currentIndex = this.fullPathList.indexOf(e)
       this.fullPathList.forEach((item, index) => {
-        if (index !== currentIndex) {
-          this.remove(item)
+        if (item != "/index") {
+          if (index !== currentIndex) {
+            this.remove(item)
+          }
         }
       })
     },
     closeMenuClick (key, route) {
+      debugger
       this[key](route)
     },
     renderTabPaneMenu (e) {
@@ -123,6 +165,7 @@ export default {
   },
   watch: {
     '$route': function (newVal) {
+      debugger
       this.activeKey = newVal.fullPath
       if (this.fullPathList.indexOf(newVal.fullPath) < 0) {
         this.fullPathList.push(newVal.fullPath)

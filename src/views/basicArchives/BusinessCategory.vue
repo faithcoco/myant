@@ -26,7 +26,7 @@
         <a-checkbox @change="onChange" />
       </span>
     </a-table>
-    <a-modal v-model="visible" title="类别" @ok="handleOk">
+    <a-modal v-model="visible" title="类别" @ok="handleOk" :v-loading="loading">
       <p>请输入类别名称：</p>
       <a-input ref="userNameInput" v-model="typeName" placeholder />
       <p>请输入类别编码：</p>
@@ -41,6 +41,7 @@ import Vue from 'vue'
 export default {
   data() {
     return {
+      loading:false,
       list: [],
       columns: [
         {
@@ -110,8 +111,8 @@ export default {
       })
     },
     insertmaterialClass() {
+      this.loading = true;
       const parameter = {}
-
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.fatherid = this.id
       parameter.businessclassname = this.materialclassname
@@ -132,8 +133,8 @@ export default {
       })
     },
     update() {
+      this.loading = true;
       const parameter = {}
-
       parameter.businessclassid = this.id
       parameter.businessclassname = this.materialclassname
       parameter.businessclasscode = this.materialclasscode
@@ -204,6 +205,7 @@ export default {
       this.$router.go(-1)
     },
     handleOk(e) {
+      debugger
       this.materialclassname = this.typeName
       this.materialclasscode = this.typeCode
       if (this.tag == 1) {

@@ -150,7 +150,7 @@
       <a-card>
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
-            <a-button type="primary"  style="margin-right: 10px">打印</a-button>
+            <a-button type="primary"  style="margin-right: 10px" @click="print">打印</a-button>
 
             <a-button type="primary" style="margin-right: 10px" v-show="approvalVisible" @click="approvalClick">{{
               approvalText
@@ -839,6 +839,7 @@ export default {
     },
     // 打印
     print(e) {
+      debugger
       const parameter = {}
       var url = '/report/getReportUrl'
       console.log('getReportUrl-->', JSON.stringify(parameter))

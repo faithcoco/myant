@@ -146,6 +146,7 @@ export default {
     menuSelect () {
     },
     drawerClose () {
+      debugger
       this.collapsed = false
     }
   }

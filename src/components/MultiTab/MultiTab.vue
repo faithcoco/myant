@@ -38,7 +38,7 @@ export default {
     debugger
     this.pages.push(this.$route)
     if (this.$route.fullPath != '/index') {
-      this.pages.push.splice(0,0,{
+      this.pages.splice(0,0,{
         name: 'index',
         path: '/index',
         fullPath: '/index',
@@ -167,9 +167,11 @@ export default {
     '$route': function (newVal) {
       debugger
       this.activeKey = newVal.fullPath
-      if (this.fullPathList.indexOf(newVal.fullPath) < 0) {
-        this.fullPathList.push(newVal.fullPath)
-        this.pages.push(newVal)
+      if (this.activeKey !== '/index') {
+        if (this.fullPathList.indexOf(newVal.fullPath) < 0) {
+          this.fullPathList.push(newVal.fullPath)
+          this.pages.push(newVal)
+        }
       }
     },
     activeKey: function (newPathKey) {

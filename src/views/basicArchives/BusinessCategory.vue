@@ -148,7 +148,8 @@ export default {
           this.typeName = ''
           this.typeCode = ''
         } else {
-          this.$message.warning(res.status)
+          debugger
+          this.$message.warning(res.errorMsg);
         }
       })
     },

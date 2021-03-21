@@ -5,17 +5,17 @@
         <a-col :span="4">
           <span>{{ titleTree }}</span>
           <a-button style="margin-left: 40px" type="primary" @click="classify">分类设置</a-button>
-          <a-divider type="horizontal" />
-          <a-input-search style="margin-bottom: 8px" placeholder="请输入关键字" @change="treeSearch" />
+          <a-divider type="horizontal"/>
+          <a-input-search style="margin-bottom: 8px" placeholder="请输入关键字" @change="treeSearch"/>
           <a-tree
-            v-show="tree_visible"
-            showLine
-            :expanded-keys="expandedKeys"
-            :auto-expand-parent="autoExpandParent"
-            :tree-data="classifyTree"
-            @expand="onExpand"
-            @select="onSelect"
-            :selectedKeys="checkedKeys"
+              v-show="tree_visible"
+              showLine
+              :expanded-keys="expandedKeys"
+              :auto-expand-parent="autoExpandParent"
+              :tree-data="classifyTree"
+              @expand="onExpand"
+              @select="onSelect"
+              :selectedKeys="checkedKeys"
           >
           </a-tree>
         </a-col>
@@ -23,32 +23,36 @@
         <a-col :span="20">
           <a-select default-value="全部" style="width: 220px" @change="selectChange">
             <a-select-option v-for="SList in selectList" :key="SList.key" :value="SList.key">{{
-              SList.value
-            }}</a-select-option>
+                SList.value
+              }}
+            </a-select-option>
           </a-select>
 
-          <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容" />
+          <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容"/>
 
           <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
             <a-button type="primary" @click="add()">新增</a-button>
-            <a-button style="margin-left: 5px" @click="downloadTemplate()">下载导入模板</a-button>
-            <a-button style="margin-left: 5px" @click="importTemplate()">导入</a-button>
-            <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
+            <a-button style="margin-left: 5px" @click="downloadTemplate()"
+                      v-if="this.menuname == 'ProductList'">下载导入模板</a-button>
+            <a-button style="margin-left: 5px" @click="importTemplate()"
+                      v-if="this.menuname == 'ProductList'">导入</a-button>
+            <a-button style="margin-left: 5px" @click="exportTemplate()"
+                      v-if="this.menuname == 'ProductList'">导出</a-button>
           </span>
 
           <a-table
-            ref="table"
-            size="default"
-            :columns="columns"
-            :data-source="listdata"
-            :alert="false"
-            :scroll="{ x: 1500, y: 525 }"
-            bordered
-            style="margin-top: 20px"
+              ref="table"
+              size="default"
+              :columns="columns"
+              :data-source="listdata"
+              :alert="false"
+              :scroll="{ x: 1500, y: 525 }"
+              bordered
+              style="margin-top: 20px"
           >
             <span slot="action" v-show="Operat_visible" slot-scope="text, record">
               <a @click="handleEdit(record)">编辑</a>
-              <a-divider type="vertical" />
+              <a-divider type="vertical"/>
 
               <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
                 <a href="javascript:;">删除</a>
@@ -58,16 +62,19 @@
         </a-col>
       </a-row>
     </a-card>
-    <a-modal title="导入模板" @ok="importOk" v-model="importVisible">
+    <a-modal title="导入模板" @ok="importOk" v-model="importVisible" :destroyOnClose="true" :footer="null">
       <a-upload
-        name="file"
-        :multiple="true"
-        action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
-        :headers="headers"
-        :before-upload="beforeUpload"
-        @change="handleChange"
+          name="file"
+          :multiple="true"
+          action="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+          :headers="headers"
+          :before-upload="beforeUpload"
+          @change="handleChange"
       >
-        <a-button> <a-icon type="upload" /> 选择 </a-button>
+        <a-button>
+          <a-icon type="upload"/>
+          选择
+        </a-button>
       </a-upload>
     </a-modal>
     <approval :visible="approval_visible" :product="product" @change="change"></approval>
@@ -78,29 +85,24 @@
 import XLSX from 'xlsx'
 import moment from 'moment'
 import Vue from 'vue'
-import { Descriptions } from 'ant-design-vue'
-import { Transfer } from 'ant-design-vue'
-import { Comment } from 'ant-design-vue'
+import {Comment, Descriptions, Mentions, Timeline, Transfer, Tree} from 'ant-design-vue'
+import {STable} from '@/components'
+import {getclassificationGoodsList, getData, getProductList, getProductListColumns, postData} from '@/api/manage'
+import Approval from '../Approval'
+import SelectModal from '../modal/SelectModal'
+import {logininfo} from '@/store/mutation-types'
+import {mapGetters} from 'vuex'
+import {url} from '@/utils/request'
+
 Vue.use(Descriptions)
 Vue.use(Transfer)
 Vue.use(Comment)
-import { Tree } from 'ant-design-vue'
 Vue.use(Tree)
-import { Timeline } from 'ant-design-vue'
 Vue.use(Timeline)
-import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
 
-import { STable } from '@/components'
-import { getProductList, getProductListColumns, getclassificationGoodsList, getData, postData } from '@/api/manage'
-import action from '../../core/directives/action'
-import Approval from '../Approval'
-import SelectModal from '../modal/SelectModal'
-import { logininfo, menuname } from '@/store/mutation-types'
-import { mapActions, mapGetters } from 'vuex'
-
 const columns = []
-const selectList = [{ value: '全部', key: 'all' }]
+const selectList = [{value: '全部', key: 'all'}]
 
 const Operat_visible = true
 const dataList = []
@@ -115,7 +117,7 @@ export default {
     const oriTargetKeys = this.columns
     const targetList = []
     return {
-       headers: {
+      headers: {
         authorization: 'authorization-text',
       },
       expandedKeys: [],
@@ -154,6 +156,9 @@ export default {
 
       importVisible: false,
       importData: undefined,
+
+      // 查询条件
+      parameter: null,
     }
   },
   mounted() {
@@ -174,6 +179,7 @@ export default {
   },
   methods: {
     handleChange(info) {
+      debugger
       console.log('info', info)
       if (info.file.status === 'uploading') {
         const params = {}
@@ -181,15 +187,13 @@ export default {
         params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         params.data = this.importData
         console.log('params', JSON.stringify(params))
-
         postData(params, '/excel/importToMaterial').then((res) => {
           console.log('res-->', JSON.stringify(res))
           if (res.status == 'SUCCESS') {
-           this.$message.info('导入成功')
-           this.importVisible=false
+            this.$message.info(res.result)
+            this.importVisible = false
           }
         })
-        
       }
       if (info.file.status === 'done') {
         // Get this url from response in real world.
@@ -246,17 +250,25 @@ export default {
       params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       console.log('params', JSON.stringify(params))
 
-      getData(params, '/excel/exportExcel').then((res) => {
+      // edit by tf 下载模板修改 2021年3月20日14:06:21
+      /*getData(params, '/excel/exportExcel').then((res) => {
         console.log('res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           let a = document.createElement('a')
           a.href = res.result
           a.click()
         }
-      })
+      })*/
+      window.open(url + '/excel/downloadexcel?enterpriseid=' + params.enterpriseid + '&memuid=' + params.memuid, '_blank');
     },
     importTemplate() {
       this.importVisible = true
+    },
+    exportTemplate() {
+      const params = {}
+      params.memuid = this.menuid
+      params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid;
+      window.open(url + '/excel/exportexcel?enterpriseid=' + params.enterpriseid + '&memuid=' + params.memuid + '&params=' + JSON.stringify(this.parameter), '_blank');
     },
     treeSearch(e) {
       const value = e.target.value
@@ -354,7 +366,7 @@ export default {
         this.columns = res.result.columns
 
         for (let i = 0; i < this.columns.length - 1; i++) {
-          this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
+          this.selectList.push({value: this.columns[i].title, key: this.columns[i].dataIndex})
         }
       })
     },
@@ -395,30 +407,30 @@ export default {
       this.$store.commit('SET_SELECTKEY', this.materialclassid)
     },
     getList() {
-      const parameter = {}
+      this.parameter = {};
       if (this.menuname == 'PersonnelSetting') {
-        parameter.departmentid = this.materialclassid
+        this.parameter.departmentid = this.materialclassid
       } else if (this.menuname == 'ProductList') {
-        parameter.materialclassid = this.materialclassid
+        this.parameter.materialclassid = this.materialclassid
       } else if (this.menuname == 'SupplierList') {
-        parameter.vendorclassid = this.materialclassid
+        this.parameter.vendorclassid = this.materialclassid
       } else if (this.menuname == 'CustomerList') {
-        parameter.customerclassid = this.materialclassid
+        this.parameter.customerclassid = this.materialclassid
       } else if (this.menuname == 'WarehouseList') {
-        parameter.warehouseclassid = this.materialclassid
+        this.parameter.warehouseclassid = this.materialclassid
       }
 
-      parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      parameter.pageNo = '1'
-      parameter.pageSize = '10'
+      this.parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+      this.parameter.pageNo = '1'
+      this.parameter.pageSize = '10'
       if (this.isSearch) {
         console.log('search-->', this.searchKey + '/' + this.searchValue)
-        parameter[`${this.searchKey}`] = this.searchValue
+        this.parameter[`${this.searchKey}`] = this.searchValue
       }
 
       console.log('list url-->', this.urlList)
-      console.log('list params-->', JSON.stringify(parameter))
-      getProductList(parameter, this.urlList).then((res) => {
+      console.log('list params-->', JSON.stringify(this.parameter))
+      getProductList(this.parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
 
         for (const key in this.listdata) {

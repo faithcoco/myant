@@ -5,17 +5,17 @@
         <a-col :span="4">
           <span>{{ titleTree }}</span>
 
-          <a-divider type="horizontal" />
-          <a-input-search style="margin-bottom: 8px" placeholder="请输入关键字" @change="treeSearch" />
+          <a-divider type="horizontal"/>
+          <a-input-search style="margin-bottom: 8px" placeholder="请输入关键字" @change="treeSearch"/>
           <a-tree
-            v-show="tree_visible"
-            showLine
-            :expanded-keys="expandedKeys"
-            :auto-expand-parent="autoExpandParent"
-            :selectedKeys="checkedKeys"
-            :tree-data="classifyTree"
-            @expand="onExpand"
-            @select="onSelect"
+              v-show="tree_visible"
+              showLine
+              :expanded-keys="expandedKeys"
+              :auto-expand-parent="autoExpandParent"
+              :selectedKeys="checkedKeys"
+              :tree-data="classifyTree"
+              @expand="onExpand"
+              @select="onSelect"
           >
           </a-tree>
         </a-col>
@@ -23,32 +23,33 @@
         <a-col :span="20">
           <a-select default-value="全部" style="width: 220px" @change="selectChange(value)">
             <a-select-option v-for="SList in selectList" :key="SList.value" :value="SList.value">{{
-              SList.value
-            }}</a-select-option>
+                SList.value
+              }}
+            </a-select-option>
           </a-select>
 
-          <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容" />
+          <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容"/>
 
           <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
             <a-button style="margin-left: 5px" type="primary" @click="add()">新增</a-button>
 
-            <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
-            <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
+            <!--            <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
+                        <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>-->
           </span>
 
           <a-table
-            ref="table"
-            size="default"
-            :columns="columns"
-            :data-source="listdata"
-            :alert="false"
-            :scroll="{ x: 1500, y: 525 }"
-            bordered
-            style="margin-top: 20px"
+              ref="table"
+              size="default"
+              :columns="columns"
+              :data-source="listdata"
+              :alert="false"
+              :scroll="{ x: 1500, y: 525 }"
+              bordered
+              style="margin-top: 20px"
           >
             <span slot="action" v-show="Operat_visible" slot-scope="text, record">
               <a @click="handleEdit(record)">编辑</a>
-              <a-divider type="vertical" />
+              <a-divider type="vertical"/>
 
               <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
                 <a href="javascript:;">删除</a>
@@ -66,28 +67,23 @@
 <script>
 import moment from 'moment'
 import Vue from 'vue'
-import { Descriptions } from 'ant-design-vue'
-import { Transfer } from 'ant-design-vue'
-import { Comment } from 'ant-design-vue'
+import {Comment, Descriptions, Mentions, Timeline, Transfer, Tree} from 'ant-design-vue'
+import STree from '@/components/Tree/Tree'
+import {STable} from '@/components'
+import {getclassificationGoodsList, getData, getProductList, getProductListColumns} from '@/api/manage'
+import Approval from '../Approval'
+import SelectModal from '../modal/SelectModal'
+import {logininfo, menuname} from '@/store/mutation-types'
+
 Vue.use(Descriptions)
 Vue.use(Transfer)
 Vue.use(Comment)
-import { Tree } from 'ant-design-vue'
 Vue.use(Tree)
-import { Timeline } from 'ant-design-vue'
 Vue.use(Timeline)
-import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
-import STree from '@/components/Tree/Tree'
-import { STable } from '@/components'
-import { getProductList, getProductListColumns, getclassificationGoodsList, postData, getData } from '@/api/manage'
-import action from '../../core/directives/action'
-import Approval from '../Approval'
-import SelectModal from '../modal/SelectModal'
-import { logininfo, menuname } from '@/store/mutation-types'
 
 const columns = []
-const selectList = [{ value: '全部' }]
+const selectList = [{value: '全部'}]
 
 const Operat_visible = true
 export default {
@@ -134,7 +130,7 @@ export default {
   watch: {
     $route: {
       handler: function (val, oldVal) {
-      
+
         this.initData(val.name)
       },
       // 深度观察监听
@@ -142,7 +138,7 @@ export default {
   },
   computed: {
     rowSelection() {
-      const { selectedRowKeys } = this
+      const {selectedRowKeys} = this
       return {
         selectedRowKeys,
         onChange: this.onSelectChange,
@@ -198,7 +194,7 @@ export default {
         this.columns = res.result.columns
 
         for (let i = 0; i < this.columns.length - 1; i++) {
-          this.selectList.push({ value: this.columns[i].title })
+          this.selectList.push({value: this.columns[i].title})
         }
       })
     },
@@ -249,7 +245,8 @@ export default {
       }
       this.$refs.table.refresh(true) //用refresh方法刷新表格
     },
-    selectChange() {},
+    selectChange() {
+    },
 
     Classify() {
       Vue.ls.set(menuname, this.$route.name)

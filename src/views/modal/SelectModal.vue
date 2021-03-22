@@ -5,22 +5,23 @@
         <a-col :span="24">
           <a-select default-value="全部" style="width: 220px" @change="selectChange">
             <a-select-option v-for="SList in selectList" :key="SList.key" :value="SList.key">{{
-              SList.value
-            }}</a-select-option>
+                SList.value
+              }}
+            </a-select-option>
           </a-select>
 
-          <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容" />
+          <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容"/>
 
           <a-table
-            ref="table"
-            size="default"
-            :columns="columns"
-            :data-source="listdata"
-            :alert="false"
-            :scroll="{ x: 1500, y: 425 }"
-            bordered
-            style="margin-top: 20px"
-            :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, onSelect: onSelect }"
+              ref="table"
+              size="default"
+              :columns="columns"
+              :data-source="listdata"
+              :alert="false"
+              :scroll="{ x: 1500, y: 425 }"
+              bordered
+              style="margin-top: 20px"
+              :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, onSelect: onSelect }"
           >
           </a-table>
         </a-col>
@@ -32,27 +33,22 @@
 <script>
 import moment from 'moment'
 import Vue from 'vue'
-import { Descriptions } from 'ant-design-vue'
-import { Transfer } from 'ant-design-vue'
-import { Comment } from 'ant-design-vue'
+import {Comment, Descriptions, Mentions, Timeline, Transfer, Tree} from 'ant-design-vue'
+import STree from '@/components/Tree/Tree'
+import {STable} from '@/components'
+import {getData, getProductList, getProductListColumns} from '@/api/manage'
+
+import {logininfo, menuname} from '@/store/mutation-types'
+
 Vue.use(Descriptions)
 Vue.use(Transfer)
 Vue.use(Comment)
-import { Tree } from 'ant-design-vue'
 Vue.use(Tree)
-import { Timeline } from 'ant-design-vue'
 Vue.use(Timeline)
-import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
-import STree from '@/components/Tree/Tree'
-import { STable } from '@/components'
-import { getProductList, getProductListColumns, getclassificationGoodsList, postData, getData } from '@/api/manage'
-import action from '../../core/directives/action'
-
-import { logininfo, menuname } from '@/store/mutation-types'
 
 const columns = []
-const selectList = [{ value: '全部', key: 'all' }]
+const selectList = [{value: '全部', key: 'all'}]
 
 const Operat_visible = true
 const dataList = []
@@ -63,7 +59,7 @@ export default {
     },
     selected: {
       type: Array,
-      default:[]
+      default: () => []
     },
   },
   components: {
@@ -115,7 +111,7 @@ export default {
       this.$emit('onSelect', selectedRows)
     },
     onSelectChange(selectedRowKeys, selectedRows) {
-      console.log('selectedRowKeys-->',selectedRowKeys)
+      console.log('selectedRowKeys-->', selectedRowKeys)
       this.selectedRowKeys = selectedRowKeys
     },
     treeSearch(e) {
@@ -212,10 +208,10 @@ export default {
         for (const key in this.listdata) {
           this.listdata[key].key = this.listdata[key].personid
         }
-        console.log('list res-->',JSON.stringify(this.selected))
+        console.log('list res-->', JSON.stringify(this.selected))
         this.isSearch = false
         this.selectedRowKeys = this.selected
-       
+
       })
     },
     onSearch(value) {

@@ -422,6 +422,7 @@ export default {
           console.log(JSON.stringify(res))
           this.content = ''
           this.getTimeline()
+          this.$parent.initData(this.$route.name)
         } else {
           this.$message.warn(res.errorMsg)
         }
@@ -454,8 +455,8 @@ export default {
         console.log('approval-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.content = ''
-
           this.getTimeline()
+          this.$parent.initData(this.$route.name)
         } else {
           this.$message.warn(res.errorMsg)
         }
@@ -470,7 +471,7 @@ export default {
     },
     handleSubmit() {
       if (this.currtent == 1) {
-        this.approveProcess()
+        this.approveProcess();
       } else if (this.currtent == 2) {
         this.rejectProcess()
       } else if (this.currtent == 3) {

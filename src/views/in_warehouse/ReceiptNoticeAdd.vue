@@ -68,7 +68,7 @@
                     </a-menu>
                   </a-dropdown>
 
-                  <a-table :columns="columns" :data-source="detailsData" :scroll="{ x: 3000 }">
+                  <a-table :columns="columns" :data-source="detailsData" :scroll="{ x: 3000 }" rowKey="index">
                     <template v-for="col in columns" :slot="col.dataIndex" slot-scope="text, record, index">
                       <div>
                         <a-input

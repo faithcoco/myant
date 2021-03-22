@@ -1,3 +1,4 @@
+<script src="../../utils/util.js"></script>
 <template>
   <div>
     <a-card>
@@ -38,6 +39,8 @@
                       v-if="this.menuname == 'ProductList'">导入</a-button>
             <a-button style="margin-left: 5px" @click="exportTemplate()"
                       v-if="this.menuname == 'ProductList'">导出</a-button>
+            <a-button style="margin-left: 5px" @click="exportErrorTemplate()"
+                      v-if="this.menuname == 'ProductList' && this.errorFileName != null">下载错误文件</a-button>
           </span>
 
           <a-table
@@ -156,6 +159,8 @@ export default {
 
       importVisible: false,
       importData: undefined,
+      errorFileName: null,
+      UUID: "",
 
       // 查询条件
       parameter: null,
@@ -179,18 +184,26 @@ export default {
   },
   methods: {
     handleChange(info) {
-      debugger
       console.log('info', info)
-      if (info.file.status === 'uploading') {
+      if (info.file.status === 'uploading' && this.importData != undefined && this.importData != null) {
         const params = {}
+        params.token = this.UUID;
         params.memuid = this.menuid
         params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
         params.data = this.importData
         console.log('params', JSON.stringify(params))
-        postData(params, '/excel/importToMaterial').then((res) => {
+        postData(params, '/excel/importexcel').then((res) => {
           console.log('res-->', JSON.stringify(res))
           if (res.status == 'SUCCESS') {
-            this.$message.info(res.result)
+            this.$message.info(res.result.result)
+            this.importVisible = false;
+            // add by tf 导入错误弹出下载框 2021年3月22日14:53:22
+            if (res.result.url != undefined && res.result.url != null) {
+              this.errorFileName = res.result.url;
+            }
+            this.initData(this.menuname);
+          } else {
+            this.$message.info(res.errorMsg)
             this.importVisible = false
           }
         })
@@ -262,13 +275,33 @@ export default {
       window.open(url + '/excel/downloadexcel?enterpriseid=' + params.enterpriseid + '&memuid=' + params.memuid, '_blank');
     },
     importTemplate() {
+      this.UUID = this.getUUID();
       this.importVisible = true
+    },
+    /**
+     * 前台登录生成UUID
+     * @returns {string}
+     */
+    getUUID() {
+      let s = [];
+      let hexDigits = "0123456789abcdef";
+      for (let i = 0; i < 36; i++) {
+        s[i] = hexDigits.substr(Math.floor(Math.random() * 0x10), 1);
+      }
+      s[14] = "4";  // bits 12-15 of the time_hi_and_version field to 0010
+      s[19] = hexDigits.substr((s[19] & 0x3) | 0x8, 1);  // bits 6-7 of the clock_seq_hi_and_reserved to 01
+      s[8] = s[13] = s[18] = s[23] = "-";
+      let uuid = s.join("");
+      return uuid;
     },
     exportTemplate() {
       const params = {}
       params.memuid = this.menuid
       params.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid;
       window.open(url + '/excel/exportexcel?enterpriseid=' + params.enterpriseid + '&memuid=' + params.memuid + '&params=' + JSON.stringify(this.parameter), '_blank');
+    },
+    exportErrorTemplate() {
+      window.open(url + '/excel/exportErrorexcel?fileName=' + this.errorFileName, '_blank');
     },
     treeSearch(e) {
       const value = e.target.value
@@ -432,7 +465,6 @@ export default {
       console.log('list params-->', JSON.stringify(this.parameter))
       getProductList(this.parameter, this.urlList).then((res) => {
         this.listdata = res.result.data
-
         for (const key in this.listdata) {
           this.listdata[key].key = key
         }

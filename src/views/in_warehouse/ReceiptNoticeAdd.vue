@@ -153,7 +153,10 @@
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
             <!--入库单打印，收货通知单打印隐藏-->
-            <a-button type="primary" style="margin-right: 10px" @click="print" v-if="this.materialid != null && this.materialid != undefined && this.materialid != '' && this.memuid == '03bf0fb1-e9fb-4014-92e7-7121f4f72002'">打印</a-button>
+            <a-button type="primary" style="margin-right: 10px" @click="print"
+                      v-if="this.materialid != null && this.materialid != undefined && this.materialid != '' && this.memuid == '03bf0fb1-e9fb-4014-92e7-7121f4f72002'">
+              打印
+            </a-button>
 
             <a-button type="primary" style="margin-right: 10px" v-show="approvalVisible" @click="approvalClick">{{
                 approvalText
@@ -225,7 +228,6 @@ export default {
       detailVisible: false,
       columns: [],
       detailsData: [],
-      menuid: '',
       departmentid: '',
       personid: '',
       vendorid: '',
@@ -500,6 +502,25 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       this.scopeList = []
       getProductListColumns(columnsParams, urlColumns).then((res) => {
+        this.columns = res.result.columns;
+      });
+      // add by tf 查询料品档案表单的自定义项设置 2021年3月23日19:39:43
+      setTimeout(() => {
+        this.getProductColumns();
+      }, 1000)
+    },
+    /**
+     * 查询料品档案表单的自定义项设置
+     * add by tf 2021年3月23日19:39:33
+     */
+    getProductColumns() {
+      const columnsParams = {}
+      columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid;
+      // 数组处理 (删除最后操作列)
+      const data = JSON.parse(JSON.stringify(this.columns));
+      data.splice(data.findIndex(item => item.dataIndex === 'action'), 1);
+      columnsParams.columns = JSON.stringify(data);
+      getProductListColumns(columnsParams, '/bd/product/getProductDefineList').then((res) => {
         this.columns = res.result.columns
       })
     },
@@ -559,11 +580,12 @@ export default {
       this.name = 'ProductList'
     },
     detailOk(e) {
+      console.log(this.columns)
       this.detailVisible = false
       this.detailsData = this.detailsData.concat(this.selectList)
       this.detailsData = this.detailsData.map((item, index) => {
         //return { ...item, doclineno: parseInt(index) + 1 }
-        return {...item, doclineno: item.doclineno == undefined ? parseInt(index) + 1 : item.doclineno}
+        return {...item, doclineno: item.doclineno == undefined ? parseInt(index) + 1 : item.doclineno,}
       })
     },
     detailCancel(e) {

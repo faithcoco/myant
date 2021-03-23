@@ -580,12 +580,16 @@ export default {
       this.name = 'ProductList'
     },
     detailOk(e) {
-      console.log(this.columns)
       this.detailVisible = false
       this.detailsData = this.detailsData.concat(this.selectList)
       this.detailsData = this.detailsData.map((item, index) => {
         //return { ...item, doclineno: parseInt(index) + 1 }
-        return {...item, doclineno: item.doclineno == undefined ? parseInt(index) + 1 : item.doclineno,}
+        return {
+          ...item,
+          doclineno: item.doclineno == undefined ? parseInt(index) + 1 : item.doclineno,
+          // add by tf 记录料品来源id 2021年3月23日21:08:43
+          receiptnoticelineid: item.materialid,
+        }
       })
     },
     detailCancel(e) {

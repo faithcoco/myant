@@ -90,7 +90,7 @@
                       />
                     </span>
 
-                    <span slot="action" slot-scope="text, record">
+                    <span slot="action" slot-scope="text, record, zindex">
                       <a-modal v-model="splitmodal_visible" title="类别" @ok="() => splitOk(record)">
                         <p>请输入拆单数量：</p>
                         <a-input-number v-model="splitQuantity" placeholder :min="0"/>
@@ -102,7 +102,7 @@
                       <a @click="handleEdit(record)">编辑</a>
                       <a-divider type="vertical"/>
 
-                      <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
+                      <a-popconfirm title="确定删除?" @confirm="() => deleteItem(zindex)">
                         <a href="javascript:;">删除</a>
                       </a-popconfirm>
                     </span>
@@ -273,16 +273,17 @@ export default {
         return
       }
       var temp = JSON.parse(JSON.stringify(record))
-      temp.doclinequantity = parseInt(record.doclinequantity) - parseInt(this.splitQuantity)
+      temp.doclinequantity = parseInt(record.doclinequantity) - parseInt(this.splitQuantity);
+      temp.doclineno = this.detailsData.length + 1;
       this.detailsData.push(temp)
 
       record.doclinequantity = this.splitQuantity
 
       this.splitmodal_visible = false
       this.splitQuantity = ''
-      this.detailsData = this.detailsData.map((item, index) => {
-        return {...item, doclineno: index + 1}
-      })
+      //this.detailsData = this.detailsData.map((item, index) => {
+      //  return { ...item, doclineno: index + 1 }
+      //})
     },
     addinit() {
       this.$multiTab.closeCurrentPage()
@@ -429,9 +430,9 @@ export default {
     },
     waitquantityChange(value, record) {
       record.doclinequantity = value
-      this.detailsData = this.detailsData.map((item, index) => {
-        return {...item, doclineno: index + 1}
-      })
+      //this.detailsData = this.detailsData.map((item, index) => {
+      //  return { ...item, doclineno: index + 1 }
+      //})
     },
     handleChange(value, key, record) {
       record[key] = value
@@ -462,8 +463,9 @@ export default {
       })
     },
 
-    deleteItem(record) {
-      this.detailsData = this.detailsData.filter((item) => item.doclineno !== record.doclineno)
+    deleteItem(index) {
+      //this.detailsData = this.detailsData.filter((item) => item.doclineno !== record.doclineno)
+      this.detailsData.splice(index, 1);
     },
     initdata() {
       this.spinning = true
@@ -528,9 +530,9 @@ export default {
           })
           this.detailsData = this.detailsData.concat(addData)
         }
-        this.detailsData = this.detailsData.map((item, index) => {
-          return {...item, doclineno: index + 1}
-        })
+        //this.detailsData = this.detailsData.map((item, index) => {
+        //  return { ...item, doclineno: index + 1 }
+        //})
       })
     },
     detailSelect(list) {
@@ -559,7 +561,8 @@ export default {
       this.detailVisible = false
       this.detailsData = this.detailsData.concat(this.selectList)
       this.detailsData = this.detailsData.map((item, index) => {
-        return {...item, doclineno: parseInt(index) + 1}
+        //return { ...item, doclineno: parseInt(index) + 1 }
+        return {...item, doclineno: item.doclineno == undefined ? parseInt(index) + 1 : item.doclineno}
       })
     },
     detailCancel(e) {
@@ -843,11 +846,13 @@ export default {
     },
     // 打印
     print(e) {
+      debugger
       const parameter = {}
       var url = '/report/getReportUrl'
       console.log('getReportUrl-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
+          debugger
           let address = res.result + '收货通知打印.cpt&id=' + this.materialid
           window.open(address, '_blank')
         } else {

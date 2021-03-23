@@ -4,52 +4,52 @@
       <div>
         <a-card>
           <a-form
-            class="ant-advanced-search-form"
-            :form="form"
-            :label-col="{ span: 3 }"
-            :wrapper-col="{ span: 20 }"
-            @submit="handleSubmit"
+              class="ant-advanced-search-form"
+              :form="form"
+              :label-col="{ span: 3 }"
+              :wrapper-col="{ span: 20 }"
+              @submit="handleSubmit"
           >
             <a-form-item v-for="item in data" :label="item.title">
               <div v-if="item.selectVisible">
                 <a-cascader
-                  v-decorator="item.decorator"
-                  v-show="item.selectVisible"
-                  :field-names="{ label: 'title', value: 'key', children: 'children' }"
-                  :options="item.selectList"
-                  placeholder="请选择"
-                  :disabled="item.disabled"
+                    v-decorator="item.decorator"
+                    v-show="item.selectVisible"
+                    :field-names="{ label: 'title', value: 'key', children: 'children' }"
+                    :options="item.selectList"
+                    placeholder="请选择"
+                    :disabled="item.disabled"
                 />
               </div>
               <div v-else>
                 <a-input
-                  v-decorator="item.decorator"
-                  :disabled="item.disabled"
-                  v-show="item.inputVisible"
-                  :maxLength="item.fieldlength"
+                    v-decorator="item.decorator"
+                    :disabled="item.disabled"
+                    v-show="item.inputVisible"
+                    :maxLength="item.fieldlength"
                 />
                 <a-input-number
-                  :style="{ width: '1370px' }"
-                  v-decorator="item.decorator"
-                  v-show="item.inputnumberVisible"
-                  :max="item.fieldmax"
-                  :precision="item.fieldprecision"
-                  :disabled="item.disabled"
+                    :style="{ width: '1370px' }"
+                    v-decorator="item.decorator"
+                    v-show="item.inputnumberVisible"
+                    :max="item.fieldmax"
+                    :precision="item.fieldprecision"
+                    :disabled="item.disabled"
                 />
                 <a-date-picker
-                  :style="{ width: '100%' }"
-                  v-show="item.timepickerVisible"
-                  show-time
-                  format="YYYY-MM-DD HH:mm:ss"
-                  placeholder="选择日期"
-                  v-decorator="item.decorator"
-                  :disabled="item.disabled"
+                    :style="{ width: '100%' }"
+                    v-show="item.timepickerVisible"
+                    show-time
+                    format="YYYY-MM-DD HH:mm:ss"
+                    placeholder="选择日期"
+                    v-decorator="item.decorator"
+                    :disabled="item.disabled"
                 />
                 <a-input
-                  v-decorator="item.decorator"
-                  v-show="item.listVisible"
-                  :maxLength="item.fieldlength"
-                  :disabled="disabled"
+                    v-decorator="item.decorator"
+                    v-show="item.listVisible"
+                    :maxLength="item.fieldlength"
+                    :disabled="disabled"
                 >
                   <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
                 </a-input>
@@ -60,11 +60,12 @@
                 <a-tab-pane tab="明细">
                   <a-dropdown>
                     <a class="ant-dropdown-link" @click="(e) => e.preventDefault()" style="margin-left: 20px">
-                      选择 <a-icon type="down" />
+                      选择
+                      <a-icon type="down"/>
                     </a>
                     <a-menu slot="overlay" @click="onClick">
-                      <a-menu-item key="1"> 选择料品 </a-menu-item>
-                      <a-menu-item key="2" v-if="menu == 'StorageManagementList'">参照收货通知单 </a-menu-item>
+                      <a-menu-item key="1"> 选择料品</a-menu-item>
+                      <a-menu-item key="2" v-if="menu == 'StorageManagementList'">参照收货通知单</a-menu-item>
                     </a-menu>
                   </a-dropdown>
 
@@ -72,9 +73,9 @@
                     <template v-for="col in columns" :slot="col.dataIndex" slot-scope="text, record, index">
                       <div>
                         <a-input
-                          :value="text"
-                          @change="(e) => handleChange(e.target.value, col.dataIndex, record)"
-                          v-if="col.isEdit"
+                            :value="text"
+                            @change="(e) => handleChange(e.target.value, col.dataIndex, record)"
+                            v-if="col.isEdit"
                         />
                         <template v-else>
                           {{ text }}
@@ -83,15 +84,15 @@
                     </template>
                     <span slot="doclinequantity" slot-scope="text, record">
                       <a-input
-                        :value="text"
-                        @pressEnter="(e) => waitquantityChange(e.target.value, record)"
-                        type="number"
+                          :value="text"
+                          @pressEnter="(e) => waitquantityChange(e.target.value, record)"
+                          type="number"
                       />
                     </span>
 
                     <span slot="action" slot-scope="text, record">
                       <a @click="handleEdit(record)">编辑</a>
-                      <a-divider type="vertical" />
+                      <a-divider type="vertical"/>
 
                       <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
                         <a href="javascript:;">删除</a>
@@ -104,52 +105,56 @@
           </a-form>
 
           <a-modal
-            title="选择"
-            :visible="visible"
-            @ok="archivesOk"
-            @cancel="handleCancel"
-            width="1300px"
-            :destroyOnClose="destroyOnClose"
+              title="选择"
+              :visible="visible"
+              @ok="archivesOk"
+              @cancel="handleCancel"
+              width="1300px"
+              :destroyOnClose="destroyOnClose"
           >
             <archives-modal :name="name" @onSelect="getSelect"></archives-modal>
           </a-modal>
           <a-modal
-            title="选择"
-            :visible="typeVisible"
-            @ok="handleOk"
-            @cancel="handleCancel"
-            width="1300px"
-            :destroyOnClose="destroyOnClose"
+              title="选择"
+              :visible="typeVisible"
+              @ok="handleOk"
+              @cancel="handleCancel"
+              width="1300px"
+              :destroyOnClose="destroyOnClose"
           >
             <type :menuname="name" @onSelect="typeSelect"></type>
           </a-modal>
           <a-modal
-            title="选择"
-            :visible="detailVisible"
-            @ok="detailOk"
-            @cancel="detailCancel"
-            :destroyOnClose="destroyOnClose"
-            width="1300px"
+              title="选择"
+              :visible="detailVisible"
+              @ok="detailOk"
+              @cancel="detailCancel"
+              :destroyOnClose="destroyOnClose"
+              width="1300px"
           >
-            <select-modal :modalname="name" :visible="visible" @onSelect="detailSelect"></select-modal>
+            <select-modal :modalname="name" :visible="visible" @onSelect="detailSelect"
+                          @onSelectAll="detailSelectAll"></select-modal>
           </a-modal>
         </a-card>
       </div>
     </a-spin>
     <a-layout-footer
-      :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-10px', zIndex: '999' }"
+        :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-10px', zIndex: '999' }"
     >
       <a-card>
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
             <a-button type="primary" style="margin-right: 10px" v-show="approvalVisilbe" @click="approval"
-              >提交审批</a-button
+            >提交审批
+            </a-button
             >
             <a-button type="primary" style="margin-right: 10px" v-show="cancelVisilbe" @click="cancelClick"
-              >撤回审批</a-button
+            >撤回审批
+            </a-button
             >
             <a-button type="primary" ref="submit" style="margin-right: 10px" v-show="saveVisible" @click="handleSubmit"
-              >保存继续</a-button
+            >保存继续
+            </a-button
             >
             <a-button type @click="Back" style="margin-right: 10px" v-show="saveVisible">保存返回</a-button>
             <a-modal title="提示" :visible="submitVisible" @ok="approvalOk" @cancel="approvalCancel">
@@ -164,26 +169,18 @@
 
 <script>
 import Vue from 'vue'
-import { formModel, Button, Tree } from 'ant-design-vue'
-import { Cascader } from 'ant-design-vue'
-Vue.use(Cascader)
-import { PageHeader } from 'ant-design-vue'
-Vue.use(PageHeader)
-Vue.use(formModel, Button)
-import { postProductAdd } from '@/api/manage'
-import { logininfo, menuname } from '@/store/mutation-types'
-import { getForm, submitForm, postData, getData } from '@/api/manage'
-import { Form } from 'ant-design-vue'
-Vue.use(Form)
-import { TreeSelect } from 'ant-design-vue'
-import { keys, type } from 'mockjs2'
-Vue.use(TreeSelect)
+import {Button, Cascader, Empty, Form, formModel, PageHeader, TreeSelect} from 'ant-design-vue'
+import {getData, getForm, getProductListColumns, submitForm} from '@/api/manage'
+import {logininfo} from '@/store/mutation-types'
 import ArchivesModal from '../modal/ArchivesModal'
 import Type from '../modal/TypeModal'
 import SelectModal from '../modal/SelectModal'
-import { getProductListColumns } from '@/api/manage'
-import { Empty } from 'ant-design-vue'
-import { isRendered } from 'nprogress'
+
+Vue.use(Cascader)
+Vue.use(PageHeader)
+Vue.use(formModel, Button)
+Vue.use(Form)
+Vue.use(TreeSelect)
 Vue.use(Empty)
 
 const numberRow = []
@@ -200,8 +197,8 @@ export default {
       selectedRow: [],
       selectedRowKeys: [],
       size: 'small',
-      labelCol: { span: 2 },
-      wrapperCol: { span: 22 },
+      labelCol: {span: 2},
+      wrapperCol: {span: 22},
       other: '',
       data: [],
       menuid: '',
@@ -251,7 +248,7 @@ export default {
     this.initdata()
   },
   beforeCreate() {
-    this.form = this.$form.createForm(this, { formname: 'form' })
+    this.form = this.$form.createForm(this, {formname: 'form'})
   },
   methods: {
     approvalOk(e) {
@@ -271,7 +268,7 @@ export default {
       this.addinit()
     },
 
-    onClick({ key }) {
+    onClick({key}) {
       console.log(`Click on item ${key}`)
       if (key == '1') {
         this.detailModal()
@@ -345,29 +342,29 @@ export default {
           console.log('submit url-->', submitUrl)
           console.log('submit parameter-->', JSON.stringify(values))
           submitForm(values, submitUrl)
-            .then((res) => {
-              console.log('submit--->', JSON.stringify(res))
-              if (res.status == 'SUCCESS') {
-                this.detailsData = []
-                if (this.$route.query.tag == 2) {
-                  //编辑
-                  if (this.status == 1) {
-                    this.getList(this.$route.query.menu, this.$route.query.materialid, 0)
+              .then((res) => {
+                console.log('submit--->', JSON.stringify(res))
+                if (res.status == 'SUCCESS') {
+                  this.detailsData = []
+                  if (this.$route.query.tag == 2) {
+                    //编辑
+                    if (this.status == 1) {
+                      this.getList(this.$route.query.menu, this.$route.query.materialid, 0)
+                    } else {
+                      this.$multiTab.closeCurrentPage()
+                    }
                   } else {
-                    this.$multiTab.closeCurrentPage()
+                    this.submitVisible = true
+                    this.materialid = res.result.bizid
+                    this.billcode = res.result.billcode
+                    this.approvalprocess = values.approvalprocess
                   }
-                } else {
-                  this.submitVisible = true
-                  this.materialid = res.result.bizid
-                  this.billcode = res.result.billcode
-                  this.approvalprocess = values.approvalprocess
                 }
-              }
-              this.$message.info(res.errorMsg)
-            })
-            .catch((err) => {
-              this.$message.error(err.message)
-            })
+                this.$message.info(res.errorMsg)
+              })
+              .catch((err) => {
+                this.$message.error(err.message)
+              })
         }
       })
     },
@@ -381,7 +378,7 @@ export default {
       }
       record.doclinequantity = value
       this.detailsData = this.detailsData.map((item, index) => {
-        return { ...item, doclineno: index + 1 }
+        return {...item, doclineno: index + 1}
       })
     },
     handleChange(value, key, record) {
@@ -473,16 +470,20 @@ export default {
           var addData = []
           addData = res.result.data
           addData = addData.map((item, index) => {
-            return { ...item, doclinequantity: item.doclinenotputquantity, receiptnoticelineid: item.doclineid }
+            return {...item, doclinequantity: item.doclinenotputquantity, receiptnoticelineid: item.doclineid}
           })
           this.detailsData = this.detailsData.concat(addData)
         }
         this.detailsData = this.detailsData.map((item, index) => {
-          return { ...item, doclineno: index + 1 }
+          return {...item, doclineno: index + 1}
         })
       })
     },
     detailSelect(list) {
+      this.selectList = list
+    },
+    // add by tf 全选 2021年3月23日12:18:47
+    detailSelectAll(list) {
       this.selectList = list
     },
     getSelect(list) {
@@ -504,7 +505,7 @@ export default {
       this.detailVisible = false
       this.detailsData = this.detailsData.concat(this.selectList)
       this.detailsData = this.detailsData.map((item, index) => {
-        return { ...item, doclineno: parseInt(index) + 1 }
+        return {...item, doclineno: parseInt(index) + 1}
       })
     },
     detailCancel(e) {

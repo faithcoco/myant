@@ -35,7 +35,6 @@ export default {
       } catch (e) {
       }
     })
-    debugger
     this.pages.push(this.$route)
     if (this.$route.fullPath != '/index') {
       this.pages.splice(0,0,{
@@ -68,11 +67,9 @@ export default {
     //   this.linkList.splice(0, 0, '/index')
     // },
     onEdit (targetKey, action) {
-      debugger
       this[action](targetKey)
     },
     remove (targetKey) {
-      debugger
       // 首页不能关闭
       if (targetKey == "/index") {
         this.$message.warning('首页不能关闭')
@@ -91,7 +88,6 @@ export default {
 
     // content menu
     closeThat (e) {
-      debugger
       // 判断是否为最后一个标签页，如果是最后一个，则无法被关闭
       if (this.fullPathList.length > 1) {
         this.remove(e)
@@ -100,7 +96,6 @@ export default {
       }
     },
     closeLeft (e) {
-      debugger
       const currentIndex = this.fullPathList.indexOf(e)
       if (currentIndex > 0) {
         this.fullPathList.forEach((item, index) => {
@@ -139,7 +134,6 @@ export default {
       })
     },
     closeMenuClick (key, route) {
-      debugger
       this[key](route)
     },
     renderTabPaneMenu (e) {
@@ -165,7 +159,6 @@ export default {
   },
   watch: {
     '$route': function (newVal) {
-      debugger
       this.activeKey = newVal.fullPath
       if (this.activeKey !== '/index') {
         if (this.fullPathList.indexOf(newVal.fullPath) < 0) {

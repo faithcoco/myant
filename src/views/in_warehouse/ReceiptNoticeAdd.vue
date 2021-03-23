@@ -152,7 +152,7 @@
       <a-card>
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
-            <a-button type="primary" style="margin-right: 10px" @click="print">打印</a-button>
+            <a-button type="primary" style="margin-right: 10px" @click="print" v-if="this.materialid != null && this.materialid != undefined && this.materialid != ''">打印</a-button>
 
             <a-button type="primary" style="margin-right: 10px" v-show="approvalVisible" @click="approvalClick">{{
                 approvalText
@@ -844,17 +844,21 @@ export default {
       }
       // 路由跳转
     },
-    // 打印
     print(e) {
-      debugger
       const parameter = {}
       var url = '/report/getReportUrl'
       console.log('getReportUrl-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
-          debugger
-          let address = res.result + '收货通知打印.cpt&id=' + this.materialid
-          window.open(address, '_blank')
+          let address = null;
+          console.log(this.$route.query.memuid);
+          if (this.memuid == '03bf0fb1-e9fb-4014-92e7-7121f4f72002') {
+            // 入库产品清单打印
+            address = res.result + '入库单打印.cpt&id=' + this.materialid
+          }
+          if (address != null) {
+            window.open(address, '_blank')
+          }
         } else {
           this.$message.warn(res.errorMsg)
         }

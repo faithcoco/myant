@@ -239,7 +239,6 @@
        * 禁用/启用
        */
       handleEnable(row){
-        debugger;
         const params={}
         params.personid= row.personid;
         if (row.enablestatus == 1) {

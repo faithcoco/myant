@@ -148,7 +148,6 @@ export default {
           this.typeName = ''
           this.typeCode = ''
         } else {
-          debugger
           this.$message.warning(res.errorMsg);
         }
       })
@@ -206,7 +205,6 @@ export default {
       this.$router.go(-1)
     },
     handleOk(e) {
-      debugger
       this.materialclassname = this.typeName
       this.materialclasscode = this.typeCode
       if (this.tag == 1) {

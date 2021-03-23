@@ -21,7 +21,7 @@
               :scroll="{ x: 1500, y: 425 }"
               bordered
               style="margin-top: 20px"
-              :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, onSelect: onSelect }"
+              :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, onSelect: onSelect, onSelectAll: onSelectAll }"
           >
           </a-table>
         </a-col>
@@ -109,6 +109,10 @@ export default {
   methods: {
     onSelect(record, selected, selectedRows) {
       this.$emit('onSelect', selectedRows)
+    },
+    // add by tf 全选 2021年3月23日12:18:47
+    onSelectAll(selected, selectedRows) {
+      this.$emit('onSelectAll', selectedRows)
     },
     onSelectChange(selectedRowKeys, selectedRows) {
       console.log('selectedRowKeys-->', selectedRowKeys)

@@ -152,7 +152,8 @@
       <a-card>
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
-            <a-button type="primary" style="margin-right: 10px" @click="print" v-if="this.materialid != null && this.materialid != undefined && this.materialid != ''">打印</a-button>
+            <!--入库单打印，收货通知单打印隐藏-->
+            <a-button type="primary" style="margin-right: 10px" @click="print" v-if="this.materialid != null && this.materialid != undefined && this.materialid != '' && this.memuid == '03bf0fb1-e9fb-4014-92e7-7121f4f72002'">打印</a-button>
 
             <a-button type="primary" style="margin-right: 10px" v-show="approvalVisible" @click="approvalClick">{{
                 approvalText

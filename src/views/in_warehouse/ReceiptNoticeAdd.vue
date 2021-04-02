@@ -393,8 +393,7 @@ export default {
           // values.approvalprocess = values.approvalprocess.join()
           console.log('submit url-->', submitUrl)
           console.log('submit parameter-->', JSON.stringify(values))
-          submitForm(values, submitUrl)
-              .then((res) => {
+          submitForm(values, submitUrl).then((res) => {
                 console.log('submit--->', JSON.stringify(res))
                 if (res.status == 'SUCCESS') {
                   if (this.$route.query.tag == 2) {
@@ -405,29 +404,26 @@ export default {
                       this.$multiTab.closeCurrentPage()
                     }
                   } else {
-                    //新增
-
-                    this.materialid = res.result.bizid
-                    this.billcode = res.result.billcode
-                    this.businessname = values.businessclassname
-
-                    if (this.status == 2) {
-                      this.submitApproval()
-                      this.addinit()
-                    } else if (this.status == 1) {
-                      this.isEdit = true
-                      this.getList(this.menu, this.materialid, 0)
-                      this.getFormdata()
-                      this.getColumns()
-                      // this.addinit()
+                      //新增
+                      this.materialid = res.result.bizid
+                      this.billcode = res.result.billcode
+                      this.businessname = values.businessclassname
+                      if (this.status == 2) {
+                        this.submitApproval()
+                        this.addinit()
+                      } else if (this.status == 1) {
+                        this.isEdit = true
+                        this.getList(this.menu, this.materialid, 0)
+                        this.getFormdata()
+                        this.getColumns()
+                        // this.addinit()
+                      }
                     }
+                    this.$message.info(res.errorMsg)
                   }
-                }
-                this.$message.info(res.errorMsg)
-              })
-              .catch((err) => {
-                this.$message.error(err.message)
-              })
+                }) .catch((err) => {
+                  this.$message.error(err.message)
+                })
         }
       })
     },
@@ -457,11 +453,11 @@ export default {
       console.log('approval url-->', url)
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
-          this.$message.info('提交审批成功')
+          this.$message.success('提交审批成功')
           this.getFormdata()
         } else {
           console.log('approval error-->', res)
-          this.$message.info(res.errorMsg)
+          this.$message.error(res.errorMsg)
         }
       })
     },
@@ -808,7 +804,7 @@ export default {
           this.data = res.result.form
           this.approvalprocess = res.result.data.enabledStatus
         } else {
-          this.$message.info(res)
+          this.$message.error(res)
         }
 
         setTimeout(() => {
@@ -858,11 +854,11 @@ export default {
       for (const key in this.detailsData) {
         if (this.detailsData[key].doclinequantity == undefined) {
           isError = true
-          this.$message.info('明细数量不能为空！')
+          this.$message.error('明细数量不能为空！')
           return
         } else if (parseInt(this.detailsData[key].doclinequantity) < 1) {
           isError = true
-          this.$message.info('明细数量必须大于0！')
+          this.$message.error('明细数量必须大于0！')
           return
         }
       }
@@ -887,7 +883,7 @@ export default {
             window.open(address, '_blank')
           }
         } else {
-          this.$message.warn(res.errorMsg)
+          this.$message.error(res.errorMsg)
         }
       })
     },

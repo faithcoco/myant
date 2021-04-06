@@ -224,8 +224,8 @@ export default {
         parameter.departmentcode = this.typeCode
       } else if (this.name == 'SupplierList') {
         parameter.vendorclassid = this.id
-        parameter.vendorclasscode = this.typeName
-        parameter.vendorclassname = this.typeCode
+        parameter.vendorclasscode = this.typeCode
+        parameter.vendorclassname = this.typeName
       } else if (this.name == 'CustomerList') {
         parameter.customerclassid = this.id
         parameter.customerclassname = this.materialclassname

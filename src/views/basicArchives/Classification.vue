@@ -198,7 +198,6 @@ export default {
         parameter.warehouseclassname = this.materialclassname
         parameter.warehouseclasscode = this.materialclasscode
       }
-
       console.log('add url-->', this.urlAdd)
       console.log('add params-->', JSON.stringify(parameter))
       insertmaterialClass(parameter, this.urlAdd).then((res) => {

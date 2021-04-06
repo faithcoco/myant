@@ -528,6 +528,7 @@ export default {
     },
 
     handleEdit(record) {
+      debugger
       var pushPath = ''
       if (this.menuname == 'ProductList') {
         this.materialid = record.materialid
@@ -540,10 +541,10 @@ export default {
         pushPath = 'SupplierEdit'
       } else if (this.menuname == 'CustomerList') {
         this.materialid = record.customerid
-        pushPath = ''
+        pushPath = 'CustomerAdd'
       } else if (this.menuname == 'WarehouseList') {
         this.materialid = record.warehouseid
-        pushPath = ''
+        pushPath = 'WarehouseAdd'
       }
 
       this.$router.push({

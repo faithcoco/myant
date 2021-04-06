@@ -16,7 +16,7 @@
                 <a-cascader
                   v-decorator="item.decorator"
                   v-show="item.selectVisible"
-                  :field-names="{ label: 'title', value: 'key', children: 'children' }"
+                  :field-names ="{ label: 'title', value: 'key', children: 'children' }"
                   :options="item.selectList"
                   placeholder="请选择"
                 />
@@ -38,6 +38,7 @@
                   format="YYYY-MM-DD HH:mm:ss"
                   placeholder="选择日期"
                   v-decorator="item.decorator"
+                  valueFormat="YYYY-MM-DD HH:mm:ss"
                 />
               </div>
             </a-form-item>
@@ -205,6 +206,7 @@ export default {
     },
 
     getFormdata() {
+      debugger
       console.log(this.$route.query.menu + 'is run')
       this.spinning = true
       this.menuid = this.$route.query.menuid
@@ -265,7 +267,7 @@ export default {
 
       getForm(columnsParams, this.urlForm).then((res) => {
         this.data = res.result
-
+        debugger
         setTimeout(() => {
           for (const i in this.data) {
             this.form.setFieldsValue({
@@ -336,7 +338,7 @@ export default {
               values.positionstatus = values.positionstatus.join()
             }
           }
-
+          debugger
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           console.log('submit url-->', submitUrl)
           console.log('submit params-->', JSON.stringify(values))

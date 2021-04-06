@@ -278,7 +278,7 @@ export default {
       console.log('add materialid-->', this.materialid)
       this.$router.push({
         name: 'ProductAdd',
-        params: {
+        query: {
           menu: this.$route.name,
           materialid: this.materialid,
           tag: 2,

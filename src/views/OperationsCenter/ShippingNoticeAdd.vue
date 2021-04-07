@@ -1,3 +1,4 @@
+<!--发货通知单-->
 <template>
   <a-layout>
     <a-spin size="large" :spinning="spinning" tip="正在加载">
@@ -616,6 +617,7 @@ export default {
     },
 
     getFormdata() {
+      debugger
       this.modalname = this.$route.query.menu
       this.menuid = this.$route.query.menuid
       const columnsParams = {}
@@ -629,7 +631,7 @@ export default {
         this.title = this.$route.query.storageTitle + '新增'
         this.materialclassid = this.$route.query.materialclassid
         if (this.$route.query.menu == 'ShippingNoticeList') {
-          this.urlForm = '/pc/bd/dispatchnotice/insterForm'
+          this.urlForm = '/bd/dispatchnotice/insterForm'
         } 
       } else if (this.$route.query.tag == 2) {
         this.approvalVisilbe = true

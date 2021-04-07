@@ -146,31 +146,20 @@
         </a-card>
       </div>
     </a-spin>
-    <a-layout-footer
-        :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-10px', zIndex: '999' }"
-    >
+    <a-layout-footer :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-10px', zIndex: '999' }">
       <a-card>
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
             <!--入库单打印，收货通知单打印隐藏-->
-            <a-button type="primary" style="margin-right: 10px" @click="print"
-                      v-if="this.materialid != null && this.materialid != undefined && this.materialid != '' && this.memuid == '03bf0fb1-e9fb-4014-92e7-7121f4f72002'">
+            <a-button type="primary" style="margin-right: 10px" @click="print" v-if="this.materialid != null && this.materialid != undefined && this.materialid != '' && this.memuid == '03bf0fb1-e9fb-4014-92e7-7121f4f72002'">
               打印
             </a-button>
-
-            <a-button type="primary" style="margin-right: 10px" v-show="approvalVisible" @click="approvalClick">{{
-                approvalText
-              }}
+            <a-button type="primary" style="margin-right: 10px" v-show="approvalVisible" @click="approvalClick">
+              {{approvalText }}
             </a-button>
-            <a-button type @click="submitEdit" style="margin-right: 10px" v-if="this.isEdit == false"
-            >存为草稿
-            </a-button
-            >
+            <a-button type @click="submitEdit" style="margin-right: 10px" v-if="this.isEdit == false">存为草稿</a-button>
             <a-button type @click="Back" style="margin-right: 10px" v-if="this.isEdit == false">保存送审</a-button>
-            <a-button type @click="handleSubmit" style="margin-right: 10px" v-if="this.approvalText == '提交审批'"
-            >保存
-            </a-button
-            >
+            <a-button type @click="handleSubmit" style="margin-right: 10px" v-if="this.approvalText == '提交审批'">保存</a-button>
           </a-col>
         </a-row>
       </a-card>

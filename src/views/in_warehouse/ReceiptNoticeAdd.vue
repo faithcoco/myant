@@ -10,7 +10,7 @@
               :wrapper-col="{ span: 20 }"
               @submit="handleSubmit"
           >
-            <a-form-item v-for="item in data" :label="item.title">
+            <a-form-item v-for="(item, index) in data" :key="index" :label="item.title">
               <div v-if="item.selectVisible">
                 <a-cascader
                     v-decorator="item.decorator"
@@ -146,20 +146,23 @@
         </a-card>
       </div>
     </a-spin>
-    <a-layout-footer :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-10px', zIndex: '999' }">
+    <a-layout-footer
+        :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-10px', zIndex: '999' }">
       <a-card>
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
             <!--入库单打印，收货通知单打印隐藏-->
-            <a-button type="primary" style="margin-right: 10px" @click="print" v-if="this.materialid != null && this.materialid != undefined && this.materialid != '' && this.memuid == '03bf0fb1-e9fb-4014-92e7-7121f4f72002'">
+            <a-button type="primary" style="margin-right: 10px" @click="print"
+                      v-if="this.materialid != null && this.materialid != undefined && this.materialid != '' && this.memuid == '03bf0fb1-e9fb-4014-92e7-7121f4f72002'">
               打印
             </a-button>
             <a-button type="primary" style="margin-right: 10px" v-show="approvalVisible" @click="approvalClick">
-              {{approvalText }}
+              {{ approvalText }}
             </a-button>
             <a-button type @click="submitEdit" style="margin-right: 10px" v-if="this.isEdit == false">存为草稿</a-button>
             <a-button type @click="Back" style="margin-right: 10px" v-if="this.isEdit == false">保存送审</a-button>
-            <a-button type @click="handleSubmit" style="margin-right: 10px" v-if="this.approvalText == '提交审批'">保存</a-button>
+            <a-button type @click="handleSubmit" style="margin-right: 10px" v-if="this.approvalText == '提交审批'">保存
+            </a-button>
           </a-col>
         </a-row>
       </a-card>
@@ -383,38 +386,6 @@ export default {
           console.log('submit url-->', submitUrl)
           console.log('submit parameter-->', JSON.stringify(values))
           submitForm(values, submitUrl).then((res) => {
-                console.log('submit--->', JSON.stringify(res))
-                if (res.status == 'SUCCESS') {
-                  if (this.$route.query.tag == 2) {
-                    //编辑
-                    if (this.status == 1) {
-                      this.getList(this.$route.query.menu, this.$route.query.materialid, 0)
-                    } else {
-                      this.$multiTab.closeCurrentPage()
-                    }
-                  } else {
-                      //新增
-                      this.materialid = res.result.bizid
-                      this.billcode = res.result.billcode
-                      this.businessname = values.businessclassname
-                      if (this.status == 2) {
-                        this.submitApproval()
-                        this.addinit()
-                      } else if (this.status == 1) {
-                        this.isEdit = true
-                        this.getList(this.menu, this.materialid, 0)
-                        this.getFormdata()
-                        this.getColumns()
-                        // this.addinit()
-                      }
-                    }
-                    this.$message.info(res.errorMsg)
-                  } else {
-                  this.$message.error(res.errorMsg);
-                  }
-                }) .catch((err) => {
-                  this.$message.error(err.message);
-                })
             console.log('submit--->', JSON.stringify(res))
             if (res.status == 'SUCCESS') {
               if (this.$route.query.tag == 2) {
@@ -442,10 +413,10 @@ export default {
               }
               this.$message.info(res.errorMsg)
             } else {
-              this.$message.info(res.errorMsg)
+              this.$message.error(res.errorMsg);
             }
           }).catch((err) => {
-            this.$message.error(err.message)
+            this.$message.error(err.message);
           })
         }
       })
@@ -524,9 +495,10 @@ export default {
         this.columns = res.result.columns;
       });
       // add by tf 查询料品档案表单的自定义项设置 2021年3月23日19:39:43
-      setTimeout(() => {
+      // edit by tf 废弃 2021年4月7日21:04:01
+      /*setTimeout(() => {
         this.getProductColumns();
-      }, 1000)
+      }, 1000)*/
     },
     /**
      * 查询料品档案表单的自定义项设置

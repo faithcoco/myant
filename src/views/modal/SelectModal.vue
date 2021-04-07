@@ -112,6 +112,7 @@ export default {
     },
     // add by tf 全选 2021年3月23日12:18:47
     onSelectAll(selected, selectedRows) {
+      debugger
       this.$emit('onSelectAll', selectedRows)
     },
     onSelectChange(selectedRowKeys, selectedRows) {

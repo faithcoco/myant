@@ -394,36 +394,38 @@ export default {
           console.log('submit url-->', submitUrl)
           console.log('submit parameter-->', JSON.stringify(values))
           submitForm(values, submitUrl).then((res) => {
-                console.log('submit--->', JSON.stringify(res))
-                if (res.status == 'SUCCESS') {
-                  if (this.$route.query.tag == 2) {
-                    //编辑
-                    if (this.status == 1) {
-                      this.getList(this.$route.query.menu, this.$route.query.materialid, 0)
-                    } else {
-                      this.$multiTab.closeCurrentPage()
-                    }
-                  } else {
-                      //新增
-                      this.materialid = res.result.bizid
-                      this.billcode = res.result.billcode
-                      this.businessname = values.businessclassname
-                      if (this.status == 2) {
-                        this.submitApproval()
-                        this.addinit()
-                      } else if (this.status == 1) {
-                        this.isEdit = true
-                        this.getList(this.menu, this.materialid, 0)
-                        this.getFormdata()
-                        this.getColumns()
-                        // this.addinit()
-                      }
-                    }
-                    this.$message.info(res.errorMsg)
-                  }
-                }) .catch((err) => {
-                  this.$message.error(err.message)
-                })
+            console.log('submit--->', JSON.stringify(res))
+            if (res.status == 'SUCCESS') {
+              if (this.$route.query.tag == 2) {
+                //编辑
+                if (this.status == 1) {
+                  this.getList(this.$route.query.menu, this.$route.query.materialid, 0)
+                } else {
+                  this.$multiTab.closeCurrentPage()
+                }
+              } else {
+                //新增
+                this.materialid = res.result.bizid
+                this.billcode = res.result.billcode
+                this.businessname = values.businessclassname
+                if (this.status == 2) {
+                  this.submitApproval()
+                  this.addinit()
+                } else if (this.status == 1) {
+                  this.isEdit = true
+                  this.getList(this.menu, this.materialid, 0)
+                  this.getFormdata()
+                  this.getColumns()
+                  // this.addinit()
+                }
+              }
+              this.$message.info(res.errorMsg)
+            } else {
+              this.$message.info(res.errorMsg)
+            }
+          }).catch((err) => {
+            this.$message.error(err.message)
+          })
         }
       })
     },
@@ -501,9 +503,10 @@ export default {
         this.columns = res.result.columns;
       });
       // add by tf 查询料品档案表单的自定义项设置 2021年3月23日19:39:43
-      setTimeout(() => {
+      // edit by tf 废弃 2021年4月7日21:04:01
+      /*setTimeout(() => {
         this.getProductColumns();
-      }, 1000)
+      }, 1000)*/
     },
     /**
      * 查询料品档案表单的自定义项设置
@@ -576,15 +579,42 @@ export default {
       this.name = 'ProductList'
     },
     detailOk(e) {
+      debugger
       this.detailVisible = false
+      this.selectList = this.selectList.map((item, index) => {
+        return {
+          ...item,
+          // add by tf 记录料品来源id 2021年3月23日21:08:43
+          receiptnoticelineid: item.materialid,
+          // edit by tf 料品自定义项带入表体自定义项 2021年4月7日21:04:01
+          doclinedefine1: item.materialdefine1,
+          doclinedefine2: item.materialdefine2,
+          doclinedefine3: item.materialdefine3,
+          doclinedefine4: item.materialdefine4,
+          doclinedefine5: item.materialdefine5,
+          doclinedefine6: item.materialdefine6,
+          doclinedefine7: item.materialdefine7,
+          doclinedefine8: item.materialdefine8,
+          doclinedefine9: item.materialdefine9,
+          doclinedefine10: item.materialdefine10,
+          doclinedefine11: item.materialdefine11,
+          doclinedefine12: item.materialdefine12,
+          doclinedefine13: item.materialdefine13,
+          doclinedefine14: item.materialdefine14,
+          doclinedefine15: item.materialdefine15,
+          doclinedefine16: item.materialdefine16,
+          doclinedefine17: item.materialdefine17,
+          doclinedefine18: item.materialdefine18,
+          doclinedefine19: item.materialdefine19,
+          doclinedefine20: item.materialdefine20,
+        }
+      })
       this.detailsData = this.detailsData.concat(this.selectList)
       this.detailsData = this.detailsData.map((item, index) => {
         //return { ...item, doclineno: parseInt(index) + 1 }
         return {
           ...item,
           doclineno: item.doclineno == undefined ? parseInt(index) + 1 : item.doclineno,
-          // add by tf 记录料品来源id 2021年3月23日21:08:43
-          receiptnoticelineid: item.materialid,
         }
       })
     },

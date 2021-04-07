@@ -420,9 +420,11 @@ export default {
                       }
                     }
                     this.$message.info(res.errorMsg)
+                  } else {
+                  this.$message.error(res.errorMsg);
                   }
                 }) .catch((err) => {
-                  this.$message.error(err.message)
+                  this.$message.error(err.message);
                 })
         }
       })

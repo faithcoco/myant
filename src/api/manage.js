@@ -98,7 +98,8 @@ const api = {
   FormSettingColumns: '/bd/FormSetting/columns',
   CodeSettingColumns: '/CodeSetting/columns',
   classificationGoodsColumns: '/classification_goods/columns',
-  approvalSettinColumns: '/approval-settin/columns'
+  approvalSettinColumns: '/approval-settin/columns',
+  initCompanyData:'/sys/setting/initAll',
 }
 
 export default api
@@ -875,5 +876,19 @@ export function saveService(parameter) {
     url: api.service,
     method: parameter.id === 0 ? 'post' : 'put',
     data: parameter
+  })
+}
+
+/**
+ * 企业初始化方法
+ * @param parameter
+ * @returns {*}
+ */
+export function initCompanyData(parameter) {
+  console.log('create url-->', api.initCompanyData)
+  return axios({
+    url: api.initCompanyData,
+    method: 'get',
+    params: parameter
   })
 }

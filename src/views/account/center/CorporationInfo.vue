@@ -64,15 +64,14 @@
         <br />
       </a-layout-content>
     </a-layout>
-    <a-modal
-      title="初始化"
-      :visible="visible"
-      :confirm-loading="confirmLoading"
-      @ok="handleOk"
-      @cancel="handleCancel"
-      okText="确定"
-    >
-      <p>如需操作请联系匠思</p>
+    <!--初始化企业信息数据-->
+    <a-modal title="初始化" :visible="visible" :confirm-loading="confirmLoading" @ok="handleOk" @cancel="handleCancel" okText="确定">
+      <!--<p>如需操作请联系匠思</p>-->
+      <a-radio-group v-model="radioValue" @change="handleChange">
+        <a-radio :style="radioStyle" value="1">基础数据</a-radio>
+        <a-radio :style="radioStyle" value="2">业务数据</a-radio>
+        <a-radio :style="radioStyle" value="3">表单数据</a-radio>
+      </a-radio-group>
     </a-modal>
 
     <a-modal
@@ -286,7 +285,7 @@ Vue.use(formModel, Button)
 import moment from 'moment'
 import { mapActions } from 'vuex'
 import AvatarModal from '../settings/AvatarModal'
-import { getBaseenterpriseInfo, updateBaseenterprise, postData } from '@/api/manage'
+import { getBaseenterpriseInfo, updateBaseenterprise, postData,initCompanyData } from '@/api/manage'
 import { retrievePsdSendSMSregister } from '@/api/register'
 import { logininfo } from '@/store/mutation-types'
 import { getCompanyList } from '@/api/login'
@@ -366,6 +365,8 @@ export default {
         phoneCode3: [{ required: true, message: '请输入验证码' }],
         phoneCode4: [{ required: true, message: '请输入验证码' }],
       },
+      // 初始化企业信息选择
+      radioValue:'',
     }
   },
 
@@ -694,10 +695,6 @@ export default {
         onCancel() {},
       })
     },
-
-    handleOk(e) {
-      this.visible = false
-    },
     confirmOk(e) {
       console.log('this.form.cName------>', this.form.cName)
       console.log('this.form.enterprisename------>', this.form.enterprisename)
@@ -934,6 +931,58 @@ export default {
       this.$refs.ruleForm.resetFields()
       this.visible = true
       this.editVisible = false
+    },
+    /**
+     * 企业初始话选择确认
+     * @param e
+     */
+    handleChange(e){
+      this.radioValue = e.target.value;
+    },
+    /**
+     * 初始话企业信息确认
+     */
+    handleOk(e) {
+      if (this.radioValue == null || this.radioValue == ''||this.radioValue == undefined) {
+        this.$message.error("请勾选需要清除的数据类型")
+        return false;
+      }
+      let context = '';
+      if (this.radioValue == '1') {
+        context = '基础数据';
+      } else if (this.radioValue == '1') {
+        context = '业务数据';
+      } else if (this.radioValue == '1') {
+        context = '表单数据';
+      }
+      // 提示
+      this.$confirm({
+        title: '确认将要清除：'+context+"？" ,
+        content: '清除数据操作不可找回，请慎重考虑！',
+        onOk: () => {
+          this.confirmLoading = true;
+          // 调用后台接口方法
+          let param = {
+            radioValue:this.radioValue,
+            enterpriseid:this.form.enterpriseid,
+          }
+          initCompanyData(param).then((res) => {
+            console.log('initCompanyData-->', res)
+            if (res.status == 'SUCCESS') {
+              this.$message.success('初始化成功！')
+              this.confirmLoading = false
+              this.visible = false
+            }
+          }).catch((err) => {
+            console.log('初始化错误：', err)
+            this.confirmLoading = false
+          })
+        },
+        onCancel() {
+
+        },
+      })
+
     },
   },
 }

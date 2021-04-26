@@ -5,23 +5,28 @@
       <div>
         <a-card>
           <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
-            <a-form-item v-for="item in data" :label="item.title">
+            <a-form-item v-for="(item,index) in data" :key="index" :label="item.title">
               <!--级联选择-->
               <div v-if="item.selectVisible">
-                <a-cascader v-decorator="item.decorator" v-show="item.selectVisible" :field-names="{ label: 'title', value: 'key', children: 'children' }"
-                  :options="item.selectList" placeholder="请选择" :disabled="item.disabled"/>
+                <a-cascader v-decorator="item.decorator" v-show="item.selectVisible"
+                            :field-names="{ label: 'title', value: 'key', children: 'children' }"
+                            :options="item.selectList" placeholder="请选择" :disabled="item.disabled"/>
               </div>
               <div v-else>
                 <!--文本输入-->
-                <a-input v-decorator="item.decorator" :disabled="item.disabled" v-show="item.inputVisible" :maxLength="item.fieldlength"/>
+                <a-input v-decorator="item.decorator" :disabled="item.disabled" v-show="item.inputVisible"
+                         :maxLength="item.fieldlength"/>
                 <!--数量输入-->
-                <a-input-number :style="{ width: '1370px' }" v-decorator="item.decorator" v-show="item.inputnumberVisible" :max="item.fieldmax"
-                  :precision="item.fieldprecision" :disabled="item.disabled"/>
+                <a-input-number :style="{ width: '1370px' }" v-decorator="item.decorator"
+                                v-show="item.inputnumberVisible" :max="item.fieldmax"
+                                :precision="item.fieldprecision" :disabled="item.disabled"/>
                 <!--日期控件-->
-                <a-date-picker :style="{ width: '100%' }" v-show="item.timepickerVisible" show-time format="YYYY-MM-DD HH:mm:ss" placeholder="选择日期" valueFormat="YYYY-MM-DD HH:mm:ss"
-                  v-decorator="item.decorator" :disabled="item.disabled"/>
+                <a-date-picker :style="{ width: '100%' }" v-show="item.timepickerVisible" show-time
+                               format="YYYY-MM-DD HH:mm:ss" placeholder="选择日期" valueFormat="YYYY-MM-DD HH:mm:ss"
+                               v-decorator="item.decorator" :disabled="item.disabled"/>
                 <!--参照选择-->
-                <a-input v-decorator="item.decorator" v-show="item.listVisible" :maxLength="item.fieldlength" :disabled="disabled">
+                <a-input v-decorator="item.decorator" v-show="item.listVisible" :maxLength="item.fieldlength"
+                         :disabled="disabled">
                   <a-button slot="suffix" type="link" @click="() => showModal(item)">选择</a-button>
                 </a-input>
               </div>
@@ -30,20 +35,36 @@
             <a-form-item :wrapper-col="{ span: 21, offset: 2 }">
               <a-tabs>
                 <a-tab-pane tab="明细">
-                  <a-button @click="() => detailModal()">选择</a-button>
+                  <!--                  <a-button @click="() => detailModal()">选择</a-button>-->
+                  <a-dropdown>
+                    <a class="ant-dropdown-link" @click="(e) => e.preventDefault()" style="margin-left: 20px">选择
+                      <a-icon type="down"/>
+                    </a>
+                    <a-menu slot="overlay" @click="onClick">
+                      <a-menu-item key="1"> 选择料品</a-menu-item>
+                    </a-menu>
+                  </a-dropdown>
                   <a-table :columns="columns" :data-source="detailsData" :scroll="{ x: 3000 }">
                     <template v-for="col in columns" :slot="col.dataIndex" slot-scope="text, record, index">
                       <div>
-                        <a-input :value="text" @pressEnter="(e) => handleChange(e.target.value, col.dataIndex, record)" v-if="col.isEdit"/>
+                        <a-input :value="text" @pressEnter="(e) => handleChange(e.target.value, col.dataIndex, record)"
+                                 v-if="col.isEdit"/>
                         <template v-else>
                           {{ text }}
                         </template>
                       </div>
                     </template>
+                    <span slot="doclinequantity" slot-scope="text, record">
+                      <a-input
+                          :value="text"
+                          @change="(e) => waitquantityChange(e.target.value, record)"
+                          type="number"
+                      />
+                    </span>
                     <!--操作栏-->
                     <span slot="action" slot-scope="text, record">
                       <a @click="handleEdit(record)">编辑</a>
-                      <a-divider type="vertical" />
+                      <a-divider type="vertical"/>
                       <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
                         <a href="javascript:;">删除</a>
                       </a-popconfirm>
@@ -54,28 +75,36 @@
             </a-form-item>
           </a-form>
           <!--参照弹窗-->
-          <a-modal title="选择" :visible="visible" @ok="archivesOk" @cancel="handleCancel" width="1300px" :destroyOnClose="destroyOnClose">
+          <a-modal title="选择" :visible="visible" @ok="archivesOk" @cancel="handleCancel" width="1300px"
+                   :destroyOnClose="destroyOnClose">
             <archives-modal :name="name" @onSelect="getSelect"></archives-modal>
           </a-modal>
-          <a-modal title="选择" :visible="typeVisible" @ok="handleOk" @cancel="handleCancel" width="1300px" :destroyOnClose="destroyOnClose">
+          <a-modal title="选择" :visible="typeVisible" @ok="handleOk" @cancel="handleCancel" width="1300px"
+                   :destroyOnClose="destroyOnClose">
             <type :menuname="name" @onSelect="typeSelect"></type>
           </a-modal>
           <!--料品档案-->
-          <a-modal title="选择" :visible="detailVisible" @ok="detailOk" @cancel="detailCancel" :destroyOnClose="destroyOnClose" width="1300px">
-            <select-modal :modalname="name" :visible="visible" @onSelect="detailSelect" @onSelectAll="detailSelect"></select-modal>
+          <a-modal title="选择" :visible="detailVisible" @ok="detailOk" @cancel="detailCancel"
+                   :destroyOnClose="destroyOnClose" width="1300px">
+            <select-modal :modalname="name" :visible="visible" @onSelect="detailSelect"
+                          @onSelectAll="detailSelect"></select-modal>
           </a-modal>
         </a-card>
       </div>
     </a-spin>
     <!--按钮排版-->
-    <a-layout-footer :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-10px', zIndex: '999' }">
+    <a-layout-footer
+        :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-10px', zIndex: '999' }">
       <a-card>
         <a-row type="flex" justify="center" align="top">
           <a-col :span="12">
-            <a-button type="primary" style="margin-right: 10px" v-show="approvalVisilbe" @click="submitApproval">提交审批</a-button>
-            <a-button type="primary" style="margin-right: 10px" v-show="cancelVisilbe" @click="cancelClick">撤回审批</a-button>
-            <a-button type="primary" ref="submit" style="margin-right: 10px" v-show="saveVisible" @click="handleSubmit">保存继续</a-button>
-            <a-button type @click="Back" style="margin-right: 10px" v-show="saveVisible">保存返回</a-button>
+            <a-button type="primary" style="margin-right: 10px" v-show="approvalVisible" @click="approvalClick">
+              {{ approvalText }}
+            </a-button>
+            <a-button type @click="submitEdit" style="margin-right: 10px" v-if="this.isEdit == false">存为草稿</a-button>
+            <a-button type @click="Back" style="margin-right: 10px" v-if="this.isEdit == false">保存返回</a-button>
+            <a-button type @click="handleSubmit" style="margin-right: 10px" v-if="this.approvalText == '提交审批'">保存
+            </a-button>
           </a-col>
         </a-row>
       </a-card>
@@ -85,26 +114,18 @@
 
 <script>
 import Vue from 'vue'
-import { formModel, Button, Tree } from 'ant-design-vue'
-import { Cascader } from 'ant-design-vue'
-Vue.use(Cascader)
-import { PageHeader } from 'ant-design-vue'
-Vue.use(PageHeader)
-Vue.use(formModel, Button)
-import { postProductAdd } from '@/api/manage'
-import { logininfo, menuname } from '@/store/mutation-types'
-import { getForm, submitForm, postData, getData } from '@/api/manage'
-import { Form } from 'ant-design-vue'
-Vue.use(Form)
-import { TreeSelect } from 'ant-design-vue'
-import { keys, type } from 'mockjs2'
-Vue.use(TreeSelect)
+import {Button, Cascader, Empty, Form, formModel, PageHeader, TreeSelect} from 'ant-design-vue'
+import {getData, getForm, getProductListColumns, submitForm} from '@/api/manage'
+import {logininfo} from '@/store/mutation-types'
 import ArchivesModal from '../modal/ArchivesModal'
 import Type from '../modal/TypeModal'
 import SelectModal from '../modal/SelectModal'
-import { getProductListColumns } from '@/api/manage'
-import { Empty } from 'ant-design-vue'
-import { isRendered } from 'nprogress'
+
+Vue.use(Cascader)
+Vue.use(PageHeader)
+Vue.use(formModel, Button)
+Vue.use(Form)
+Vue.use(TreeSelect)
 Vue.use(Empty)
 
 const numberRow = []
@@ -121,8 +142,8 @@ export default {
       selectedRow: [],
       selectedRowKeys: [],
       size: 'small',
-      labelCol: { span: 2 },
-      wrapperCol: { span: 22 },
+      labelCol: {span: 2},
+      wrapperCol: {span: 22},
       other: '',
       data: [],
       menuid: '',
@@ -139,14 +160,12 @@ export default {
       detailVisible: false,
       columns: [],
       detailsData: [],
-      menuid: '',
       departmentid: '',
       personid: '',
       vendorid: '',
       businessclassid: '',
       spinning: false,
       name: '',
-      approvalVisilbe: false,
       approveStatus: 8,
       destroyOnClose: true,
       menu: '',
@@ -158,8 +177,11 @@ export default {
       saveVisible: true,
       cancelVisilbe: false,
       continueVisible: true,
-      approvalprocess: '',
-      businessname:''
+      approvalVisible: false,
+      approvalprocess: false, //1审批流启用 2审批流未启用
+      businessname: '',
+      approvalText: '',
+      isEdit: false,
     }
   },
   created() {
@@ -167,7 +189,7 @@ export default {
   },
   computed: {
     rowSelection() {
-      const { selectedRowKeys } = this
+      const {selectedRowKeys} = this
       return {
         selectedRowKeys,
         hideDefaultSelections: true,
@@ -179,30 +201,9 @@ export default {
     this.initdata()
   },
   beforeCreate() {
-    this.form = this.$form.createForm(this, { formname: 'form' })
+    this.form = this.$form.createForm(this, {formname: 'form'})
   },
   methods: {
-
-    cancelClick(e) {
-      const parameter = {}
-      parameter.memuid = this.menuid
-      parameter.bizid = this.materialid
-      var url = ''
-      if (this.approvalprocess == 1) {
-        url = '/work/recallProcess'
-      } else {
-        url = '/work/directApproval'
-      }
-      console.log('cancel-->', JSON.stringify(parameter))
-      getData(parameter, url).then((res) => {
-        if (res.status == 'SUCCESS') {
-          this.$message.info('撤销成功')
-          this.getFormdata()
-        } else {
-          this.$message.warn(res.errorMsg)
-        }
-      })
-    },
 
     handleEdit(record) {
       console.log(JSON.stringify(record.doclineid))
@@ -218,12 +219,29 @@ export default {
     },
 
     submit() {
+      var isError = false
+      for (const key in this.detailsData) {
+        if (this.detailsData[key].doclinequantity == undefined) {
+          isError = true
+          this.$message.info('明细数量不能为空！')
+          return
+        } else if (parseInt(this.detailsData[key].doclinequantity) < 1) {
+          isError = true
+          this.$message.info('明细数量必须大于0！')
+          return
+        }
+      }
+      if (isError) {
+        this.$message.info('明细数量不能为空！')
+        isError = false
+        return
+      }
       this.form.validateFields((err, values) => {
         if (!err) {
           if (this.$route.query.tag == 1) {
             if (this.$route.query.menu == 'ShippingNoticeList') {
               var submitUrl = '/bd/dispatchnotice/insterSave'
-            } 
+            }
           } else {
             if (this.$route.query.menu == 'ShippingNoticeList') {
               var submitUrl = '/bd/dispatchnotice/updateSave'
@@ -239,67 +257,111 @@ export default {
           values.departmentid = this.departmentid
           values.personid = this.personid
           values.customerid = this.customerid
-          values.businessclasscode = this.businessclassid
+          values.businessclassid = this.businessclassid
           // values.approvalprocess = values.approvalprocess.join()
           console.log('submit url-->', submitUrl)
           console.log('submit parameter-->', JSON.stringify(values))
           submitForm(values, submitUrl).then((res) => {
-              console.log('submit--->', JSON.stringify(res))
-              if (this.$route.query.tag == 1) {
-                if (res.status == 'SUCCESS') {
-                  this.detailsData = []
-                  if (this.status == 1) {
-                    this.getFormdata()
-                  } else if (this.status == 2) {
-                    this.$multiTab.closeCurrentPage()
-                  }
+            console.log('submit--->', JSON.stringify(res))
+            if (res.status == 'SUCCESS') {
+              if (this.$route.query.tag == 2) {
+                //编辑
+                if (this.status == 1) {
+                  this.getList(this.$route.query.menu, this.$route.query.materialid, 0)
+                } else {
+                  this.$multiTab.closeCurrentPage()
+                }
+              } else {
+                //新增
+                this.materialid = res.result.bizid
+                this.billcode = res.result.billcode
+                this.businessname = values.businessclassname
+                if (this.status == 2) {
+                  this.submitApproval()
+                  this.addinit()
+                } else if (this.status == 1) {
+                  this.isEdit = true
+                  this.getList(this.menu, this.materialid, 0)
+                  this.getFormdata()
+                  this.getColumns()
                 }
               }
               this.$message.info(res.errorMsg)
-            }).catch((err) => {
-              this.$message.error(err.message)
-            })
+            } else {
+              this.$message.error(res.errorMsg);
+            }
+            /*if (this.$route.query.tag == 1) {
+              if (res.status == 'SUCCESS') {
+                this.detailsData = []
+                if (this.status == 1) {
+                  this.getFormdata()
+                } else if (this.status == 2) {
+                  this.$multiTab.closeCurrentPage()
+                }
+              }
+            }
+            this.$message.info(res.errorMsg)*/
+          }).catch((err) => {
+            this.$message.error(err.message)
+          })
         }
       })
+    },
+
+    waitquantityChange(value, record) {
+      record.doclinequantity = value
     },
 
     handleChange(value, key, record) {
-      if (key == 'doclinequantity') {
-        if (this.$route.query.menu == 'StorageManagementList') {
-          if (record.doclinequantity) {
-            if (parseInt(record.doclinequantity) > parseInt(value)) {
-              var temp = JSON.parse(JSON.stringify(record))
-              temp.doclinequantity = parseInt(record.doclinequantity) - parseInt(value)
-              this.detailsData.push(temp)
-            }
-          }
-        }
-      }
       record[key] = value
       this.detailsData = this.detailsData.map((item, index) => {
-        return { ...item, key: index + 1 }
+        return {...item, key: index + 1}
       })
     },
 
-    submitApproval(e) {
+    approvalClick(e) {
+      if (this.approvalText == '提交审批') {
+        this.submitApproval()
+      } else {
+        const parameter = {}
+        parameter.memuid = this.menuid
+        parameter.bizid = this.materialid
+        var url = '/work/recallProcess'
+
+        console.log('cancel-->', JSON.stringify(parameter))
+        getData(parameter, url).then((res) => {
+          if (res.status == 'SUCCESS') {
+            this.$message.info('撤销成功')
+            this.getFormdata()
+          } else {
+            this.$message.warn(res.errorMsg)
+          }
+        })
+      }
+    },
+
+    submitApproval() {
+      //提交审批
       const parameter = {}
       parameter.bizid = this.materialid
       parameter.memuid = this.menuid
       var url = ''
-      if (this.approvalprocess == 1) {
+      if (this.approvalprocess) {
         url = '/work/submitProcess'
         parameter.billcode = this.billcode
-          parameter.businessname=this.businessname
+        parameter.businessname = this.businessname
       } else {
         url = '/work/directApproval'
       }
-      console.log('submit approval-->', JSON.stringify(parameter))
+      console.log('approval-->', JSON.stringify(parameter))
+      console.log('approval url-->', url)
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
-          this.$message.info('提交审批成功')
+          this.$message.success('提交审批成功')
           this.getFormdata()
         } else {
-          this.$message.info(res.errorMsg)
+          console.log('approval error-->', res)
+          this.$message.error(res.errorMsg)
         }
       })
     },
@@ -337,7 +399,7 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, urlColumns).then((res) => {
         this.columns = res.result.columns
-        this.columns.unshift({ title: '序号', dataIndex: 'key', key: 'key', width: '200px' })
+        this.columns.unshift({title: '序号', dataIndex: 'key', key: 'key', width: '200px'})
       })
     },
 
@@ -349,16 +411,13 @@ export default {
 
       if (menu == 'ShippingNoticeList') {
         var urlColumns = '/bd/dispatchnotice/dispatchnoticelineList'
-      } 
+      }
       columnsParams.docid = id
       console.log('listdata url--->', urlColumns)
       console.log('listdata parameter-->', JSON.stringify(columnsParams))
       getData(columnsParams, urlColumns).then((res) => {
         this.detailsData = []
         this.detailsData = res.result.data
-        this.detailsData = this.detailsData.map((item, index) => {
-          return { ...item, key: index + 1 }
-        })
       })
     },
 
@@ -376,6 +435,14 @@ export default {
       this.selectList = list
     },
 
+    onClick({key}) {
+      console.log(`Click on item ${key}`)
+      if (key == '1') {
+        this.detailModal()
+      } else {
+        return;
+      }
+    },
     detailModal(e) {
       this.selectedRowKeys = []
       for (const key in this.detailsData) {
@@ -386,11 +453,42 @@ export default {
     },
 
     detailOk(e) {
-      debugger
       this.detailVisible = false
+      // add by tf 记录料品来源字段信息 2021年4月19日14:45:03
+      this.selectList = this.selectList.map((item, index) => {
+        return {
+          ...item,
+          doclinedefine1: item.materialdefine1,
+          doclinedefine2: item.materialdefine2,
+          doclinedefine3: item.materialdefine3,
+          doclinedefine4: item.materialdefine4,
+          doclinedefine5: item.materialdefine5,
+          doclinedefine6: item.materialdefine6,
+          doclinedefine7: item.materialdefine7,
+          doclinedefine8: item.materialdefine8,
+          doclinedefine9: item.materialdefine9,
+          doclinedefine10: item.materialdefine10,
+          doclinedefine11: item.materialdefine11,
+          doclinedefine12: item.materialdefine12,
+          doclinedefine13: item.materialdefine13,
+          doclinedefine14: item.materialdefine14,
+          doclinedefine15: item.materialdefine15,
+          doclinedefine16: item.materialdefine16,
+          doclinedefine17: item.materialdefine17,
+          doclinedefine18: item.materialdefine18,
+          doclinedefine19: item.materialdefine19,
+          doclinedefine20: item.materialdefine20,
+        }
+      })
       this.detailsData = this.detailsData.concat(this.selectList)
       this.detailsData = this.detailsData.map((item, index) => {
-        return { ...item, key: parseInt(index) + 1 }
+        /*return {...item, key: parseInt(index) + 1}*/
+        // add by tf 记录料品行号 2021年4月19日14:46:43
+        return {
+          ...item,
+          key: parseInt(index) + 1,
+          doclineno: item.doclineno == undefined ? parseInt(index) + 1 : item.doclineno,
+        }
       })
     },
 
@@ -429,7 +527,6 @@ export default {
         })
         this.departmentid = this.selectList[0].departmentid
       } else if (this.currentkey == 'customerid') { // 客户选择确认
-        debugger;
         this.visible = false
         this.form.setFieldsValue({
           [this.currentkey]: this.selectList[0].customercode,
@@ -554,6 +651,10 @@ export default {
       }
     },
 
+    submitEdit(e) {
+      this.submit()
+    },
+
     handleSubmit(e) {
       this.status = 1
       this.submit()
@@ -564,27 +665,26 @@ export default {
     },
 
     getFormdata() {
-      debugger
       this.modalname = this.$route.query.menu
       this.menuid = this.$route.query.menuid
       const columnsParams = {}
       columnsParams.memuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       if (this.$route.query.tag == 1) {
-        this.approvalVisilbe = false
+        this.approvalVisible = false
         this.continueVisible = true
         this.saveVisible = true
         this.title = this.$route.query.storageTitle + '新增'
         this.materialclassid = this.$route.query.materialclassid
         if (this.$route.query.menu == 'ShippingNoticeList') {
           this.urlForm = '/bd/dispatchnotice/insterForm'
-        } 
+        }
       } else if (this.$route.query.tag == 2) {
-        this.approvalVisilbe = true
+        this.approvalVisible = true
         this.title = this.$route.query.storageTitle + '编辑'
         if (this.$route.query.menu == 'ShippingNoticeList') {
           this.urlForm = '/bd/dispatchnotice/updateForm'
-        } 
+        }
         columnsParams.docid = this.materialid
       }
       this.$multiTab.rename(this.$route.path, this.title)
@@ -611,23 +711,36 @@ export default {
               this.vendorid = this.data[i].keyvalue
             } else if (this.data[i].key == 'doccode') {
               this.billcode = this.data[i].value
-            }else if (this.data[i].key == 'businessclassname') {
+            } else if (this.data[i].key == 'businessclassname') {
               this.businessname = this.data[i].value
             } else if (this.data[i].key == 'ApproveStatus') {
               if (this.$route.query.tag == 2) {
                 this.continueVisible = false
-                if (this.data[i].value == 3) {
+                /*if (this.data[i].value == 3) {
                   this.cancelVisilbe = true
-                  this.approvalVisilbe = false
+                  this.approvalVisible = false
                   this.saveVisible = false
                 } else if (this.data[i].value == 8) {
                   this.cancelVisilbe = false
-                  this.approvalVisilbe = true
+                  this.approvalVisible = true
                   this.saveVisible = true
                 } else {
                   this.cancelVisilbe = false
-                  this.approvalVisilbe = false
+                  this.approvalVisible = false
                   this.saveVisible = false
+                }*/
+                if (this.data[i].value == 3) {
+                  this.approvalText = '撤回审批'
+                  this.approvalVisible = true
+                  //撤回
+                } else if (this.data[i].value == 8) {
+                  this.approvalText = '提交审批'
+                  this.approvalVisible = true
+                  //提交
+                } else {
+                  this.approvalText = ''
+                  this.approvalVisible = false
+                  //都不显示
                 }
               }
             } else if (this.data[i].key == 'approvalprocess') {
@@ -646,7 +759,21 @@ export default {
     // 返回到清单页面
     Back(e) {
       this.status = 2
-      this.submit()
+      var isError = false
+      for (const key in this.detailsData) {
+        if (this.detailsData[key].doclinequantity == undefined) {
+          isError = true
+          this.$message.error('明细数量不能为空！')
+          return
+        } else if (parseInt(this.detailsData[key].doclinequantity) < 1) {
+          isError = true
+          this.$message.error('明细数量必须大于0！')
+          return
+        }
+      }
+      if (!isError) {
+        this.submit()
+      }
       // 路由跳转
     },
 

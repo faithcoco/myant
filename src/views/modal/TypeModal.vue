@@ -2,42 +2,43 @@
   <a-card>
     <a-row>
       <a-col :span="19"></a-col>
-      <a-col :span="5"> </a-col>
+      <a-col :span="5"></a-col>
     </a-row>
-    <br />
+    <br/>
     <a-table
-      :columns="columns"
-      :data-source="list"
-      defaultExpandAllRows
-      :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: 'radio', onSelect: onSelect }"
+        :columns="columns"
+        :data-source="list"
+        defaultExpandAllRows
+        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, type: 'radio', onSelect: onSelect }"
     >
       <span slot="action" slot-scope="text, record">
         <template>
           <a @click="handleAddItem(record)">添加子类</a>
-          <a-divider type="vertical" />
+          <a-divider type="vertical"/>
           <a @click="handleEdit(record)">编辑</a>
-          <a-divider type="vertical" />
+          <a-divider type="vertical"/>
           <a-popconfirm title="确定删除?" @confirm="() => handleDelete(record)">
             <a href="javascript:;">删除</a>
           </a-popconfirm>
         </template>
       </span>
       <span slot="use" style="margin: 0">
-        <a-checkbox @change="onChange" />
+        <a-checkbox @change="onChange"/>
       </span>
     </a-table>
     <a-modal v-model="visible" title="类别" @ok="handleOk">
       <p>请输入类别名称：</p>
-      <a-input ref="userNameInput" v-model="typeName" placeholder />
+      <a-input ref="userNameInput" v-model="typeName" placeholder/>
       <p>请输入类别编码：</p>
-      <a-input ref="userNameInput" v-model="typeCode" placeholder />
+      <a-input ref="userNameInput" v-model="typeCode" placeholder/>
     </a-modal>
   </a-card>
 </template>
 <script>
-import { getclassificationGoodsColumns, getclassificationGoodsList, insertmaterialClass, getData } from '@/api/manage'
-import { logininfo, menuname } from '@/store/mutation-types'
+import {getclassificationGoodsList} from '@/api/manage'
+import {logininfo} from '@/store/mutation-types'
 import Vue from 'vue'
+
 export default {
   props: {
     menuname: {
@@ -78,7 +79,6 @@ export default {
       tag: 0, //1新增 2编辑
       urlUpdate: '',
       urlDelete: '',
-      menuname: '',
       selectedRowKeys: [],
     }
   },
@@ -96,14 +96,14 @@ export default {
   methods: {
     onSelect(record) {
       console.log('record-->', JSON.stringify(record))
-    
-       this.$emit('onSelect', record)
+
+      this.$emit('onSelect', record)
     },
     onSelectChange(selectedRowKeys) {
       console.log('selectedRowKeys changed-->', selectedRowKeys)
       console.log('this list-->', JSON.stringify(this.list))
       this.selectedRowKeys = selectedRowKeys
-   
+
     },
     initData(name) {
       this.name = name
@@ -178,6 +178,9 @@ export default {
 
     back() {
       this.$router.go(-1)
+    },
+    handleOk(e) {
+
     },
   },
 }

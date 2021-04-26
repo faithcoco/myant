@@ -5,11 +5,12 @@
         <a-col>
           <a-select default-value="全部" style="width: 220px" @change="selectChange">
             <a-select-option v-for="SList in selectList" :key="SList.key" :value="SList.key">{{
-              SList.value
-            }}</a-select-option>
+                SList.value
+              }}
+            </a-select-option>
           </a-select>
 
-          <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容" />
+          <a-input-search @search="onSearch" style="width: 220px; margin-left: 20px" placeholder="请输入搜索内容"/>
 
           <span class="table-page-search-submitButtons" :style="{ float: 'right', overflow: 'hidden' } || {}">
             <a-button style="margin-left: 5px" type="primary" @click="add()">新增</a-button>
@@ -19,23 +20,26 @@
           </span>
 
           <a-table
-            ref="table"
-            size="default"
-            :columns="columns"
-            :data-source="listdata"
-            :alert="false"
-            :scroll="{ x: 1500, y: 525 }"
-            bordered
-            style="margin-top: 20px"
-            :pagination="pagination"
-            @change="handleTableChange"
+              ref="table"
+              size="default"
+              :columns="columns"
+              :data-source="listdata"
+              :alert="false"
+              :scroll="{ x: 1500, y: 525 }"
+              bordered
+              style="margin-top: 20px"
+              :pagination="pagination"
+              @change="handleTableChange"
           >
             <span slot="action" slot-scope="text, record">
               <a @click="showApproval(record)">查审</a>
-              <a-divider type="vertical" />
+              <a-divider type="vertical"/>
+              <a @click="submitApproval(record)" v-if="record.approvecode == 8">送审</a>
+              <a-divider type="vertical" v-if="record.approvecode == 8"/>
+              <a @click="handleRevocation(record)" v-if="record.approvecode == 3">撤回</a>
+              <a-divider type="vertical" v-if="record.approvecode == 3"/>
               <a @click="handleEdit(record)">编辑</a>
-              <a-divider type="vertical" />
-
+              <a-divider type="vertical"/>
               <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
                 <a href="javascript:;">删除</a>
               </a-popconfirm>
@@ -52,28 +56,23 @@
 <script>
 import moment from 'moment'
 import Vue from 'vue'
-import { Descriptions } from 'ant-design-vue'
-import { Transfer } from 'ant-design-vue'
-import { Comment } from 'ant-design-vue'
+import {Comment, Descriptions, Mentions, Timeline, Transfer, Tree} from 'ant-design-vue'
+import STree from '@/components/Tree/Tree'
+import {STable} from '@/components'
+import {getData, getProductList, getProductListColumns} from '@/api/manage'
+import Approval from '../Approval'
+import SelectModal from '../modal/SelectModal'
+import {logininfo, menuname} from '@/store/mutation-types'
+
 Vue.use(Descriptions)
 Vue.use(Transfer)
 Vue.use(Comment)
-import { Tree } from 'ant-design-vue'
 Vue.use(Tree)
-import { Timeline } from 'ant-design-vue'
 Vue.use(Timeline)
-import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
-import STree from '@/components/Tree/Tree'
-import { STable } from '@/components'
-import { getProductList, getProductListColumns, getclassificationGoodsList, postData, getData } from '@/api/manage'
-import action from '../../core/directives/action'
-import Approval from '../Approval'
-import SelectModal from '../modal/SelectModal'
-import { logininfo, menuname } from '@/store/mutation-types'
 
 const columns = []
-const selectList = [{ value: '全部', key: 'all' }]
+const selectList = [{value: '全部', key: 'all'}]
 
 const dataList = []
 export default {
@@ -116,7 +115,7 @@ export default {
       isSearch: false,
       searchValue: '',
       searchKey: 'all',
-      pagination: { current: 1, pageSize: 10, total: 10 },
+      pagination: {current: 1, pageSize: 10, total: 10},
       pageNo: 1,
     }
   },
@@ -133,7 +132,7 @@ export default {
   },
   computed: {
     rowSelection() {
-      const { selectedRowKeys } = this
+      const {selectedRowKeys} = this
       return {
         selectedRowKeys,
         onChange: this.onSelectChange,
@@ -152,14 +151,56 @@ export default {
       this.approval_visible = true
       this.materialid = record.docid
     },
+    handleRevocation(record) {
+      const parameter = {}
+      parameter.memuid = this.menuid
+      parameter.bizid = record.docid
+      var url = '/work/recallProcess'
+
+      console.log('cancel-->', JSON.stringify(parameter))
+      getData(parameter, url).then((res) => {
+        if (res.status == 'SUCCESS') {
+          this.$message.info('撤销成功')
+          this.getList()
+        } else {
+          this.$message.warn(res.errorMsg)
+        }
+      })
+    },
+    submitApproval(record) {
+      console.log('record--->', JSON.stringify(record))
+      //提交审批
+      const parameter = {}
+      parameter.bizid = record.docid
+      parameter.memuid = this.menuid
+      var url = ''
+
+      if (record.approvalprocess == '启用') {
+        url = '/work/submitProcess'
+        parameter.billcode = this.billcode
+        parameter.businessname = this.businessname
+      } else {
+        url = '/work/directApproval'
+      }
+      console.log('approval-->', JSON.stringify(parameter))
+      console.log('approval url-->', url)
+      getData(parameter, url).then((res) => {
+        if (res.status == 'SUCCESS') {
+          this.$message.info('提交审批成功')
+          this.getList()
+        } else {
+          this.$message.info(res.errorMsg)
+        }
+      })
+    },
     treeSearch(e) {
       const value = e.target.value
       this.classifyTree = this.treeData.filter((item) => JSON.stringify(item).includes(value))
     },
     delete() {
       const columnsParams = {}
-    
-      columnsParams.docid=this.materialid
+
+      columnsParams.docid = this.materialid
 
       console.log('delete url--->', this.urlDelete)
       console.log('delete params--->', JSON.stringify(columnsParams))
@@ -204,7 +245,7 @@ export default {
 
         for (let i = 0; i < this.columns.length; i++) {
           if (i < this.columns.length - 1) {
-            this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
+            this.selectList.push({value: this.columns[i].title, key: this.columns[i].dataIndex})
           } else {
             this.columns[i].width = 155
           }
@@ -237,7 +278,7 @@ export default {
       console.log('list url-->', this.urlList)
       console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
-       
+
         this.listdata = []
         if (res.status == 'SUCCESS') {
           this.pagination.current = res.result.pageNo

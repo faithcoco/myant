@@ -284,14 +284,14 @@ export const asyncRouterMap = [
           {
             path: 'OutManagementAdd',
             name: 'OutManagementAdd',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/OutManagementAdd.vue'),
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/StockOutRecordAdd.vue'),
             meta: { title: '出库新增' },
             hidden: true
           },
           {
             path: 'OutManagementList',
             name: 'OutManagementList',
-            component: () => import(/* webpackChunkName: "fail" */ '@/views/OutManagementList.vue'),
+            component: () => import(/* webpackChunkName: "fail" */ '@/views/OperationsCenter/StockOutRecordList.vue'),
             meta: { title: '出库产品清单', icon: 'user', permission: ['03-01'] }
           },
           {
@@ -307,7 +307,6 @@ export const asyncRouterMap = [
             meta: { title: '发货通知新增' },
             hidden: true
           },
-
           {
             path: 'ReturnNoticeSupplierList',
             name: 'ReturnNoticeSupplierList',

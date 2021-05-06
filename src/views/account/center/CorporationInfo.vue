@@ -48,15 +48,10 @@
                 </a-form-item>
                 <a-form-item>
                   <a-icon style="margin-right: 10px" type="mail" class="upload-icon" />注册时间:
-                  {{ form.enterpriseregistrationtime }}
+                  {{ registrationtime }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right: 10px" type="deployment-unit" class="upload-icon" />
-                  状态:
-                  <a-tag :color="color" style="margin-left: 10px">{{ this.statusname }}</a-tag>
-                  剩余试用时间:
-                  {{ form.enterprisetrialdays }}天
-                </a-form-item>
+                  <a-icon style="margin-right: 10px" type="deployment-unit" class="upload-icon" />状态:<a-tag :color="color" style="margin-left: 10px">{{statusname }}</a-tag>剩余试用时间: {{ form.enterprisetrialdays }}天</a-form-item>
               </a-form>
             </a-col>
           </a-row>
@@ -369,6 +364,8 @@ export default {
       radioValue:'',
       // 企业状态名称
       statusname:'',
+      // 企业注册日期
+      registrationtime:'',
     }
   },
 
@@ -379,15 +376,19 @@ export default {
     getInfo() {
       const params = {}
       params.id = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-
+      debugger
       console.log('params-->', params)
       getBaseenterpriseInfo(params)
         .then((res) => {
           console.log('getBaseenterpriseInfo----->', JSON.stringify(res))
+          debugger
           this.form = res.result
-          let d = new Date(this.baseenterprisePO.enterpriseregistrationtime)
+          let d = new Date(this.form.enterpriseregistrationtime)
           let enterpriseregistrationtime = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
+          // 企业注册日期
+          this.registrationtime = enterpriseregistrationtime
           //企业状态：0待审核、1已审核、2已过期、5试用中、9已注销——注册成功默认5
+          debugger
           if (this.form.enterprisestatus === 5) {
             this.statusname = '试用中'
             this.color = 'yellow'

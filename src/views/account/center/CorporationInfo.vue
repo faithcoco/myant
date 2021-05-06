@@ -106,11 +106,12 @@
           ></a-input>
           <a @click="changePhone">更改</a>
         </a-form-model-item>
-        <a-form-model-item label="注册时间:" prop="EnterpriseRegistrationtime">
-          <a-input v-model="form.enterpriseregistrationtime" disabled placeholder="无"></a-input>
+        <a-form-model-item label="注册时间:">
+          <a-input v-model="registrationtime" disabled placeholder="无"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="状态:" prop="EnterpriseStatus">
-          <a-input v-model="form.enterprisestatusname" disabled placeholder="请输入新手机号"></a-input>
+
+        <a-form-model-item label="状态:" >
+          <a-input v-model="statusname" disabled ></a-input>
         </a-form-model-item>
       </a-form-model>
     </a-modal>

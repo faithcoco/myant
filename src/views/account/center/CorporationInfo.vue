@@ -53,7 +53,7 @@
                 <a-form-item>
                   <a-icon style="margin-right: 10px" type="deployment-unit" class="upload-icon" />
                   状态:
-                  <a-tag :color="color" style="margin-left: 10px">{{ form.enterprisestatus }}</a-tag>
+                  <a-tag :color="color" style="margin-left: 10px">{{ this.statusname }}</a-tag>
                   剩余试用时间:
                   {{ form.enterprisetrialdays }}天
                 </a-form-item>
@@ -367,6 +367,8 @@ export default {
       },
       // 初始化企业信息选择
       radioValue:'',
+      // 企业状态名称
+      statusname:'',
     }
   },
 
@@ -387,19 +389,19 @@ export default {
           let enterpriseregistrationtime = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
           //企业状态：0待审核、1已审核、2已过期、5试用中、9已注销——注册成功默认5
           if (this.form.enterprisestatus === 5) {
-            this.enterprisestatusname = '试用中'
+            this.statusname = '试用中'
             this.color = 'yellow'
           } else if (this.form.enterprisestatus === 0) {
-            this.enterprisestatusname = '待审核'
+            this.statusname = '待审核'
             this.color = 'red'
           } else if (this.form.enterprisestatus === 1) {
-            this.enterprisestatusname = '已审核'
+            this.statusname = '已审核'
             this.color = 'yellowgreen'
           } else if (this.form.enterprisestatus === 2) {
-            this.enterprisestatusname = '已过期'
+            this.statusname = '已过期'
             this.color = 'gray'
           } else if (this.form.enterprisestatus === 9) {
-            this.enterprisestatusname = '已注销'
+            this.statusname = '已注销'
             this.color = 'black'
           }
          

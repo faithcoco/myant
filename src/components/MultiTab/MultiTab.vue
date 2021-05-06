@@ -36,7 +36,6 @@ export default {
       }
     })
     this.pages.push(this.$route)
-    debugger
     if (this.$route.fullPath != '/index') {
       this.pages.splice(0,0,{
         name: 'index',
@@ -71,7 +70,6 @@ export default {
       this[action](targetKey)
     },
     remove (targetKey) {
-      debugger
       // 首页不能关闭
       if (targetKey == "/index") {
         this.$message.warning('首页不能关闭')

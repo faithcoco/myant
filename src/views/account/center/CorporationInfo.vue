@@ -381,10 +381,12 @@ export default {
         .then((res) => {
           console.log('getBaseenterpriseInfo----->', JSON.stringify(res))
           this.form = res.result
-          let d = new Date(this.form.enterpriseregistrationtime)
-          let enterpriseregistrationtime = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
-          // 企业注册日期
-          this.registrationtime = enterpriseregistrationtime
+          if (this.form.enterpriseregistrationtime !== null && this.form.enterpriseregistrationtime !== '' ) {
+            let d = new Date(this.form.enterpriseregistrationtime)
+            let enterpriseregistrationtime = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
+            // 企业注册日期
+            this.registrationtime = enterpriseregistrationtime
+          }
           //企业状态：0待审核、1已审核、2已过期、5试用中、9已注销——注册成功默认5
           if (this.form.enterprisestatus === 5) {
             this.statusname = '试用中'

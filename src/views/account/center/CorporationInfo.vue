@@ -381,7 +381,6 @@ export default {
       getBaseenterpriseInfo(params)
         .then((res) => {
           console.log('getBaseenterpriseInfo----->', JSON.stringify(res))
-          debugger
           this.form = res.result
           let d = new Date(this.form.enterpriseregistrationtime)
           let enterpriseregistrationtime = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'

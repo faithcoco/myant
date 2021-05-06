@@ -48,15 +48,10 @@
                 </a-form-item>
                 <a-form-item>
                   <a-icon style="margin-right: 10px" type="mail" class="upload-icon" />注册时间:
-                  {{ form.enterpriseregistrationtime }}
+                  {{ registrationtime }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right: 10px" type="deployment-unit" class="upload-icon" />
-                  状态:
-                  <a-tag :color="color" style="margin-left: 10px">{{ form.enterprisestatus }}</a-tag>
-                  剩余试用时间:
-                  {{ form.enterprisetrialdays }}天
-                </a-form-item>
+                  <a-icon style="margin-right: 10px" type="deployment-unit" class="upload-icon" />状态:<a-tag :color="color" style="margin-left: 10px">{{statusname }}</a-tag>剩余试用时间: {{ form.enterprisetrialdays }}天</a-form-item>
               </a-form>
             </a-col>
           </a-row>
@@ -111,11 +106,12 @@
           ></a-input>
           <a @click="changePhone">更改</a>
         </a-form-model-item>
-        <a-form-model-item label="注册时间:" prop="EnterpriseRegistrationtime">
-          <a-input v-model="form.enterpriseregistrationtime" disabled placeholder="无"></a-input>
+        <a-form-model-item label="注册时间:">
+          <a-input v-model="registrationtime" disabled placeholder="无"></a-input>
         </a-form-model-item>
-        <a-form-model-item label="状态:" prop="EnterpriseStatus">
-          <a-input v-model="form.enterprisestatusname" disabled placeholder="请输入新手机号"></a-input>
+
+        <a-form-model-item label="状态:" >
+          <a-input v-model="statusname" disabled ></a-input>
         </a-form-model-item>
       </a-form-model>
     </a-modal>
@@ -367,6 +363,10 @@ export default {
       },
       // 初始化企业信息选择
       radioValue:'',
+      // 企业状态名称
+      statusname:'',
+      // 企业注册日期
+      registrationtime:'',
     }
   },
 
@@ -377,29 +377,32 @@ export default {
     getInfo() {
       const params = {}
       params.id = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-
       console.log('params-->', params)
       getBaseenterpriseInfo(params)
         .then((res) => {
           console.log('getBaseenterpriseInfo----->', JSON.stringify(res))
           this.form = res.result
-          let d = new Date(this.baseenterprisePO.enterpriseregistrationtime)
-          let enterpriseregistrationtime = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
+          if (this.form.enterpriseregistrationtime !== null && this.form.enterpriseregistrationtime !== '' ) {
+            let d = new Date(this.form.enterpriseregistrationtime)
+            let enterpriseregistrationtime = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
+            // 企业注册日期
+            this.registrationtime = enterpriseregistrationtime
+          }
           //企业状态：0待审核、1已审核、2已过期、5试用中、9已注销——注册成功默认5
           if (this.form.enterprisestatus === 5) {
-            this.enterprisestatusname = '试用中'
+            this.statusname = '试用中'
             this.color = 'yellow'
           } else if (this.form.enterprisestatus === 0) {
-            this.enterprisestatusname = '待审核'
+            this.statusname = '待审核'
             this.color = 'red'
           } else if (this.form.enterprisestatus === 1) {
-            this.enterprisestatusname = '已审核'
+            this.statusname = '已审核'
             this.color = 'yellowgreen'
           } else if (this.form.enterprisestatus === 2) {
-            this.enterprisestatusname = '已过期'
+            this.statusname = '已过期'
             this.color = 'gray'
           } else if (this.form.enterprisestatus === 9) {
-            this.enterprisestatusname = '已注销'
+            this.statusname = '已注销'
             this.color = 'black'
           }
          
@@ -957,7 +960,7 @@ export default {
       }
       // 提示
       this.$confirm({
-        title: '确认将要清除：'+context+"？" ,
+        title: '是否确认清除'+context+"？" ,
         content: '清除数据操作不可找回，请慎重考虑！',
         onOk: () => {
           this.confirmLoading = true;

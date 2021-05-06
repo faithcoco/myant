@@ -83,13 +83,17 @@ export default {
       }
     },
     selectedLastPath () {
-      this.activeKey = this.fullPathList[this.fullPathList.length - 1]
+      if (this.fullPathList.length == 0) {
+        this.activeKey = '/index'
+      } else {
+        this.activeKey = this.fullPathList[this.fullPathList.length - 1]
+      }
     },
 
     // content menu
     closeThat (e) {
       // 判断是否为最后一个标签页，如果是最后一个，则无法被关闭
-      if (this.fullPathList.length > 1) {
+      if (this.pages.length > 1) {
         this.remove(e)
       } else {
         this.$message.info('这是最后一个标签了, 无法被关闭')

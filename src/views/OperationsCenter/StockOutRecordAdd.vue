@@ -182,6 +182,7 @@ export default {
       businessname: '',
       approvalText: '',
       isEdit: false,
+      
     }
   },
   created() {

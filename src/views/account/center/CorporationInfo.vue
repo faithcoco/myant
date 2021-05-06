@@ -957,7 +957,7 @@ export default {
       }
       // 提示
       this.$confirm({
-        title: '确认将要清除：'+context+"？" ,
+        title: '是否确认清除'+context+"？" ,
         content: '清除数据操作不可找回，请慎重考虑！',
         onOk: () => {
           this.confirmLoading = true;

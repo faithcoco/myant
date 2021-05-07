@@ -399,11 +399,6 @@ export default {
       }
     },
     handleAdd(e) {
-      if (this.menu == 'StorageManagementList') {
-        this.path = 'StorageManagementAdd'
-      } else if (this.menu == 'ReceiptNoticeList') {
-        this.path = 'ShippingNoticeAdd'
-      }
       this.$router.push({
         path: this.path,
         query: {
@@ -421,9 +416,9 @@ export default {
         path: this.path,
         query: {
           menu: this.$route.name,
+          menuid: this.menuid,
           materialid: this.materialid,
           tag: 2,
-          menuid: this.menuid,
           storageTitle: this.$route.meta.title,
         },
       })

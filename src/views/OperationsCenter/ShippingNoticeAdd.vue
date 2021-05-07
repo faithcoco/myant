@@ -204,6 +204,10 @@ export default {
     this.form = this.$form.createForm(this, {formname: 'form'})
   },
   methods: {
+    addinit() {
+      this.$multiTab.closeCurrentPage()
+    },
+
     handleEdit(record) {
       if (record.docid) {
         this.$message.info('参照明细不能修改')
@@ -355,7 +359,8 @@ export default {
     },
 
     deleteItem(record) {
-      this.detailsData = this.detailsData.filter((item) => item.key !== record.key)
+      //this.detailsData = this.detailsData.filter((item) => item.key !== record.key)
+      this.detailsData.splice(index, 1);
     },
 
     initdata() {

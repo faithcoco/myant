@@ -30,7 +30,7 @@
               </a-select>
             </a-form-model-item>
           </a-col>
-          <a-col :span="4" v-if="menu == 'ReceiptNoticeList'">
+          <a-col :span="4">
             <a-form-model-item label="部 门" prop="departmentid">
               <a-select style="width: 100%" placeholder="请选择部门" v-model="form.departmentid">
                 <a-select-option v-for="(item, index) in department" :value="item.departmentid"
@@ -44,7 +44,7 @@
               <a-range-picker v-model="date" style="width: 100%"/>
             </a-form-model-item>
           </a-col>
-          <a-col :span="4" v-if="menu == 'StorageManagementList'">
+          <a-col :span="4">
             <a-form-model-item label="仓 库" prop="warehouseid">
               <a-select style="width: 100%" placeholder="请选择仓库" v-model="form.warehouseid">
                 <a-select-option v-for="(item, index) in warehouse" :value="item.warehouseid"
@@ -65,7 +65,7 @@
               </a-select>
             </a-form-model-item>
           </a-col>
-          <a-col :span="4" v-if="menu == 'ReceiptNoticeList'">
+          <a-col :span="4">
             <a-form-model-item label="业务员" prop="personid">
               <a-select style="width: 100%" placeholder="请选择人员" v-model="form.personid">
                 <a-select-option v-for="(item, index) in personnel" :value="item.personid"

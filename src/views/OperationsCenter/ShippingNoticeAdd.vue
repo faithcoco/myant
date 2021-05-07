@@ -257,7 +257,7 @@ export default {
           values.personid = this.personid
           values.customerid = this.customerid
           values.businessclassid = this.businessclassid
-          // values.approvalprocess = values.approvalprocess.join()
+          values.approvalprocess = values.approvalprocess.join()
           submitForm(values, submitUrl).then((res) => {
             if (res.status == 'SUCCESS') {
               if (this.$route.query.tag == 2) {

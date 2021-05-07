@@ -153,7 +153,7 @@
           <a-col :span="12">
             <!--入库单打印，发货通知单打印隐藏-->
             <a-button type="primary" style="margin-right: 10px" @click="print"
-                      v-if="this.materialid != null && this.materialid != undefined && this.materialid != '' && this.memuid == '03bf0fb1-e9fb-4014-92e7-7121f4f72002'">
+                      v-if="this.materialid != null && this.materialid != undefined && this.materialid != '' && this.memuid == '03bf0fb1-e9fb-4014-92e7-7121f4f73002'">
               打印
             </a-button>
             <a-button type="primary" style="margin-right: 10px" v-show="approvalVisible" @click="approvalClick">
@@ -286,7 +286,7 @@ export default {
         this.detailModal()
       } else {
         this.currentkey = 'list'
-        this.name = 'StockOutRecordList'
+        this.name = 'ShippingNoticeList'
         this.visible = true
       }
     },
@@ -364,6 +364,7 @@ export default {
           values.customerid = this.customerid
           values.businessclasscode = this.businessclassid
           values.warehouseid = this.warehouseid
+          values.approvalprocess = values.approvalprocess.join();
           submitForm(values, submitUrl).then((res) => {
             if (res.status == 'SUCCESS') {
               if (this.$route.query.tag == 2) {
@@ -462,7 +463,11 @@ export default {
       columnsParams.pageNo = 1
       columnsParams.pageSize = 10
       columnsParams.docid = id
-      var urlColumns = '/bd/Stockoutrecord/stockoutrecordlineList'
+      if (menu == 'ShippingNoticeList') {
+        var urlColumns = '/bd/dispatchnotice/dispatchnoticelineList'
+      } else if (menu == 'StockOutRecordList') {
+        var urlColumns = '/bd/Stockoutrecord/stockoutrecordlineList'
+      }
       getData(columnsParams, urlColumns).then((res) => {
         if (type == 0) {
           //编辑明细
@@ -473,7 +478,7 @@ export default {
           var addData = []
           addData = res.result.data
           addData = addData.map((item, index) => {
-            return {...item, doclinequantity: item.doclinenotputquantity, receiptnoticelineid: item.doclineid}
+            return {...item, doclinequantity: item.doclinenotputquantity, dispatchnoticelineid: item.doclineid}
           })
           this.detailsData = this.detailsData.concat(addData)
         }
@@ -506,7 +511,7 @@ export default {
         return {
           ...item,
           // add by tf 记录料品来源id 2021年3月23日21:08:43
-          receiptnoticelineid: item.materialid,
+          dispatchnoticelineid: item.materialid,
           // edit by tf 料品自定义项带入表体自定义项 2021年4月7日21:04:01
           doclinedefine1: item.materialdefine1,
           doclinedefine2: item.materialdefine2,
@@ -643,7 +648,7 @@ export default {
         this.departmentid = this.selectList[0].departmentid
         this.businessclassid = this.selectList[0].businessclassid
         this.customerid = this.selectList[0].customerid
-        this.getList('StockOutRecordList', this.selectList[0].docid, 1)
+        this.getList('ShippingNoticeList', this.selectList[0].docid, 1)
       } else if (this.currentkey == 'edit') {
         this.visible = false
         var formkey = Object.keys(this.currentRecord)
@@ -655,7 +660,7 @@ export default {
           }
         }
       } else if (this.currentkey == 'list') {
-        this.getList('StockOutRecordList', this.selectList[0].docid, 1)
+        this.getList('ShippingNoticeList', this.selectList[0].docid, 1)
         this.visible = false
       }
     },

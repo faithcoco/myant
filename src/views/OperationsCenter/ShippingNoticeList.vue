@@ -333,10 +333,13 @@ export default {
     },
     initData(name) {
       this.menu = this.$route.name
-      this.titleTree = '仓位分类'
-      this.urlList = '/bd/dispatchnotice/list'
-      this.urlDelete = '/bd/dispatchnotice/del'
-      this.path = 'ShippingNoticeAdd'
+      if (this.menu == 'ShippingNoticeList') {
+        this.urlList = '/bd/dispatchnotice/list'
+        this.urlDelete = '/bd/dispatchnotice/del'
+        this.path = 'ShippingNoticeAdd'
+      } else {
+        return
+      }
       this.urlColumns = '/sys/setting/getSetting'
       const parameter = {}
       parameter.memucode = this.$route.meta.permission[0]
@@ -363,6 +366,7 @@ export default {
       })
     },
     getList() {
+      let _this = this;
       this.spinning = true
       const parameter = {}
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
@@ -373,19 +377,19 @@ export default {
       }
       parameter.form = this.form
       postData(parameter, this.urlList).then((res) => {
-        this.listdata = []
+        _this.listdata = []
         if (res.status == 'SUCCESS') {
-          this.pagination.current = res.result.pageNo
-          this.pagination.pageSize = res.result.pageSize
-          this.pagination.total = res.result.totalCount
-          this.listdata = res.result.data
+          _this.pagination.current = res.result.pageNo
+          _this.pagination.pageSize = res.result.pageSize
+          _this.pagination.total = res.result.totalCount
+          _this.listdata = res.result.data
           for (const key in this.listdata) {
-            this.listdata[key].key = key
+            _this.listdata[key].key = key
           }
         } else {
           this.$message.warning(res.errorMsg)
         }
-        this.spinning = false
+        _this.spinning = false
       })
     },
     handleSearch(e) {

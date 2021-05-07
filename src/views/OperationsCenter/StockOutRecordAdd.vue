@@ -446,6 +446,7 @@ export default {
       }
       this.getFormdata()
       this.getColumns()
+      this.spinning = false
     },
     getColumns() {
       const columnsParams = {}

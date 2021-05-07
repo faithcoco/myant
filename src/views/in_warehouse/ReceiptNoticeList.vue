@@ -314,7 +314,7 @@ export default {
       parameter.bizid = record.docid
       parameter.memuid = this.menuid
       var url = ''
-     
+
       if (record.approvalprocess == '启用') {
         url = '/work/submitProcess'
         parameter.billcode = this.billcode
@@ -386,7 +386,7 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-       
+
         for (let i = 0; i < this.columns.length; i++) {
           this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
         }

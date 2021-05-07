@@ -435,7 +435,11 @@ export default {
     initdata() {
       this.spinning = true
       this.menu = this.$route.query.menu
-      this.menuid = this.$route.query.menuid
+      if (this.menu == 'StockOutRecordList') {
+        this.menuid = this.$route.query.menuid
+      } else {
+        return
+      }
       this.materialid = this.$route.query.materialid
       if (this.$route.query.tag == 2) {
         this.isEdit = true
@@ -446,7 +450,6 @@ export default {
       }
       this.getFormdata()
       this.getColumns()
-      this.spinning = false
     },
     getColumns() {
       const columnsParams = {}

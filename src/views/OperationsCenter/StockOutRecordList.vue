@@ -383,14 +383,14 @@ export default {
           _this.pagination.pageSize = res.result.pageSize
           _this.pagination.total = res.result.totalCount
           _this.listdata = res.result.data
-          for (const key in this.listdata) {
+          for (const key in _this.listdata) {
             _this.listdata[key].key = key
           }
         } else {
           this.$message.warning(res.errorMsg)
         }
-        _this.spinning = false
       })
+      this.spinning = false
     },
     handleSearch(e) {
       if (this.search_show == false) {

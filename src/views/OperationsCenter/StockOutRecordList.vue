@@ -174,6 +174,7 @@ export default {
       expandedKeys: [],
       autoExpandParent: true,
       checkedKeys: [],
+      titleTree: '',
       urlTree: '',
       urlColumns: '',
       urlList: '',
@@ -331,8 +332,10 @@ export default {
       })
     },
     initData(name) {
+      this.menu = this.$route.name
+      this.titleTree = '仓位分类'
       this.urlList = '/bd/Stockoutrecord/stockoutrecordList'
-      this.urlDelete = '/bd/Stockoutrecord/delStocoutrec'
+      this.urlDelete = '/bd/Stockoutrecord/delStockoutrecord'
       this.path = 'StockOutRecordAdd'
       this.urlColumns = '/sys/setting/getSetting'
       const parameter = {}
@@ -348,7 +351,6 @@ export default {
         this.getWarehouse()
       })
     },
-    // 获取关键字查询字段
     getColumns() {
       const columnsParams = {}
       columnsParams.menuid = this.menuid
@@ -398,7 +400,7 @@ export default {
     },
     handleAdd(e) {
       this.$router.push({
-        path: "/OutManagement/StockOutRecordAdd",
+        path: this.path,
         query: {
           menu: this.$route.name,
           menuid: this.menuid,
@@ -414,9 +416,9 @@ export default {
         path: this.path,
         query: {
           menu: this.$route.name,
+          menuid: this.menuid,
           materialid: this.materialid,
           tag: 2,
-          menuid: this.menuid,
           storageTitle: this.$route.meta.title,
         },
       })

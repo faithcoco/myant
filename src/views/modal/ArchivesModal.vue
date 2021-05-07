@@ -168,11 +168,11 @@ export default {
         parameter.memucode = '01-05'
       } else if (name == 'ReceiptNoticeList') {
         this.urlList = '/bd/docreceiptnotice/selectlist'
-        this.method = 'get'
+        this.method = 'post'
         parameter.memucode = '02-02'
       } else if (name == 'ShippingNoticeList') {
         this.urlList = '/bd/dispatchnotice/selectlist'
-        this.method = 'get'
+        this.method = 'post'
         parameter.memucode = '03-02'
       } else {
         return

@@ -102,7 +102,7 @@
               {{ approvalText }}
             </a-button>
             <a-button type @click="submitEdit" style="margin-right: 10px" v-if="this.isEdit == false">存为草稿</a-button>
-            <a-button type @click="Back" style="margin-right: 10px" v-if="this.isEdit == false">保存返回</a-button>
+            <a-button type @click="Back" style="margin-right: 10px" v-if="this.isEdit == false">保存送审</a-button>
             <a-button type @click="handleSubmit" style="margin-right: 10px" v-if="this.approvalText == '提交审批'">保存
             </a-button>
           </a-col>
@@ -204,9 +204,7 @@ export default {
     this.form = this.$form.createForm(this, {formname: 'form'})
   },
   methods: {
-
     handleEdit(record) {
-      console.log(JSON.stringify(record.doclineid))
       if (record.docid) {
         this.$message.info('参照明细不能修改')
       } else {
@@ -239,13 +237,9 @@ export default {
       this.form.validateFields((err, values) => {
         if (!err) {
           if (this.$route.query.tag == 1) {
-            if (this.$route.query.menu == 'ShippingNoticeList') {
-              var submitUrl = '/bd/dispatchnotice/insterSave'
-            }
+            var submitUrl = '/bd/dispatchnotice/insterSave'
           } else {
-            if (this.$route.query.menu == 'ShippingNoticeList') {
-              var submitUrl = '/bd/dispatchnotice/updateSave'
-            }
+            var submitUrl = '/bd/dispatchnotice/updateSave'
             values.docid = this.materialid
           }
           if (this.detailsData.length == 0) {
@@ -253,16 +247,14 @@ export default {
             return
           }
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+          values.memuid = this.menuid
           values.details = this.detailsData
           values.departmentid = this.departmentid
           values.personid = this.personid
           values.customerid = this.customerid
           values.businessclassid = this.businessclassid
           // values.approvalprocess = values.approvalprocess.join()
-          console.log('submit url-->', submitUrl)
-          console.log('submit parameter-->', JSON.stringify(values))
           submitForm(values, submitUrl).then((res) => {
-            console.log('submit--->', JSON.stringify(res))
             if (res.status == 'SUCCESS') {
               if (this.$route.query.tag == 2) {
                 //编辑
@@ -328,7 +320,6 @@ export default {
         parameter.bizid = this.materialid
         var url = '/work/recallProcess'
 
-        console.log('cancel-->', JSON.stringify(parameter))
         getData(parameter, url).then((res) => {
           if (res.status == 'SUCCESS') {
             this.$message.info('撤销成功')
@@ -353,14 +344,11 @@ export default {
       } else {
         url = '/work/directApproval'
       }
-      console.log('approval-->', JSON.stringify(parameter))
-      console.log('approval url-->', url)
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
           this.$message.success('提交审批成功')
           this.getFormdata()
         } else {
-          console.log('approval error-->', res)
           this.$message.error(res.errorMsg)
         }
       })
@@ -373,14 +361,8 @@ export default {
     initdata() {
       this.spinning = true
       this.menu = this.$route.query.menu
-      console.log('add menu-->', this.$route)
-      if (this.$route.query.menu == 'ShippingNoticeList') {
-        this.memuid = '03bf0fb1-e9fb-4014-92e7-7121f4f71002'
-      } else {
-        return
-      }
+      this.menuid = this.$route.query.menuid
       this.materialid = this.$route.query.materialid
-      console.log('route-->', this.$route)
       if (this.$route.query.tag == 2) {
         this.getList(this.$route.query.menu, this.$route.query.materialid)
       } else {
@@ -395,8 +377,6 @@ export default {
       columnsParams.menuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       var urlColumns = '/sys/setting/getChildrenSetting'
-      console.log('columns url--->', urlColumns)
-      console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, urlColumns).then((res) => {
         this.columns = res.result.columns
         this.columns.unshift({title: '序号', dataIndex: 'key', key: 'key', width: '200px'})
@@ -408,13 +388,8 @@ export default {
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       columnsParams.pageNo = 1
       columnsParams.pageSize = 10
-
-      if (menu == 'ShippingNoticeList') {
-        var urlColumns = '/bd/dispatchnotice/dispatchnoticelineList'
-      }
+      var urlColumns = '/bd/dispatchnotice/dispatchnoticelineList'
       columnsParams.docid = id
-      console.log('listdata url--->', urlColumns)
-      console.log('listdata parameter-->', JSON.stringify(columnsParams))
       getData(columnsParams, urlColumns).then((res) => {
         this.detailsData = []
         this.detailsData = res.result.data
@@ -423,7 +398,6 @@ export default {
 
     detailSelect(list) {
       this.selectList = list
-      console.log('detail-->', JSON.stringify(this.selectList))
     },
 
     getSelect(list) {
@@ -431,12 +405,10 @@ export default {
     },
 
     typeSelect(list) {
-      console.log('type-->', JSON.stringify(list))
       this.selectList = list
     },
 
     onClick({key}) {
-      console.log(`Click on item ${key}`)
       if (key == '1') {
         this.detailModal()
       } else {
@@ -505,7 +477,6 @@ export default {
     },
 
     setform() {
-      console.log('select--->', JSON.stringify(this.selectList))
       if (this.currentkey == 'departmentid') { // 部门选择确认
         this.typeVisible = false
         this.form.setFieldsValue({
@@ -626,12 +597,10 @@ export default {
     },
 
     onChange(value) {
-      console.log(value)
       this.value = value
     },
 
     showModal(item) {
-      console.log('this-->', item.key)
       this.currentkey = item.key
       if (this.currentkey == 'departmentid') {  // 部门选择
         this.typeVisible = true
@@ -661,7 +630,6 @@ export default {
     },
 
     onCascaderChange(value) {
-      console.log(this.test)
     },
 
     getFormdata() {
@@ -688,11 +656,8 @@ export default {
         columnsParams.docid = this.materialid
       }
       this.$multiTab.rename(this.$route.path, this.title)
-      console.log('form url--->', this.urlForm)
-      console.log('form params-->', JSON.stringify(columnsParams))
       this.data = []
       getForm(columnsParams, this.urlForm).then((res) => {
-        // console.log('form--->',JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = res.result
         } else {
@@ -753,7 +718,6 @@ export default {
     },
 
     handleSearchChange(value) {
-      console.log(`selected ${value}`)
     },
 
     // 返回到清单页面
@@ -780,15 +744,12 @@ export default {
     // 重置表单
 
     handleBlur() {
-      console.log('blur')
     },
 
     handleFocus() {
-      console.log('focus')
     },
 
     onSearch(value) {
-      console.log(value)
     },
   },
 }

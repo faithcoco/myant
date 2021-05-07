@@ -143,7 +143,6 @@ export default {
   },
   methods: {
     handleTableChange(pagination, filters, sorter) {
-      console.log('pagination', pagination)
       this.pageNo = pagination.current
       this.getList()
     },
@@ -157,7 +156,6 @@ export default {
       parameter.bizid = record.docid
       var url = '/work/recallProcess'
 
-      console.log('cancel-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
           this.$message.info('撤销成功')
@@ -168,7 +166,6 @@ export default {
       })
     },
     submitApproval(record) {
-      console.log('record--->', JSON.stringify(record))
       //提交审批
       const parameter = {}
       parameter.bizid = record.docid
@@ -182,8 +179,6 @@ export default {
       } else {
         url = '/work/directApproval'
       }
-      console.log('approval-->', JSON.stringify(parameter))
-      console.log('approval url-->', url)
       getData(parameter, url).then((res) => {
         if (res.status == 'SUCCESS') {
           this.$message.info('提交审批成功')
@@ -199,13 +194,8 @@ export default {
     },
     delete() {
       const columnsParams = {}
-
       columnsParams.docid = this.materialid
-
-      console.log('delete url--->', this.urlDelete)
-      console.log('delete params--->', JSON.stringify(columnsParams))
       getData(columnsParams, this.urlDelete).then((res) => {
-        console.log('delete res-->', JSON.stringify(res))
         this.getList()
       })
     },
@@ -213,23 +203,14 @@ export default {
       this.menu = this.$route.name
       this.menuname = name
       this.titleTree = '仓位分类'
-      console.log('menu-->', this.menu)
-      if (this.menu == 'ShippingNoticeList') {
-        this.urlList = '/bd/dispatchnotice/dispatchnoticeList'
-        this.urlDelete = '/bd/dispatchnotice/delDispatchnotice'
-      } else {
-        return
-      }
+      this.urlList = '/bd/dispatchnotice/dispatchnoticeList'
+      this.urlDelete = '/bd/dispatchnotice/delDispatchnotice'
       this.urlColumns = '/sys/setting/getSetting'
       const parameter = {}
       parameter.memucode = this.$route.meta.permission[0]
       var url = '/bd/menu/findallmenu'
-      console.log('gtmenuid res-->', JSON.stringify(parameter))
       getData(parameter, url).then((res) => {
-        console.log('menu id-->', JSON.stringify(res))
-
         this.menuid = res.result
-
         this.getList()
         this.getColumns()
       })
@@ -238,11 +219,8 @@ export default {
       const columnsParams = {}
       columnsParams.menuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-      console.log('columns url--->', this.urlColumns)
-      console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-
         for (let i = 0; i < this.columns.length; i++) {
           if (i < this.columns.length - 1) {
             this.selectList.push({value: this.columns[i].title, key: this.columns[i].dataIndex})
@@ -266,19 +244,13 @@ export default {
     },
     getList() {
       const parameter = {}
-
       parameter.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       parameter.pageNo = this.pageNo
       parameter.pageSize = '10'
       if (this.isSearch) {
-        console.log('search-->', this.searchKey + '/' + this.searchValue)
         parameter[`${this.searchKey}`] = this.searchValue
       }
-
-      console.log('list url-->', this.urlList)
-      console.log('list params-->', JSON.stringify(parameter))
       getProductList(parameter, this.urlList).then((res) => {
-
         this.listdata = []
         if (res.status == 'SUCCESS') {
           this.pagination.current = res.result.pageNo
@@ -318,7 +290,6 @@ export default {
       })
     },
     add() {
-      console.log('push-->', this.$route.name)
       this.$router.push({
         path: 'ShippingNoticeAdd',
         query: {
@@ -350,19 +321,15 @@ export default {
       this.delete()
     },
     handleSub(record) {
-      console.log(record)
     },
 
     change(visible) {
       this.approval_visible = visible
     },
     handleAdd(item) {
-      console.log('add button, item', item)
-      //   this.$message.info(`提示：你点了 ${item.key} - ${item.title} `)
       this.$refs.modal.add(item.key)
     },
     handleTitleClick(item) {
-      console.log('handleTitleClick', item)
     },
   },
 }

@@ -26,7 +26,6 @@
 
         </a-table>
       </a-col>
-      </a-row>
     </a-card>
   </div>
 </template>
@@ -169,12 +168,12 @@ export default {
         parameter.memucode = '01-05'
       } else if (name == 'ReceiptNoticeList') {
         this.urlList = '/bd/docreceiptnotice/selectlist'
-        this.method = 'post'
-        parameter.memucode = '02-02'
-      } else if (name == 'WarehouseList') {
-        this.urlList = '/bd/warehouse/warehouselist'
         this.method = 'get'
-        parameter.memucode = '01-05'
+        parameter.memucode = '02-02'
+      } else if (name == 'ShippingNoticeList') {
+        this.urlList = '/bd/dispatchnotice/selectlist'
+        this.method = 'get'
+        parameter.memucode = '03-02'
       } else {
         return
       }

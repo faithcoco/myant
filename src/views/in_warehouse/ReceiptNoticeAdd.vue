@@ -382,7 +382,9 @@ export default {
           values.vendorid = this.vendorid
           values.businessclasscode = this.businessclassid
           values.warehouseid = this.warehouseid
-          values.approvalprocess = values.approvalprocess.join()
+          if (values.approvalprocess != null) {
+            values.approvalprocess = values.approvalprocess.join()
+          }
           console.log('submit url-->', submitUrl)
           console.log('submit parameter-->', JSON.stringify(values))
           submitForm(values, submitUrl).then((res) => {

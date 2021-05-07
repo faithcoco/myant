@@ -314,7 +314,6 @@ export default {
       this.splitmodal_visible = true
     },
     handleEdit(record) {
-      console.log(JSON.stringify(record.doclineid))
       if (record.docid) {
         this.$message.info('参照明细不能修改')
       } else {
@@ -362,9 +361,11 @@ export default {
           values.departmentid = this.departmentid
           values.personid = this.personid
           values.customerid = this.customerid
-          values.businessclasscode = this.businessclassid
+          values.businessclassid = this.businessclassid
           values.warehouseid = this.warehouseid
-          values.approvalprocess = values.approvalprocess.join();
+          if (values.approvalprocess != null) {
+            values.approvalprocess = values.approvalprocess.join()
+          }
           submitForm(values, submitUrl).then((res) => {
             if (res.status == 'SUCCESS') {
               if (this.$route.query.tag == 2) {
@@ -652,6 +653,7 @@ export default {
         this.departmentid = this.selectList[0].departmentid
         this.businessclassid = this.selectList[0].businessclassid
         this.customerid = this.selectList[0].customerid
+        this.warehouseid = this.selectList[0].warehouseid
         this.getList('ShippingNoticeList', this.selectList[0].docid, 1)
       } else if (this.currentkey == 'edit') {
         this.visible = false

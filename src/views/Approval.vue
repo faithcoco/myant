@@ -1,18 +1,19 @@
 <template>
   <div class="approval">
     <a-drawer
-      title="产品详情"
-      placement="right"
-      :width="700"
-      :closable="false"
-      :visible="visible"
-      :after-visible-change="afterVisibleChange"
-      @close="onClose"
+        title="产品详情"
+        placement="right"
+        :width="700"
+        :closable="false"
+        :visible="visible"
+        :after-visible-change="afterVisibleChange"
+        @close="onClose"
     >
       <a-descriptions title :column="2">
         <a-descriptions-item v-for="(item, index) in descriptions" v-if="item.label != '审批流'" :label="item.label">{{
-          item.value
-        }}</a-descriptions-item>
+            item.value
+          }}
+        </a-descriptions-item>
 
         <a-descriptions-item label="审批状态">
           <a-tag :color="color">{{ status }}</a-tag>
@@ -35,8 +36,8 @@
           </p>
           <p v-show="item.isShow">
             <a-card v-for="item in item.img" :key="item.src" :bordered="false">
-              <img slot="extra" alt="logo" :src="item.src" height="100%" width="100%" />
-              <br />
+              <img slot="extra" alt="logo" :src="item.src" height="100%" width="100%"/>
+              <br/>
             </a-card>
           </p>
         </a-timeline-item>
@@ -44,11 +45,13 @@
       <a-row type="flex" justify="center">
         <a-col :span="12">
           <a-button type="primary" v-show="approvalVisible" style="margin-right: 10px" @click="approvalClick"
-            >同意</a-button
+          >同意
+          </a-button
           >
 
           <a-button type="danger" v-show="approvalVisible" style="margin-right: 10px" @click="refuceClick"
-            >拒绝</a-button
+          >拒绝
+          </a-button
           >
           <a-button type="primary" style="margin-right: 10px" @click="chatClick">评论</a-button>
         </a-col>
@@ -56,32 +59,32 @@
     </a-drawer>
 
     <a-modal
-      width="1000px"
-      :title="title"
-      :visible="chat_visible"
-      :confirm-loading="confirmLoading"
-      @ok="chatOk"
-      @cancel="chatCancel"
-      :destroyOnClose="destroyOnClose"
+        width="1000px"
+        :title="title"
+        :visible="chat_visible"
+        :confirm-loading="confirmLoading"
+        @ok="chatOk"
+        @cancel="chatCancel"
+        :destroyOnClose="destroyOnClose"
     >
       <div>
         <a-comment>
           <a-avatar
-            slot="avatar"
-            src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
-            alt="Han Solo"
+              slot="avatar"
+              src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+              alt="Han Solo"
           />
           <div slot="content">
             <a-form-item>
-              <a-textarea v-model="content" :rows="4" />
+              <a-textarea v-model="content" :rows="4"/>
 
               <a-upload
-                v-show="isContent"
-                name="multipartFile"
-                :multiple="true"
-                action="/api/common/upload"
-                :headers="headers"
-                @change="fileChange"
+                  v-show="isContent"
+                  name="multipartFile"
+                  :multiple="true"
+                  action="/api/common/upload"
+                  :headers="headers"
+                  @change="fileChange"
               >
                 <a-button type="link" :size="size">添加附件</a-button>
               </a-upload>
@@ -98,24 +101,24 @@
       <div slot="footer"></div>
     </a-modal>
     <a-modal
-      :destroyOnClose="destroyOnClose"
-      width="1000px"
-      title="选择通知人员"
-      :visible="personVisible"
-      :confirm-loading="confirmLoading"
-      @ok="handleOk"
-      @cancel="handleCancel"
+        :destroyOnClose="destroyOnClose"
+        width="1000px"
+        title="选择通知人员"
+        :visible="personVisible"
+        :confirm-loading="confirmLoading"
+        @ok="handleOk"
+        @cancel="handleCancel"
     >
       <a-table
-        ref="table"
-        size="default"
-        :columns="columns"
-        :data-source="listdata"
-        :alert="false"
-        :scroll="{ x: 1500, y: 425 }"
-        bordered
-        style="margin-top: 20px"
-        :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, onSelect: onSelect }"
+          ref="table"
+          size="default"
+          :columns="columns"
+          :data-source="listdata"
+          :alert="false"
+          :scroll="{ x: 1500, y: 425 }"
+          bordered
+          style="margin-top: 20px"
+          :row-selection="{ selectedRowKeys: selectedRowKeys, onChange: onSelectChange, onSelect: onSelect }"
       >
       </a-table>
     </a-modal>
@@ -123,25 +126,20 @@
 </template>
 <script>
 import Vue from 'vue'
-import { Timeline } from 'ant-design-vue'
-import { type } from 'mockjs2'
-Vue.use(Timeline)
-import { Mentions } from 'ant-design-vue'
-Vue.use(Mentions)
+import {Mentions, Timeline} from 'ant-design-vue'
+import {getData, getProductList, getProductListColumns, postData} from '@/api/manage'
+import {ACCESS_TOKEN, logininfo} from '@/store/mutation-types'
+import {url} from '@/utils/request'
+import {uploadHelp} from '@/utils/uploadHelp'
 
-import { getPersonnelList, getApproval } from '@/api/manage'
-import moment from 'moment'
-import { logininfo, ACCESS_TOKEN } from '@/store/mutation-types'
-import { postData, getData, getProductListColumns, getProductList } from '@/api/manage'
-import { resetWarned } from 'ant-design-vue/es/_util/warning'
-import { url } from '@/utils/request'
-import { uploadHelp } from '@/utils/uploadHelp'
+Vue.use(Timeline)
+Vue.use(Mentions)
 
 const product = {}
 const personnelList = [
-  { name: '张三', key: '1' },
-  { name: '李四', key: '2' },
-  { name: '王五', key: '3' },
+  {name: '张三', key: '1'},
+  {name: '李四', key: '2'},
+  {name: '王五', key: '3'},
 ]
 
 export default {
@@ -186,7 +184,7 @@ export default {
 
       title: '',
       uploadUrl: url + '/common/upload', //上传
-      uploadHelp: { file: new uploadHelp(this, this.fileSuccess, '上传', '上传', this.fileRemove, false) },
+      uploadHelp: {file: new uploadHelp(this, this.fileSuccess, '上传', '上传', this.fileRemove, false)},
       mentions: '',
       upload: [],
 
@@ -199,7 +197,6 @@ export default {
       destroyOnClose: true,
       columns: [],
       listdata: [],
-      menuid: '',
       urlColumns: '',
       urlList: '',
       personIdList: [],
@@ -218,7 +215,8 @@ export default {
     this.getList()
   },
 
-  mounted() {},
+  mounted() {
+  },
   methods: {
     onSelect(record, selected, selectedRows) {
       this.selectList = selectedRows
@@ -296,6 +294,7 @@ export default {
     },
 
     handleChange(info) {
+      debugger
       console.log('info--->', JSON.stringify(info))
       let fileList = [...info.fileList]
       fileList = fileList.slice(-2)
@@ -308,15 +307,15 @@ export default {
       this.fileList = fileList
     },
     getTimeline() {
-      this.timelinelist=[]
+      this.timelinelist = []
       const parameter = {}
       parameter.bizid = this.materialid
-      if(this.approvalprocess){
-        parameter.isEnabled ="1"
-      }else{
-        parameter.isEnabled ="2"
+      if (this.approvalprocess) {
+        parameter.isEnabled = "1"
+      } else {
+        parameter.isEnabled = "2"
       }
-     
+
       console.log('timeline param-->', JSON.stringify(parameter))
       getData(parameter, '/work/getApprovalInfo').then((res) => {
         console.log('timeline-->', JSON.stringify(res))
@@ -338,7 +337,7 @@ export default {
       getData(parameter, url).then((res) => {
         this.menuid = res.result
         this.getFormdata()
-       
+
       })
     },
     setStatus(status) {
@@ -369,29 +368,33 @@ export default {
       if (this.menu == 'ReceiptNoticeList') {
         this.urlForm = '/bd/docreceiptnotice/updateform'
       } else if (this.menu == 'StorageManagementList') {
-          this.urlForm = '/bd/Stockinrecord/updateForm'
-        }
+        this.urlForm = '/bd/Stockinrecord/updateForm'
+      } else if (this.menu == 'ShippingNoticeList') {
+        this.urlForm = '/bd/dispatchnotice/updateForm'
+      } else if (this.menu == 'StockOutRecordList') {
+        this.urlForm = '/bd/Stockoutrecord/updateForm'
+      }
       columnsParams.docid = this.materialid
       console.log('form url--->', this.urlForm)
       console.log('form params-->', JSON.stringify(columnsParams))
 
       getData(columnsParams, this.urlForm).then((res) => {
-         console.log('res-->',JSON.stringify(res))
+        console.log('res-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
-         
+
           this.data = []
           this.descriptions = []
           this.data = res.result.form
-          this.approvalprocess=res.result.data.enabledStatus
+          this.approvalprocess = res.result.data.enabledStatus
 
           for (const key in this.data) {
             if (this.data[key].key == 'ApproveStatus') {
               this.setStatus(this.data[key].value)
             } else {
-              this.descriptions.push({ label: this.data[key].title, value: this.data[key].value })
+              this.descriptions.push({label: this.data[key].title, value: this.data[key].value})
             }
           }
-           this.getTimeline()
+          this.getTimeline()
         } else {
           this.$message.warn(res.errorMsg)
         }
@@ -481,8 +484,10 @@ export default {
       this.chat_visible = false
     },
 
-    handleScroll(direction, e) {},
+    handleScroll(direction, e) {
+    },
     handleChange(nextTargetKeys, direction, moveKeys) {
+      debugger
       console.log(nextTargetKeys)
       for (const key in moveKeys) {
         if (direction == 'right') {

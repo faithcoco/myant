@@ -357,7 +357,7 @@ export default {
           }
 
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-          values.memuid = this.memuid
+          values.memuid = this.menuid
           values.details = this.detailsData
           values.departmentid = this.departmentid
           values.personid = this.personid

@@ -361,7 +361,6 @@ export default {
       }
     },
     getFormdata() {
-      debugger
       const columnsParams = {}
       // columnsParams.memuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
@@ -493,7 +492,6 @@ export default {
     handleScroll(direction, e) {
     },
     handleChange(nextTargetKeys, direction, moveKeys) {
-      debugger
       console.log(nextTargetKeys)
       for (const key in moveKeys) {
         if (direction == 'right') {

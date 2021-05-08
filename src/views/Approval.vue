@@ -330,15 +330,17 @@ export default {
       })
     },
     initdata() {
-      const parameter = {}
-      parameter.memucode = '02-02'
-      var url = '/bd/menu/findallmenu'
-
-      getData(parameter, url).then((res) => {
-        this.menuid = res.result
-        this.getFormdata()
-
-      })
+      debugger
+      this.getFormdata()
+      // const parameter = {}
+      // parameter.memucode = '02-02'
+      // var url = '/bd/menu/findallmenu'
+      //
+      // getData(parameter, url).then((res) => {
+      //   this.menuid = res.result
+      //   this.getFormdata()
+      //
+      // })
     },
     setStatus(status) {
       if (status == 1) {
@@ -359,19 +361,23 @@ export default {
       }
     },
     getFormdata() {
+      debugger
       const columnsParams = {}
-      columnsParams.memuid = this.menuid
+      // columnsParams.memuid = this.menuid
       columnsParams.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
-
       this.materialid = this.materialid
       console.log('materialid', this.materialid)
       if (this.menu == 'ReceiptNoticeList') {
+        columnsParams.memuid = '03bf0fb1-e9fb-4014-92e7-7121f4f72003'
         this.urlForm = '/bd/docreceiptnotice/updateform'
       } else if (this.menu == 'StorageManagementList') {
+        columnsParams.memuid = '03bf0fb1-e9fb-4014-92e7-7121f4f72002'
         this.urlForm = '/bd/Stockinrecord/updateForm'
       } else if (this.menu == 'ShippingNoticeList') {
+        columnsParams.memuid = '03bf0fb1-e9fb-4014-92e7-7121f4f73003'
         this.urlForm = '/bd/dispatchnotice/updateForm'
       } else if (this.menu == 'StockOutRecordList') {
+        columnsParams.memuid = '03bf0fb1-e9fb-4014-92e7-7121f4f73002'
         this.urlForm = '/bd/Stockoutrecord/updateForm'
       }
       columnsParams.docid = this.materialid

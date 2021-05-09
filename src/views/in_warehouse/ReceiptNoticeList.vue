@@ -7,10 +7,11 @@
             <a-form-model-item label="关键字" prop="key">
               <a-select v-model="key.scope" style="width: 10%">
                 <a-select-option v-for="SList in selectList" :key="SList.key" :value="SList.key">{{
-                  SList.value
-                }}</a-select-option>
+                    SList.value
+                  }}
+                </a-select-option>
               </a-select>
-              <a-input-search style="width: 90%" placeholder="请输入搜索内容" v-model="key.value" />
+              <a-input-search style="width: 90%" placeholder="请输入搜索内容" v-model="key.value"/>
             </a-form-model-item>
           </a-col>
           <a-col :span="1">
@@ -24,7 +25,7 @@
             <a-form-model-item label="供应商" prop="vendorid">
               <a-select placeholder="请选择供应商" v-model="form.vendorid" style="width: 100%">
                 <a-select-option v-for="(item, index) in supplier" :value="item.vendorid"
-                  >{{ item.vendorname }}
+                >{{ item.vendorname }}
                 </a-select-option>
               </a-select>
             </a-form-model-item>
@@ -33,21 +34,21 @@
             <a-form-model-item label="部 门" prop="departmentid">
               <a-select style="width: 100%" placeholder="请选择部门" v-model="form.departmentid">
                 <a-select-option v-for="(item, index) in department" :value="item.departmentid"
-                  >{{ item.title }}
+                >{{ item.title }}
                 </a-select-option>
               </a-select>
             </a-form-model-item>
           </a-col>
           <a-col :span="4">
             <a-form-model-item label="日 期" prop="date">
-              <a-range-picker v-model="date" style="width: 100%" />
+              <a-range-picker v-model="date" style="width: 100%"/>
             </a-form-model-item>
           </a-col>
           <a-col :span="4" v-if="menu == 'StorageManagementList'">
             <a-form-model-item label="仓 库" prop="warehouseid">
               <a-select style="width: 100%" placeholder="请选择仓库" v-model="form.warehouseid">
                 <a-select-option v-for="(item, index) in warehouse" :value="item.warehouseid"
-                  >{{ item.warehousename }}
+                >{{ item.warehousename }}
                 </a-select-option>
               </a-select>
             </a-form-model-item>
@@ -56,11 +57,11 @@
           <a-col :span="4">
             <a-form-model-item label="审批状态" prop="approvestatus">
               <a-select style="width: 100%" placeholder="请选择审批状态" v-model="form.approvestatus">
-                <a-select-option value="1"> 已审批 </a-select-option>
-                <a-select-option value="2"> 审批中 </a-select-option>
-                <a-select-option value="3"> 已提交 </a-select-option>
-                <a-select-option value="8"> 未提交 </a-select-option>
-                <a-select-option value="9"> 未通过 </a-select-option>
+                <a-select-option value="1"> 已审批</a-select-option>
+                <a-select-option value="2"> 审批中</a-select-option>
+                <a-select-option value="3"> 已提交</a-select-option>
+                <a-select-option value="8"> 未提交</a-select-option>
+                <a-select-option value="9"> 未通过</a-select-option>
               </a-select>
             </a-form-model-item>
           </a-col>
@@ -68,7 +69,7 @@
             <a-form-model-item label="业务员" prop="personid">
               <a-select style="width: 100%" placeholder="请选择人员" v-model="form.personid">
                 <a-select-option v-for="(item, index) in personnel" :value="item.personid"
-                  >{{ item.personname }}
+                >{{ item.personname }}
                 </a-select-option>
               </a-select>
             </a-form-model-item>
@@ -77,9 +78,9 @@
         <a-row type="flex" justify="end">
           <a-col :span="3">
             <a-form-model-item>
-              <a-button type="primary" @click="onSubmit"> 搜索 </a-button>
+              <a-button type="primary" @click="onSubmit"> 搜索</a-button>
 
-              <a-button style="margin-left: 10px" @click="resetForm"> 重置 </a-button>
+              <a-button style="margin-left: 10px" @click="resetForm"> 重置</a-button>
             </a-form-model-item>
           </a-col>
         </a-row>
@@ -89,32 +90,32 @@
       <a-row type="flex" justify="end">
         <a-col :span="4">
           <a-button type="primary" style="margin-left: 5px" @click="handleAdd">新增</a-button>
-          <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
-          <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
+          <!--          <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>-->
+          <!--          <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>-->
         </a-col>
       </a-row>
       <a-spin size="large" :spinning="spinning" tip="正在加载">
         <a-table
-          ref="table"
-          size="default"
-          :columns="columns"
-          :data-source="listdata"
-          :alert="false"
-          :scroll="{ x: 1500, y: 800 }"
-          bordered
-          style="margin-top: 20px"
-          :pagination="pagination"
-          @change="handleTableChange"
+            ref="table"
+            size="default"
+            :columns="columns"
+            :data-source="listdata"
+            :alert="false"
+            :scroll="{ x: 1500, y: 800 }"
+            bordered
+            style="margin-top: 20px"
+            :pagination="pagination"
+            @change="handleTableChange"
         >
           <span slot="action" slot-scope="text, record">
             <a @click="showApproval(record)">查审</a>
-            <a-divider type="vertical" />
+            <a-divider type="vertical"/>
             <a @click="submitApproval(record)" v-if="record.approvecode == 8">送审</a>
-            <a-divider type="vertical" v-if="record.approvecode == 8" />
+            <a-divider type="vertical" v-if="record.approvecode == 8"/>
             <a @click="handleRevocation(record)" v-if="record.approvecode == 3">撤回</a>
-            <a-divider type="vertical" v-if="record.approvecode == 3" />
+            <a-divider type="vertical" v-if="record.approvecode == 3"/>
             <a @click="handleEdit(record)">编辑</a>
-            <a-divider type="vertical" />
+            <a-divider type="vertical"/>
             <a-popconfirm title="确定删除?" @confirm="() => deleteItem(record)">
               <a href="javascript:;">删除</a>
             </a-popconfirm>
@@ -130,29 +131,24 @@
 <script>
 import moment from 'moment'
 import Vue from 'vue'
-import { Descriptions } from 'ant-design-vue'
-import { Transfer } from 'ant-design-vue'
-import { Comment } from 'ant-design-vue'
+import {Comment, Descriptions, FormModel, Mentions, Timeline, Transfer, Tree} from 'ant-design-vue'
+import STree from '@/components/Tree/Tree'
+import {STable} from '@/components'
+import {getData, getProductListColumns, postData} from '@/api/manage'
+import Approval from '../Approval'
+import SelectModal from '../modal/SelectModal'
+import {logininfo} from '@/store/mutation-types'
+
 Vue.use(Descriptions)
 Vue.use(Transfer)
 Vue.use(Comment)
-import { Tree } from 'ant-design-vue'
 Vue.use(Tree)
-import { Timeline } from 'ant-design-vue'
 Vue.use(Timeline)
-import { Mentions } from 'ant-design-vue'
 Vue.use(Mentions)
-import { FormModel } from 'ant-design-vue'
 Vue.use(FormModel)
-import STree from '@/components/Tree/Tree'
-import { STable } from '@/components'
-import { getProductListColumns, postData, getData } from '@/api/manage'
-import Approval from '../Approval'
-import SelectModal from '../modal/SelectModal'
-import { logininfo } from '@/store/mutation-types'
 
 const columns = []
-const selectList = [{ value: '全部', key: 'all' }]
+const selectList = [{value: '全部', key: 'all'}]
 
 const dataList = []
 export default {
@@ -192,7 +188,7 @@ export default {
       treeData: [],
       menu: '',
       searchValue: '',
-      pagination: { current: 1, pageSize: 10, total: 10 },
+      pagination: {current: 1, pageSize: 10, total: 10},
       pageNo: 1,
       form: {
         vendorid: undefined,
@@ -388,7 +384,7 @@ export default {
         this.columns = res.result.columns
 
         for (let i = 0; i < this.columns.length; i++) {
-          this.selectList.push({ value: this.columns[i].title, key: this.columns[i].dataIndex })
+          this.selectList.push({value: this.columns[i].title, key: this.columns[i].dataIndex})
         }
       })
     },
@@ -450,7 +446,7 @@ export default {
       })
     },
     handleEdit(record) {
-      console.log('record.approvalprocess-->',record.approvalprocess)
+      console.log('record.approvalprocess-->', record.approvalprocess)
       if (this.menu == 'StorageManagementList') {
         this.path = 'StorageManagementEdit'
       } else if (this.menu == 'ReceiptNoticeList') {

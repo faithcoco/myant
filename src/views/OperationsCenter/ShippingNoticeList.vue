@@ -90,8 +90,8 @@
       <a-row type="flex" justify="end">
         <a-col :span="4">
           <a-button type="primary" style="margin-left: 5px" @click="handleAdd">新增</a-button>
-          <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>
-          <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>
+          <!--          <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导入</a-button>-->
+          <!--          <a-button style="margin-left: 5px" @click="() => (queryParam = {})">导出</a-button>-->
         </a-col>
       </a-row>
       <a-spin size="large" :spinning="spinning" tip="正在加载">

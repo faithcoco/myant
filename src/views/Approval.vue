@@ -11,9 +11,7 @@
     >
       <a-descriptions title :column="2">
         <a-descriptions-item v-for="(item, index) in descriptions" :key="index" v-if="item.label != '审批流'"
-                             :label="item.label">{{
-            item.value
-          }}
+                             :label="item.label">{{ item.value }}
         </a-descriptions-item>
 
         <a-descriptions-item label="审批状态">

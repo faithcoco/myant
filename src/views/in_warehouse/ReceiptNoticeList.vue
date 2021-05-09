@@ -24,7 +24,7 @@
           <a-col :span="4">
             <a-form-model-item label="供应商" prop="vendorid">
               <a-select placeholder="请选择供应商" v-model="form.vendorid" style="width: 100%">
-                <a-select-option v-for="(item, index) in supplier" :value="item.vendorid"
+                <a-select-option v-for="(item, index) in supplier" :key="index" :value="item.vendorid"
                 >{{ item.vendorname }}
                 </a-select-option>
               </a-select>
@@ -33,7 +33,7 @@
           <a-col :span="4" v-if="menu == 'ReceiptNoticeList'">
             <a-form-model-item label="部 门" prop="departmentid">
               <a-select style="width: 100%" placeholder="请选择部门" v-model="form.departmentid">
-                <a-select-option v-for="(item, index) in department" :value="item.departmentid"
+                <a-select-option v-for="(item, index) in department" :key="index" :value="item.departmentid"
                 >{{ item.title }}
                 </a-select-option>
               </a-select>
@@ -47,7 +47,7 @@
           <a-col :span="4" v-if="menu == 'StorageManagementList'">
             <a-form-model-item label="仓 库" prop="warehouseid">
               <a-select style="width: 100%" placeholder="请选择仓库" v-model="form.warehouseid">
-                <a-select-option v-for="(item, index) in warehouse" :value="item.warehouseid"
+                <a-select-option v-for="(item, index) in warehouse" :key="index" :value="item.warehouseid"
                 >{{ item.warehousename }}
                 </a-select-option>
               </a-select>
@@ -68,7 +68,7 @@
           <a-col :span="4" v-if="menu == 'ReceiptNoticeList'">
             <a-form-model-item label="业务员" prop="personid">
               <a-select style="width: 100%" placeholder="请选择人员" v-model="form.personid">
-                <a-select-option v-for="(item, index) in personnel" :value="item.personid"
+                <a-select-option v-for="(item, index) in personnel" :key="index" :value="item.personid"
                 >{{ item.personname }}
                 </a-select-option>
               </a-select>

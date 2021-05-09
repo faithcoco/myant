@@ -9,7 +9,7 @@
         <a-card>
           <a-row type="flex" justify="space-between">
             <a-col style="font-weight: bold">
-              <a-avatar shape="square" :size="70" icon="user" style="margin-right: 30px" />
+              <a-avatar shape="square" :size="70" icon="user" style="margin-right: 30px"/>
               {{ form.enterprisename }}
               <!-- &nbsp;(ID:&nbsp;{{ form.companyCode }}) -->
             </a-col>
@@ -21,46 +21,57 @@
               <a-button type="primary" style="margin-left: 20px" @click="disband()">解散企业</a-button>
             </a-col>
           </a-row>
-          <a-divider type="horizontal" />
+          <a-divider type="horizontal"/>
           <a-row>
             <a-col>
               <a-form layout="vertical" ref="ruleForm" :model="form" :rules="rules">
                 <a-form-item>
-                  <a-icon style="margin-right: 10px" type="barcode" class="upload-icon" />企业地址:{{
+                  <a-icon style="margin-right: 10px" type="barcode" class="upload-icon"/>
+                  企业地址:{{
                     form.enterpriseaddress
                   }}
                 </a-form-item>
 
                 <a-form-item>
-                  <a-icon style="margin-right: 10px" type="user" class="upload-icon" />联系人:
+                  <a-icon style="margin-right: 10px" type="user" class="upload-icon"/>
+                  联系人:
                   {{ form.enterprisecontact }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right: 10px" type="bank" class="upload-icon" />电话: {{ form.enterprisetel }}
+                  <a-icon style="margin-right: 10px" type="bank" class="upload-icon"/>
+                  电话: {{ form.enterprisetel }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right: 10px" type="bank" class="upload-icon" />注册人:
+                  <a-icon style="margin-right: 10px" type="bank" class="upload-icon"/>
+                  注册人:
                   {{ form.enterpriseregistrant }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right: 10px" type="phone" class="upload-icon" />注册手机:
+                  <a-icon style="margin-right: 10px" type="phone" class="upload-icon"/>
+                  注册手机:
                   {{ form.enterprisephone }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right: 10px" type="mail" class="upload-icon" />注册时间:
+                  <a-icon style="margin-right: 10px" type="mail" class="upload-icon"/>
+                  注册时间:
                   {{ registrationtime }}
                 </a-form-item>
                 <a-form-item>
-                  <a-icon style="margin-right: 10px" type="deployment-unit" class="upload-icon" />状态:<a-tag :color="color" style="margin-left: 10px">{{statusname }}</a-tag>剩余试用时间: {{ form.enterprisetrialdays }}天</a-form-item>
+                  <a-icon style="margin-right: 10px" type="deployment-unit" class="upload-icon"/>
+                  状态:
+                  <a-tag :color="color" style="margin-left: 10px">{{ statusname }}</a-tag>
+                  剩余试用时间: {{ form.enterprisetrialdays }}天
+                </a-form-item>
               </a-form>
             </a-col>
           </a-row>
         </a-card>
-        <br />
+        <br/>
       </a-layout-content>
     </a-layout>
     <!--初始化企业信息数据-->
-    <a-modal title="初始化" :visible="visible" :confirm-loading="confirmLoading" @ok="handleOk" @cancel="handleCancel" okText="确定">
+    <a-modal title="初始化" :visible="visible" :confirm-loading="confirmLoading" @ok="handleOk" @cancel="handleCancel"
+             okText="确定">
       <!--<p>如需操作请联系匠思</p>-->
       <a-radio-group v-model="radioValue" @change="handleChange">
         <a-radio :style="radioStyle" value="1">基础数据</a-radio>
@@ -70,12 +81,12 @@
     </a-modal>
 
     <a-modal
-      title="修改信息"
-      :visible="companyVisible"
-      :confirm-loading="confirmLoading"
-      @ok="companyOk"
-      @cancel="companyCancel"
-      :width="800"
+        title="修改信息"
+        :visible="companyVisible"
+        :confirm-loading="confirmLoading"
+        @ok="companyOk"
+        @cancel="companyCancel"
+        :width="800"
     >
       <a-form-model ref="ruleForm" :model="form" :rules="rules" :label-col="labelCol" :wrapper-col="wrapperCol">
         <a-form-model-item label="企业名称:" prop="enterprisename">
@@ -89,9 +100,9 @@
         </a-form-model-item>
         <a-form-model-item label="电话:" prop="EnterpriseTel">
           <a-input
-            v-model="form.enterprisetel"
-            style="width: 100%; margin-right: 10px"
-            placeholder="请输入电话"
+              v-model="form.enterprisetel"
+              style="width: 100%; margin-right: 10px"
+              placeholder="请输入电话"
           ></a-input>
         </a-form-model-item>
         <a-form-model-item label="注册人:" prop="EnterpriseRegistrant">
@@ -99,10 +110,10 @@
         </a-form-model-item>
         <a-form-model-item label="更换手机:">
           <a-input
-            v-model="form.enterprisephone"
-            disabled
-            style="width: 90%; margin-right: 10px"
-            placeholder="请输入新手机号"
+              v-model="form.enterprisephone"
+              disabled
+              style="width: 90%; margin-right: 10px"
+              placeholder="请输入新手机号"
           ></a-input>
           <a @click="changePhone">更改</a>
         </a-form-model-item>
@@ -110,18 +121,18 @@
           <a-input v-model="registrationtime" disabled placeholder="无"></a-input>
         </a-form-model-item>
 
-        <a-form-model-item label="状态:" >
-          <a-input v-model="statusname" disabled ></a-input>
+        <a-form-model-item label="状态:">
+          <a-input v-model="statusname" disabled></a-input>
         </a-form-model-item>
       </a-form-model>
     </a-modal>
 
     <a-modal
-      title="初始化确认"
-      :visible="confirmVisible"
-      :confirm-loading="confirmLoading"
-      @ok="confirmOk"
-      @cancel="confirmCancel"
+        title="初始化确认"
+        :visible="confirmVisible"
+        :confirm-loading="confirmLoading"
+        @ok="confirmOk"
+        @cancel="confirmCancel"
     >
       <a-form-model ref="CruleForm" :model="form" :rules="rules">
         <a-form-model-item style="display: flex; align-items: center; justify-content: center; text-align: justify">
@@ -135,7 +146,7 @@
 
     <a-modal :visible="phoneVisible" :width="700" style="text-align: center">
       <template slot="footer">
-        <a-button key="back" @click="phoneCancel"> 取消 </a-button>
+        <a-button key="back" @click="phoneCancel"> 取消</a-button>
         <a-button key="submit" class="phoneBtn" :loading="loading" disabled type="primary" @click="phoneOk">
           确认
         </a-button>
@@ -152,7 +163,8 @@
         <a-form-model-item label="输入验证码:" prop="VerificationCode">
           <a-input v-model="form.VerificationCode" placeholder="输入验证码">
             <a-button class="GVbtn" :disabled="false" slot="suffix" type="link" @click="getMailVerificationCode"
-              >获取验证码</a-button
+            >获取验证码
+            </a-button
             >
           </a-input>
         </a-form-model-item>
@@ -163,11 +175,11 @@
     </a-modal>
 
     <a-modal
-      title="切换所在企业"
-      :visible="changeVisible"
-      :confirm-loading="changeConfirmLoading"
-      @ok="changeHandleOk"
-      @cancel="changeHandleCancel"
+        title="切换所在企业"
+        :visible="changeVisible"
+        :confirm-loading="changeConfirmLoading"
+        @ok="changeHandleOk"
+        @cancel="changeHandleCancel"
     >
       <p>请从下面选择一个企业进行切换</p>
       <a-radio-group :default-value="1" @change="onChange">
@@ -177,12 +189,12 @@
       </a-radio-group>
     </a-modal>
     <a-modal
-      title="更换电话号"
-      :visible="changeTelVisible1"
-      :confirm-loading="confirmLoading"
-      @ok="changeTelhandleOk"
-      okText="下一步"
-      @cancel="changeTelhandleCancel"
+        title="更换电话号"
+        :visible="changeTelVisible1"
+        :confirm-loading="confirmLoading"
+        @ok="changeTelhandleOk"
+        okText="下一步"
+        @cancel="changeTelhandleCancel"
     >
       <p>更改前需校验当前绑定的手机号</p>
       <a-form-model ref="ruleForm1" :model="form" :rules="rules">
@@ -192,7 +204,8 @@
         <a-form-model-item prop="phoneCode1">
           <a-input v-model="form.phoneCode1" placeholder="请输入验证码">
             <a-button class="GPBtn" :disabled="false" slot="suffix" type="link" @click="getVerificationCode"
-              >获取验证码</a-button
+            >获取验证码
+            </a-button
             >
           </a-input>
           <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
@@ -200,12 +213,12 @@
       </a-form-model>
     </a-modal>
     <a-modal
-      title="更换手机号"
-      :visible="changePhoneVisible1"
-      :confirm-loading="confirmLoading"
-      @ok="changePhonehandleOk"
-      okText="下一步"
-      @cancel="changePhonehandleCancel"
+        title="更换手机号"
+        :visible="changePhoneVisible1"
+        :confirm-loading="confirmLoading"
+        @ok="changePhonehandleOk"
+        okText="下一步"
+        @cancel="changePhonehandleCancel"
     >
       <p>更改前需校验当前绑定的手机号</p>
       <a-form-model ref="CPruleForm" :model="form" :rules="rules">
@@ -215,7 +228,8 @@
         <a-form-model-item prop="phoneCode3">
           <a-input v-model="form.phoneCode3" placeholder="请输入验证码">
             <a-button class="GPBtn3" :disabled="false" slot="suffix" type="link" @click="getPhoneVerificationCode"
-              >获取验证码</a-button
+            >获取验证码
+            </a-button
             >
           </a-input>
           <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
@@ -223,12 +237,12 @@
       </a-form-model>
     </a-modal>
     <a-modal
-      title="更换电话号第二步"
-      :visible="changeNewVisible"
-      :confirm-loading="confirmLoading"
-      @ok="changeNewOk"
-      @cancel="changeNewCancel"
-      v-show="Telshow"
+        title="更换电话号第二步"
+        :visible="changeNewVisible"
+        :confirm-loading="confirmLoading"
+        @ok="changeNewOk"
+        @cancel="changeNewCancel"
+        v-show="Telshow"
     >
       <p>更改手机号后，您将使用新的手机号进行登录</p>
       <a-form-model ref="PruleForm2" :model="form" :rules="rules">
@@ -240,7 +254,8 @@
         <a-form-model-item prop="phoneCode2">
           <a-input v-model="form.phoneCode2" placeholder="请输入验证码">
             <a-button class="GPBtn2" slot="suffix" :disabled="false" type="link" @click="getVerificationCode1"
-              >获取验证码</a-button
+            >获取验证码
+            </a-button
             >
           </a-input>
           <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
@@ -248,12 +263,12 @@
       </a-form-model>
     </a-modal>
     <a-modal
-      title="更换手机第二步"
-      :visible="changeNewPhoneVisible"
-      :confirm-loading="confirmLoading"
-      @ok="changeNewPhoneOk"
-      @cancel="changeNewPhoneCancel"
-      v-show="true"
+        title="更换手机第二步"
+        :visible="changeNewPhoneVisible"
+        :confirm-loading="confirmLoading"
+        @ok="changeNewPhoneOk"
+        @cancel="changeNewPhoneCancel"
+        v-show="true"
     >
       <p>更改手机号后，您将使用新的手机号进行登录</p>
       <a-form-model ref="PruleForm4" :model="form" :rules="rules">
@@ -265,7 +280,8 @@
         <a-form-model-item prop="phoneCode4">
           <a-input v-model="form.phoneCode4" placeholder="请输入验证码">
             <a-button class="GPBtn4" slot="suffix" :disabled="false" type="link" @click="getNewPhoneVerificationCode"
-              >获取验证码</a-button
+            >获取验证码
+            </a-button
             >
           </a-input>
           <!-- <p>如果无法收到验证码短信，请尝试<a>语音验证码</a></p> -->
@@ -276,15 +292,16 @@
 </template>
 <script>
 import Vue from 'vue'
-import { formModel, Button } from 'ant-design-vue'
-Vue.use(formModel, Button)
+import {Button, formModel} from 'ant-design-vue'
 import moment from 'moment'
-import { mapActions } from 'vuex'
+import {mapActions} from 'vuex'
 import AvatarModal from '../settings/AvatarModal'
-import { getBaseenterpriseInfo, updateBaseenterprise, postData,initCompanyData } from '@/api/manage'
-import { retrievePsdSendSMSregister } from '@/api/register'
-import { logininfo } from '@/store/mutation-types'
-import { getCompanyList } from '@/api/login'
+import {getBaseenterpriseInfo, initCompanyData, postData, updateBaseenterprise} from '@/api/manage'
+import {retrievePsdSendSMSregister} from '@/api/register'
+import {logininfo} from '@/store/mutation-types'
+import {getCompanyList} from '@/api/login'
+
+Vue.use(formModel, Button)
 export default {
   components: {
     AvatarModal,
@@ -334,39 +351,39 @@ export default {
       Form: Object,
       form: {},
       color: 'green',
-      labelCol: { span: 4 },
-      wrapperCol: { span: 18 },
+      labelCol: {span: 4},
+      wrapperCol: {span: 18},
       rules: {
         //校验规则
-        enterprisename: [{ required: true, message: '请输入企业名称', trigger: 'blur' }],
+        enterprisename: [{required: true, message: '请输入企业名称', trigger: 'blur'}],
         EnterprisePhone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
+          {required: true, message: '请输入手机号', trigger: 'blur'},
+          {required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号'},
         ],
         Newphone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
+          {required: true, message: '请输入手机号', trigger: 'blur'},
+          {required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号'},
         ],
         enterprisetel: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
+          {required: true, message: '请输入手机号', trigger: 'blur'},
+          {required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号'},
         ],
         PersonPhone: [
-          { required: true, message: '请输入手机号', trigger: 'blur' },
-          { required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号' },
+          {required: true, message: '请输入手机号', trigger: 'blur'},
+          {required: true, pattern: /^1[34578]\d{9}$/, message: '请输入正确的手机号'},
         ],
-        VerificationCode: [{ required: true, message: '请输入验证码' }],
-        phoneCode1: [{ required: true, message: '请输入验证码' }],
-        phoneCode2: [{ required: true, message: '请输入验证码' }],
-        phoneCode3: [{ required: true, message: '请输入验证码' }],
-        phoneCode4: [{ required: true, message: '请输入验证码' }],
+        VerificationCode: [{required: true, message: '请输入验证码'}],
+        phoneCode1: [{required: true, message: '请输入验证码'}],
+        phoneCode2: [{required: true, message: '请输入验证码'}],
+        phoneCode3: [{required: true, message: '请输入验证码'}],
+        phoneCode4: [{required: true, message: '请输入验证码'}],
       },
       // 初始化企业信息选择
-      radioValue:'',
+      radioValue: '',
       // 企业状态名称
-      statusname:'',
+      statusname: '',
       // 企业注册日期
-      registrationtime:'',
+      registrationtime: '',
     }
   },
 
@@ -379,35 +396,36 @@ export default {
       params.id = Vue.ls.get(logininfo).basepersonPO.enterpriseid
       console.log('params-->', params)
       getBaseenterpriseInfo(params)
-        .then((res) => {
-          console.log('getBaseenterpriseInfo----->', JSON.stringify(res))
-          this.form = res.result
-          if (this.form.enterpriseregistrationtime !== null && this.form.enterpriseregistrationtime !== '' ) {
-            let d = new Date(this.form.enterpriseregistrationtime)
-            let enterpriseregistrationtime = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
-            // 企业注册日期
-            this.registrationtime = enterpriseregistrationtime
-          }
-          //企业状态：0待审核、1已审核、2已过期、5试用中、9已注销——注册成功默认5
-          if (this.form.enterprisestatus === 5) {
-            this.statusname = '试用中'
-            this.color = 'yellow'
-          } else if (this.form.enterprisestatus === 0) {
-            this.statusname = '待审核'
-            this.color = 'red'
-          } else if (this.form.enterprisestatus === 1) {
-            this.statusname = '已审核'
-            this.color = 'yellowgreen'
-          } else if (this.form.enterprisestatus === 2) {
-            this.statusname = '已过期'
-            this.color = 'gray'
-          } else if (this.form.enterprisestatus === 9) {
-            this.statusname = '已注销'
-            this.color = 'black'
-          }
-         
-        })
-        .catch((err) => {})
+          .then((res) => {
+            console.log('getBaseenterpriseInfo----->', JSON.stringify(res))
+            this.form = res.result
+            if (this.form.enterpriseregistrationtime !== null && this.form.enterpriseregistrationtime !== '') {
+              let d = new Date(this.form.enterpriseregistrationtime)
+              let enterpriseregistrationtime = d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日'
+              // 企业注册日期
+              this.registrationtime = enterpriseregistrationtime
+            }
+            //企业状态：0待审核、1已审核、2已过期、5试用中、9已注销——注册成功默认5
+            if (this.form.enterprisestatus === 5) {
+              this.statusname = '试用中'
+              this.color = 'yellow'
+            } else if (this.form.enterprisestatus === 0) {
+              this.statusname = '待审核'
+              this.color = 'red'
+            } else if (this.form.enterprisestatus === 1) {
+              this.statusname = '已审核'
+              this.color = 'yellowgreen'
+            } else if (this.form.enterprisestatus === 2) {
+              this.statusname = '已过期'
+              this.color = 'gray'
+            } else if (this.form.enterprisestatus === 9) {
+              this.statusname = '已注销'
+              this.color = 'black'
+            }
+
+          })
+          .catch((err) => {
+          })
     },
     getNewPhoneVerificationCode() {
       this.$refs.PruleForm4.validate((valid) => {
@@ -417,30 +435,30 @@ export default {
           const params = {}
           params.enterprisephone = this.form.Newphone
           retrievePsdSendSMSregister(params)
-            .then((res) => {
-              if (res.status == 'SUCCESS') {
-                setTimeout(hide, 2500)
-                this.$notification['success']({
-                  message: '提示',
-                  description: res.errorMsg,
-                  duration: 8,
-                })
-              } else if (res.status == 'FAILED' || res.status == 'EXCEPTION') {
-                setTimeout(hide, 2500)
-                this.$notification['error']({
-                  message: '提示',
-                  description: res.errorMsg,
-                  duration: 8,
-                })
-              }
-            })
-            .catch((err) => {
-              setTimeout(hide, 1)
-              clearInterval(interval)
-              state.time = 60
-              state.smsSendBtn = false
-              this.requestFailed(err)
-            })
+              .then((res) => {
+                if (res.status == 'SUCCESS') {
+                  setTimeout(hide, 2500)
+                  this.$notification['success']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                  })
+                } else if (res.status == 'FAILED' || res.status == 'EXCEPTION') {
+                  setTimeout(hide, 2500)
+                  this.$notification['error']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                  })
+                }
+              })
+              .catch((err) => {
+                setTimeout(hide, 1)
+                clearInterval(interval)
+                state.time = 60
+                state.smsSendBtn = false
+                this.requestFailed(err)
+              })
           var oBtn1 = document.getElementsByClassName('GPBtn4')[0]
           // this.$message.info("发送验证码成功！")
           var time = 60
@@ -478,30 +496,30 @@ export default {
           console.log(this.form.enterprisetel)
           params.enterprisephone = this.form.enterprisetel
           retrievePsdSendSMSregister(params)
-            .then((res) => {
-              if (res.status == 'SUCCESS') {
-                setTimeout(hide, 2500)
-                this.$notification['success']({
-                  message: '提示',
-                  description: res.errorMsg,
-                  duration: 8,
-                })
-              } else if (res.status == 'FAILED' || res.status == 'EXCEPTION') {
-                setTimeout(hide, 2500)
-                this.$notification['error']({
-                  message: '提示',
-                  description: res.errorMsg,
-                  duration: 8,
-                })
-              }
-            })
-            .catch((err) => {
-              setTimeout(hide, 1)
-              clearInterval(interval)
-              state.time = 60
-              state.smsSendBtn = false
-              this.requestFailed(err)
-            })
+              .then((res) => {
+                if (res.status == 'SUCCESS') {
+                  setTimeout(hide, 2500)
+                  this.$notification['success']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                  })
+                } else if (res.status == 'FAILED' || res.status == 'EXCEPTION') {
+                  setTimeout(hide, 2500)
+                  this.$notification['error']({
+                    message: '提示',
+                    description: res.errorMsg,
+                    duration: 8,
+                  })
+                }
+              })
+              .catch((err) => {
+                setTimeout(hide, 1)
+                clearInterval(interval)
+                state.time = 60
+                state.smsSendBtn = false
+                this.requestFailed(err)
+              })
           var oBtn1 = document.getElementsByClassName('GPBtn2')[0]
           var time = 60
           var timer = null
@@ -592,22 +610,23 @@ export default {
       params.enterprisephone = Vue.ls.get(logininfo).basepersonPO.personphone
       var url = '/sys/switchlogin'
       postData(params, url)
-        .then((res) => {
-          Vue.ls.set(logininfo, res.result)
-          this.baseenterprisePO = Vue.ls.get(logininfo).baseenterprisePO
-          this.getInfo()
-          this.changeVisible = false
-        })
-        .catch(() => {})
+          .then((res) => {
+            Vue.ls.set(logininfo, res.result)
+            this.baseenterprisePO = Vue.ls.get(logininfo).baseenterprisePO
+            this.getInfo()
+            this.changeVisible = false
+          })
+          .catch(() => {
+          })
     },
     changeHandleCancel(e) {
       this.changeVisible = false
     },
     Newbusiness() {
-      this.$router.push({ path: '/Newbusiness' })
+      this.$router.push({path: '/Newbusiness'})
     },
     setavatar(url) {
-    
+
       this.option.img = url
     },
     pCancel() {
@@ -629,13 +648,14 @@ export default {
       this.changeVisible = true
       const params = {}
       params.phone = Vue.ls.get(logininfo).basepersonPO.personphone
-      params.state=''
+      params.state = ''
       getCompanyList(params)
-        .then((res) => {
-          console.log('getCompanyList-->', JSON.stringify(res))
-          this.enterprisename = res.result
-        })
-        .catch(() => {})
+          .then((res) => {
+            console.log('getCompanyList-->', JSON.stringify(res))
+            this.enterprisename = res.result
+          })
+          .catch(() => {
+          })
     },
     companyOk(e) {
       this.confirmLoading = true
@@ -652,22 +672,22 @@ export default {
             data.enterprisecontact = this.form.enterprisecontact
             data.enterprisetel = this.form.enterprisetel
             data.enterprisephone = this.form.enterprisephone
-            console.log('update enterprise-->',data)
+            console.log('update enterprise-->', data)
             updateBaseenterprise(data)
-              .then((res) => {
-                console.log('updateBaseenterprise-->', res)
-                if (res.status == 'SUCCESS') {
+                .then((res) => {
+                  console.log('updateBaseenterprise-->', res)
+                  if (res.status == 'SUCCESS') {
+                    this.confirmLoading = false
+                    this.$message.info('保存成功！')
+                    this.companyVisible = false
+                    //   提示用户信息
+                    this.$store.commit('SET_ENTERPRISENAME', data.enterprisename)
+                  }
+                })
+                .catch((err) => {
+                  console.log('错误------》', err)
                   this.confirmLoading = false
-                  this.$message.info('保存成功！')
-                  this.companyVisible = false
-                  //   提示用户信息
-                   this.$store.commit('SET_ENTERPRISENAME', data.enterprisename)
-                }
-              })
-              .catch((err) => {
-                console.log('错误------》', err)
-                this.confirmLoading = false
-              })
+                })
           }, 2000)
         } else {
           // 等于false
@@ -694,8 +714,10 @@ export default {
         title: '确认将要解散企业？',
         content: '解散企业操作不可撤回，请慎重考虑',
         okText: '联系我们',
-        onOk: () => {},
-        onCancel() {},
+        onOk: () => {
+        },
+        onCancel() {
+        },
       })
     },
     confirmOk(e) {
@@ -763,30 +785,30 @@ export default {
       const params = {}
       params.enterprisephone = this.form.enterprisetel
       retrievePsdSendSMSregister(params)
-        .then((res) => {
-          if (res.status == 'SUCCESS') {
-            setTimeout(hide, 2500)
-            this.$notification['success']({
-              message: '提示',
-              description: res.errorMsg,
-              duration: 8,
-            })
-          } else if (res.status == 'FAILED' || res.status == 'EXCEPTION') {
-            setTimeout(hide, 2500)
-            this.$notification['error']({
-              message: '提示',
-              description: res.errorMsg,
-              duration: 8,
-            })
-          }
-        })
-        .catch((err) => {
-          setTimeout(hide, 1)
-          clearInterval(interval)
-          state.time = 60
-          state.smsSendBtn = false
-          this.requestFailed(err)
-        })
+          .then((res) => {
+            if (res.status == 'SUCCESS') {
+              setTimeout(hide, 2500)
+              this.$notification['success']({
+                message: '提示',
+                description: res.errorMsg,
+                duration: 8,
+              })
+            } else if (res.status == 'FAILED' || res.status == 'EXCEPTION') {
+              setTimeout(hide, 2500)
+              this.$notification['error']({
+                message: '提示',
+                description: res.errorMsg,
+                duration: 8,
+              })
+            }
+          })
+          .catch((err) => {
+            setTimeout(hide, 1)
+            clearInterval(interval)
+            state.time = 60
+            state.smsSendBtn = false
+            this.requestFailed(err)
+          })
       var time = 60
       var timer = null
       oBtn1.innerHTML = time + '秒后重新发送'
@@ -812,30 +834,30 @@ export default {
       const params = {}
       params.enterprisephone = this.form.enterprisephone
       retrievePsdSendSMSregister(params)
-        .then((res) => {
-          if (res.status == 'SUCCESS') {
-            setTimeout(hide, 2500)
-            this.$notification['success']({
-              message: '提示',
-              description: res.errorMsg,
-              duration: 8,
-            })
-          } else if (res.status == 'FAILED' || res.status == 'EXCEPTION') {
-            setTimeout(hide, 2500)
-            this.$notification['error']({
-              message: '提示',
-              description: res.errorMsg,
-              duration: 8,
-            })
-          }
-        })
-        .catch((err) => {
-          setTimeout(hide, 1)
-          clearInterval(interval)
-          state.time = 60
-          state.smsSendBtn = false
-          this.requestFailed(err)
-        })
+          .then((res) => {
+            if (res.status == 'SUCCESS') {
+              setTimeout(hide, 2500)
+              this.$notification['success']({
+                message: '提示',
+                description: res.errorMsg,
+                duration: 8,
+              })
+            } else if (res.status == 'FAILED' || res.status == 'EXCEPTION') {
+              setTimeout(hide, 2500)
+              this.$notification['error']({
+                message: '提示',
+                description: res.errorMsg,
+                duration: 8,
+              })
+            }
+          })
+          .catch((err) => {
+            setTimeout(hide, 1)
+            clearInterval(interval)
+            state.time = 60
+            state.smsSendBtn = false
+            this.requestFailed(err)
+          })
       var oBtn1 = document.getElementsByClassName('GPBtn3')[0]
       // this.$message.info("发送验证码成功！")
       var time = 60
@@ -869,30 +891,30 @@ export default {
       console.log('手机号码----->', this.form.enterprisephone)
       params.enterprisephone = this.form.enterprisephone
       retrievePsdSendSMSregister(params)
-        .then((res) => {
-          if (res.status == 'SUCCESS') {
-            setTimeout(hide, 2500)
-            this.$notification['success']({
-              message: '提示',
-              description: res.errorMsg,
-              duration: 8,
-            })
-          } else if (res.status == 'FAILED' || res.status == 'EXCEPTION') {
-            setTimeout(hide, 2500)
-            this.$notification['error']({
-              message: '提示',
-              description: res.errorMsg,
-              duration: 8,
-            })
-          }
-        })
-        .catch((err) => {
-          setTimeout(hide, 1)
-          clearInterval(interval)
-          state.time = 60
-          state.smsSendBtn = false
-          this.requestFailed(err)
-        })
+          .then((res) => {
+            if (res.status == 'SUCCESS') {
+              setTimeout(hide, 2500)
+              this.$notification['success']({
+                message: '提示',
+                description: res.errorMsg,
+                duration: 8,
+              })
+            } else if (res.status == 'FAILED' || res.status == 'EXCEPTION') {
+              setTimeout(hide, 2500)
+              this.$notification['error']({
+                message: '提示',
+                description: res.errorMsg,
+                duration: 8,
+              })
+            }
+          })
+          .catch((err) => {
+            setTimeout(hide, 1)
+            clearInterval(interval)
+            state.time = 60
+            state.smsSendBtn = false
+            this.requestFailed(err)
+          })
 
       var time = 60
       var timer = null
@@ -939,35 +961,35 @@ export default {
      * 企业初始话选择确认
      * @param e
      */
-    handleChange(e){
+    handleChange(e) {
       this.radioValue = e.target.value;
     },
     /**
      * 初始话企业信息确认
      */
     handleOk(e) {
-      if (this.radioValue == null || this.radioValue == ''||this.radioValue == undefined) {
+      if (this.radioValue == null || this.radioValue == '' || this.radioValue == undefined) {
         this.$message.error("请勾选需要清除的数据类型")
         return false;
       }
       let context = '';
       if (this.radioValue == '1') {
         context = '基础数据';
-      } else if (this.radioValue == '1') {
+      } else if (this.radioValue == '2') {
         context = '业务数据';
-      } else if (this.radioValue == '1') {
+      } else if (this.radioValue == '3') {
         context = '表单数据';
       }
       // 提示
       this.$confirm({
-        title: '是否确认清除'+context+"？" ,
+        title: '是否确认清除' + context + "？",
         content: '清除数据操作不可找回，请慎重考虑！',
         onOk: () => {
           this.confirmLoading = true;
           // 调用后台接口方法
           let param = {
-            radioValue:this.radioValue,
-            enterpriseid:this.form.enterpriseid,
+            radioValue: this.radioValue,
+            enterpriseid: this.form.enterpriseid,
           }
           initCompanyData(param).then((res) => {
             console.log('initCompanyData-->', res)
@@ -1009,9 +1031,11 @@ export default {
     border-radius: 50%;
     border: 1px solid rgba(0, 0, 0, 0.2);
   }
+
   .edit {
     background: rgba(24, 144, 255, 0.7);
   }
+
   .mask {
     opacity: 0;
     position: absolute;

@@ -34,7 +34,6 @@ export default {
   },
   methods: {
     getReportUrl() {
-      debugger
       let _this = this;
       let enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid;
       getData({}, '/report/getReportUrl').then((res) => {

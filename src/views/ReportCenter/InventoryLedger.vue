@@ -1,114 +1,59 @@
+/*
+* 功能：库存流水账报表
+* 日期：2021年5月10日15:16:18
+* 作者：陶飞
+* 备注：
+*/
 <template>
-  <a-table
-    :columns="columns"
-    :data-source="data"
-    bordered
-    size="middle"
-    :scroll="{ x: 'calc(400px + 50%)', y: 400 }"
-  />
+  <div>
+    <div class="m-list-wrap">
+      <div class="m-table">
+        <div class="sfznav divc" style="overflow: hidden; padding: 0px; margin: 0px;height:800px;width: 1650px">
+          <iframe id="myframe" style="position: relative;" name="myframe" :src="this.url"
+                  frameborder="0" scrolling="yes"
+                  width="1650" height="800">
+          </iframe>
+        </div>
+      </div>
+    </div>
+  </div>
 </template>
+
 <script>
-const columns = [
-  {
-    title: '日期',
-    dataIndex: 'Date',
-    key: 'Date',
-    width: 10
-  },
-  {
-    title: '存货编码',
-    dataIndex: 'InventoryCode',
-    key: 'InventoryCode',
-    width: 10
-  },
-  {
-    title: '存货名称',
-    dataIndex: 'InventoryName',
-    key: 'InventoryName',
-    width: 10
-  },
-  {
-    title: '存货规格',
-    dataIndex: 'InventorySpecifications',
-    key: 'InventorySpecifications',
-    width: 10
-  },
-  {
-    title: '数量',
-    dataIndex: 'Quantity',
-    key: 'Quantity',
-    width: 10
-  },
-  {
-    title: '单位',
-    dataIndex: 'Unit',
-    key: 'Unit',
-    width: 10
-  },
-    {
-    title: '包装单位',
-    dataIndex: 'PackingUnit',
-    key: 'PackingUnit',
-    width: 10
-  },
-    {
-    title: '包装数量',
-    dataIndex: 'PackingQuantity',
-    key: 'PackingQuantity',
-    width: 10
-  },
-    {
-    title: '批次',
-    dataIndex: 'Batch',
-    key: 'Batch',
-    width: 10
-  },
-    {
-    title: '批次属性',
-    dataIndex: 'BatchAttributes',
-    key: 'BatchAttributes',
-    width: 10
-  },
-    {
-    title: '仓库名称',
-    dataIndex: 'WarehouseName',
-    key: 'WarehouseName',
-    width: 10
-  },
-    {
-    title: '货位',
-    dataIndex: 'CargoSpace',
-    key: 'CargoSpace',
-    width: 10
-  },
-]
-
-const data = []
-for (let i = 1; i < 30; i++) {
-  data.push({
-    key: i,
-    Date:'1.'+i+'日',
-    InventoryCode: 'A' + 100 + i,
-    InventoryName: `Edward King ${i}`,
-    InventorySpecifications: `Edward King ${i}`,
-    Quantity: i + i,
-    Unit: 'KG',
-    PackingUnit:"KG",
-    PackingQuantity:100+i,
-    Batch:100+i,
-    BatchAttributes:"优秀",
-    WarehouseName:'A'+100+i,
-    CargoSpace:"L"+101+i
-
-  })
-}
+import {getData} from "@/api/manage";
+import Vue from "vue";
+import {logininfo} from "@/store/mutation-types";
 
 export default {
+  name: "ReportList",
   data() {
     return {
-      data,
-      columns
+      // 报表服务器地址
+      url: '',
     }
-  }
+  },
+  methods: {
+    getReportUrl() {
+      debugger
+      let _this = this;
+      let enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid;
+      getData({}, '/report/getReportUrl').then((res) => {
+        if (res.status == 'SUCCESS') {
+          _this.url = res.result + "/report/库存流水账报表.cpt&enterpriseid=" + enterpriseid;
+        } else {
+          this.$message.error(res.errorMsg)
+        }
+      })
+    },
+  },
+  // 监视路由，参数为要目标路由和当前页面的路由
+  watch: {
+    '$route'(to, from) {
+      this.getReportUrl();
+    }
+  },
+  mounted() {
+    this.getReportUrl();
+  },
 }
 </script>

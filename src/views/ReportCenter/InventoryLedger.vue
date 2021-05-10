@@ -1,5 +1,5 @@
 /*
-* 功能：库存流水账报表
+* 功能：出入库流水账报表
 * 日期：2021年5月10日15:16:18
 * 作者：陶飞
 * 备注：
@@ -38,7 +38,7 @@ export default {
       let enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid;
       getData({}, '/report/getReportUrl').then((res) => {
         if (res.status == 'SUCCESS') {
-          _this.url = res.result + "/report/库存流水账报表.cpt&enterpriseid=" + enterpriseid;
+          _this.url = res.result + "/report/出入库流水账报表.cpt&enterpriseid=" + enterpriseid;
         } else {
           this.$message.error(res.errorMsg)
         }

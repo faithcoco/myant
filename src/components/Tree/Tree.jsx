@@ -33,6 +33,7 @@ export default {
   },
   methods: {
     handlePlus(item) {
+      debugger
       this.$emit('add', item)
     },
     handleTitleClick(...args) {
@@ -55,7 +56,7 @@ export default {
         <Item key={item.key}>
           { this.renderIcon(item.icon)}
           { item.title}
-          <a class="btn" style="width: 20px;z-index:1300" {...{ on: { click: () => this.handlePlus(item) } }}><a-icon type="plus" /></a>
+         {/* <a class="btn" style="width: 20px;z-index:1300" {...{ on: { click: () => this.handlePlus(item) } }}><a-icon type="plus" /></a>*/}
         </Item>
       )
     },
@@ -74,7 +75,7 @@ export default {
             <a-dropdown>
               <a class="btn"><a-icon type="ellipsis" /></a>
               <a-menu slot="overlay">
-                <a-menu-item key="1">新增</a-menu-item>
+               {/* <a-menu-item key="1">新增</a-menu-item>*/}
                 <a-menu-item key="2">合并</a-menu-item>
                 <a-menu-item key="3">移除</a-menu-item>
               </a-menu>

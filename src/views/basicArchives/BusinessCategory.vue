@@ -9,39 +9,40 @@
         </span>
       </a-col>
     </a-row>
-    <br />
+    <br/>
     <a-table :columns="columns" :data-source="list" defaultExpandAllRows>
       <span slot="action" slot-scope="text, record">
         <template>
           <a @click="handleAddItem(record)">添加子类</a>
-          <a-divider type="vertical" />
+          <a-divider type="vertical"/>
           <a @click="handleEdit(record)">编辑</a>
-          <a-divider type="vertical" />
+          <a-divider type="vertical"/>
           <a-popconfirm title="确定删除?" @confirm="() => handleDelete(record)">
             <a href="javascript:;">删除</a>
           </a-popconfirm>
         </template>
       </span>
       <span slot="use" style="margin: 0">
-        <a-checkbox @change="onChange" />
+        <a-checkbox @change="onChange"/>
       </span>
     </a-table>
     <a-modal v-model="visible" title="类别" @ok="handleOk" :v-loading="loading">
       <p>请输入类别名称：</p>
-      <a-input ref="userNameInput" v-model="typeName" placeholder />
+      <a-input ref="userNameInput" v-model="typeName" placeholder/>
       <p>请输入类别编码：</p>
-      <a-input ref="userNameInput" v-model="typeCode" placeholder />
+      <a-input ref="userNameInput" v-model="typeCode" placeholder/>
     </a-modal>
   </a-card>
 </template>
 <script>
-import { getclassificationGoodsList, insertmaterialClass, getData } from '@/api/manage'
-import { logininfo } from '@/store/mutation-types'
+import {getclassificationGoodsList, getData, insertmaterialClass} from '@/api/manage'
+import {logininfo} from '@/store/mutation-types'
 import Vue from 'vue'
+
 export default {
   data() {
     return {
-      loading:false,
+      loading: false,
       list: [],
       columns: [
         {
@@ -161,6 +162,7 @@ export default {
       getData(parameter, this.urlDelete).then((res) => {
         console.log('delete-->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
+          this.$message.info("删除成功")
           this.getList()
         } else {
           this.$message.warning(res.errorMsg)

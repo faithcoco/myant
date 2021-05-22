@@ -328,6 +328,8 @@ export default {
         if (res.status == 'SUCCESS') {
           this.$message.info("删除成功")
           this.getList()
+        } else {
+          this.$message.info(res.errorMsg)
         }
       })
     },

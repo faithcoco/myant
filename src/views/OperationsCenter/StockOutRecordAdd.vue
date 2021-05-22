@@ -82,6 +82,15 @@
                         </template>
                       </div>
                     </template>
+
+                    <!--add by tf 货位档案选择 2021年5月23日00:52:19-->
+                    <span slot="positioncode" slot-scope="text, record, index">
+                      <a-input ref="positionInput" v-model="text" :disabled="disabled">
+                        <a-button slot="suffix" type="link"
+                                  @click="(e) => handleShowModal(e.target.value, 'positioncode', record, index)">选择</a-button>
+                      </a-input>
+                    </span>
+
                     <span slot="doclinequantity" slot-scope="text, record">
                       <a-input
                           :value="text"
@@ -218,6 +227,7 @@ export default {
       typeVisible: false,
       currentkey: '',
       detailVisible: false,
+      detailIndex: '',// 明细行下标
       columns: [],
       detailsData: [],
       departmentid: '',
@@ -401,6 +411,17 @@ export default {
         }
       })
     },
+
+    // add by tf 货位档案选择 2021年5月23日00:52:19
+    handleShowModal(value, key, record, index) {
+      this.currentkey = key
+      this.detailIndex = index
+      if (this.currentkey == 'positioncode') {
+        this.name = 'CargoSpace'
+        this.visible = true
+      }
+    },
+
     waitquantityChange(value, record) {
       record.doclinequantity = value
     },
@@ -668,6 +689,11 @@ export default {
       } else if (this.currentkey == 'list') {
         this.getList('ShippingNoticeList', this.selectList[0].docid, 1)
         this.visible = false
+      } else if (this.currentkey == 'positioncode') {
+        this.visible = false
+        this.detailsData[this.detailIndex].positionid = this.selectList[0].positionid
+        this.detailsData[this.detailIndex].positioncode = this.selectList[0].positioncode
+        this.detailsData[this.detailIndex].positionname = this.selectList[0].positionname
       }
     },
     handleCancel(e) {
@@ -685,8 +711,9 @@ export default {
         this.visible = false
       } else if (this.currentkey == 'list') {
         this.visible = false
-      }
-      if (this.currentkey == 'warehouseid') {
+      } else if (this.currentkey == 'warehouseid') {
+        this.visible = false
+      } else if (this.currentkey == 'positioncode') {
         this.visible = false
       }
     },

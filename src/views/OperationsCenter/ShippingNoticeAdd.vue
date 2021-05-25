@@ -44,6 +44,7 @@
                     placeholder="选择日期"
                     v-decorator="item.decorator"
                     :disabled="item.disabled"
+                    :defaultValue="moment(getCurrentData(), 'YYYY-MM-DD HH:mm:ss')"
                 />
                 <a-input
                     v-decorator="item.decorator"
@@ -165,6 +166,13 @@ import ArchivesModal from '../modal/ArchivesModal'
 import Type from '../modal/TypeModal'
 import SelectModal from '../modal/SelectModal'
 
+// 设置中文
+import moment from "moment";
+import {getTimeStrByDate} from "@/utils/util";
+import 'moment/locale/zh-cn'
+
+moment.locale('zh-cn');
+
 Vue.use(Cascader)
 Vue.use(PageHeader)
 Vue.use(formModel, Button)
@@ -248,6 +256,14 @@ export default {
     this.form = this.$form.createForm(this, {formname: 'form'})
   },
   methods: {
+    /**
+     * 默认日期
+     */
+    moment,
+    getCurrentData() {
+      return getTimeStrByDate(new Date());
+    },
+
     addinit() {
       this.$multiTab.closeCurrentPage()
     },

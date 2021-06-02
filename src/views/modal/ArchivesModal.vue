@@ -174,6 +174,10 @@ export default {
         this.urlList = '/bd/dispatchnotice/selectlist'
         this.method = 'post'
         parameter.memucode = '03-02'
+      } else if (name == 'CargoSpace') {
+        this.urlList = '/bd/warehouse/positionlist'
+        this.method = 'get'
+        parameter.memucode = '01-07'
       } else {
         return
       }

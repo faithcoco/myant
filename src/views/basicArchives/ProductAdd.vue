@@ -5,40 +5,41 @@
         <a-card>
           <div></div>
           <a-form
-            class="ant-advanced-search-form"
-            :form="form"
-            :label-col="{ span: 3 }"
-            :wrapper-col="{ span: 20 }"
-            @submit="handleSubmit"
+              class="ant-advanced-search-form"
+              :form="form"
+              :label-col="{ span: 3 }"
+              :wrapper-col="{ span: 20 }"
+              @submit="handleSubmit"
           >
-            <a-form-item v-for="item in data" :label="item.title">
+            <a-form-item v-for="(item, index) in data" :key="index" :label="item.title">
               <div v-if="item.selectVisible">
                 <a-cascader
-                  v-decorator="item.decorator"
-                  v-show="item.selectVisible"
-                  :field-names ="{ label: 'title', value: 'key', children: 'children' }"
-                  :options="item.selectList"
-                  placeholder="请选择"
+                    v-decorator="item.decorator"
+                    v-show="item.selectVisible"
+                    :field-names="{ label: 'title', value: 'key', children: 'children' }"
+                    :options="item.selectList"
+                    placeholder="请选择"
                 />
               </div>
               <div v-else>
-                <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
+                <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength"/>
                 <a-input-number
-                  :style="{ width: '1370px' }"
-                  v-decorator="item.decorator"
-                  v-show="item.inputnumberVisible"
-                  :max="item.fieldmax"
-                  :precision="item.fieldprecision"
+                    :style="{ width: '1370px' }"
+                    v-decorator="item.decorator"
+                    v-show="item.inputnumberVisible"
+                    :max="item.fieldmax"
+                    :precision="item.fieldprecision"
                 />
 
                 <a-date-picker
-                  :style="{ width: '100%' }"
-                  v-show="item.timepickerVisible"
-                  show-time
-                  format="YYYY-MM-DD HH:mm:ss"
-                  placeholder="选择日期"
-                  v-decorator="item.decorator"
-                  valueFormat="YYYY-MM-DD HH:mm:ss"
+                    :style="{ width: '100%' }"
+                    v-show="item.timepickerVisible"
+                    show-time
+                    format="YYYY-MM-DD HH:mm:ss"
+                    placeholder="选择日期"
+                    v-decorator="item.decorator"
+                    valueFormat="YYYY-MM-DD HH:mm:ss"
+                    :defaultValue="moment(getCurrentData(), 'YYYY-MM-DD HH:mm:ss')"
                 />
               </div>
             </a-form-item>
@@ -47,7 +48,7 @@
       </div>
     </a-spin>
     <a-layout-footer
-      :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-25px', zIndex: '999' }"
+        :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-25px', zIndex: '999' }"
     >
       <a-card>
         <a-row>
@@ -68,17 +69,20 @@
 
 <script>
 import Vue from 'vue'
-import { formModel, Button, Tree } from 'ant-design-vue'
-import { Cascader } from 'ant-design-vue'
+import {Button, Cascader, Form, formModel, PageHeader, TreeSelect} from 'ant-design-vue'
+import {logininfo} from '@/store/mutation-types'
+import {getForm, submitForm} from '@/api/manage'
+// 设置中文
+import {getTimeStrByDate} from '@/utils/util'
+import moment from 'moment';
+import 'moment/locale/zh-cn'
+
+moment.locale('zh-cn');
+
 Vue.use(Cascader)
-import { PageHeader } from 'ant-design-vue'
 Vue.use(PageHeader)
 Vue.use(formModel, Button)
-import { logininfo } from '@/store/mutation-types'
-import { getForm, submitForm } from '@/api/manage'
-import { Form } from 'ant-design-vue'
 Vue.use(Form)
-import { TreeSelect } from 'ant-design-vue'
 Vue.use(TreeSelect)
 
 const numberRow = []
@@ -93,8 +97,8 @@ export default {
         authorization: 'authorization-text',
       },
       size: 'small',
-      labelCol: { span: 2 },
-      wrapperCol: { span: 22 },
+      labelCol: {span: 2},
+      wrapperCol: {span: 22},
       other: '',
       data: [],
 
@@ -126,7 +130,7 @@ export default {
 
   computed: {
     rowSelection() {
-      const { selectedRowKeys } = this
+      const {selectedRowKeys} = this
       return {
         selectedRowKeys,
         hideDefaultSelections: true,
@@ -136,9 +140,17 @@ export default {
   },
 
   beforeCreate() {
-    this.form = this.$form.createForm(this, { name: 'form' })
+    this.form = this.$form.createForm(this, {name: 'form'})
   },
   methods: {
+    /**
+     * 默认日期
+     */
+    moment,
+    getCurrentData() {
+      return getTimeStrByDate(new Date());
+    },
+
     handleSubmit(e) {
       this.form.validateFields((err, values) => {
         if (!err) {
@@ -206,7 +218,6 @@ export default {
     },
 
     getFormdata() {
-      debugger
       console.log(this.$route.query.menu + 'is run')
       this.spinning = true
       this.menuid = this.$route.query.menuid
@@ -267,7 +278,6 @@ export default {
 
       getForm(columnsParams, this.urlForm).then((res) => {
         this.data = res.result
-        debugger
         setTimeout(() => {
           for (const i in this.data) {
             this.form.setFieldsValue({
@@ -338,7 +348,6 @@ export default {
               values.positionstatus = values.positionstatus.join()
             }
           }
-          debugger
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           console.log('submit url-->', submitUrl)
           console.log('submit params-->', JSON.stringify(values))

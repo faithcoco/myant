@@ -336,10 +336,11 @@ export default {
       console.log('delete params--->', JSON.stringify(columnsParams))
       getData(columnsParams, this.urlDelete).then((res) => {
         console.log('delete res-->', JSON.stringify(res))
-        if (res.status == 'FAILED') {
-          this.$message.info(res.errorMsg)
-        } else {
+        if (res.status == 'SUCCESS') {
+          this.$message.info("删除成功")
           this.getList()
+        } else {
+          this.$message.info(res.errorMsg)
         }
       })
     },

@@ -159,7 +159,12 @@ export default {
       console.log('url--->', this.urlColumns)
       getData(columnsParams, this.urlColumns).then((res) => {
         console.log('res', JSON.stringify(res))
-        this.getList()
+        if (res.status == 'SUCCESS') {
+          this.$message.info("删除成功")
+          this.getList()
+        } else {
+          this.$message.info(res.errorMsg)
+        }
       })
     },
     initData(name) {

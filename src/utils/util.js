@@ -93,3 +93,19 @@ export function getTimeStrByDate(date) {
     var s = date.getSeconds();
     return y + '-' + (M < 10 ? ('0' + M) : M) + '-' + (d < 10 ? ('0' + d) : d) + " " + (H < 10 ? ('0' + H) : H) + ":" + (m < 10 ? ('0' + m) : m) + ":" + (s < 10 ? ('0' + s) : s);
 }
+
+/*
+ * 字段判空
+ */
+export function stringNotBlank(a) {
+    if (Object.is(a, null)) {
+        return false;
+    } else if (Object.is(a, undefined)) {
+        return false;
+    } else if (Object.is(a, '')) {
+        return false;
+    }
+    return true;
+}
+
+

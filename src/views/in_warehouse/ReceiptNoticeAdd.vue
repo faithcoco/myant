@@ -190,7 +190,7 @@ import Type from '../modal/TypeModal'
 import SelectModal from '../modal/SelectModal'
 
 // 设置中文
-import {getTimeStrByDate} from '@/utils/util'
+import {getTimeStrByDate, stringNotBlank} from '@/utils/util'
 import moment from 'moment';
 import 'moment/locale/zh-cn'
 
@@ -362,6 +362,7 @@ export default {
       }
     },
     submit() {
+      debugger
       var isError = false
       for (const key in this.detailsData) {
         if (this.detailsData[key].doclinequantity == undefined) {
@@ -371,6 +372,14 @@ export default {
         } else if (parseInt(this.detailsData[key].doclinequantity) < 1) {
           isError = true
           this.$message.info('明细数量必须大于0！')
+          return
+        } else if (!stringNotBlank(this.detailsData[key].positionid)) {
+          isError = true
+          this.$message.info('请选择货位！')
+          return
+        } else if (!stringNotBlank(this.detailsData[key].doclinebatch)) {
+          isError = true
+          this.$message.info('请填写批号！')
           return
         }
       }
@@ -395,6 +404,12 @@ export default {
             }
             values.docid = this.materialid
           }
+
+          if (!stringNotBlank(this.warehouseid)) {
+            this.$message.info('请选择仓库！')
+            return
+          }
+
           if (this.detailsData.length == 0) {
             this.$message.warn('请添加明细')
             return
@@ -884,6 +899,8 @@ export default {
               this.personid = this.data[i].keyvalue
             } else if (this.data[i].key == 'vendorid') {
               this.vendorid = this.data[i].keyvalue
+            } else if (this.data[i].key == 'warehouseid') {
+              this.warehouseid = this.data[i].keyvalue
             } else if (this.data[i].key == 'doccode') {
               this.billcode = this.data[i].value
             } else if (this.data[i].key == 'businessclassname') {

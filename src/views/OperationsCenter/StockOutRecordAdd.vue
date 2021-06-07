@@ -86,9 +86,17 @@
 
                     <!--add by tf 货位档案选择 2021年5月23日00:52:19-->
                     <span slot="positioncode" slot-scope="text, record, index">
-                      <a-input ref="positionInput" v-model="text" :disabled="disabled">
+                      <a-input ref="positioncodeInput" v-model="text" :disabled="disabled">
                         <a-button slot="suffix" type="link"
                                   @click="(e) => handleShowModal(e.target.value, 'positioncode', record, index)">选择</a-button>
+                      </a-input>
+                    </span>
+
+                    <!--add by tf 批号选择 2021年6月6日17:02:58-->
+                    <span slot="doclinebatch" slot-scope="text, record, index">
+                      <a-input ref="doclinebatchInput" v-model="text" :disabled="disabled">
+                        <a-button slot="suffix" type="link"
+                                  @click="(e) => handleShowModal(e.target.value, 'doclinebatch', record, index)">选择</a-button>
                       </a-input>
                     </span>
 
@@ -130,7 +138,11 @@
               width="1300px"
               :destroyOnClose="destroyOnClose"
           >
-            <archives-modal :name="name" @onSelect="getSelect"></archives-modal>
+            <archives-modal :name="name"
+                            :warehouseid="stockcurrent_warehouseid"
+                            :positionid="stockcurrent_positionid"
+                            :materialid="stockcurrent_materialid"
+                            @onSelect="getSelect"></archives-modal>
           </a-modal>
           <a-modal
               title="选择"
@@ -192,7 +204,7 @@ import SelectModal from '../modal/SelectModal'
 // 设置中文
 import moment from 'moment';
 import 'moment/locale/zh-cn'
-import {getTimeStrByDate} from "@/utils/util";
+import {getTimeStrByDate, stringNotBlank} from "@/utils/util";
 
 moment.locale('zh-cn');
 
@@ -260,6 +272,11 @@ export default {
       splitQuantity: '',
       approvalText: '',
       isEdit: false,
+
+      // 批号
+      stockcurrent_warehouseid: '',
+      stockcurrent_positionid: '',
+      stockcurrent_materialid: '',
     }
   },
 
@@ -361,6 +378,14 @@ export default {
           isError = true
           this.$message.info('明细数量必须大于0！')
           return
+        } else if (!stringNotBlank(this.detailsData[key].positionid)) {
+          isError = true
+          this.$message.info('请选择货位！')
+          return
+        } else if (!stringNotBlank(this.detailsData[key].doclinebatch)) {
+          isError = true
+          this.$message.info('请选择批号！')
+          return
         }
       }
       if (isError) {
@@ -376,6 +401,12 @@ export default {
             var submitUrl = '/bd/Stockoutrecord/updateSave'
             values.docid = this.materialid
           }
+
+          if (!stringNotBlank(this.warehouseid)) {
+            this.$message.info('请选择仓库！')
+            return
+          }
+
           if (this.detailsData.length == 0) {
             this.$message.warn('请添加明细')
             return
@@ -434,6 +465,24 @@ export default {
       this.detailIndex = index
       if (this.currentkey == 'positioncode') {
         this.name = 'CargoSpace'
+        this.visible = true
+      } else if (this.currentkey == 'doclinebatch') {
+        if (!stringNotBlank(this.warehouseid)) {
+          this.$message.info('请先选择仓库！')
+          return
+        }
+        if (!stringNotBlank(record.materialid)) {
+          this.$message.info('请先选择料品！')
+          return
+        }
+        if (!stringNotBlank(record.positionid)) {
+          this.$message.info('请先选择货位！')
+          return
+        }
+        this.stockcurrent_warehouseid = this.warehouseid;
+        this.stockcurrent_materialid = record.materialid;
+        this.stockcurrent_positionid = record.positionid;
+        this.name = 'StockCurrentRecordList'
         this.visible = true
       }
     },
@@ -710,6 +759,22 @@ export default {
         this.detailsData[this.detailIndex].positionid = this.selectList[0].positionid
         this.detailsData[this.detailIndex].positioncode = this.selectList[0].positioncode
         this.detailsData[this.detailIndex].positionname = this.selectList[0].positionname
+      } else if (this.currentkey == 'doclinebatch') {
+        debugger
+        this.visible = false
+        this.detailsData[this.detailIndex].doclinebatch = this.selectList[0].stockbatch
+        // 1.数量已有值，如果小于等于库存结存量，以当前数量为主
+        // 2.数量已有值，如果大于库存结存量，以库存结存量为主
+        // 3.数量没有值，以库存结存量为主
+        if (stringNotBlank(this.detailsData[this.detailIndex].doclinequantity)) {
+          if (stringNotBlank(this.selectList[0].stockquantity)) {
+            if (this.detailsData[this.detailIndex].doclinequantity > this.selectList[0].stockquantity) {
+              this.detailsData[this.detailIndex].doclinequantity = this.selectList[0].stockquantity
+            }
+          }
+        } else {
+          this.detailsData[this.detailIndex].doclinequantity = this.selectList[0].stockquantity
+        }
       }
     },
     handleCancel(e) {
@@ -730,6 +795,8 @@ export default {
       } else if (this.currentkey == 'warehouseid') {
         this.visible = false
       } else if (this.currentkey == 'positioncode') {
+        this.visible = false
+      } else if (this.currentkey == 'doclinebatch') {
         this.visible = false
       }
     },
@@ -804,6 +871,8 @@ export default {
               this.personid = this.data[i].keyvalue
             } else if (this.data[i].key == 'customerid') {
               this.customerid = this.data[i].keyvalue
+            } else if (this.data[i].key == 'warehouseid') {
+              this.warehouseid = this.data[i].keyvalue
             } else if (this.data[i].key == 'doccode') {
               this.billcode = this.data[i].value
             } else if (this.data[i].key == 'businessclassname') {

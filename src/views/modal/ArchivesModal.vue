@@ -40,6 +40,7 @@ import {getData, getProductListColumns, requestData} from '@/api/manage'
 import Approval from '../Approval'
 import SelectModal from '../modal/SelectModal'
 import {logininfo, menuname} from '@/store/mutation-types'
+import {stringNotBlank} from "@/utils/util";
 
 Vue.use(Descriptions)
 Vue.use(Transfer)
@@ -57,6 +58,15 @@ export default {
   name: 'archivesmodal',
   props: {
     name: {
+      type: String,
+    },
+    warehouseid: {
+      type: String,
+    },
+    positionid: {
+      type: String,
+    },
+    materialid: {
       type: String,
     },
   },
@@ -90,7 +100,6 @@ export default {
       urlList: '',
       materialclassid: '',
       menuname: '',
-      materialid: '',
       approval_visible: false,
       tree_visible: true,
       product: {},
@@ -178,6 +187,10 @@ export default {
         this.urlList = '/bd/warehouse/positionlist'
         this.method = 'get'
         parameter.memucode = '01-07'
+      } else if (name == 'StockCurrentRecordList') {
+        this.urlList = '/stock/stockcurrent/stockCurrentRecordRefList'
+        this.method = 'post'
+        parameter.memucode = '04-04'
       } else {
         return
       }
@@ -202,8 +215,9 @@ export default {
       console.log('columns parameter-->', JSON.stringify(columnsParams))
       getProductListColumns(columnsParams, this.urlColumns).then((res) => {
         this.columns = res.result.columns
-
-        this.columns.splice(this.columns.length - 1, 1)
+        if (stringNotBlank(this.columns) && this.columns.length > 0) {
+          this.columns.splice(this.columns.length - 1, 1)
+        }
       })
     },
 
@@ -228,6 +242,14 @@ export default {
       if (this.isSearch) {
         console.log('search-->', this.searchKey + '/' + this.searchValue)
         parameter[`${this.searchKey}`] = this.searchValue
+      }
+
+      debugger
+      // add by tf 批号参照加几个字段 2021年6月6日19:42:55
+      if (this.menuname == 'StockCurrentRecordList') {
+        parameter.warehouseid = this.warehouseid
+        parameter.materialid = this.materialid
+        parameter.positionid = this.positionid
       }
 
       console.log('request url-->', this.urlList)

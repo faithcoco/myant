@@ -94,7 +94,8 @@
 
                     <!--add by tf 批号选择 2021年6月6日17:02:58-->
                     <span slot="doclinebatch" slot-scope="text, record, index">
-                      <a-input ref="doclinebatchInput" v-model="text" :disabled="disabled">
+                      <a-input ref="doclinebatchInput" v-model="text" :value="text"
+                               @change="(e) => waitdoclinebatchChange(e.target.value, record)">
                         <a-button slot="suffix" type="link"
                                   @click="(e) => handleShowModal(e.target.value, 'doclinebatch', record, index)">选择</a-button>
                       </a-input>
@@ -247,7 +248,6 @@ export default {
       typeVisible: false,
       currentkey: '',
       detailVisible: false,
-      detailIndex: '',// 明细行下标
       columns: [],
       detailsData: [],
       departmentid: '',
@@ -274,6 +274,7 @@ export default {
       isEdit: false,
 
       // 批号
+      detailIndex: '',// 明细行下标
       stockcurrent_warehouseid: '',
       stockcurrent_positionid: '',
       stockcurrent_materialid: '',
@@ -378,11 +379,11 @@ export default {
           isError = true
           this.$message.info('明细数量必须大于0！')
           return
-        } else if (!stringNotBlank(this.detailsData[key].positionid)) {
+        } /*else if (!stringNotBlank(this.detailsData[key].positionid)) {
           isError = true
           this.$message.info('请选择货位！')
           return
-        } else if (!stringNotBlank(this.detailsData[key].doclinebatch)) {
+        }*/ else if (!stringNotBlank(this.detailsData[key].doclinebatch)) {
           isError = true
           this.$message.info('请选择批号！')
           return
@@ -475,10 +476,10 @@ export default {
           this.$message.info('请先选择料品！')
           return
         }
-        if (!stringNotBlank(record.positionid)) {
+        /*if (!stringNotBlank(record.positionid)) {
           this.$message.info('请先选择货位！')
           return
-        }
+        }*/
         this.stockcurrent_warehouseid = this.warehouseid;
         this.stockcurrent_materialid = record.materialid;
         this.stockcurrent_positionid = record.positionid;
@@ -486,7 +487,9 @@ export default {
         this.visible = true
       }
     },
-
+    waitdoclinebatchChange(value, record) {
+      record.doclinebatch = value
+    },
     waitquantityChange(value, record) {
       record.doclinequantity = value
     },
@@ -760,7 +763,6 @@ export default {
         this.detailsData[this.detailIndex].positioncode = this.selectList[0].positioncode
         this.detailsData[this.detailIndex].positionname = this.selectList[0].positionname
       } else if (this.currentkey == 'doclinebatch') {
-        debugger
         this.visible = false
         this.detailsData[this.detailIndex].doclinebatch = this.selectList[0].stockbatch
         // 1.数量已有值，如果小于等于库存结存量，以当前数量为主

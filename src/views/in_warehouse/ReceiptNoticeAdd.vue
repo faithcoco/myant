@@ -373,11 +373,11 @@ export default {
           isError = true
           this.$message.info('明细数量必须大于0！')
           return
-        } else if (!stringNotBlank(this.detailsData[key].positionid)) {
+        } /*else if (!stringNotBlank(this.detailsData[key].positionid)) {
           isError = true
           this.$message.info('请选择货位！')
           return
-        } else if (!stringNotBlank(this.detailsData[key].doclinebatch)) {
+        }*/ else if (!stringNotBlank(this.detailsData[key].doclinebatch)) {
           isError = true
           this.$message.info('请填写批号！')
           return

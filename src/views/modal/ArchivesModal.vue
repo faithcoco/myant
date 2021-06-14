@@ -244,7 +244,6 @@ export default {
         parameter[`${this.searchKey}`] = this.searchValue
       }
 
-      debugger
       // add by tf 批号参照加几个字段 2021年6月6日19:42:55
       if (this.menuname == 'StockCurrentRecordList') {
         parameter.warehouseid = this.warehouseid

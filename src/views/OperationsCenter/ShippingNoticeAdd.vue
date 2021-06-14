@@ -82,6 +82,16 @@
                         </template>
                       </div>
                     </template>
+
+                    <!--add by tf 批号选择 2021年6月6日17:02:58-->
+                    <span slot="doclinebatch" slot-scope="text, record, index">
+                      <a-input ref="doclinebatchInput" v-model="text" :value="text"
+                               @change="(e) => waitdoclinebatchChange(e.target.value, record)">
+                        <a-button slot="suffix" type="link"
+                                  @click="(e) => handleShowModal(e.target.value, 'doclinebatch', record, index)">选择</a-button>
+                      </a-input>
+                    </span>
+
                     <span slot="doclinequantity" slot-scope="text, record">
                       <a-input
                           :value="text"
@@ -168,7 +178,7 @@ import SelectModal from '../modal/SelectModal'
 
 // 设置中文
 import moment from "moment";
-import {getTimeStrByDate} from "@/utils/util";
+import {getTimeStrByDate, stringNotBlank} from "@/utils/util";
 import 'moment/locale/zh-cn'
 
 moment.locale('zh-cn');
@@ -236,6 +246,12 @@ export default {
       splitQuantity: '',
       approvalText: '',
       isEdit: false,
+
+      // 批号
+      detailIndex: '',// 明细行下标
+      stockcurrent_warehouseid: '',
+      stockcurrent_positionid: '',
+      stockcurrent_materialid: '',
     }
   },
 
@@ -386,6 +402,25 @@ export default {
           })
         }
       })
+    },
+    // add by tf 货位档案选择 2021年5月23日00:52:19
+    handleShowModal(value, key, record, index) {
+      this.currentkey = key
+      this.detailIndex = index
+      if (this.currentkey == 'doclinebatch') {
+        if (!stringNotBlank(record.materialid)) {
+          this.$message.info('请先选择料品！')
+          return
+        }
+        this.stockcurrent_warehouseid = this.warehouseid;
+        this.stockcurrent_materialid = record.materialid;
+        this.stockcurrent_positionid = record.positionid;
+        this.name = 'StockCurrentRecordList'
+        this.visible = true
+      }
+    },
+    waitdoclinebatchChange(value, record) {
+      record.doclinebatch = value
     },
     waitquantityChange(value, record) {
       record.doclinequantity = value
@@ -605,6 +640,10 @@ export default {
       } else if (this.currentkey == 'list') {
         this.getList('ShippingNoticeList', this.selectList[0].docid, 1)
         this.visible = false
+      } else if (this.currentkey == 'doclinebatch') {
+        this.visible = false
+        this.detailsData[this.detailIndex].doclinebatch = this.selectList[0].stockbatch
+        this.detailsData[this.detailIndex].doclinequantity = this.selectList[0].stockquantity
       }
     },
     handleCancel(e) {
@@ -620,8 +659,9 @@ export default {
         this.visible = false
       } else if (this.currentkey == 'list') {
         this.visible = false
-      }
-      if (this.currentkey == 'warehouseid') {
+      } else if (this.currentkey == 'warehouseid') {
+        this.visible = false
+      } else if (this.currentkey == 'doclinebatch') {
         this.visible = false
       }
     },

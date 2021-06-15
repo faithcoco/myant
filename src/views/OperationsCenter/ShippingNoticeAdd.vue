@@ -643,7 +643,7 @@ export default {
       } else if (this.currentkey == 'doclinebatch') {
         this.visible = false
         this.detailsData[this.detailIndex].doclinebatch = this.selectList[0].stockbatch
-        this.detailsData[this.detailIndex].doclinequantity = this.selectList[0].stockquantity
+        this.detailsData[this.detailIndex].doclinequantity = this.selectList[0].stockavaquantity
       }
     },
     handleCancel(e) {

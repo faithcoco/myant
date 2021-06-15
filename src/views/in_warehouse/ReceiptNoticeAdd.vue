@@ -405,7 +405,7 @@ export default {
             values.docid = this.materialid
           }
 
-          if (!stringNotBlank(this.warehouseid)) {
+          if (this.menu == 'StorageManagementList' && !stringNotBlank(this.warehouseid)) {
             this.$message.info('请选择仓库！')
             return
           }

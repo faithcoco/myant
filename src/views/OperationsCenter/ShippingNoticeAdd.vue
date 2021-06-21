@@ -85,8 +85,9 @@
 
                     <!--add by tf 批号选择 2021年6月6日17:02:58-->
                     <span slot="doclinebatch" slot-scope="text, record, index">
-                      <a-input ref="doclinebatchInput" v-model="text" :value="text"
-                               @change="(e) => waitdoclinebatchChange(e.target.value, record)">
+                      <a-input ref="doclinebatchInput" :value="text"
+                               @change="(e) => waitdoclinebatchChange(e.target.value, record)"
+                               @blur="(e) => waitdoclinebatchChange(e.target.value, record)">
                         <a-button slot="suffix" type="link"
                                   @click="(e) => handleShowModal(e.target.value, 'doclinebatch', record, index)">选择</a-button>
                       </a-input>
@@ -420,6 +421,7 @@ export default {
       }
     },
     waitdoclinebatchChange(value, record) {
+      debugger
       record.doclinebatch = value
     },
     waitquantityChange(value, record) {

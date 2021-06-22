@@ -493,6 +493,7 @@ export default {
       console.log("2222222222---" + JSON.stringify(record))
       this.$set(record, 'doclinebatch', value);
       // record.doclinebatch = value
+      console.log("3333333333---" + JSON.stringify(record))
     },
     waitquantityChange(value, record) {
       this.$set(record, 'doclinequantity', value);

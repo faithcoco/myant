@@ -421,14 +421,18 @@ export default {
       }
     },
     waitdoclinebatchChange(value, record) {
-      debugger
-      record.doclinebatch = value
+      console.log("1111111111111---" + value)
+      console.log("2222222222---" + JSON.stringify(record))
+      this.$set(record, 'doclinebatch', value);
+      // record.doclinebatch = value
     },
     waitquantityChange(value, record) {
-      record.doclinequantity = value
+      this.$set(record, 'doclinequantity', value);
+      // record.doclinequantity = value
     },
     handleChange(value, key, record) {
-      record[key] = value
+      this.$set(record, key, value);
+      // record[key] = value
     },
     submitApproval() {
       //提交审批

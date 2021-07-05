@@ -21,6 +21,17 @@
                     placeholder="请选择"
                 />
               </div>
+              <div v-else-if="item.timepickerVisible">
+                <j-date
+                    :style="{ width: '100%' }"
+                    v-show="item.timepickerVisible"
+                    :show-time="false"
+                    format="YYYY-MM-DD"
+                    placeholder="选择日期"
+                    v-decorator="item.decorator"
+                    :disabled="item.disabled"
+                />
+              </div>
               <div v-else>
                 <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength"/>
                 <a-input-number
@@ -29,17 +40,6 @@
                     v-show="item.inputnumberVisible"
                     :max="item.fieldmax"
                     :precision="item.fieldprecision"
-                />
-
-                <a-date-picker
-                    :style="{ width: '100%' }"
-                    v-show="item.timepickerVisible"
-                    show-time
-                    format="YYYY-MM-DD HH:mm:ss"
-                    placeholder="选择日期"
-                    v-decorator="item.decorator"
-                    valueFormat="YYYY-MM-DD HH:mm:ss"
-                    :defaultValue="moment(getCurrentData(), 'YYYY-MM-DD HH:mm:ss')"
                 />
               </div>
             </a-form-item>
@@ -72,8 +72,8 @@ import Vue from 'vue'
 import {Button, Cascader, Form, formModel, PageHeader, TreeSelect} from 'ant-design-vue'
 import {logininfo} from '@/store/mutation-types'
 import {getForm, submitForm} from '@/api/manage'
+import JDate from "@/components/tools/JDate";
 // 设置中文
-import {getTimeStrByDate} from '@/utils/util'
 import moment from 'moment';
 import 'moment/locale/zh-cn'
 
@@ -87,6 +87,7 @@ Vue.use(TreeSelect)
 
 const numberRow = []
 export default {
+  components: {JDate},
   data() {
     return {
       numberRow,
@@ -148,11 +149,14 @@ export default {
      */
     moment,
     getCurrentData() {
-      return getTimeStrByDate(new Date());
+      // return getTimeStrByDate(new Date());
+      return new Date().toLocaleDateString();
     },
 
     handleSubmit(e) {
+      debugger
       this.form.validateFields((err, values) => {
+        debugger
         if (!err) {
           if (this.$route.query.tag == 1) {
             if (this.$route.query.menu == 'ProductList') {
@@ -197,7 +201,7 @@ export default {
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
           console.log('submit url-->', submitUrl)
           console.log('submit params-->', JSON.stringify(values))
-          submitForm(values, submitUrl).then((res) => {
+          submitForm(Object.assign({}, values), submitUrl).then((res) => {
             console.log('submit--->', JSON.stringify(res))
             if (this.$route.query.tag == 1) {
               if (res.status == 'SUCCESS') {
@@ -278,13 +282,17 @@ export default {
 
       getForm(columnsParams, this.urlForm).then((res) => {
         this.data = res.result
+        // add by tf 默认时间 2021年7月5日18:40:21
+        debugger
+        let that = this;
+        let date = new Date();
         setTimeout(() => {
-          for (const i in this.data) {
-            this.form.setFieldsValue({
-              [this.data[i].key]: this.data[i].value,
+          for (const i in that.data) {
+            that.form.setFieldsValue({
+              [that.data[i].key]: that.data[i].fieldtype == 'date' && !that.data[i].value ? that.formatDateUtil('YYYY-mm-dd', date) : that.data[i].value,
             })
           }
-          this.spinning = false
+          that.spinning = false
         }, 500)
       })
     },
@@ -349,6 +357,9 @@ export default {
             }
           }
           values.enterpriseid = Vue.ls.get(logininfo).basepersonPO.enterpriseid
+
+          debugger
+
           console.log('submit url-->', submitUrl)
           console.log('submit params-->', JSON.stringify(values))
           submitForm(values, submitUrl).then((res) => {

@@ -21,6 +21,17 @@
                     :disabled="item.disabled"
                 />
               </div>
+              <div v-else-if="item.timepickerVisible">
+                <j-date
+                    :style="{ width: '100%' }"
+                    v-show="item.timepickerVisible"
+                    :show-time="false"
+                    format="YYYY-MM-DD"
+                    placeholder="选择日期"
+                    v-decorator="item.decorator"
+                    :disabled="item.disabled"
+                />
+              </div>
               <div v-else>
                 <a-input
                     v-decorator="item.decorator"
@@ -34,15 +45,6 @@
                     v-show="item.inputnumberVisible"
                     :max="item.fieldmax"
                     :precision="item.fieldprecision"
-                    :disabled="item.disabled"
-                />
-                <a-date-picker
-                    :style="{ width: '100%' }"
-                    v-show="item.timepickerVisible"
-                    show-time
-                    format="YYYY-MM-DD HH:mm:ss"
-                    placeholder="选择日期"
-                    v-decorator="item.decorator"
                     :disabled="item.disabled"
                 />
                 <a-input
@@ -175,6 +177,7 @@ import {logininfo} from '@/store/mutation-types'
 import ArchivesModal from '../modal/ArchivesModal'
 import Type from '../modal/TypeModal'
 import SelectModal from '../modal/SelectModal'
+import JDate from "@/components/tools/JDate";
 
 Vue.use(Cascader)
 Vue.use(PageHeader)
@@ -189,6 +192,7 @@ export default {
     Type,
     ArchivesModal,
     SelectModal,
+    JDate,
   },
   data() {
     return {
@@ -714,6 +718,18 @@ export default {
         console.log('form--->', JSON.stringify(res))
         if (res.status == 'SUCCESS') {
           this.data = res.result
+          // add by tf 默认时间 2021年7月5日18:40:21
+          debugger
+          let that = this;
+          let date = new Date();
+          setTimeout(() => {
+            for (const i in that.data) {
+              that.form.setFieldsValue({
+                [that.data[i].key]: that.data[i].fieldtype == 'date' && !that.data[i].value ? that.formatDateUtil('YYYY-mm-dd', date) : that.data[i].value,
+              })
+            }
+            that.spinning = false
+          }, 500)
         } else {
           this.$message.info(res)
         }
@@ -721,7 +737,7 @@ export default {
         setTimeout(() => {
           for (const i in this.data) {
             this.form.setFieldsValue({
-              [this.data[i].key]: this.data[i].value,
+              [this.data[i].key]: this.data[i].fieldtype == 'date' && !this.data[i].value ? this.formatDateUtil('YYYY-mm-dd', date) : this.data[i].value,
             })
             if (this.data[i].key == 'departmentid') {
               this.departmentid = this.data[i].keyvalue

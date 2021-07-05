@@ -3,40 +3,40 @@
     <div>
       <a-card>
         <a-form :form="form" :label-col="{ span: 3 }" :wrapper-col="{ span: 20 }" @submit="handleSubmit">
-          <a-form-item v-for="item in data" :label="item.title">
-            <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength" />
+          <a-form-item v-for="(item,index) in data" :key="index" :label="item.title">
+            <a-input v-decorator="item.decorator" v-show="item.inputVisible" :maxLength="item.fieldlength"/>
             <a-input-number
-              :style="{ width: '1370px' }"
-              v-decorator="item.decorator"
-              v-show="item.inputnumberVisible"
-              :max="item.fieldmax"
-              :precision="item.fieldprecision"
+                :style="{ width: '1370px' }"
+                v-decorator="item.decorator"
+                v-show="item.inputnumberVisible"
+                :max="item.fieldmax"
+                :precision="item.fieldprecision"
             />
             <a-cascader
-              v-decorator="item.decorator"
-              v-show="item.selectVisible"
-              :field-names="{ label: 'title', value: 'key', children: 'children' }"
-              :options="item.selectList"
-              placeholder="请选择"
+                v-decorator="item.decorator"
+                v-show="item.selectVisible"
+                :field-names="{ label: 'title', value: 'key', children: 'children' }"
+                :options="item.selectList"
+                placeholder="请选择"
             />
 
             <a-date-picker
-              :style="{ width: '1370px' }"
-              v-show="item.timepickerVisible"
-              show-time
-              format="YYYY-MM-DD HH:mm:ss"
-              placeholder="选择日期"
-              v-decorator="item.decorator"
+                :style="{ width: '1370px' }"
+                v-show="item.timepickerVisible"
+                show-time
+                format="YYYY-MM-DD"
+                placeholder="选择日期"
+                v-decorator="item.decorator"
             />
             <a-input v-decorator="item.decorator" v-show="item.listVisible" :maxLength="item.fieldlength">
               <a-button slot="suffix" type="link" @click="showModal">选择</a-button>
             </a-input>
           </a-form-item>
           <a-form-item :wrapper-col="{ span: 12, offset: 2 }">
-           
+
             <a-tabs>
               <a-tab-pane key="1" tab="明细">
-                 <a-button   @click="showModal">选择</a-button>
+                <a-button @click="showModal">选择</a-button>
               </a-tab-pane>
             </a-tabs>
           </a-form-item>
@@ -44,7 +44,7 @@
       </a-card>
     </div>
     <a-layout-footer
-      :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-25px', zIndex: '999' }"
+        :style="{ position: 'fixed', width: '100%', height: '70px', bottom: '0px', marginLeft: '-25px', zIndex: '999' }"
     >
       <a-card>
         <a-row>
@@ -65,23 +65,20 @@
 
 <script>
 import Vue from 'vue'
-import { formModel, Button, Tree } from 'ant-design-vue'
-import { Cascader } from 'ant-design-vue'
+import {Button, Cascader, Form, formModel, PageHeader, TreeSelect} from 'ant-design-vue'
+import {getForm, submitForm} from '@/api/manage'
+import {logininfo} from '@/store/mutation-types'
+import JDate from "@/components/tools/JDate";
+
 Vue.use(Cascader)
-import { PageHeader } from 'ant-design-vue'
 Vue.use(PageHeader)
 Vue.use(formModel, Button)
-import { postProductAdd } from '@/api/manage'
-import { logininfo, menuname } from '@/store/mutation-types'
-import { getForm, submitForm, postData, getData } from '@/api/manage'
-import { Form } from 'ant-design-vue'
 Vue.use(Form)
-import { TreeSelect } from 'ant-design-vue'
-import { keys } from 'mockjs2'
 Vue.use(TreeSelect)
 
 const numberRow = []
 export default {
+  components: {JDate},
   data() {
     return {
       numberRow,
@@ -92,8 +89,8 @@ export default {
         authorization: 'authorization-text',
       },
       size: 'small',
-      labelCol: { span: 2 },
-      wrapperCol: { span: 22 },
+      labelCol: {span: 2},
+      wrapperCol: {span: 22},
       other: '',
       data: [],
 
@@ -111,7 +108,7 @@ export default {
 
   computed: {
     rowSelection() {
-      const { selectedRowKeys } = this
+      const {selectedRowKeys} = this
       return {
         selectedRowKeys,
         hideDefaultSelections: true,
@@ -130,7 +127,7 @@ export default {
     },
   },
   beforeCreate() {
-    this.form = this.$form.createForm(this, { name: 'form' })
+    this.form = this.$form.createForm(this, {name: 'form'})
   },
   methods: {
     onChange(value) {
@@ -253,8 +250,8 @@ export default {
       console.log('form params-->', JSON.stringify(columnsParams))
       getForm(columnsParams, this.urlForm).then((res) => {
         this.data = res.result
-       
-        setTimeout(() => {
+
+        /*setTimeout(() => {
           for (const i in this.data) {
             if (this.data[i].value !== '') {
               this.form.setFieldsValue({
@@ -262,7 +259,21 @@ export default {
               })
             }
           }
-        }, 3000)
+        }, 3000)*/
+
+        // add by tf 默认时间 2021年7月5日18:40:21
+        debugger
+        let that = this;
+        let date = new Date();
+        setTimeout(() => {
+          for (const i in that.data) {
+            that.form.setFieldsValue({
+              [that.data[i].key]: that.data[i].fieldtype == 'date' && !that.data[i].value ? that.formatDateUtil('YYYY-mm-dd', date) : that.data[i].value,
+            })
+          }
+          that.spinning = false
+        }, 500)
+
       })
     },
     handleChange(info) {

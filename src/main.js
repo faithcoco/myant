@@ -20,7 +20,7 @@ import './components/global.less'
 import { Dialog } from '@/components'
 import Moment from 'moment'
 import XLSX from "xlsx";
-import {stringNotBlank} from "./utils/util";
+import {stringNotBlank,formatDate,dateFormat} from "./utils/util";
 
 Vue.config.productionTip = false
 Vue.filter('formatDate', function (value) {
@@ -36,6 +36,8 @@ Vue.use(VueAxios)
 Vue.use(Dialog)
 
 Vue.prototype.strNotBlank = stringNotBlank;
+Vue.prototype.formatTimeUtil = formatDate;
+Vue.prototype.formatDateUtil = dateFormat;
 
 new Vue({
   router,

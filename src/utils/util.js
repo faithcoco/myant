@@ -94,6 +94,63 @@ export function getTimeStrByDate(date) {
     return y + '-' + (M < 10 ? ('0' + M) : M) + '-' + (d < 10 ? ('0' + d) : d) + " " + (H < 10 ? ('0' + H) : H) + ":" + (m < 10 ? ('0' + m) : m) + ":" + (s < 10 ? ('0' + s) : s);
 }
 
+/**
+ * 时间格式化
+ * @param value
+ * @param fmt
+ * @returns {*}
+ */
+export function formatDate(value, fmt) {
+    let regPos = /^\d+(\.\d+)?$/;
+    if (regPos.test(value)) {
+        //如果是数字
+        let getDate = new Date(value);
+        let o = {
+            'M+': getDate.getMonth() + 1,
+            'd+': getDate.getDate(),
+            'h+': getDate.getHours(),
+            'm+': getDate.getMinutes(),
+            's+': getDate.getSeconds(),
+            'q+': Math.floor((getDate.getMonth() + 3) / 3),
+            'S': getDate.getMilliseconds()
+        };
+        if (/(y+)/.test(fmt)) {
+            fmt = fmt.replace(RegExp.$1, (getDate.getFullYear() + '').substr(4 - RegExp.$1.length))
+        }
+        for (let k in o) {
+            if (new RegExp('(' + k + ')').test(fmt)) {
+                fmt = fmt.replace(RegExp.$1, (RegExp.$1.length === 1) ? (o[k]) : (('00' + o[k]).substr(('' + o[k]).length)))
+            }
+        }
+        return fmt;
+    } else {
+        //TODO
+        value = value.trim();
+        return value.substr(0, fmt.length);
+    }
+}
+
+// Add by Panqixiong 2021/06/02 日期格式化
+export function dateFormat(fmt, date) {
+    let ret;
+    const opt = {
+        "Y+": date.getFullYear().toString(),        // 年
+        "m+": (date.getMonth() + 1).toString(),     // 月
+        "d+": date.getDate().toString(),            // 日
+        "H+": date.getHours().toString(),           // 时
+        "M+": date.getMinutes().toString(),         // 分
+        "S+": date.getSeconds().toString()          // 秒
+        // 有其他格式化字符需求可以继续添加，必须转化成字符串
+    };
+    for (let k in opt) {
+        ret = new RegExp("(" + k + ")").exec(fmt);
+        if (ret) {
+            fmt = fmt.replace(ret[1], (Object.is(ret[1].length,1)) ? (opt[k]) : (opt[k].padStart(ret[1].length, "0")))
+        }
+    }
+    return fmt;
+}
+
 /*
  * 字段判空
  */

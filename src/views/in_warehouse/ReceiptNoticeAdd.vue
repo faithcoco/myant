@@ -479,13 +479,15 @@ export default {
     },
 
     waitquantityChange(value, record) {
-      record.doclinequantity = value
+      this.$set(record, 'doclinequantity', value);
+      // record.doclinequantity = value
       //this.detailsData = this.detailsData.map((item, index) => {
       //  return { ...item, doclineno: index + 1 }
       //})
     },
     handleChange(value, key, record) {
-      record[key] = value
+      this.$set(record, key, value);
+      // record[key] = value
     },
     submitApproval() {
       //提交审批
